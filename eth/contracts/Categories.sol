@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 pragma solidity ^0.6.0;
-pragma experimental ABIEncoderV2;
+//pragma experimental ABIEncoderV2;
 
 import './BaseToken.sol';
 
@@ -14,25 +14,12 @@ contract Categories is BaseToken {
     uint maxId = 0;
 
     event ItemUpdated(uint256 indexed id, string title, string shortDecription, string longDescription);
-    event ItemFilesUpdated(uint itemId, File file, uint version);
+    event ItemFilesUpdated(uint itemId, string format, byte[46][] chunks, uint version);
     event CategoryCreated(uint256 indexed id, string title);
     event ItemAdded(uint256 indexed categoryId, uint indexed itemId);
     event SubcategoryAdded(uint256 indexed categoryId, uint indexed subId);
-
-    struct File {
-        string format;
-        byte[46][] chunks;
-    }
-
-    struct Item {
-        uint id;
-        int256 votes;
-        //File[] files;
-        uint256 eventBlock;
-    }
     
-    mapping (uint => Item) private items;
-    mapping (uint => mapping (uint => int256)) private votesForSubcategories; // TODO: accessor
+    mapping (uint => mapping (uint => int256)) private votesForCategories; // TODO: accessor
 
 /// ERC-20 ///
 
@@ -53,9 +40,7 @@ contract Categories is BaseToken {
     function createItem(string calldata _title,
                         string calldata _shortDescription,
                         string calldata _longDescription) external {
-        Item memory item = Item({id: ++maxId, votes: 0, eventBlock: block.number});
-        items[maxId] = item;
-        emit ItemUpdated(item.id, _title, _shortDescription, _longDescription);
+        emit ItemUpdated(++maxId, _title, _shortDescription, _longDescription);
     }
 
     function updateItem(uint _itemId,
@@ -66,7 +51,7 @@ contract Categories is BaseToken {
     }
 
     function uploadFile(uint _itemId, uint _version, string calldata _format, byte[46][] calldata _chunks) external {
-        emit ItemFilesUpdated(_itemId, File({format: _format, chunks: _chunks}), _version);
+        emit ItemFilesUpdated(_itemId, _format, _chunks, _version);
     }
 
 /// Categories ///
@@ -87,6 +72,6 @@ contract Categories is BaseToken {
 
     function voteForCategory(uint _child, uint _parent, bool _yes) external {
         int256 _value = _yes ? int256(balances[msg.sender]) : -int256(balances[msg.sender]);
-        votesForSubcategories[_child][_parent] += -votesForSubcategories[_child][_parent] + _value; // reclaim the previous vote
+        votesForCategories[_child][_parent] += -votesForCategories[_child][_parent] + _value; // reclaim the previous vote
     }
 }
