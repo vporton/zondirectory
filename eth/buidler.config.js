@@ -30,6 +30,16 @@ module.exports = {
   solc: {
     version: "0.6.8",
   },
+  networks: {
+    buidlerevm: {
+      accounts: [
+        {
+          privateKey: '0xe0bb3d8b2933d3d9284a7ba24ff0c3cf86233912cfc75a92901b74c7e9470211',
+          balance: '0xf0000000000000000',
+        }
+      ],
+    },
+  },
   namedAccounts: {
     deployer: {
         default: 0, // here this will by default take the first account as deployer
