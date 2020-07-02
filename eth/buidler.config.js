@@ -12,9 +12,11 @@ task("accounts", "Prints the list of accounts", async () => {
 
 task("compile", "Compiles the entire project, building all artifacts", async function(taskArguments, bre, runSuper) {
   await runSuper();
+  console.log("Extracting ABIs...");
   const fs = require('fs');
   fs.mkdir('../ui/artifacts', ()=>{});
-  fs.copyFile('artifacts/Categories.json', '../ui/artifacts/Categories.json', ()=>{});
+  const abi = JSON.parse(fs.readFileSync('artifacts/Categories.json')).abi;
+  fs.writeFileSync('../ui/artifacts/Categories.abi', JSON.stringify(abi));
 });
 
 
