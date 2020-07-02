@@ -13,7 +13,7 @@ contract Categories is BaseToken {
 
     uint maxId = 0;
 
-    event ItemUpdated(uint256 indexed id, string title, string shortDecription, string longDescription);
+    event ItemUpdated(address owner, uint256 indexed id, string title, string shortDecription, string longDescription);
     event ItemFilesUpdated(uint itemId, string format, byte[46][] chunks, uint version);
     event CategoryCreated(uint256 indexed id, string title);
     event ItemAdded(uint256 indexed categoryId, uint indexed itemId);
@@ -43,7 +43,7 @@ contract Categories is BaseToken {
                         string calldata _longDescription) external
     {
         itemOwners[++maxId] = msg.sender;
-        emit ItemUpdated(maxId, _title, _shortDescription, _longDescription);
+        emit ItemUpdated(msg.sender, maxId, _title, _shortDescription, _longDescription);
     }
 
     function updateItem(uint _itemId,
@@ -52,7 +52,7 @@ contract Categories is BaseToken {
                         string calldata _longDescription) external
     {
         require(itemOwners[_itemId] == msg.sender, "Attempt to modify other's item.");
-        emit ItemUpdated(_itemId, _title, _shortDescription, _longDescription);
+        emit ItemUpdated(msg.sender, _itemId, _title, _shortDescription, _longDescription);
     }
 
     function uploadFile(uint _itemId, uint _version, string calldata _format, byte[46][] calldata _chunks) external {
