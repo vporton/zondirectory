@@ -10,6 +10,14 @@ task("accounts", "Prints the list of accounts", async () => {
   }
 });
 
+task("compile", "Compiles the entire project, building all artifacts", async function(taskArguments, bre, runSuper) {
+  await runSuper();
+  const fs = require('fs');
+  fs.mkdir('../ui/artifacts', ()=>{});
+  fs.copyFile('artifacts/Categories.json', '../ui/artifacts/Categories.json', ()=>{});
+});
+
+
 // You have to export an object to set up your config
 // This object can have the following optional entries:
 // defaultNetwork, networks, solc, and paths.
