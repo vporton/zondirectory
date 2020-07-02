@@ -19,7 +19,7 @@ contract Categories is BaseToken {
     event ItemAdded(uint256 indexed categoryId, uint indexed itemId);
     event SubcategoryAdded(uint256 indexed categoryId, uint indexed subId);
 
-    mapping (uint => uint) itemOwners;
+    mapping (uint => address) itemOwners;
     mapping (uint => mapping (uint => int256)) private votesForCategories; // TODO: accessor
 
 /// ERC-20 ///
