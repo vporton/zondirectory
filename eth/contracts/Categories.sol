@@ -18,7 +18,8 @@ contract Categories is BaseToken {
     event CategoryCreated(uint256 indexed id, string title);
     event ItemAdded(uint256 indexed categoryId, uint indexed itemId);
     event SubcategoryAdded(uint256 indexed categoryId, uint indexed subId);
-    
+
+    mapping (uint => uint) itemOwners;
     mapping (uint => mapping (uint => int256)) private votesForCategories; // TODO: accessor
 
 /// ERC-20 ///
@@ -39,18 +40,23 @@ contract Categories is BaseToken {
 
     function createItem(string calldata _title,
                         string calldata _shortDescription,
-                        string calldata _longDescription) external {
-        emit ItemUpdated(++maxId, _title, _shortDescription, _longDescription);
+                        string calldata _longDescription) external
+    {
+        itemOwners[++maxId] = msg.sender;
+        emit ItemUpdated(maxId, _title, _shortDescription, _longDescription);
     }
 
     function updateItem(uint _itemId,
                         string calldata _title,
                         string calldata _shortDescription,
-                        string calldata _longDescription) external {
+                        string calldata _longDescription) external
+    {
+        require(itemOwners[_itemId] == msg.sender, "Attempt to modify other's item.");
         emit ItemUpdated(_itemId, _title, _shortDescription, _longDescription);
     }
 
     function uploadFile(uint _itemId, uint _version, string calldata _format, byte[46][] calldata _chunks) external {
+        require(itemOwners[_itemId] == msg.sender, "Attempt to modify other's item.");
         emit ItemFilesUpdated(_itemId, _format, _chunks, _version);
     }
 
