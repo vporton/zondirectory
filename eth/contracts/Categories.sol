@@ -14,7 +14,7 @@ contract Categories is BaseToken {
     uint maxId = 0;
 
     event ItemUpdated(uint256 indexed id, string title, string shortDecription, string longDescription);
-    event ItemFilesUpdated(uint itemId, File file, uint _version);
+    event ItemFilesUpdated(uint itemId, File file, uint version);
     event CategoryCreated(uint256 indexed id, string title);
     event ItemAdded(uint256 indexed categoryId, uint indexed itemId);
     event SubcategoryAdded(uint256 indexed categoryId, uint indexed subId);
