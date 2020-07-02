@@ -7,6 +7,7 @@ contract Books {
     }
 
     struct Book {
+        uint id;
         string shortDescription;
         string longDescription;
         File[] files;
