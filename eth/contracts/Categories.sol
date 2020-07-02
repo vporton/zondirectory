@@ -1,4 +1,7 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
+
 pragma solidity ^0.6.0;
+pragma experimental ABIEncoderV2;
 
 import './BaseToken.sol';
 
@@ -11,12 +14,10 @@ contract Categories is BaseToken {
     uint maxId = 0;
 
     event ItemUpdated(uint256 indexed id, string title, string shortDecription, string longDescription);
+    event ItemFilesUpdated(uint itemId, File file, uint _version);
     event CategoryCreated(uint256 indexed id, string title);
     event ItemAdded(uint256 indexed categoryId, uint indexed itemId);
     event SubcategoryAdded(uint256 indexed categoryId, uint indexed subId);
-
-    // voter => (issue => value)
-    mapping (address => mapping (uint256 => int256)) voters;
 
     struct File {
         string format;
@@ -26,25 +27,12 @@ contract Categories is BaseToken {
     struct Item {
         uint id;
         int256 votes;
-        File[] files;
+        //File[] files;
         uint256 eventBlock;
     }
     
-    struct Subcategory {
-        uint id;
-        Category category;
-        int256 votes;
-    }
-
-    struct Category {
-        uint id;
-        uint256[] subcategories;
-        Item[] items;
-        uint256 eventBlock;
-    }
-
     mapping (uint => Item) private items;
-    mapping (uint => Subcategory) private categories;
+    mapping (uint => mapping (uint => int256)) private votesForSubcategories; // TODO: accessor
 
 /// ERC-20 ///
 
@@ -65,7 +53,7 @@ contract Categories is BaseToken {
     function createItem(string calldata _title,
                         string calldata _shortDescription,
                         string calldata _longDescription) external {
-        Item memory item = Item({id: ++maxId, votes: 0, files: new File[](0), eventBlock: block.number});
+        Item memory item = Item({id: ++maxId, votes: 0, eventBlock: block.number});
         items[maxId] = item;
         emit ItemUpdated(item.id, _title, _shortDescription, _longDescription);
     }
@@ -77,44 +65,28 @@ contract Categories is BaseToken {
         emit ItemUpdated(_itemId, _title, _shortDescription, _longDescription);
     }
 
-    function uploadFile(uint _itemId, string calldata _format, byte[46][] calldata _chunks) external {
-        items[_itemId].files.push(File({format: _format, chunks: _chunks}));
+    function uploadFile(uint _itemId, uint _version, string calldata _format, byte[46][] calldata _chunks) external {
+        emit ItemFilesUpdated(_itemId, File({format: _format, chunks: _chunks}), _version);
     }
 
 /// Categories ///
 
-    function createCategory(bytes calldata _link, string calldata _title, string calldata _description) external {
-        Category memory category = Category({
-            id: ++maxId,
-            subcategories: new uint256[](0),
-            items: new Item[](0),
-            eventBlock: block.number
-        });
-        categories[category.id] = storage(category);
-        emit CategoryCreated(category.id, _title);
+    function createCategory(string calldata _title) external {
+        emit CategoryCreated(++maxId, _title);
     }
 
     function addItemToCategory(uint256 _categoryId, uint256 _itemId) external {
-        categories[_categoryId].category.items.push(items[_itemId]);
         emit ItemAdded(_categoryId, _itemId);
     }
 
-    function addSubcategory(uint256 _categoryId, uint256 _subCategory) external {
-        categories[_categoryId].category.subcategories.push(_subCategory);
-        emit SubcategoryAdded(_categoryId, _categoryId);
+    function addSubcategory(uint256 _category, uint256 _subCategory) external {
+        emit SubcategoryAdded(_category, _subCategory);
     }
 
 /// Voting ///
 
-    function voteForItem(uint256 _issue, bool _yes) external {
+    function voteForCategory(uint _child, uint _parent, bool _yes) external {
         int256 _value = _yes ? int256(balances[msg.sender]) : -int256(balances[msg.sender]);
-        items[_issue].votes += -voters[msg.sender][_issue] + _value; // reclaim the previous vote
-        voters[msg.sender][_issue] = _value;
-    }
-
-    function voteForCategory(uint256 _issue, bool _yes) external {
-        int256 _value = _yes ? int256(balances[msg.sender]) : -int256(balances[msg.sender]);
-        categories[_issue].votes += -voters[msg.sender][_issue] + _value; // reclaim the previous vote
-        voters[msg.sender][_issue] = _value;
+        votesForSubcategories[_child][_parent] += -votesForSubcategories[_child][_parent] + _value; // reclaim the previous vote
     }
 }
