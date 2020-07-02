@@ -1,4 +1,5 @@
 usePlugin("@nomiclabs/buidler-waffle");
+usePlugin('buidler-deploy');
 
 // This is a sample Buidler task. To learn how to create your own go to
 // https://buidler.dev/guides/create-task.html
@@ -29,4 +30,10 @@ module.exports = {
   solc: {
     version: "0.6.8",
   },
-};
+  namedAccounts: {
+    deployer: {
+        default: 0, // here this will by default take the first account as deployer
+        //4: '0xffffeffffff', // but for rinkeby it will be a specific address
+    },
+  },
+}

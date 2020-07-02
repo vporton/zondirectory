@@ -1,5 +1,5 @@
 function createNewItem() {
-    const contract = new web3.eth.Contract(jsonInterface, address)
+    const contract = new web3.eth.Contract(await categoriesJsonInterface, categoriesContractAddress)
     const title = document.getElementById('title');
     const short = document.getElementById('short');
     const long = document.getElementById('long')    ;

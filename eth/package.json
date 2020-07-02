@@ -1,6 +1,7 @@
 {
   "dependencies": {
-    "@nomiclabs/buidler": "^1.3.8"
+    "@nomiclabs/buidler": "^1.3.8",
+    "buidler-deploy": "^0.4.8"
   },
   "devDependencies": {
     "@nomiclabs/buidler-ethers": "^2.0.0",
