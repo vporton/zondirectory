@@ -25,9 +25,10 @@ contract Categories is BaseToken {
                       string shortDecription,
                       string longDescription,
                       uint256 priceETH,
-                      uint256 priceAR);
+                      uint256 priceAR,
+                      string locale);
     event ItemFilesUpdated(uint itemId, string format, uint version);
-    event CategoryCreated(uint256 indexed id, string title);
+    event CategoryCreated(uint256 indexed id, string title, string locale);
     event ItemAdded(uint256 indexed categoryId, uint indexed itemId);
     event SubcategoryAdded(uint256 indexed categoryId, uint indexed subId);
     event Vote(uint child, uint parent, int256 value);
@@ -66,12 +67,13 @@ contract Categories is BaseToken {
                         string calldata _shortDescription,
                         string calldata _longDescription,
                         uint256 _priceETH,
-                        uint256 _priceAR) external
+                        uint256 _priceAR,
+                        string calldata _locale) external
     {
         itemOwners[++maxId] = msg.sender;
         pricesETH[maxId] = _priceETH;
         pricesAR[maxId] = _priceAR;
-        emit ItemUpdated(msg.sender, maxId, _title, _shortDescription, _longDescription, _priceETH, _priceAR);
+        emit ItemUpdated(msg.sender, maxId, _title, _shortDescription, _longDescription, _priceETH, _priceAR, _locale);
     }
 
     function updateItem(uint _itemId,
@@ -79,12 +81,13 @@ contract Categories is BaseToken {
                         string calldata _shortDescription,
                         string calldata _longDescription,
                         uint256 _priceETH,
-                        uint256 _priceAR) external
+                        uint256 _priceAR,
+                        string calldata _locale) external
     {
         require(itemOwners[_itemId] == msg.sender, "Attempt to modify other's item.");
         pricesETH[_itemId] = _priceETH;
         pricesAR[_itemId] = _priceAR;
-        emit ItemUpdated(msg.sender, _itemId, _title, _shortDescription, _longDescription, _priceETH, _priceAR);
+        emit ItemUpdated(msg.sender, _itemId, _title, _shortDescription, _longDescription, _priceETH, _priceAR, _locale);
     }
 
     function uploadFile(uint _itemId, uint _version, string calldata _format, bytes calldata _chunks) external {
@@ -108,8 +111,8 @@ contract Categories is BaseToken {
 
 /// Categories ///
 
-    function createCategory(string calldata _title) external {
-        emit CategoryCreated(++maxId, _title);
+    function createCategory(string calldata _title, string calldata _locale) external {
+        emit CategoryCreated(++maxId, _title, _locale);
     }
 
     function addItemToCategory(uint256 _categoryId, uint256 _itemId) external {
