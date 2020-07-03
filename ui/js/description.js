@@ -2,6 +2,24 @@
 
 // let itemEvents;
 
+function sellInETHToggle(event) {
+    document.getElementById('priceETH').disabled = event.target.checked;
+}
+
+function sellInARToggle(event) {
+    document.getElementById('priceAR').disabled = event.target.checked;
+}
+
+const INFINITY = (BigInt(1) << BigInt(256)) - BigInt(1);
+
+function getPriceETH() {
+    return document.getElementById('sellInETH').checked ? INFINITY : document.getElementById('priceInETH').value;
+}
+
+function getPriceAR() {
+    return document.getElementById('sellInAR').checked ? INFINITY : document.getElementById('priceInAR').value;
+}
+
 async function createOrUpdateItem() {
     const urlParams = new URLSearchParams(window.location.search);
     const itemId = urlParams.get('id');
@@ -14,6 +32,7 @@ async function createOrUpdateItem() {
 async function createItem() {
     const contractInstance = new web3.eth.Contract(await categoriesJsonInterface(), categoriesContractAddress);
 
+    const locale = document.getElementById('locale').value;
     const title = document.getElementById('title').value;
     const short = document.getElementById('short').value;
     const long = document.getElementById('long').value;
@@ -40,7 +59,8 @@ async function createItem() {
 
     // contractInstance.events.ItemUpdated({fromBlock:'pending'}, onEvent); // does not call the callback
 
-    contractInstance.methods.createItem(title, short, long).send({from: defaultAccount, gas: '1000000'}) //, (error, receiptHash) => {
+    contractInstance.methods.createItem(title, short, long, getPriceETH(), getPriceAR(), locale)
+        .send({from: defaultAccount, gas: '1000000'})
         .on('transactionHash', async function(receiptHash) {
             transactionHash = receiptHash;
             // console.log(await contractInstance.getPastEvents('ItemUpdated', {fromBlock:0, toBlock:'pending'}));
@@ -50,9 +70,11 @@ async function createItem() {
 async function updateItem(itemId) {
     const contractInstance = new web3.eth.Contract(await categoriesJsonInterface(), categoriesContractAddress);
 
+    const locale = document.getElementById('locale').value;
     const title = document.getElementById('title').value;
     const short = document.getElementById('short').value;
     const long = document.getElementById('long').value;
 
-    contractInstance.methods.updateItem(itemId, title, short, long).send({from: defaultAccount, gas: '1000000'});
+    contractInstance.methods.updateItem(itemId, title, short, long, getPriceETH(), getPriceAR(), locale)
+        .send({from: defaultAccount, gas: '1000000'});
 }

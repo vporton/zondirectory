@@ -1,13 +1,13 @@
 {
-  "name": "cryptozon-rinkeby",
+  "name": "CryptozonRinkeby",
   "license": "UNLICENSED",
   "scripts": {
     "codegen": "graph codegen",
     "build": "graph build",
-    "deploy": "graph deploy --node https://api.thegraph.com/deploy/ --ipfs https://api.thegraph.com/ipfs/ vporton/cryptozon-rinkeby",
-    "create-local": "graph create --node http://localhost:8020/ vporton/cryptozon-rinkeby",
-    "remove-local": "graph remove --node http://localhost:8020/ vporton/cryptozon-rinkeby",
-    "deploy-local": "graph deploy --node http://localhost:8020/ --ipfs http://localhost:5001 vporton/cryptozon-rinkeby"
+    "deploy": "graph deploy --node https://api.thegraph.com/deploy/ --ipfs https://api.thegraph.com/ipfs/ vporton/CryptozonRinkeby",
+    "create-local": "graph create --node http://localhost:8020/ vporton/CryptozonRinkeby",
+    "remove-local": "graph remove --node http://localhost:8020/ vporton/CryptozonRinkeby",
+    "deploy-local": "graph deploy --node http://localhost:8020/ --ipfs http://localhost:5001 vporton/CryptozonRinkeby"
   },
   "dependencies": {
     "@graphprotocol/graph-cli": "0.18.0",

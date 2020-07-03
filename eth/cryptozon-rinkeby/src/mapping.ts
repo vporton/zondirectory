@@ -65,7 +65,7 @@ export function handleItemUpdated(event: ItemUpdatedEvent): void {
   entity.owner = event.params.owner
   entity.itemId = event.params.itemId
   entity.title = event.params.title
-  entity.shortDecription = event.params.shortDecription
+  entity.shortDescription = event.params.shortDescription
   entity.longDescription = event.params.longDescription
   entity.priceETH = event.params.priceETH
   entity.priceAR = event.params.priceAR
