@@ -97,7 +97,6 @@ contract Categories is BaseToken {
         uint256 myShare = msg.value * PROGRAMMER_SHARE_MULT / PROGRAMMER_SHARE_DIV;
         programmerAddress.transfer(myShare);
         itemOwners[_itemId].transfer(msg.value - myShare);
-        // TODO: Pay to the owner and 10% to me.
         return downloadURLs[_itemId];
     }
 
