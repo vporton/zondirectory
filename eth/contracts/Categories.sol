@@ -22,7 +22,7 @@ contract Categories is BaseToken {
     event ItemUpdated(address owner,
                       uint256 indexed itemId,
                       string title,
-                      string shortDecription,
+                      string shortDescription,
                       string longDescription,
                       uint256 priceETH,
                       uint256 priceAR,

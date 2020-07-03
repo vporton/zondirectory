@@ -37,7 +37,7 @@ type Approval @entity {
 
 type CategoryCreated @entity {
   id: ID!
-  categoryId: BigInt! # uint256
+  id: BigInt! # uint256
   title: String! # string
   locale: String! # string
 }
@@ -58,9 +58,9 @@ type ItemFilesUpdated @entity {
 type ItemUpdated @entity {
   id: ID!
   owner: Bytes! # address
-  itemId: BigInt! # uint256
+  id: BigInt! # uint256
   title: String! # string
-  shortDescription: String! # string
+  shortDecription: String! # string
   longDescription: String! # string
   priceETH: BigInt! # uint256
   priceAR: BigInt! # uint256
