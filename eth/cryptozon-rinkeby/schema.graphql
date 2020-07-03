@@ -1,3 +1,35 @@
+type _Schema_
+  @fulltext(
+    name: "fileSearch",
+    language: en
+    algorithm: rank,
+    include: [
+      {
+        entity: "ItemUpdated",
+        fields: [
+          { name: "title" },
+          { name: "shortDescription" },
+          { name: "longDescription" },
+        ]
+      }
+    ]
+  )
+
+type _Schema_
+  @fulltext(
+    name: "categorySearch",
+    language: en
+    algorithm: rank,
+    include: [
+      {
+        entity: "CategoryCreated",
+        fields: [
+          { name: "title" },
+        ]
+      }
+    ]
+  )
+
 type Approval @entity {
   id: ID!
   _owner: Bytes! # address
