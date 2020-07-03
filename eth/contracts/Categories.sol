@@ -30,6 +30,7 @@ contract Categories is BaseToken {
     event CategoryCreated(uint256 indexed id, string title);
     event ItemAdded(uint256 indexed categoryId, uint indexed itemId);
     event SubcategoryAdded(uint256 indexed categoryId, uint indexed subId);
+    event Vote(uint child, uint parent, int256 value);
 
     address payable programmerAddress;
     mapping (uint => address payable) itemOwners;
@@ -124,5 +125,6 @@ contract Categories is BaseToken {
     function voteForCategory(uint _child, uint _parent, bool _yes) external {
         int256 _value = _yes ? int256(balances[msg.sender]) : -int256(balances[msg.sender]);
         votesForCategories[_child][_parent] += -votesForCategories[_child][_parent] + _value; // reclaim the previous vote
+        emit Vote(_child, _parent, _value);
     }
 }
