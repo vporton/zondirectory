@@ -3,8 +3,7 @@
 let itemEvents;
 
 async function createNewItem() {
-    const contract = web3.eth.contract(await categoriesJsonInterface());
-    const contractInstance = contract.at(categoriesContractAddress);
+    const contractInstance = new web3.eth.Contract(await categoriesJsonInterface(), categoriesContractAddress);
 
     const title = document.getElementById('title').value;
     const short = document.getElementById('short').value;
@@ -12,7 +11,6 @@ async function createNewItem() {
 
     let transactionHash = null;
     let events = [];
-    let intervalHandle = null;
 
     function onEvent(error, log) {
         var myResults = contractInstance.ItemUpdated({}, {fromBlock:'pending', toBlock:'pending'}, function(error, logs){ console.log('logs', logs) }).get(function(error, logs){ /*console.log('logs', logs)*/ });
@@ -30,14 +28,13 @@ async function createNewItem() {
 
     // const filter = web3.eth.filter({fromBlock:'pending', toBlock:'pending'});
     // filter.watch(onEvent); // in unknown reason does not call the callback
-    intervalHandle = setInterval(onEvent, 100);
 
-    contractInstance.createItem.sendTransaction(title, short, long, {gas: '1000000'}, (error, receiptHash) => {
-        transactionHash = receiptHash;
+    contractInstance.methods.createItem(title, short, long).send({from: defaultAccount, gas: '1000000'}); //, (error, receiptHash) => {
+        // transactionHash = receiptHash;
         // web3.eth.getTransactionReceipt(receiptHash, (error, receipt) => {
         //     const event = receipt.logs.ItemUpdated;
         //     const itemId = event.returnValues.id;
         //     open('upload.html?id=' + itemId);
         // });
-    });
+    // });
 }
