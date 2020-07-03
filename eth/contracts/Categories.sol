@@ -55,7 +55,7 @@ contract Categories is BaseToken {
 
     function setOwner(address payable _programmerAddress) external {
         require(_programmerAddress == msg.sender, "Access denied.");
-        require(_programmerAddress != address(0));
+        require(_programmerAddress != address(0), "Zero address.");
         programmerAddress = _programmerAddress;
     }
 
