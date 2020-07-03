@@ -27,7 +27,7 @@ contract Categories is BaseToken {
                       uint256 priceETH,
                       uint256 priceAR,
                       string locale);
-    event ItemFilesUpdated(uint itemId, string format, uint version);
+    event ItemFilesUpdated(uint indexed itemId, string format, uint version);
     event CategoryCreated(uint256 indexed id, string title, string locale);
     event ItemAdded(uint256 indexed categoryId, uint indexed itemId);
     event SubcategoryAdded(uint256 indexed categoryId, uint indexed subId);
