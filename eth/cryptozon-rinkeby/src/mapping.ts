@@ -33,7 +33,7 @@ export function handleCategoryCreated(event: CategoryCreatedEvent): void {
   let entity = new CategoryCreated(
     event.transaction.hash.toHex() + "-" + event.logIndex.toString()
   )
-  entity.id = event.params.id
+  entity.categoryId = event.params.categoryId
   entity.title = event.params.title
   entity.locale = event.params.locale
   entity.save()
@@ -63,7 +63,7 @@ export function handleItemUpdated(event: ItemUpdatedEvent): void {
     event.transaction.hash.toHex() + "-" + event.logIndex.toString()
   )
   entity.owner = event.params.owner
-  entity.id = event.params.id
+  entity.itemId = event.params.itemId
   entity.title = event.params.title
   entity.shortDecription = event.params.shortDecription
   entity.longDescription = event.params.longDescription

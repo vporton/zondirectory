@@ -14,8 +14,6 @@ type _Schema_
       }
     ]
   )
-
-type _Schema_
   @fulltext(
     name: "categorySearch",
     language: en
@@ -39,7 +37,7 @@ type Approval @entity {
 
 type CategoryCreated @entity {
   id: ID!
-  id: BigInt! # uint256
+  categoryId: BigInt! # uint256
   title: String! # string
   locale: String! # string
 }
@@ -60,7 +58,7 @@ type ItemFilesUpdated @entity {
 type ItemUpdated @entity {
   id: ID!
   owner: Bytes! # address
-  id: BigInt! # uint256
+  itemId: BigInt! # uint256
   title: String! # string
   shortDecription: String! # string
   longDescription: String! # string

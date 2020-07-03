@@ -41,7 +41,7 @@
       {
         "indexed": true,
         "internalType": "uint256",
-        "name": "id",
+        "name": "categoryId",
         "type": "uint256"
       },
       {
@@ -116,7 +116,7 @@
       {
         "indexed": true,
         "internalType": "uint256",
-        "name": "id",
+        "name": "itemId",
         "type": "uint256"
       },
       {

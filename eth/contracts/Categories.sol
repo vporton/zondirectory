@@ -20,7 +20,7 @@ contract Categories is BaseToken {
     // WARNING: If priceAR != (1<<256) - 1, then the downloadURLs are not kept secret,
     // because AR is inherently insecure anyway.
     event ItemUpdated(address owner,
-                      uint256 indexed id,
+                      uint256 indexed itemId,
                       string title,
                       string shortDecription,
                       string longDescription,
@@ -28,7 +28,7 @@ contract Categories is BaseToken {
                       uint256 priceAR,
                       string locale);
     event ItemFilesUpdated(uint indexed itemId, string format, uint version);
-    event CategoryCreated(uint256 indexed id, string title, string locale);
+    event CategoryCreated(uint256 indexed categoryId, string title, string locale);
     event ItemAdded(uint256 indexed categoryId, uint indexed itemId);
     event SubcategoryAdded(uint256 indexed categoryId, uint indexed subId);
     event Vote(uint child, uint parent, int256 value);
