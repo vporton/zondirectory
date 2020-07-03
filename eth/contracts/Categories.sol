@@ -13,14 +13,25 @@ contract Categories is BaseToken {
 
     uint maxId = 0;
 
-    event ItemUpdated(address owner, uint256 indexed id, string title, string shortDecription, string longDescription);
-    event ItemFilesUpdated(uint itemId, string format, byte[46][] chunks, uint version);
+    // WARNING: If priceAR != (1<<256) - 1, then the downloadURLs are not kept secret,
+    // because AR is inherently insecure anyway.
+    event ItemUpdated(address owner,
+                      uint256 indexed id,
+                      string title,
+                      string shortDecription,
+                      string longDescription,
+                      uint256 priceETH,
+                      uint256 priceAR);
+    event ItemFilesUpdated(uint itemId, string format, uint version);
     event CategoryCreated(uint256 indexed id, string title);
     event ItemAdded(uint256 indexed categoryId, uint indexed itemId);
     event SubcategoryAdded(uint256 indexed categoryId, uint indexed subId);
 
     mapping (uint => address) itemOwners;
     mapping (uint => mapping (uint => int256)) private votesForCategories; // TODO: accessor
+    mapping (uint => uint256) pricesETH;
+    mapping (uint => uint256) pricesAR;
+    mapping (uint => bytes) downloadURLs; // concatenation of 46 bytes hashes, for files split into chunks
 
 /// ERC-20 ///
 
@@ -40,24 +51,44 @@ contract Categories is BaseToken {
 
     function createItem(string calldata _title,
                         string calldata _shortDescription,
-                        string calldata _longDescription) external
+                        string calldata _longDescription,
+                        uint256 _priceETH,
+                        uint256 _priceAR) external
     {
         itemOwners[++maxId] = msg.sender;
-        emit ItemUpdated(msg.sender, maxId, _title, _shortDescription, _longDescription);
+        pricesETH[maxId] = _priceETH;
+        pricesAR[maxId] = _priceAR;
+        emit ItemUpdated(msg.sender, maxId, _title, _shortDescription, _longDescription, _priceETH, _priceAR);
     }
 
     function updateItem(uint _itemId,
                         string calldata _title,
                         string calldata _shortDescription,
-                        string calldata _longDescription) external
+                        string calldata _longDescription,
+                        uint256 _priceETH,
+                        uint256 _priceAR) external
     {
         require(itemOwners[_itemId] == msg.sender, "Attempt to modify other's item.");
-        emit ItemUpdated(msg.sender, _itemId, _title, _shortDescription, _longDescription);
+        pricesETH[_itemId] = _priceETH;
+        pricesAR[_itemId] = _priceAR;
+        emit ItemUpdated(msg.sender, _itemId, _title, _shortDescription, _longDescription, _priceETH, _priceAR);
     }
 
-    function uploadFile(uint _itemId, uint _version, string calldata _format, byte[46][] calldata _chunks) external {
+    function uploadFile(uint _itemId, uint _version, string calldata _format, bytes calldata _chunks) external {
         require(itemOwners[_itemId] == msg.sender, "Attempt to modify other's item.");
-        emit ItemFilesUpdated(_itemId, _format, _chunks, _version);
+        downloadURLs[_itemId] = _chunks;
+        emit ItemFilesUpdated(_itemId, _format, _version);
+    }
+
+    function obtainURLs(uint _itemId) external payable returns (bytes memory) {
+        require(pricesETH[_itemId] <= msg.value, "Paid too little.");
+        // TODO: Pay to the owner and 10% to me.
+        return downloadURLs[_itemId];
+    }
+
+    function obtainURLsFree(uint _itemId) external view returns (bytes memory) {
+        require(pricesAR[_itemId] == (1<<256) - 1, "Cannot obtain for free.");
+        return downloadURLs[_itemId];
     }
 
 /// Categories ///
