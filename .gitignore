@@ -6,6 +6,7 @@ __pycache__/
 
 node_modules/
 
+generated/
 artifacts/
 cache/
 deployments/

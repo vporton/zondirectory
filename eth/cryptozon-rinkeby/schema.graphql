@@ -1,0 +1,58 @@
+type Approval @entity {
+  id: ID!
+  _owner: Bytes! # address
+  _spender: Bytes! # address
+  _value: BigInt! # uint256
+}
+
+type CategoryCreated @entity {
+  id: ID!
+  id: BigInt! # uint256
+  title: String! # string
+  locale: String! # string
+}
+
+type ItemAdded @entity {
+  id: ID!
+  categoryId: BigInt! # uint256
+  itemId: BigInt! # uint256
+}
+
+type ItemFilesUpdated @entity {
+  id: ID!
+  itemId: BigInt! # uint256
+  format: String! # string
+  version: BigInt! # uint256
+}
+
+type ItemUpdated @entity {
+  id: ID!
+  owner: Bytes! # address
+  id: BigInt! # uint256
+  title: String! # string
+  shortDecription: String! # string
+  longDescription: String! # string
+  priceETH: BigInt! # uint256
+  priceAR: BigInt! # uint256
+  locale: String! # string
+}
+
+type SubcategoryAdded @entity {
+  id: ID!
+  categoryId: BigInt! # uint256
+  subId: BigInt! # uint256
+}
+
+type Transfer @entity {
+  id: ID!
+  _from: Bytes! # address
+  _to: Bytes! # address
+  _value: BigInt! # uint256
+}
+
+type Vote @entity {
+  id: ID!
+  child: BigInt! # uint256
+  parent: BigInt! # uint256
+  value: BigInt! # int256
+}
