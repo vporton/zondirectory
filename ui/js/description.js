@@ -13,11 +13,11 @@ function sellInARToggle(event) {
 const INFINITY = (BigInt(1) << BigInt(256)) - BigInt(1);
 
 function getPriceETH() {
-    return document.getElementById('sellInETH').checked ? INFINITY : document.getElementById('priceInETH').value;
+    return document.getElementById('sellInETH').checked ? INFINITY : web3.utils.toWei(document.getElementById('priceETH').value);
 }
 
 function getPriceAR() {
-    return document.getElementById('sellInAR').checked ? INFINITY : document.getElementById('priceInAR').value;
+    return document.getElementById('sellInAR').checked ? INFINITY : web3.utils.toWei(document.getElementById('priceAR').value);
 }
 
 async function createOrUpdateItem() {
