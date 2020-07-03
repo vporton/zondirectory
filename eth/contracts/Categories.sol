@@ -7,6 +7,10 @@ import './BaseToken.sol';
 
 contract Categories is BaseToken {
 
+    // I get 10% of sales
+    uint256 constant PROGRAMMER_SHARE_MULT = 1;
+    uint256 constant PROGRAMMER_SHARE_DIV = 10;
+
     string public name;
     uint8 public decimals;
     string public symbol;
@@ -27,7 +31,8 @@ contract Categories is BaseToken {
     event ItemAdded(uint256 indexed categoryId, uint indexed itemId);
     event SubcategoryAdded(uint256 indexed categoryId, uint indexed subId);
 
-    mapping (uint => address) itemOwners;
+    address payable programmerAddress;
+    mapping (uint => address payable) itemOwners;
     mapping (uint => mapping (uint => int256)) private votesForCategories; // TODO: accessor
     mapping (uint => uint256) pricesETH;
     mapping (uint => uint256) pricesAR;
@@ -35,16 +40,23 @@ contract Categories is BaseToken {
 
 /// ERC-20 ///
 
-    constructor() public {
+    constructor(address payable _programmerAddress) public {
         name = "Voting";
         decimals = 8;
         symbol = "VOT";
+        programmerAddress = _programmerAddress;
     }
 
     receive() payable external {
         totalSupply = msg.value;
         balances[msg.sender] += msg.value; // 1/1 exchange rate
         emit Transfer(address(this), msg.sender, msg.value);
+    }
+
+    function setOwner(address payable _programmerAddress) external {
+        require(_programmerAddress == msg.sender, "Access denied.");
+        require(_programmerAddress != address(0));
+        programmerAddress = _programmerAddress;
     }
 
 /// Items ///
@@ -82,12 +94,15 @@ contract Categories is BaseToken {
 
     function obtainURLs(uint _itemId) external payable returns (bytes memory) {
         require(pricesETH[_itemId] <= msg.value, "Paid too little.");
+        uint256 myShare = msg.value * PROGRAMMER_SHARE_MULT / PROGRAMMER_SHARE_DIV;
+        programmerAddress.transfer(myShare);
+        itemOwners[_itemId].transfer(msg.value - myShare);
         // TODO: Pay to the owner and 10% to me.
         return downloadURLs[_itemId];
     }
 
     function obtainURLsFree(uint _itemId) external view returns (bytes memory) {
-        require(pricesAR[_itemId] == (1<<256) - 1, "Cannot obtain for free.");
+        require(pricesETH[_itemId] == 0 || pricesAR[_itemId] == (1<<256) - 1, "Cannot obtain for free.");
         return downloadURLs[_itemId];
     }
 
