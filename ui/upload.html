@@ -2,12 +2,13 @@
     <head>
         <meta charset="utf-8"/>
         <title>Upload a File</title>
+        <script src="https://unpkg.com/arweave/bundles/web.bundle.min.js"></script>
+        <script src="js/upload.js"></script>
     </head>
     <body>
         <h1>Upload a File</h1>
-        <p>Item ID (borrow it from item description page): <input type="number" id="item"/></p>
         <p>Files set version: <input type="number" id="version"/></p>
         <p>File format: <input type="text" id="format"/></p>
         <p>File: <input type="file" id="file"/></p>
-        <p><input type="button" value="submit"/></p>
+        <p><input type="button" value="submit" onclick="upload()"/></p>
     </body>
