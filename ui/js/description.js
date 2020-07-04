@@ -101,6 +101,8 @@ $(function() {
     const urlParams = new URLSearchParams(window.location.search);
     const itemId = urlParams.get('id');
     if(itemId) {
+        $('#uploadLink').setAttribute('href', "upload.html?id="+itemId);
+        $('#uploadLink').css('display', 'block');
         const query = `itemUpdateds(first:1, orderBy:itemId, orderDirection:desc, where:{itemId:${itemId}}) {
             title
             priceETH
