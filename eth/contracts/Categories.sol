@@ -1,7 +1,5 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-// TODO: Keep secret keys of ciphered files in Ethereum. you should use native browser crypto apis, aes-256-gcm is pretty much the standard
-
 pragma solidity ^0.6.0;
 //pragma experimental ABIEncoderV2;
 
@@ -21,8 +19,6 @@ contract Categories is BaseToken {
     uint maxVoteId = 0;
 
     event ItemCreated(uint indexed itemId);
-    // WARNING: If priceAR != (1<<256) - 1, then the downloadURLs are not kept secret,
-    // because AR is inherently insecure anyway.
     event SetItemOwner(uint indexed itemId, address payable indexed owner);
     event ItemUpdated(uint indexed itemId,
                       string title,
@@ -31,7 +27,7 @@ contract Categories is BaseToken {
                       uint256 priceAR,
                       string locale,
                       bytes cover);
-    event ItemFilesUpdated(uint indexed itemId, string format, uint version);
+    event ItemFilesUpdated(uint indexed itemId, string format, uint version, bytes chunks);
     event CategoryCreated(uint256 indexed categoryId, string title, string locale);
     event ItemAdded(uint256 indexed categoryId, uint indexed itemId);
     event SubcategoryAdded(uint256 indexed categoryId, uint indexed subId);
@@ -43,7 +39,6 @@ contract Categories is BaseToken {
     mapping (uint => mapping (uint => int256)) private votesForCategories; // TODO: accessor
     mapping (uint => uint256) pricesETH;
     mapping (uint => uint256) pricesAR;
-    mapping (uint => bytes) downloadURLs; // concatenation of 46 bytes hashes, for files split into chunks
 
 /// ERC-20 ///
 
@@ -100,21 +95,14 @@ contract Categories is BaseToken {
 
     function uploadFile(uint _itemId, uint _version, string calldata _format, bytes calldata _chunks) external {
         require(itemOwners[_itemId] == msg.sender, "Attempt to modify other's item.");
-        downloadURLs[_itemId] = _chunks;
-        emit ItemFilesUpdated(_itemId, _format, _version);
+        emit ItemFilesUpdated(_itemId, _format, _version, _chunks);
     }
 
-    function obtainURLs(uint _itemId) external payable returns (bytes memory) {
+    function pay(uint _itemId) external payable returns (bytes memory) {
         require(pricesETH[_itemId] <= msg.value, "Paid too little.");
         uint256 myShare = msg.value * PROGRAMMER_SHARE_MULT / PROGRAMMER_SHARE_DIV;
         programmerAddress.transfer(myShare);
         itemOwners[_itemId].transfer(msg.value - myShare);
-        return downloadURLs[_itemId];
-    }
-
-    function obtainURLsFree(uint _itemId) external view returns (bytes memory) {
-        require(pricesETH[_itemId] == 0 || pricesAR[_itemId] == (1<<256) - 1, "Cannot obtain for free.");
-        return downloadURLs[_itemId];
     }
 
 /// Categories ///
