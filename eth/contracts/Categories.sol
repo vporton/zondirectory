@@ -75,6 +75,7 @@ contract Categories is BaseToken {
         itemOwners[++maxId] = msg.sender;
         pricesETH[maxId] = _priceETH;
         pricesAR[maxId] = _priceAR;
+        emit ItemCreated(maxId);
         emit ItemUpdated(maxId, _title, _description, _priceETH, _priceAR, _locale, _cover);
     }
 
