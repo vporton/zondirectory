@@ -1,5 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
+// TODO: Keep secret keys of ciphered files in Ethereum.
+
 pragma solidity ^0.6.0;
 //pragma experimental ABIEncoderV2;
 
