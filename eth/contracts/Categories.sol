@@ -26,7 +26,7 @@ contract Categories is BaseToken {
                       uint256 priceETH,
                       uint256 priceAR,
                       string locale,
-                      bytes cover);
+                      string license);
     event ItemFilesUpdated(uint indexed itemId, string format, uint version, bytes hash);
     event CategoryCreated(uint256 indexed categoryId, string title, string locale);
     event ItemAdded(uint256 indexed categoryId, uint indexed itemId);
@@ -69,14 +69,14 @@ contract Categories is BaseToken {
                         uint256 _priceETH,
                         uint256 _priceAR,
                         string calldata _locale,
-                        bytes calldata _cover) external
+                        string calldata _license) external
     {
         itemOwners[++maxId] = msg.sender;
         pricesETH[maxId] = _priceETH;
         pricesAR[maxId] = _priceAR;
         emit ItemCreated(maxId);
         emit SetItemOwner(maxId, msg.sender);
-        emit ItemUpdated(maxId, _title, _description, _priceETH, _priceAR, _locale, _cover);
+        emit ItemUpdated(maxId, _title, _description, _priceETH, _priceAR, _locale, _license);
     }
 
     function updateItem(uint _itemId,
@@ -85,12 +85,12 @@ contract Categories is BaseToken {
                         uint256 _priceETH,
                         uint256 _priceAR,
                         string calldata _locale,
-                        bytes calldata _cover) external
+                        string calldata _license) external
     {
         require(itemOwners[_itemId] == msg.sender, "Attempt to modify other's item.");
         pricesETH[_itemId] = _priceETH;
         pricesAR[_itemId] = _priceAR;
-        emit ItemUpdated(_itemId, _title, _description, _priceETH, _priceAR, _locale, _cover);
+        emit ItemUpdated(_itemId, _title, _description, _priceETH, _priceAR, _locale, _license);
     }
 
     function uploadFile(uint _itemId, uint _version, string calldata _format, bytes calldata _hash) external {

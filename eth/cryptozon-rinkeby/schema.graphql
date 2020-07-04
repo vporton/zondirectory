@@ -68,7 +68,7 @@ type ItemUpdated @entity {
   priceETH: BigInt! # uint256
   priceAR: BigInt! # uint256
   locale: String! # string
-  cover: Bytes! # bytes
+  license: String! # bytes
 }
 
 type SetItemOwner @entity {

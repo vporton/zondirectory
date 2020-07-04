@@ -81,7 +81,7 @@ export function handleItemUpdated(event: ItemUpdatedEvent): void {
   entity.priceETH = event.params.priceETH
   entity.priceAR = event.params.priceAR
   entity.locale = event.params.locale
-  entity.cover = event.params.cover
+  entity.license = event.params.license
   entity.save()
 }
 
