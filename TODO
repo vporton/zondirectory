@@ -2,3 +2,5 @@
   cheating).
 
 * Don't use TheGraph when not necessary, use plain RPC.
+
+* PayPal, etc.
