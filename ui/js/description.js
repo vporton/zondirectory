@@ -20,6 +20,24 @@ function getPriceAR() {
     return document.getElementById('sellInAR').checked ? INFINITY : web3.utils.toWei(document.getElementById('priceAR').value);
 }
 
+function setPriceETH(price) {
+    if(price == INFINITY) {
+        document.getElementById('sellInETH').checked = true;
+        document.getElementById('priceETH').disabled = true;
+    } else {
+        document.getElementById('priceETH').value = web3.utils.fromWei(price);
+    }
+}
+
+function setPriceAR(price) {
+    if(price == INFINITY) {
+        document.getElementById('sellInAR').checked = true;
+        document.getElementById('priceAR').disabled = true;
+    } else {
+        document.getElementById('priceAR').value = web3.utils.fromWei(price);
+    }
+}
+
 async function createOrUpdateItem() {
     const urlParams = new URLSearchParams(window.location.search);
     const itemId = urlParams.get('id');
@@ -78,3 +96,20 @@ async function updateItem(itemId) {
     contractInstance.methods.updateItem(itemId, title, description, getPriceETH(), getPriceAR(), locale, cover)
         .send({from: defaultAccount, gas: '1000000'});
 }
+
+$(function() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const itemId = urlParams.get('id');
+    if(itemId) {
+        const query = `itemUpdateds(first:1, orderBy:itemId, orderDirection:desc, where:{itemId:${itemId}}) {
+            title
+            priceETH
+            priceAR
+        }`;
+        let item = (await queryThegraph(query)).data.itemUpdateds[0];
+        document.getElementById('title').value = item.title;
+        setPriceETH(item.priceETH);
+        setPriceAR(item.priceAR);
+    }
+
+})
