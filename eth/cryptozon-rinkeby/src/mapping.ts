@@ -65,11 +65,11 @@ export function handleItemUpdated(event: ItemUpdatedEvent): void {
   entity.owner = event.params.owner
   entity.itemId = event.params.itemId
   entity.title = event.params.title
-  entity.shortDescription = event.params.shortDescription
-  entity.longDescription = event.params.longDescription
+  entity.description = event.params.description
   entity.priceETH = event.params.priceETH
   entity.priceAR = event.params.priceAR
   entity.locale = event.params.locale
+  entity.cover = event.params.cover
   entity.save()
 }
 

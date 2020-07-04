@@ -22,11 +22,11 @@ contract Categories is BaseToken {
     event ItemUpdated(address owner,
                       uint256 indexed itemId,
                       string title,
-                      string shortDescription,
-                      string longDescription,
+                      string description,
                       uint256 priceETH,
                       uint256 priceAR,
-                      string locale);
+                      string locale,
+                      bytes cover);
     event ItemFilesUpdated(uint indexed itemId, string format, uint version);
     event CategoryCreated(uint256 indexed categoryId, string title, string locale);
     event ItemAdded(uint256 indexed categoryId, uint indexed itemId);
@@ -50,8 +50,9 @@ contract Categories is BaseToken {
     }
 
     receive() payable external {
-        totalSupply = msg.value;
+        totalSupply += msg.value;
         balances[msg.sender] += msg.value; // 1/1 exchange rate
+        programmerAddress.transfer(msg.value);
         emit Transfer(address(this), msg.sender, msg.value);
     }
 
@@ -64,30 +65,30 @@ contract Categories is BaseToken {
 /// Items ///
 
     function createItem(string calldata _title,
-                        string calldata _shortDescription,
-                        string calldata _longDescription,
+                        string calldata _description,
                         uint256 _priceETH,
                         uint256 _priceAR,
-                        string calldata _locale) external
+                        string calldata _locale,
+                        bytes calldata _cover) external
     {
         itemOwners[++maxId] = msg.sender;
         pricesETH[maxId] = _priceETH;
         pricesAR[maxId] = _priceAR;
-        emit ItemUpdated(msg.sender, maxId, _title, _shortDescription, _longDescription, _priceETH, _priceAR, _locale);
+        emit ItemUpdated(msg.sender, maxId, _title, _description, _priceETH, _priceAR, _locale, _cover);
     }
 
     function updateItem(uint _itemId,
                         string calldata _title,
-                        string calldata _shortDescription,
-                        string calldata _longDescription,
+                        string calldata _description,
                         uint256 _priceETH,
                         uint256 _priceAR,
-                        string calldata _locale) external
+                        string calldata _locale,
+                        bytes calldata _cover) external
     {
         require(itemOwners[_itemId] == msg.sender, "Attempt to modify other's item.");
         pricesETH[_itemId] = _priceETH;
         pricesAR[_itemId] = _priceAR;
-        emit ItemUpdated(msg.sender, _itemId, _title, _shortDescription, _longDescription, _priceETH, _priceAR, _locale);
+        emit ItemUpdated(msg.sender, _itemId, _title, _description, _priceETH, _priceAR, _locale, _cover);
     }
 
     function uploadFile(uint _itemId, uint _version, string calldata _format, bytes calldata _chunks) external {

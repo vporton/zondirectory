@@ -8,8 +8,7 @@ type _Schema_
         entity: "ItemUpdated",
         fields: [
           { name: "title" },
-          { name: "shortDescription" },
-          { name: "longDescription" },
+          { name: "description" },
         ]
       }
     ]
@@ -60,11 +59,11 @@ type ItemUpdated @entity {
   owner: Bytes! # address
   itemId: BigInt! # uint256
   title: String! # string
-  shortDescription: String! # string
-  longDescription: String! # string
+  description: String! # string
   priceETH: BigInt! # uint256
   priceAR: BigInt! # uint256
   locale: String! # string
+  cover: Bytes! # bytes
 }
 
 type SubcategoryAdded @entity {
