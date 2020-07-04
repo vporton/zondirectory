@@ -1,0 +1,27 @@
+<html>
+    <head>
+        <meta charset="utf-8"/>
+        <title>List of Items to Buy or Download</title>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/web3/1.2.9/web3.min.js"></script>
+        <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+        <!--script src="artifacts/addresses.js"></script-->
+        <script src="js/common.js"></script>
+        <script src="js/list.js"></script>
+        <style>
+            table { border-collapse: collapse; }
+            tr, th { border: 1px solid gray }
+        </style>
+    </head>
+    <body>
+        <h1>List of Items to Buy or Download</h1>
+        <table>
+            <thead>
+                <tr>
+                    <th>Title</th>
+                    <th>Price in ETH</th>
+                    <th>Price in AR</th>
+                </tr>
+            </thead>
+            <tbody id="theTable"></tbody>
+        </table>
+    </body>
