@@ -6,11 +6,8 @@ function myBooks() {
         itemId    
     }
 }`;
-            query = query.replace(/\\/g, '\\').replace(/"/g, '\\"').replace(/\n/g, "\\n");
-            $.post("https://api.thegraph.com/subgraphs/name/vporton/cryptozonrinkeby3", `{ "query": "${query}" }`, function(data) {
-                alert(JSON.stringify(data));
-            });
-        });
+    queryThegraph(query, (data) => alert(JSON.stringify(data)));
+    });
 }
 
 $(myBooks);

@@ -1,3 +1,12 @@
+const THEGRAPH_URL = "https://api.thegraph.com/subgraphs/name/vporton/cryptozonrinkeby3";
+
+function queryThegraph(query, callback) {
+    query = query.replace(/\\/g, '\\').replace(/"/g, '\\"').replace(/\n/g, "\\n");
+    $.post(THEGRAPH_URL, `{ "query": "${query}" }`, function(data) {
+        callback(data);
+    });
+}
+
 const web3 = new Web3(window.web3.currentProvider);
 
 let defaultAccount;
