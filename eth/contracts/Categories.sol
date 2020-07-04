@@ -35,7 +35,7 @@ contract Categories is BaseToken {
     event Vote(uint voteId, uint child, uint parent, int256 value);
 
     address payable programmerAddress;
-    mapping (uint => address payable) itemOwners;
+    mapping (uint => address payable) itemOwners; // TODO: update
     mapping (uint => mapping (uint => int256)) private votesForCategories; // TODO: accessor
     mapping (uint => uint256) pricesETH;
     mapping (uint => uint256) pricesAR;
