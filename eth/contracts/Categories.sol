@@ -93,9 +93,9 @@ contract Categories is BaseToken {
         emit ItemUpdated(_itemId, _title, _description, _priceETH, _priceAR, _locale, _cover);
     }
 
-    function uploadFile(uint _itemId, uint _version, string calldata _format, bytes calldata _chunks) external {
+    function uploadFile(uint _itemId, uint _version, string calldata _format, bytes calldata _hash) external {
         require(itemOwners[_itemId] == msg.sender, "Attempt to modify other's item.");
-        emit ItemFilesUpdated(_itemId, _format, _version, _chunks);
+        emit ItemFilesUpdated(_itemId, _format, _version, _hash);
     }
 
     function pay(uint _itemId) external payable returns (bytes memory) {
