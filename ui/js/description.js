@@ -53,7 +53,7 @@ async function createItem() {
     const locale = document.getElementById('locale').value;
     const title = document.getElementById('title').value;
     const description = document.getElementById('description').value;
-    const cover = []; // TODO
+    const license = document.getElementById('license').value;
 
     let transactionHash = null;
     let events = [];
@@ -77,7 +77,7 @@ async function createItem() {
 
     // contractInstance.events.ItemUpdated({fromBlock:'pending'}, onEvent); // does not call the callback
 
-    contractInstance.methods.createItem(title, description, getPriceETH(), getPriceAR(), locale, cover)
+    contractInstance.methods.createItem(title, description, getPriceETH(), getPriceAR(), locale, license)
         .send({from: defaultAccount, gas: '1000000'})
         .on('transactionHash', async function(receiptHash) {
             transactionHash = receiptHash;
@@ -91,9 +91,9 @@ async function updateItem(itemId) {
     const locale = document.getElementById('locale').value;
     const title = document.getElementById('title').value;
     const description = document.getElementById('description').value;
-    const cover = []; // TODO
+    const license = document.getElementById('license').value;
 
-    contractInstance.methods.updateItem(itemId, title, description, getPriceETH(), getPriceAR(), locale, cover)
+    contractInstance.methods.updateItem(itemId, title, description, getPriceETH(), getPriceAR(), locale, license)
         .send({from: defaultAccount, gas: '1000000'});
 }
 
