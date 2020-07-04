@@ -18,5 +18,4 @@ async function upload() {
         alert("Failed ArWeave transaction.");
         return;
     }
-    console.log(response);
 }

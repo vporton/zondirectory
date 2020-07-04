@@ -1,6 +1,6 @@
 async function myBooks() {
     await defaultAccountPromise();
-    let query = `{
+        let query = `{
     setItemOwners(orderBy:id, orderDirection:desc, where:{owner:"${defaultAccount}"}) {
         itemId    
     }
