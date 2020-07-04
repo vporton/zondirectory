@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-// TODO: Keep secret keys of ciphered files in Ethereum.
+// TODO: Keep secret keys of ciphered files in Ethereum. you should use native browser crypto apis, aes-256-gcm is pretty much the standard
 
 pragma solidity ^0.6.0;
 //pragma experimental ABIEncoderV2;
