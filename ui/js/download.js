@@ -6,13 +6,13 @@ function formatPrice(price) {
     return price == INFINITY ? "-" : web3.utils.fromWei(price);
 }
 
-function showFiles(withLinks) {
-    const query = `itemFilesUpdateds(first:1, orderBy:version, orderDirection:desc, where:{itemId:${itemId}}) {
+async function showFiles(withLinks) {
+    let query = `itemFilesUpdateds(first:1, orderBy:version, orderDirection:desc, where:{itemId:${itemId}}) {
     version
 }`;
     let version = (await queryThegraph(query)).data.itemFilesUpdateds[0].version;
     const fileFields = withLinks ? 'format hash' : 'format';
-    const query = `itemFilesUpdateds(orderBy:id, orderDirection:asc, where:{itemId:${itemId}, version:${version}}) {
+    query = `itemFilesUpdateds(orderBy:id, orderDirection:asc, where:{itemId:${itemId}, version:${version}}) {
     ${fileFields}
 }`;
     const files = (await queryThegraph(query)).data.itemFilesUpdateds;
