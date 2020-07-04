@@ -35,7 +35,7 @@ dataSources:
           handler: handleItemAdded
         - event: ItemCreated(indexed uint256)
           handler: handleItemCreated
-        - event: ItemFilesUpdated(indexed uint256,string,uint256)
+        - event: ItemFilesUpdated(indexed uint256,string,uint256,bytes)
           handler: handleItemFilesUpdated
         - event: ItemUpdated(indexed uint256,string,string,uint256,uint256,string,bytes)
           handler: handleItemUpdated

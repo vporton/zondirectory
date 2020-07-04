@@ -67,6 +67,7 @@ export function handleItemFilesUpdated(event: ItemFilesUpdatedEvent): void {
   entity.itemId = event.params.itemId
   entity.format = event.params.format
   entity.version = event.params.version
+  entity.hash = event.params.hash
   entity.save()
 }
 

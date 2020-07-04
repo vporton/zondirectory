@@ -57,6 +57,7 @@ type ItemFilesUpdated @entity {
   itemId: BigInt! # uint256
   format: String! # string
   version: BigInt! # uint256
+  hash: Bytes! # bytes[46]
 }
 
 type ItemUpdated @entity {
