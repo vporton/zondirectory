@@ -37,6 +37,7 @@ contract Categories is BaseToken {
 
     address payable programmerAddress;
     mapping (uint => address payable) itemOwners; // TODO: update
+    mapping (address => mapping (uint => mapping (uint => int256))) private votes; // TODO: accessor
     mapping (uint => mapping (uint => int256)) private votesForCategories; // TODO: accessor
     mapping (uint => uint256) pricesETH;
     mapping (uint => uint256) pricesAR;
@@ -130,9 +131,12 @@ contract Categories is BaseToken {
 
 /// Voting ///
 
+    // FIXME: Check!
+    // TODO: Partial votes.
     function voteForCategory(uint _child, uint _parent, bool _yes) external {
         int256 _value = _yes ? int256(balances[msg.sender]) : -int256(balances[msg.sender]);
-        int256 _newValue = votesForCategories[_child][_parent] + -votesForCategories[_child][_parent] + _value; // reclaim the previous vote
+        int256 _newValue = votesForCategories[_child][_parent] - votes[msg.sender][_child][_parent] + _value; // reclaim the previous vote
+        votes[msg.sender][_child][_parent] = _value;
         votesForCategories[_child][_parent] = _newValue;
         emit Vote(_child, _parent, _newValue);
     }
