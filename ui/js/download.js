@@ -2,6 +2,9 @@
 
 const INFINITY = (BigInt(1) << BigInt(256)) - BigInt(1);
 
+const urlParams = new URLSearchParams(window.location.search);
+const itemId = urlParams.get('id');
+
 function formatPrice(price) {
     return price == INFINITY ? "-" : web3.utils.fromWei(price);
 }
@@ -24,9 +27,37 @@ async function showFiles(withLinks) {
     }
 }
 
+function askPrice(defaultPrice) {
+    let price = defaultPrice;
+    do {
+        price = prompt("Please pay more than the author requested, be benevolent!", price);
+        if(!price) return null;
+    } while(price < defaultPrice);
+    return price;
+}
+
+function showFilesWithMessage() {
+    showFiles(true);
+    alert("Download the files from this page.");
+}
+
+async function payETH() {
+    const price = askPrice(document.getElementById('priceETH').textContent);
+    if(!price) return;
+    const contractInstance = new web3.eth.Contract(await categoriesJsonInterface(), categoriesContractAddress);
+    await defaultAccountPromise();
+    contractInstance.methods.pay(itemId).send({from: defaultAccount, gas: '1000000'})
+        .then(() => showFilesWithMessage())
+        .catch(() => alert("You tried to pay below the price or payment failure!"));
+}
+
+async function payAR() {
+    const price = askPrice(document.getElementById('priceAR').textContent);
+    if(!price) return;
+
+}
+
 $(async function() {
-    const urlParams = new URLSearchParams(window.location.search);
-    const itemId = urlParams.get('id');
     if(itemId) {
         const query = `itemUpdateds(first:1, orderBy:id, orderDirection:desc, where:{itemId:${itemId}}) {
     title
