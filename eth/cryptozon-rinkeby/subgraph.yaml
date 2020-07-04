@@ -16,6 +16,7 @@ dataSources:
         - Approval
         - CategoryCreated
         - ItemAdded
+        - ItemCoverUpdated
         - ItemCreated
         - ItemFilesUpdated
         - ItemUpdated
@@ -33,6 +34,8 @@ dataSources:
           handler: handleCategoryCreated
         - event: ItemAdded(indexed uint256,indexed uint256)
           handler: handleItemAdded
+        - event: ItemCoverUpdated(indexed uint256,bytes)
+          handler: handleItemCoverUpdated
         - event: ItemCreated(indexed uint256)
           handler: handleItemCreated
         - event: ItemFilesUpdated(indexed uint256,string,uint256,bytes)

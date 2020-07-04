@@ -27,6 +27,7 @@ contract Categories is BaseToken {
                       uint256 priceAR,
                       string locale,
                       string license);
+    event ItemCoverUpdated(uint indexed itemId, bytes cover);
     event ItemFilesUpdated(uint indexed itemId, string format, uint version, bytes hash);
     event CategoryCreated(uint256 indexed categoryId, string title, string locale);
     event ItemAdded(uint256 indexed categoryId, uint indexed itemId);
@@ -91,6 +92,10 @@ contract Categories is BaseToken {
         pricesETH[_itemId] = _priceETH;
         pricesAR[_itemId] = _priceAR;
         emit ItemUpdated(_itemId, _title, _description, _priceETH, _priceAR, _locale, _license);
+    }
+
+    function updateItemCover(uint _itemId, bytes calldata _cover) external {
+        emit ItemCoverUpdated(_itemId, _cover);
     }
 
     function uploadFile(uint _itemId, uint _version, string calldata _format, bytes calldata _hash) external {

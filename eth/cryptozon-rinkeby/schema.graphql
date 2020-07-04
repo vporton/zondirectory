@@ -47,6 +47,12 @@ type ItemAdded @entity {
   itemId: BigInt! # uint256
 }
 
+type ItemCoverUpdated @entity {
+  id: ID!
+  itemId: BigInt! # uint256
+  cover: Bytes! # bytes
+}
+
 type ItemCreated @entity {
   id: ID!
   itemId: BigInt! # uint256

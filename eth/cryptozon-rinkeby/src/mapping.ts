@@ -3,6 +3,7 @@ import {
   Approval as ApprovalEvent,
   CategoryCreated as CategoryCreatedEvent,
   ItemAdded as ItemAddedEvent,
+  ItemCoverUpdated as ItemCoverUpdatedEvent,
   ItemCreated as ItemCreatedEvent,
   ItemFilesUpdated as ItemFilesUpdatedEvent,
   ItemUpdated as ItemUpdatedEvent,
@@ -15,6 +16,7 @@ import {
   Approval,
   CategoryCreated,
   ItemAdded,
+  ItemCoverUpdated,
   ItemCreated,
   ItemFilesUpdated,
   ItemUpdated,
@@ -49,6 +51,15 @@ export function handleItemAdded(event: ItemAddedEvent): void {
   )
   entity.categoryId = event.params.categoryId
   entity.itemId = event.params.itemId
+  entity.save()
+}
+
+export function handleCoverItemUpdated(event: ItemCoverUpdatedEvent): void {
+  let entity = new ItemCoverUpdated(
+    event.transaction.index.toHex() + "-" + event.logIndex.toString() + "-" + event.transaction.hash.toHex()
+  )
+  entity.itemId = event.params.itemId
+  entity.cover = event.params.cover
   entity.save()
 }
 
