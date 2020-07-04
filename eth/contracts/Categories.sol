@@ -18,10 +18,10 @@ contract Categories is BaseToken {
     uint maxId = 0;
     uint maxVoteId = 0;
 
+    event ItemCreated(uint indexed itemId);
     // WARNING: If priceAR != (1<<256) - 1, then the downloadURLs are not kept secret,
     // because AR is inherently insecure anyway.
-    event ItemUpdated(address owner,
-                      uint256 indexed itemId,
+    event ItemUpdated(uint indexed itemId,
                       string title,
                       string description,
                       uint256 priceETH,
@@ -75,7 +75,7 @@ contract Categories is BaseToken {
         itemOwners[++maxId] = msg.sender;
         pricesETH[maxId] = _priceETH;
         pricesAR[maxId] = _priceAR;
-        emit ItemUpdated(msg.sender, maxId, _title, _description, _priceETH, _priceAR, _locale, _cover);
+        emit ItemUpdated(maxId, _title, _description, _priceETH, _priceAR, _locale, _cover);
     }
 
     function updateItem(uint _itemId,
@@ -89,7 +89,7 @@ contract Categories is BaseToken {
         require(itemOwners[_itemId] == msg.sender, "Attempt to modify other's item.");
         pricesETH[_itemId] = _priceETH;
         pricesAR[_itemId] = _priceAR;
-        emit ItemUpdated(msg.sender, _itemId, _title, _description, _priceETH, _priceAR, _locale, _cover);
+        emit ItemUpdated(_itemId, _title, _description, _priceETH, _priceAR, _locale, _cover);
     }
 
     function uploadFile(uint _itemId, uint _version, string calldata _format, bytes calldata _chunks) external {

@@ -3,6 +3,7 @@ import {
   Approval as ApprovalEvent,
   CategoryCreated as CategoryCreatedEvent,
   ItemAdded as ItemAddedEvent,
+  ItemCreated as ItemCreatedEvent,
   ItemFilesUpdated as ItemFilesUpdatedEvent,
   ItemUpdated as ItemUpdatedEvent,
   SubcategoryAdded as SubcategoryAddedEvent,
@@ -13,6 +14,7 @@ import {
   Approval,
   CategoryCreated,
   ItemAdded,
+  ItemCreated,
   ItemFilesUpdated,
   ItemUpdated,
   SubcategoryAdded,
@@ -24,7 +26,6 @@ export function handleApproval(event: ApprovalEvent): void {
   let entity = new Approval(
     event.transaction.index.toHex() + "-" + event.logIndex.toString() + "-" + event.transaction.hash.toHex()
   )
-  entity._owner = event.params._owner
   entity._spender = event.params._spender
   entity._value = event.params._value
   entity.save()
@@ -49,6 +50,14 @@ export function handleItemAdded(event: ItemAddedEvent): void {
   entity.save()
 }
 
+export function handleItemCreated(event: ItemAddedEvent): void {
+  let entity = new ItemCreated(
+    event.transaction.index.toHex() + "-" + event.logIndex.toString() + "-" + event.transaction.hash.toHex()
+  )
+  entity.itemId = event.params.itemId
+  entity.save()
+}
+
 export function handleItemFilesUpdated(event: ItemFilesUpdatedEvent): void {
   let entity = new ItemFilesUpdated(
     event.transaction.index.toHex() + "-" + event.logIndex.toString() + "-" + event.transaction.hash.toHex()
@@ -63,7 +72,6 @@ export function handleItemUpdated(event: ItemUpdatedEvent): void {
   let entity = new ItemUpdated(
     event.transaction.index.toHex() + "-" + event.logIndex.toString() + "-" + event.transaction.hash.toHex()
   )
-  entity.owner = event.params.owner
   entity.itemId = event.params.itemId
   entity.title = event.params.title
   entity.description = event.params.description

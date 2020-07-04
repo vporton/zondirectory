@@ -47,6 +47,11 @@ type ItemAdded @entity {
   itemId: BigInt! # uint256
 }
 
+type ItemCreated @entity {
+  id: ID!
+  itemId: BigInt! # uint256
+}
+
 type ItemFilesUpdated @entity {
   id: ID!
   itemId: BigInt! # uint256
@@ -56,7 +61,6 @@ type ItemFilesUpdated @entity {
 
 type ItemUpdated @entity {
   id: ID!
-  owner: Bytes! # address
   itemId: BigInt! # uint256
   title: String! # string
   description: String! # string
