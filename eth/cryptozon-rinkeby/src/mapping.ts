@@ -1,3 +1,4 @@
+import { BigInt } from "@graphprotocol/graph-ts";
 import {
   Approval as ApprovalEvent,
   CategoryCreated as CategoryCreatedEvent,
@@ -21,7 +22,7 @@ import {
 
 export function handleApproval(event: ApprovalEvent): void {
   let entity = new Approval(
-    event.transaction.hash.toHex() + "-" + event.logIndex.toString()
+    event.transaction.index.toHex() + "-" + event.logIndex.toString() + "-" + event.transaction.hash.toHex()
   )
   entity._owner = event.params._owner
   entity._spender = event.params._spender
@@ -31,7 +32,7 @@ export function handleApproval(event: ApprovalEvent): void {
 
 export function handleCategoryCreated(event: CategoryCreatedEvent): void {
   let entity = new CategoryCreated(
-    event.transaction.hash.toHex() + "-" + event.logIndex.toString()
+    event.transaction.index.toHex() + "-" + event.logIndex.toString() + "-" + event.transaction.hash.toHex()
   )
   entity.categoryId = event.params.categoryId
   entity.title = event.params.title
@@ -41,7 +42,7 @@ export function handleCategoryCreated(event: CategoryCreatedEvent): void {
 
 export function handleItemAdded(event: ItemAddedEvent): void {
   let entity = new ItemAdded(
-    event.transaction.hash.toHex() + "-" + event.logIndex.toString()
+    event.transaction.index.toHex() + "-" + event.logIndex.toString() + "-" + event.transaction.hash.toHex()
   )
   entity.categoryId = event.params.categoryId
   entity.itemId = event.params.itemId
@@ -50,7 +51,7 @@ export function handleItemAdded(event: ItemAddedEvent): void {
 
 export function handleItemFilesUpdated(event: ItemFilesUpdatedEvent): void {
   let entity = new ItemFilesUpdated(
-    event.transaction.hash.toHex() + "-" + event.logIndex.toString()
+    event.transaction.index.toHex() + "-" + event.logIndex.toString() + "-" + event.transaction.hash.toHex()
   )
   entity.itemId = event.params.itemId
   entity.format = event.params.format
@@ -60,7 +61,7 @@ export function handleItemFilesUpdated(event: ItemFilesUpdatedEvent): void {
 
 export function handleItemUpdated(event: ItemUpdatedEvent): void {
   let entity = new ItemUpdated(
-    event.transaction.hash.toHex() + "-" + event.logIndex.toString()
+    event.transaction.index.toHex() + "-" + event.logIndex.toString() + "-" + event.transaction.hash.toHex()
   )
   entity.owner = event.params.owner
   entity.itemId = event.params.itemId
@@ -75,7 +76,7 @@ export function handleItemUpdated(event: ItemUpdatedEvent): void {
 
 export function handleSubcategoryAdded(event: SubcategoryAddedEvent): void {
   let entity = new SubcategoryAdded(
-    event.transaction.hash.toHex() + "-" + event.logIndex.toString()
+    event.transaction.index.toHex() + "-" + event.logIndex.toString() + "-" + event.transaction.hash.toHex()
   )
   entity.categoryId = event.params.categoryId
   entity.subId = event.params.subId
@@ -84,7 +85,7 @@ export function handleSubcategoryAdded(event: SubcategoryAddedEvent): void {
 
 export function handleTransfer(event: TransferEvent): void {
   let entity = new Transfer(
-    event.transaction.hash.toHex() + "-" + event.logIndex.toString()
+    event.transaction.index.toHex() + "-" + event.logIndex.toString() + "-" + event.transaction.hash.toHex()
   )
   entity._from = event.params._from
   entity._to = event.params._to
@@ -94,7 +95,7 @@ export function handleTransfer(event: TransferEvent): void {
 
 export function handleVote(event: VoteEvent): void {
   let entity = new Vote(
-    event.transaction.hash.toHex() + "-" + event.logIndex.toString()
+    event.transaction.index.toHex() + "-" + event.logIndex.toString() + "-" + event.transaction.hash.toHex()
   )
   entity.voteId = event.params.voteId
   entity.child = event.params.child
