@@ -1,5 +1,9 @@
 const THEGRAPH_URL = "https://api.thegraph.com/subgraphs/name/vporton/cryptozonrinkeby3";
 
+function safe_tags(str) {
+    return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
 function queryThegraph(query) {
     query = query.replace(/\\/g, '\\').replace(/"/g, '\\"').replace(/\n/g, "\\n");
     return new Promise((resolve, error) => {

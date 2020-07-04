@@ -15,9 +15,15 @@ async function myBooks() {
             priceAR
         }`;
     }
+    if(!itemIds.length) return;
     query = "{\n" + itemIds.map(itemId => itemReq(itemId)).join("\n") + "\n}";
     let items = (await queryThegraph(query)).data.itemUpdateds;
-    console.log(items)
+    for(let i in items) {
+        const item = items[i];
+        const link = "update.html?id=" + item.itemId;
+        const row = `<tr><td><a href="${link}">${safe_tags(item.title)}</a></td><td>${item.priceETH}</td><td>${item.priceAR}</td></tr>`;
+        $('#theTable').append(row);
+    }
 }
 
 $(myBooks);
