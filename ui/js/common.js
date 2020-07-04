@@ -1,9 +1,11 @@
 const THEGRAPH_URL = "https://api.thegraph.com/subgraphs/name/vporton/cryptozonrinkeby3";
 
-function queryThegraph(query, callback) {
+function queryThegraph(query) {
     query = query.replace(/\\/g, '\\').replace(/"/g, '\\"').replace(/\n/g, "\\n");
-    $.post(THEGRAPH_URL, `{ "query": "${query}" }`, function(data) {
-        callback(data);
+    return new Promise((resolve, error) => {
+        $.post(THEGRAPH_URL, `{ "query": "${query}" }`, function(data) {
+            resolve(data);
+        });
     });
 }
 

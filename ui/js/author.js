@@ -6,8 +6,10 @@ function myBooks() {
         itemId    
     }
 }`;
-    queryThegraph(query, (data) => alert(JSON.stringify(data)));
-    });
+            queryThegraph(query)
+                .then((data) => alert(JSON.stringify(data)));
+            //const itemOwners = 
+        });
 }
 
 $(myBooks);
