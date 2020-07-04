@@ -73,7 +73,7 @@ type ItemUpdated @entity {
 type SetItemOwner @entity {
   id: ID!
   itemId: BigInt! # uint256
-  address: Bytes! # address
+  owner: Bytes! # address
 }
 
 type SubcategoryAdded @entity {
