@@ -10,6 +10,7 @@ generated/
 artifacts/
 cache/
 deployments/
+ui/js/SmartWeave/
 
 # C extensions
 *.so
