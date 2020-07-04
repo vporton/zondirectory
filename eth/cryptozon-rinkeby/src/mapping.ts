@@ -6,6 +6,7 @@ import {
   ItemCreated as ItemCreatedEvent,
   ItemFilesUpdated as ItemFilesUpdatedEvent,
   ItemUpdated as ItemUpdatedEvent,
+  SetItemOwner as SetItemOwnerEvent,
   SubcategoryAdded as SubcategoryAddedEvent,
   Transfer as TransferEvent,
   Vote as VoteEvent
@@ -17,6 +18,7 @@ import {
   ItemCreated,
   ItemFilesUpdated,
   ItemUpdated,
+  SetItemOwner,
   SubcategoryAdded,
   Transfer,
   Vote
@@ -79,6 +81,15 @@ export function handleItemUpdated(event: ItemUpdatedEvent): void {
   entity.priceAR = event.params.priceAR
   entity.locale = event.params.locale
   entity.cover = event.params.cover
+  entity.save()
+}
+
+export function handleSetItemOwner(event: SetItemOwnerEvent): void {
+  let entity = new SetItemOwner(
+    event.transaction.index.toHex() + "-" + event.logIndex.toString() + "-" + event.transaction.hash.toHex()
+  )
+  entity.itemId = event.params.itemId
+  entity.owner = event.params.owner
   entity.save()
 }
 

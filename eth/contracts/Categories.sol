@@ -21,6 +21,7 @@ contract Categories is BaseToken {
     event ItemCreated(uint indexed itemId);
     // WARNING: If priceAR != (1<<256) - 1, then the downloadURLs are not kept secret,
     // because AR is inherently insecure anyway.
+    event SetItemOwner(uint indexed itemId, address payable indexed owner);
     event ItemUpdated(uint indexed itemId,
                       string title,
                       string description,
@@ -76,6 +77,7 @@ contract Categories is BaseToken {
         pricesETH[maxId] = _priceETH;
         pricesAR[maxId] = _priceAR;
         emit ItemCreated(maxId);
+        emit SetItemOwner(maxId, msg.sender);
         emit ItemUpdated(maxId, _title, _description, _priceETH, _priceAR, _locale, _cover);
     }
 

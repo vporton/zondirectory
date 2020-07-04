@@ -70,6 +70,12 @@ type ItemUpdated @entity {
   cover: Bytes! # bytes
 }
 
+type SetItemOwner @entity {
+  id: ID!
+  itemId: BigInt! # uint256
+  address: Bytes! # address
+}
+
 type SubcategoryAdded @entity {
   id: ID!
   categoryId: BigInt! # uint256

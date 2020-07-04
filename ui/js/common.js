@@ -2,7 +2,8 @@ const web3 = new Web3(window.web3.currentProvider);
 
 let defaultAccount;
 // web3.eth.defaultAccount = web3.eth.accounts[0];
-web3.eth.getAccounts().then( function (result) { return defaultAccount = result[0] });
+function defaultAccountPromise() { return web3.eth.getAccounts(); }
+defaultAccountPromise().then( function (result) { return defaultAccount = result[0] });
 
 function categoriesJsonInterface() {
     return new Promise((resolve) => {
