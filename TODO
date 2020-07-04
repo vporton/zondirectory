@@ -1,2 +1,4 @@
 * PST in Ethereum (base random on the payee address to eliminate possible
   cheating).
+
+* Don't use TheGraph when not necessary, use plain RPC.
