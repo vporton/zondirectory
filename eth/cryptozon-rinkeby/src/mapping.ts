@@ -97,7 +97,6 @@ export function handleVote(event: VoteEvent): void {
   let entity = new Vote(
     event.transaction.index.toHex() + "-" + event.logIndex.toString() + "-" + event.transaction.hash.toHex()
   )
-  entity.voteId = event.params.voteId
   entity.child = event.params.child
   entity.parent = event.params.parent
   entity.value = event.params.value

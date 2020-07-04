@@ -81,7 +81,6 @@ type Transfer @entity {
 
 type Vote @entity {
   id: ID!
-  voteId: BigInt! # uint256
   child: BigInt! # uint256
   parent: BigInt! # uint256
   value: BigInt! # int256

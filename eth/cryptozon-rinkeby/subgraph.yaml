@@ -39,6 +39,6 @@ dataSources:
           handler: handleSubcategoryAdded
         - event: Transfer(indexed address,indexed address,uint256)
           handler: handleTransfer
-        - event: Vote(uint256,uint256,uint256,int256)
+        - event: Vote(uint256,uint256,int256)
           handler: handleVote
       file: ./src/mapping.ts
