@@ -18,6 +18,7 @@ contract Categories is BaseToken {
     uint maxId = 0;
     uint maxVoteId = 0;
 
+    event SetARWallet(address payable indexed owner, uint256 indexed arWallet);
     event ItemCreated(uint indexed itemId);
     event SetItemOwner(uint indexed itemId, address payable indexed owner);
     event ItemUpdated(uint indexed itemId,
@@ -61,6 +62,12 @@ contract Categories is BaseToken {
         require(_programmerAddress == msg.sender, "Access denied.");
         require(_programmerAddress != address(0), "Zero address.");
         programmerAddress = _programmerAddress;
+    }
+
+/// Wallets ///
+
+    function setARWallet(address payable _owner, uint256 _arWallet) external {
+        emit SetARWallet(_owner, _arWallet);
     }
 
 /// Items ///

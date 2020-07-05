@@ -7,6 +7,7 @@ import {
   ItemCreated as ItemCreatedEvent,
   ItemFilesUpdated as ItemFilesUpdatedEvent,
   ItemUpdated as ItemUpdatedEvent,
+  SetARWallet as SetARWalletEvent,
   SetItemOwner as SetItemOwnerEvent,
   SubcategoryAdded as SubcategoryAddedEvent,
   Transfer as TransferEvent,
@@ -20,6 +21,7 @@ import {
   ItemCreated,
   ItemFilesUpdated,
   ItemUpdated,
+  SetARWallet,
   SetItemOwner,
   SubcategoryAdded,
   Transfer,
@@ -93,6 +95,15 @@ export function handleItemUpdated(event: ItemUpdatedEvent): void {
   entity.priceAR = event.params.priceAR
   entity.locale = event.params.locale
   entity.license = event.params.license
+  entity.save()
+}
+
+export function handleSetARWallet(event: SetARWalletEvent): void {
+  let entity = new SetARWallet(
+    event.transaction.index.toHex() + "-" + event.logIndex.toString() + "-" + event.transaction.hash.toHex()
+  )
+  entity.owner = event.params.owner
+  entity.arWallet = event.params.arWallet
   entity.save()
 }
 

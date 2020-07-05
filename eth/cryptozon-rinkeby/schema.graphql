@@ -77,6 +77,12 @@ type ItemUpdated @entity {
   license: String! # bytes
 }
 
+type SetARWallet @entity {
+  id: ID!
+  owner: Bytes! # address
+  arWallet: BigInt! # uint256
+}
+
 type SetItemOwner @entity {
   id: ID!
   itemId: BigInt! # uint256
