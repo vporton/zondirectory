@@ -5,7 +5,9 @@ pragma solidity ^0.6.0;
 
 import './BaseToken.sol';
 
-contract Categories is BaseToken {
+// TODO: Encode wallets and hashes as uint256
+
+contract Files is BaseToken {
 
     // I get 10% of sales
     uint256 constant PROGRAMMER_SHARE_MULT = 1;
@@ -18,7 +20,7 @@ contract Categories is BaseToken {
     uint maxId = 0;
     uint maxVoteId = 0;
 
-    event SetARWallet(address payable indexed owner, uint256 indexed arWallet);
+    event SetARWallet(address payable indexed owner, string arWallet);
     event ItemCreated(uint indexed itemId);
     event SetItemOwner(uint indexed itemId, address payable indexed owner);
     event ItemUpdated(uint indexed itemId,
@@ -66,7 +68,7 @@ contract Categories is BaseToken {
 
 /// Wallets ///
 
-    function setARWallet(address payable _owner, uint256 _arWallet) external {
+    function setARWallet(address payable _owner, string calldata _arWallet) external {
         emit SetARWallet(_owner, _arWallet);
     }
 

@@ -80,7 +80,7 @@ type ItemUpdated @entity {
 type SetARWallet @entity {
   id: ID!
   owner: Bytes! # address
-  arWallet: BigInt! # uint256
+  arWallet: String! # string
 }
 
 type SetItemOwner @entity {

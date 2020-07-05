@@ -86,7 +86,7 @@ async function payAR() {
         }
         if(authorRoyalty) {
             const holder = smartweave.selectWeightedPstHolder(contractState.balances);
-            const tx = await arweave.transactions.create({ target: atob(arWallet), quantity: authorRoyalty }, key);
+            const tx = await arweave.transactions.create({ target: atob(arWallet), quantity: authorRoyalty }, key); // FIXME: URL encoded
             await arweave.transaction.sign(tx, key);
             const response = await arweave.transactions.post(tx);
             if(response.status != 200) paymentFailure = true;

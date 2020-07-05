@@ -1,4 +1,4 @@
-async function myBooks() {
+async function onLoad() {
     await defaultAccountPromise();
         let query = `{
     setItemOwners(orderBy:id, orderDirection:desc, where:{owner:"${defaultAccount}"}) {
@@ -26,4 +26,19 @@ async function myBooks() {
     }
 }
 
-$(myBooks);
+async function setARWallet() {
+    const smartweave = require('smartweave');
+    const arweave = Arweave.init();
+    let key = await arweave.wallets.generate();
+    arweave.wallets.jwkToAddress(key).then(async address => {
+        address = prompt("Enter your AR wallet", address);
+        const contractInstance = new web3.eth.Contract(await filesJsonInterface(), filesContractAddress);
+        contractInstance.methods.setARWallet(defaultAccount, new Blob(address.filter(c=>c.charCodeAt(0))))
+            .send({from: defaultAccount, gas: '1000000'})
+            .then(function(receiptHash) {
+                document.getElementById('arWallet').textContent = address;
+            });
+    });
+}
+
+$(onLoad);
