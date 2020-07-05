@@ -2,7 +2,7 @@ async function onLoad() {
     await defaultAccountPromise();
     // TODO: pagination
     query = `{
-        itemCreateds(orderBy:id, orderDirection:desc) {
+        itemCreateds {
             itemId    
         }
     }`;
@@ -20,11 +20,12 @@ async function onLoad() {
     query = "{\n" + itemIdsFlat.map(i => subquery(i)).join("\n") + "\n}";
     let items = (await queryThegraph(query)).data;
     const arweave = Arweave.init();
+    console.log(items)
     for(let i in items) {
         const item = items[i][0];
         const link = "download.html?id=" + item.itemId;
         const row = `<tr><td><a href="${link}">${safe_tags(item.title)}</a></td><td>${web3.utils.fromWei(item.priceETH)}</td><td>${arweave.ar.winstonToAr(item.priceAR)}</td></tr>`;
-        $('#theTable').append(row);
+        $('#theTable').prepend(row);
     }
 }
 
