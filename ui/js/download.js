@@ -75,19 +75,20 @@ async function payAR() {
         }
 
         // FIXME: check that we have enough balance before trying to pay
+        // FIrst pay to me then to the author, because in the case of a failure the buyer loses less this way.
         let paymentFailure = false;
-        if(authorRoyalty) {
-            const holder = smartweave.selectWeightedPstHolder(contractState.balances);
-            const tx = await arweave.transactions.create({ target: atob(arWallet), quantity: authorRoyalty }, key);
-            await arweave.transaction.sign(tx, key);
-            const response = await arweave.transactions.post(tx);
-            if(response.status != 200) paymentFailure = true;
-        }
         if(myRoyalty) {
             const holder = smartweave.selectWeightedPstHolder(contractState.balances);
             const tx = await arweave.transactions.create({ target: holder, quantity: myRoyalty }, key);
             await arweave.transaction.sign(tx, key);
             await arweave.transactions.post(tx);
+            if(response.status != 200) paymentFailure = true;
+        }
+        if(authorRoyalty) {
+            const holder = smartweave.selectWeightedPstHolder(contractState.balances);
+            const tx = await arweave.transactions.create({ target: atob(arWallet), quantity: authorRoyalty }, key);
+            await arweave.transaction.sign(tx, key);
+            const response = await arweave.transactions.post(tx);
             if(response.status != 200) paymentFailure = true;
         }
 
