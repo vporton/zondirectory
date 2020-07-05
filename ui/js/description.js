@@ -35,7 +35,8 @@ function setPriceAR(price) {
         document.getElementById('sellInAR').checked = true;
         document.getElementById('priceAR').disabled = true;
     } else {
-        document.getElementById('priceAR').value = web3.utils.fromWei(price);
+        const arweave = Arweave.init();
+        document.getElementById('priceAR').value = arweave.ar.winstonToAr(price);
     }
 }
 
