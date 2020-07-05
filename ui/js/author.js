@@ -28,7 +28,7 @@ async function onLoad() {
     const arweave = Arweave.init();
     for(let i in items) {
         const item = items[i];
-        const link = "update.html?id=" + item.itemId;
+        const link = "description.html?id=" + item.itemId;
         const row = `<tr><td><a href="${link}">${safe_tags(item.title)}</a></td><td>${web3.utils.fromWei(item.priceETH)}</td><td>${arweave.ar.winstonToAr(item.priceAR)}</td></tr>`;
         $('#theTable').append(row);
     }
