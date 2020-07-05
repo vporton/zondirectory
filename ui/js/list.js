@@ -1,19 +1,29 @@
 async function onLoad() {
     await defaultAccountPromise();
     // TODO: pagination
-    const query = `{
-    itemUpdateds(first:1000, orderBy:itemId, orderDirection:desc}) {
-        itemId
-        title
-        priceETH
-        priceAR
+    query = `{
+        itemCreateds(orderBy:id, orderDirection:desc) {
+            itemId    
+        }
+    }`;
+    let itemIds = (await queryThegraph(query)).data.itemCreateds;
+    if(!itemIds.length) return;
+    const itemIdsFlat = itemIds.map(i => i.itemId);
+    function subquery(itemId) {
+        return `item${itemId}: itemUpdateds(first:1, orderBy:id, orderDirection:desc, where:{itemId:${itemId}}) {
+    itemId
+    title
+    priceETH
+    priceAR
+}`
     }
-}`;
-    let items = (await queryThegraph(query)).data.itemUpdateds;
+    query = "{\n" + itemIdsFlat.map(i => subquery(i)).join("\n") + "\n}";
+    let items = (await queryThegraph(query)).data;
+    const arweave = Arweave.init();
     for(let i in items) {
-        const item = items[i];
+        const item = items[i][0];
         const link = "download.html?id=" + item.itemId;
-        const row = `<tr><td><a href="${link}">${safe_tags(item.title)}</a></td><td>${item.priceETH}</td><td>${item.priceAR}</td></tr>`;
+        const row = `<tr><td><a href="${link}">${safe_tags(item.title)}</a></td><td>${web3.utils.fromWei(item.priceETH)}</td><td>${arweave.ar.winstonToAr(item.priceAR)}</td></tr>`;
         $('#theTable').append(row);
     }
 }
