@@ -55,6 +55,18 @@ async function payAR() {
     const price = askPrice(document.getElementById('priceAR').textContent);
     if(!price) return;
 
+    const smartweave = require('smartweave');
+    const arweave = Arweave.init();
+    let key = await arweave.wallets.generate();
+    smartweave.readContract(arweave, AR_PST_CONTRACT_ADDRESS).then(contractState => {
+        // TODO: Read royalty percent from Ethereum.
+        const holder = smartweave.selectWeightedPstHolder(contractState.balances);
+        const tx = await arweave.transactions.create({ target: holder, quantity: price*0.1 }, jwk);
+        await arweave.transaction.sign(tx, jwk);
+        await arweave.transactions.post(tx);
+        // TODO: Pay royalty to the author.
+    });
+      
 }
 
 $(async function() {
