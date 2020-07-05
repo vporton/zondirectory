@@ -2,7 +2,7 @@ import { BigInt } from "@graphprotocol/graph-ts";
 import {
   Approval as ApprovalEvent,
   CategoryCreated as CategoryCreatedEvent,
-  ItemAdded as ItemAddedEvent,
+  ItemAddedToCategory as ItemAddedToCategoryEvent,
   ItemCoverUpdated as ItemCoverUpdatedEvent,
   ItemCreated as ItemCreatedEvent,
   ItemFilesUpdated as ItemFilesUpdatedEvent,
@@ -16,7 +16,7 @@ import {
 import {
   Approval,
   CategoryCreated,
-  ItemAdded,
+  ItemAddedToCategory,
   ItemCoverUpdated,
   ItemCreated,
   ItemFilesUpdated,
@@ -47,8 +47,8 @@ export function handleCategoryCreated(event: CategoryCreatedEvent): void {
   entity.save()
 }
 
-export function handleItemAdded(event: ItemAddedEvent): void {
-  let entity = new ItemAdded(
+export function handleItemAddedToCategory(event: ItemAddedToCategoryEvent): void {
+  let entity = new ItemAddedToCategory(
     event.transaction.index.toHex() + "-" + event.logIndex.toString() + "-" + event.transaction.hash.toHex()
   )
   entity.categoryId = event.params.categoryId
@@ -65,7 +65,7 @@ export function handleCoverItemUpdated(event: ItemCoverUpdatedEvent): void {
   entity.save()
 }
 
-export function handleItemCreated(event: ItemAddedEvent): void {
+export function handleItemCreated(event: ItemCreatedEvent): void {
   let entity = new ItemCreated(
     event.transaction.index.toHex() + "-" + event.logIndex.toString() + "-" + event.transaction.hash.toHex()
   )

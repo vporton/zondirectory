@@ -31,7 +31,7 @@ contract Categories is BaseToken {
     event ItemCoverUpdated(uint indexed itemId, bytes cover);
     event ItemFilesUpdated(uint indexed itemId, string format, uint version, bytes hash);
     event CategoryCreated(uint256 indexed categoryId, string title, string locale);
-    event ItemAdded(uint256 indexed categoryId, uint indexed itemId);
+    event ItemAddedToCategory(uint256 indexed categoryId, uint indexed itemId);
     event SubcategoryAdded(uint256 indexed categoryId, uint indexed subId);
     event Vote(uint child, uint parent, int256 value);
 
@@ -124,7 +124,7 @@ contract Categories is BaseToken {
     }
 
     function addItemToCategory(uint256 _categoryId, uint256 _itemId) external {
-        emit ItemAdded(_categoryId, _itemId);
+        emit ItemAddedToCategory(_categoryId, _itemId);
     }
 
     function addSubcategory(uint256 _category, uint256 _subCategory) external {

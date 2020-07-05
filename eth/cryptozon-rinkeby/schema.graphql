@@ -41,7 +41,7 @@ type CategoryCreated @entity {
   locale: String! # string
 }
 
-type ItemAdded @entity {
+type ItemAddedToCategory @entity {
   id: ID!
   categoryId: BigInt! # uint256
   itemId: BigInt! # uint256
