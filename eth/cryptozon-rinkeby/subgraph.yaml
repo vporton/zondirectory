@@ -22,6 +22,8 @@ dataSources:
         - ItemUpdated
         - SetARWallet
         - SetItemOwner
+        - SetOwner
+        - SetOwnerShare
         - SubcategoryAdded
         - Transfer
         - Vote
@@ -47,6 +49,10 @@ dataSources:
           handler: handleSetARWallet
         - event: SetItemOwner(indexed uint256,indexed address)
           handler: handleSetItemOwner
+        - event: SetOwner(address)
+          handler: handleSetOwner
+        - event: SetOwnerShare(int128)
+          handler: handleSetOwnerShare
         - event: SubcategoryAdded(indexed uint256,indexed uint256)
           handler: handleSubcategoryAdded
         - event: Transfer(indexed address,indexed address,uint256)

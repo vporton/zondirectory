@@ -9,6 +9,8 @@ import {
   ItemUpdated as ItemUpdatedEvent,
   SetARWallet as SetARWalletEvent,
   SetItemOwner as SetItemOwnerEvent,
+  SetOwner as SetOwnerEvent,
+  SetOwnerShare as SetOwnerShareEvent,
   SubcategoryAdded as SubcategoryAddedEvent,
   Transfer as TransferEvent,
   Vote as VoteEvent
@@ -23,6 +25,8 @@ import {
   ItemUpdated,
   SetARWallet,
   SetItemOwner,
+  SetOwner,
+  SetOwnerShare,
   SubcategoryAdded,
   Transfer,
   Vote
@@ -116,6 +120,22 @@ export function handleSetItemOwner(event: SetItemOwnerEvent): void {
   )
   entity.itemId = event.params.itemId
   entity.owner = event.params.owner
+  entity.save()
+}
+
+export function handleSetOwner(event: SetOwnerEvent): void {
+  let entity = new SetOwner(
+    event.transaction.index.toHex() + "-" + event.logIndex.toString() + "-" + event.transaction.hash.toHex()
+  )
+  entity.owner = event.params.owner
+  entity.save()
+}
+
+export function handleSetOwnerShare(event: SetOwnerShareEvent): void {
+  let entity = new SetOwnerShare(
+    event.transaction.index.toHex() + "-" + event.logIndex.toString() + "-" + event.transaction.hash.toHex()
+  )
+  entity.share = event.params.share
   entity.save()
 }
 

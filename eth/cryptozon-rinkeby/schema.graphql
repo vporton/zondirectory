@@ -92,6 +92,16 @@ type SetItemOwner @entity {
   owner: Bytes! # address
 }
 
+type SetOwner @entity {
+  id: ID!
+  owner: Bytes! # address
+}
+
+type SetOwnerShare @entity {
+  id: ID!
+  share: BigInt! # int128
+}
+
 type SubcategoryAdded @entity {
   id: ID!
   categoryId: BigInt! # uint256
