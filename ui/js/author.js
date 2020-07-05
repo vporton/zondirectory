@@ -26,19 +26,31 @@ async function onLoad() {
     }
 }
 
+async function doSetARWallet(address) {
+    const contractInstance = new web3.eth.Contract(await filesJsonInterface(), filesContractAddress);
+    contractInstance.methods.setARWallet(defaultAccount, address)
+        .send({from: defaultAccount, gas: '1000000'})
+        .on('transactionHash', function(transactionHash) {
+            document.getElementById('arWallet').textContent = address;
+        });
+}
+
 async function setARWallet() {
-    const smartweave = require('smartweave');
-    const arweave = Arweave.init();
-    let key = await arweave.wallets.generate(); // FIXME: Use keyfile instead.
-    arweave.wallets.jwkToAddress(key).then(async address => {
-        address = prompt("Enter your AR wallet", address);
-        const contractInstance = new web3.eth.Contract(await filesJsonInterface(), filesContractAddress);
-        contractInstance.methods.setARWallet(defaultAccount, address)
-            .send({from: defaultAccount, gas: '1000000'})
-            .on('transactionHash', function(transactionHash) {
-                document.getElementById('arWallet').textContent = address;
-            });
-    });
+    const address = prompt("Enter your AR wallet");
+    doSetARWallet(address);
+}
+
+function setARWalletFromkeyFile(event) {
+    const fileReader = new FileReader();
+    fileReader.onload = async (e) => {
+        const key = JSON.parse(e.target.result);
+        const smartweave = require('smartweave');
+        const arweave = Arweave.init();
+        arweave.wallets.jwkToAddress(key).then(async address => {
+            doSetARWallet(address);
+        });
+    }
+    fileReader.readAsText(event.target.files[0]);
 }
 
 $(onLoad);

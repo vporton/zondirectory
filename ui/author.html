@@ -18,7 +18,8 @@
         <h1>Author's Dashboard</h1>
         <p>Your AR wallet (until it is set all your AR royalties and donations will be sent to the owner of this site!):
             <code id="arWallet"></code>
-            <input type="button" value="Set AR wallet" onclick="setARWallet()"/></p>
+            <input type="button" value="Set AR wallet" onclick="setARWallet()"/>
+            <input type="file" value="Set AR wallet from key file..." id="arKeyFile" onchange="setARWalletFromkeyFile(event)"/></p>
         </p>
         <p><a href="description.html">New title</a></p>
         <table>
