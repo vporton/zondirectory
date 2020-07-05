@@ -14,16 +14,16 @@ async function onLoad() {
     }`;
     let itemIds = (await queryThegraph(query)).data.setItemOwners;
     itemIds = itemIds.filter((x, i, a) => a.indexOf(x) == i); // unique values
-    function itemReq(itemId) {
-        return `itemUpdateds(first:1, orderBy:itemId, orderDirection:desc, where:{itemId:${itemId}}) {
-            itemId
-            title
-            priceETH
-            priceAR
-        }`;
-    }
     if(!itemIds.length) return;
-    query = "{\n" + itemIds.map(itemId => itemReq(itemId.itemId)).join("\n") + "\n}";
+    const itemIdsFlat = itemIds.map(i => i.itemId);
+    query = `{
+    itemUpdateds(orderBy:itemId, orderDirection:desc, where:{itemId_in:[${itemIdsFlat.join(',')}]}) {
+        itemId
+        title
+        priceETH
+        priceAR
+    }
+}`;
     let items = (await queryThegraph(query)).data.itemUpdateds;
     const arweave = Arweave.init();
     for(let i in items) {
