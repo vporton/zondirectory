@@ -4,18 +4,21 @@ pragma solidity ^0.6.0;
 //pragma experimental ABIEncoderV2;
 
 import './BaseToken.sol';
+import './ABDKMath64x64.sol';
 
 // TODO: Encode wallets and hashes as uint256
 
 contract Files is BaseToken {
 
-    // I get 10% of sales
-    uint256 constant PROGRAMMER_SHARE_MULT = 1;
-    uint256 constant PROGRAMMER_SHARE_DIV = 10;
+    using ABDKMath64x64 for int128;
 
+    // I get 10% of sales
     string public name;
     uint8 public decimals;
     string public symbol;
+
+    // 64.64 fixed point number
+    int128 public ownersShare = int128(1).divi(int128(10)); // 1/10
 
     uint maxId = 0;
     uint maxVoteId = 0;
@@ -114,7 +117,7 @@ contract Files is BaseToken {
 
     function pay(uint _itemId) external payable returns (bytes memory) {
         require(pricesETH[_itemId] <= msg.value, "Paid too little.");
-        uint256 myShare = msg.value * PROGRAMMER_SHARE_MULT / PROGRAMMER_SHARE_DIV;
+        uint256 myShare = uint256(ownersShare.muli(int256(msg.value)));
         programmerAddress.transfer(myShare);
         itemOwners[_itemId].transfer(msg.value - myShare);
     }
