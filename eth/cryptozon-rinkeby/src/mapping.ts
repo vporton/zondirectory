@@ -61,6 +61,7 @@ export function handleCoverItemUpdated(event: ItemCoverUpdatedEvent): void {
     event.transaction.index.toHex() + "-" + event.logIndex.toString() + "-" + event.transaction.hash.toHex()
   )
   entity.itemId = event.params.itemId
+  entity.version = event.params.version
   entity.cover = event.params.cover
   entity.width = event.params.width
   entity.height = event.params.height

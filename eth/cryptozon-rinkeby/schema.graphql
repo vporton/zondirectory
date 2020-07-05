@@ -50,6 +50,7 @@ type ItemAddedToCategory @entity {
 type ItemCoverUpdated @entity {
   id: ID!
   itemId: BigInt! # uint256
+  version: BigInt! # uint256
   cover: Bytes! # bytes
   width: BigInt! # uint256
   height: BigInt! # uint256
