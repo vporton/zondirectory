@@ -98,7 +98,7 @@ async function updateItem(itemId) {
         .send({from: defaultAccount, gas: '1000000'});
 }
 
-$(function() {
+$(async function() {
     const urlParams = new URLSearchParams(window.location.search);
     const itemId = urlParams.get('id');
     if(itemId) {

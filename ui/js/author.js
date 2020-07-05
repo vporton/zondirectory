@@ -1,10 +1,17 @@
 async function onLoad() {
     await defaultAccountPromise();
-        let query = `{
-    setItemOwners(orderBy:id, orderDirection:desc, where:{owner:"${defaultAccount}"}) {
-        itemId    
-    }
-}`;
+    let query = `{
+        setARWallets(orderBy:id, orderDirection:desc, where:{owner:"${defaultAccount}"}) {
+            arWallet
+        }
+    }`;
+    const arWallet = (await queryThegraph(query)).data.setARWallets[0].arWallet;
+    document.getElementById('arWallet').textContent = arWallet;
+    query = `{
+        setItemOwners(orderBy:id, orderDirection:desc, where:{owner:"${defaultAccount}"}) {
+            itemId    
+        }
+    }`;
     let itemIds = (await queryThegraph(query)).data.setItemOwners;
     itemIds = itemIds.filter((x, i, a) => a.indexOf(x) == i); // unique values
     function itemReq(itemId) {
