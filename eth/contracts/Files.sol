@@ -43,9 +43,9 @@ contract Files is BaseToken {
     event Vote(uint child, uint parent, int256 value);
 
     address payable programmerAddress;
-    mapping (uint => address payable) itemOwners; // TODO: update
-    mapping (address => mapping (uint => mapping (uint => int256))) private votes; // TODO: accessor
-    mapping (uint => mapping (uint => int256)) private votesForCategories; // TODO: accessor
+    mapping (uint => address payable) itemOwners;
+    mapping (address => mapping (uint => mapping (uint => int256))) private votes;
+    mapping (uint => mapping (uint => int256)) private votesForCategories;
     mapping (uint => uint256) pricesETH;
     mapping (uint => uint256) pricesAR;
 
@@ -158,5 +158,13 @@ contract Files is BaseToken {
         votes[msg.sender][_child][_parent] = _value;
         votesForCategories[_child][_parent] = _newValue;
         emit Vote(_child, _parent, _newValue);
+    }
+
+    function voterInfo(address _voter, uint _child, uint _parent) external view returns (int256) {
+        return votes[_voter][_child][_parent];
+    }
+
+    function getCategoryVotes(uint _child, uint _parent) external view returns (int256) {
+        return votesForCategories[_child][_parent];
     }
 }
