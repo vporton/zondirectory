@@ -17,7 +17,7 @@ async function upload() {
         return;
     }
 
-    const contractInstance = new web3.eth.Contract(await categoriesJsonInterface(), categoriesContractAddress);
+    const contractInstance = new web3.eth.Contract(await filesJsonInterface(), filesContractAddress);
     contractInstance.methods.uploadFile(itemId,
                                         document.getElementById('version').value,
                                         document.getElementById('format').value,

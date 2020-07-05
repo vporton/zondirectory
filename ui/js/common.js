@@ -22,14 +22,14 @@ let defaultAccount;
 function defaultAccountPromise() { return web3.eth.getAccounts(); }
 defaultAccountPromise().then( function (result, x) { defaultAccount = result[0] });
 
-function categoriesJsonInterface() {
+function filesJsonInterface() {
     return new Promise((resolve) => {
         var xhttp = new XMLHttpRequest();
         xhttp.onreadystatechange = function() {
             if (this.readyState == 4 && this.status == 200)
                 resolve(JSON.parse(xhttp.responseText));
         };
-        xhttp.open("GET", "artifacts/Categories.abi", true);
+        xhttp.open("GET", "artifacts/Files.abi", true);
         xhttp.send();
     });
 }

@@ -6,7 +6,7 @@ module.exports = async ({getNamedAccounts, deployments}) => {
     const deployResult = await deploy('Categories', {from: deployer, args: [process.env.PROGRAMMER_ADDRESS]});
     if (deployResult.newlyDeployed) {
         const fs = require('fs');
-        fs.writeFileSync('../ui/artifacts/addresses.js', "const categoriesContractAddress = '" + deployResult.address + "';");
+        fs.writeFileSync('../ui/artifacts/addresses.js', "const filesContractAddress = '" + deployResult.address + "';");
         log(`contract Categories deployed at ${deployResult.address} using ${deployResult.receipt.gasUsed} gas`);
     }
 }

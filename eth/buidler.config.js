@@ -16,8 +16,8 @@ task("compile", "Compiles the entire project, building all artifacts", async fun
   console.log("Extracting ABIs...");
   const fs = require('fs');
   fs.mkdir('../ui/artifacts', ()=>{});
-  const abi = JSON.parse(fs.readFileSync('artifacts/Categories.json')).abi;
-  fs.writeFileSync('../ui/artifacts/Categories.abi', JSON.stringify(abi));
+  const abi = JSON.parse(fs.readFileSync('artifacts/Files.json')).abi;
+  fs.writeFileSync('../ui/artifacts/Files.abi', JSON.stringify(abi));
 });
 
 

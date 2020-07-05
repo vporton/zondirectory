@@ -44,7 +44,7 @@ function showFilesWithMessage() {
 async function payETH() {
     const price = askPrice(document.getElementById('priceETH').textContent);
     if(!price) return;
-    const contractInstance = new web3.eth.Contract(await categoriesJsonInterface(), categoriesContractAddress);
+    const contractInstance = new web3.eth.Contract(await filesJsonInterface(), filesContractAddress);
     await defaultAccountPromise();
     contractInstance.methods.pay(itemId).send({from: defaultAccount, gas: '1000000'})
         .then(() => showFilesWithMessage())
