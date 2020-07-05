@@ -30,7 +30,7 @@ contract Files is BaseToken {
                       uint256 priceAR,
                       string locale,
                       string license);
-    event ItemCoverUpdated(uint indexed itemId, bytes cover);
+    event ItemCoverUpdated(uint indexed itemId, bytes cover, uint width, uint height);
     event ItemFilesUpdated(uint indexed itemId, string format, uint version, bytes hash);
     event CategoryCreated(uint256 indexed categoryId, string title, string locale);
     event ItemAddedToCategory(uint256 indexed categoryId, uint indexed itemId);
@@ -103,8 +103,8 @@ contract Files is BaseToken {
         emit ItemUpdated(_itemId, _title, _description, _priceETH, _priceAR, _locale, _license);
     }
 
-    function updateItemCover(uint _itemId, bytes calldata _cover) external {
-        emit ItemCoverUpdated(_itemId, _cover);
+    function updateItemCover(uint _itemId, bytes calldata _cover, uint _width, uint _height) external {
+        emit ItemCoverUpdated(_itemId, _cover, _width, _height);
     }
 
     function uploadFile(uint _itemId, uint _version, string calldata _format, bytes calldata _hash) external {

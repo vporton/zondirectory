@@ -62,6 +62,8 @@ export function handleCoverItemUpdated(event: ItemCoverUpdatedEvent): void {
   )
   entity.itemId = event.params.itemId
   entity.cover = event.params.cover
+  entity.width = event.params.width
+  entity.height = event.params.height
   entity.save()
 }
 
