@@ -59,12 +59,34 @@ async function payAR() {
     const arweave = Arweave.init();
     let key = await arweave.wallets.generate();
     smartweave.readContract(arweave, AR_PST_CONTRACT_ADDRESS).then(contractState => {
+        await defaultAccountPromise();
+        let query = `setARWallets(first:1, orderBy:id, orderDirection:desc, where:{owner:${defaultAccount}}) {
+            arWallet
+        }`;
+        let arWallet = (await queryThegraph(query)).data.setARWallets[0].arWallet;
+        let authorRoyalty, myRoyalty;
         // TODO: Read royalty percent from Ethereum.
-        const holder = smartweave.selectWeightedPstHolder(contractState.balances);
-        const tx = await arweave.transactions.create({ target: holder, quantity: price*0.1 }, jwk);
-        await arweave.transaction.sign(tx, jwk);
-        await arweave.transactions.post(tx);
-        // TODO: Pay royalty to the author.
+        if(arWallet) {
+            authorRoyalty = 0.9 * price;
+            myRoyalty = 0.1 * price;
+        } else {
+            authorRoyalty = 0;
+            myRoyalty = price;
+        }
+
+        if(authorRoyalty) {
+            const holder = smartweave.selectWeightedPstHolder(contractState.balances);
+            // FIXME: hash
+            const tx = await arweave.transactions.create({ target: arWallet, quantity: authorRoyalty }, jwk);
+            await arweave.transaction.sign(tx, jwk);
+            await arweave.transactions.post(tx);
+        }
+        if(myRoyalty) {
+            const holder = smartweave.selectWeightedPstHolder(contractState.balances);
+            const tx = await arweave.transactions.create({ target: holder, quantity: myRoyalty }, jwk);
+            await arweave.transaction.sign(tx, jwk);
+            await arweave.transactions.post(tx);
+        }
     });
       
 }
