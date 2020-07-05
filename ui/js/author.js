@@ -23,12 +23,13 @@ async function onLoad() {
         }`;
     }
     if(!itemIds.length) return;
-    query = "{\n" + itemIds.map(itemId => itemReq(itemId)).join("\n") + "\n}";
+    query = "{\n" + itemIds.map(itemId => itemReq(itemId.itemId)).join("\n") + "\n}";
     let items = (await queryThegraph(query)).data.itemUpdateds;
+    const arweave = Arweave.init();
     for(let i in items) {
         const item = items[i];
         const link = "update.html?id=" + item.itemId;
-        const row = `<tr><td><a href="${link}">${safe_tags(item.title)}</a></td><td>${item.priceETH}</td><td>${item.priceAR}</td></tr>`;
+        const row = `<tr><td><a href="${link}">${safe_tags(item.title)}</a></td><td>${web3.utils.fromWei(item.priceETH)}</td><td>${arweave.ar.winstonToAr(item.priceAR)}</td></tr>`;
         $('#theTable').append(row);
     }
 }
