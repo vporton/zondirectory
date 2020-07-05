@@ -17,7 +17,7 @@ function getPriceETH() {
 }
 
 function getPriceAR() {
-    // FIXME: arweave
+    const arweave = Arweave.init();
     return document.getElementById('sellInAR').checked ? INFINITY : arweave.ar.arToWinston(document.getElementById('priceAR').value);
 }
 
