@@ -33,9 +33,9 @@ async function setARWallet() {
     arweave.wallets.jwkToAddress(key).then(async address => {
         address = prompt("Enter your AR wallet", address);
         const contractInstance = new web3.eth.Contract(await filesJsonInterface(), filesContractAddress);
-        contractInstance.methods.setARWallet(defaultAccount, new Blob(address.filter(c=>c.charCodeAt(0))))
+        contractInstance.methods.setARWallet(defaultAccount, address)
             .send({from: defaultAccount, gas: '1000000'})
-            .then(function(receiptHash) {
+            .on('transactionHash', function(transactionHash) {
                 document.getElementById('arWallet').textContent = address;
             });
     });
