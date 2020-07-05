@@ -76,8 +76,7 @@ async function payAR() {
 
         if(authorRoyalty) {
             const holder = smartweave.selectWeightedPstHolder(contractState.balances);
-            // FIXME: hash
-            const tx = await arweave.transactions.create({ target: arWallet, quantity: authorRoyalty }, jwk);
+            const tx = await arweave.transactions.create({ target: atob(arWallet), quantity: authorRoyalty }, jwk);
             await arweave.transaction.sign(tx, jwk);
             await arweave.transactions.post(tx);
         }
