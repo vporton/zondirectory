@@ -19,10 +19,10 @@
         <p>Description: <textarea id="description"></textarea></p>
         <p>License: <textarea id="license"></textarea></p>
         <p>Minimal prices:</p>
-        <p>in ETH: <input type="number" id="priceETH"/>
+        <p>in ETH: <input type="text" id="priceETH"/>
             <label><input type="checkbox" id="sellInETH" onclick="sellInETHToggle(event)"/> Don't sell in ETH</label></p>
-        <p>in AR: <input type="number" id="priceAR"/>
+        <p>in AR: <input type="text" id="priceAR"/>
             <label><input type="checkbox" id="sellInAR" onclick="sellInARToggle(event)"/> Don't sell in AR</label></p>
-        <p><input type="button" value="submit" onclick="createItem()"/></p>
+        <p><input type="button" value="submit" onclick="createOrUpdateItem()"/></p>
         <p id="uploadLink" style="display: none;"><a href="">Upload file</a></p>
     </body>
