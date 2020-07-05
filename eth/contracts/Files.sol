@@ -48,7 +48,7 @@ contract Files is BaseToken {
 
     constructor(address payable _programmerAddress) public {
         name = "Voting";
-        decimals = 8;
+        decimals = 18;
         symbol = "VOT";
         programmerAddress = _programmerAddress;
     }
