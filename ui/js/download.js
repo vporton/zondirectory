@@ -57,7 +57,7 @@ async function payAR() {
 
     const smartweave = require('smartweave');
     const arweave = Arweave.init();
-    let key = await arweave.wallets.generate();
+    let key = await arweave.wallets.generate(); // FIXME: Use keyfile instead.
     smartweave.readContract(arweave, AR_PST_CONTRACT_ADDRESS).then(contractState => {
         await defaultAccountPromise();
         let query = `setARWallets(first:1, orderBy:id, orderDirection:desc, where:{owner:${defaultAccount}}) {

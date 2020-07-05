@@ -4,7 +4,7 @@ async function upload() {
     if(!itemId) return; // just to be sure
 
     const arweave = Arweave.init();
-    let key = await arweave.wallets.generate();
+    let key = await arweave.wallets.generate(); // FIXME: Use keyfile instead.
     let transaction = await arweave.createTransaction({
         data: 'x' // FIXME: Upload the actual file.
     }, key);

@@ -29,7 +29,7 @@ async function onLoad() {
 async function setARWallet() {
     const smartweave = require('smartweave');
     const arweave = Arweave.init();
-    let key = await arweave.wallets.generate();
+    let key = await arweave.wallets.generate(); // FIXME: Use keyfile instead.
     arweave.wallets.jwkToAddress(key).then(async address => {
         address = prompt("Enter your AR wallet", address);
         const contractInstance = new web3.eth.Contract(await filesJsonInterface(), filesContractAddress);
