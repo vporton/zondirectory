@@ -102,15 +102,17 @@ $(async function() {
     const urlParams = new URLSearchParams(window.location.search);
     const itemId = urlParams.get('id');
     if(itemId) {
-        $('#uploadLink').setAttribute('href', "upload.html?id="+itemId);
+        $('#uploadLink').attr('href', "upload.html?id="+itemId);
         $('#uploadLink').css('display', 'block');
-        const query = `itemUpdateds(first:1, orderBy:itemId, orderDirection:desc, where:{itemId:${itemId}}) {
-            title
-            description
-            license
-            priceETH
-            priceAR
-        }`;
+        const query = `{
+    itemUpdateds(first:1, orderBy:itemId, orderDirection:desc, where:{itemId:${itemId}}) {
+        title
+        description
+        license
+        priceETH
+        priceAR
+    }
+}`;
         let item = (await queryThegraph(query)).data.itemUpdateds[0];
         document.getElementById('title').value = item.title;
         document.getElementById('description').textContent = item.description;
