@@ -74,18 +74,27 @@ async function payAR() {
             myRoyalty = price;
         }
 
+        // FIXME: check that we have enough balance before trying to pay
+        let paymentFailure = false;
         if(authorRoyalty) {
             const holder = smartweave.selectWeightedPstHolder(contractState.balances);
-            const tx = await arweave.transactions.create({ target: atob(arWallet), quantity: authorRoyalty }, jwk);
-            await arweave.transaction.sign(tx, jwk);
-            await arweave.transactions.post(tx);
+            const tx = await arweave.transactions.create({ target: atob(arWallet), quantity: authorRoyalty }, key);
+            await arweave.transaction.sign(tx, key);
+            const response = await arweave.transactions.post(tx);
+            if(response.status != 200) paymentFailure = true;
         }
         if(myRoyalty) {
             const holder = smartweave.selectWeightedPstHolder(contractState.balances);
-            const tx = await arweave.transactions.create({ target: holder, quantity: myRoyalty }, jwk);
-            await arweave.transaction.sign(tx, jwk);
+            const tx = await arweave.transactions.create({ target: holder, quantity: myRoyalty }, key);
+            await arweave.transaction.sign(tx, key);
             await arweave.transactions.post(tx);
+            if(response.status != 200) paymentFailure = true;
         }
+
+        if(!paymentFailure)
+            showFilesWithMessage();
+        else
+            alert("You didn't pay the full sum!");
     });
       
 }
