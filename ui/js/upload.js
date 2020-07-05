@@ -3,25 +3,29 @@ async function upload() {
     const itemId = urlParams.get('id');
     if(!itemId) return; // just to be sure
 
-    const arweave = Arweave.init();
-    let key = await arweave.wallets.generate(); // FIXME: Use keyfile instead.
-    let transaction = await arweave.createTransaction({
-        data: 'x' // FIXME: Upload the actual file.
-    }, key);
-    console.log("Uploaded file hash:", transaction.id);
-    await arweave.transactions.sign(transaction, key);
-    const response = await arweave.transactions.post(transaction);
-    console.log(response)
-    if(response.status != 200) {
-        alert("Failed ArWeave transaction.");
-        return;
-    }
+    const fileReader = new FileReader();
+    fileReader.onload = async (e) => {
+        const key = JSON.parse(e.target.result);
 
-    const contractInstance = new web3.eth.Contract(await filesJsonInterface(), filesContractAddress);
-    contractInstance.methods.uploadFile(itemId,
-                                        document.getElementById('version').value,
-                                        document.getElementById('format').value,
-                                        transaction.id)
-        .send({from: defaultAccount, gas: '1000000'})
-        .then(() => open('description.html?id=' + itemId));
+        let transaction = await arweave.createTransaction({
+            data: 'x' // FIXME: Upload the actual file.
+        }, key);
+        console.log("Uploaded file hash:", transaction.id);
+        await arweave.transactions.sign(transaction, key);
+        const response = await arweave.transactions.post(transaction);
+        console.log(response)
+        if(response.status != 200) {
+            alert("Failed ArWeave transaction.");
+            return;
+        }
+
+        const contractInstance = new web3.eth.Contract(await filesJsonInterface(), filesContractAddress);
+        contractInstance.methods.uploadFile(itemId,
+                                            document.getElementById('version').value,
+                                            document.getElementById('format').value,
+                                            transaction.id)
+            .send({from: defaultAccount, gas: '1000000'})
+            .then(() => open('description.html?id=' + itemId));
+    }
+    fileReader.readAsText(document.getElementById('arWalletKeyFile').files[0]);
 }

@@ -44,7 +44,6 @@ function setARWalletFromkeyFile(event) {
     const fileReader = new FileReader();
     fileReader.onload = async (e) => {
         const key = JSON.parse(e.target.result);
-        const smartweave = require('smartweave');
         const arweave = Arweave.init();
         arweave.wallets.jwkToAddress(key).then(async address => {
             doSetARWallet(address);
