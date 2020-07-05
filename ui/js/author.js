@@ -37,7 +37,7 @@ async function doSetARWallet(address) {
 
 async function setARWallet() {
     const address = prompt("Enter your AR wallet");
-    doSetARWallet(address);
+    if(address) doSetARWallet(address);
 }
 
 function setARWalletFromkeyFile(event) {
