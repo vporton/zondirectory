@@ -23,7 +23,8 @@ contract Files is BaseToken {
     uint maxId = 0;
     uint maxVoteId = 0;
 
-    event SetOwnersShare(int128 share); // share is 64.64 fixed point number
+    event SetOwner(address payable owner); // share is 64.64 fixed point number
+    event SetOwnerShare(int128 share); // share is 64.64 fixed point number
     event SetARWallet(address payable indexed owner, string arWallet);
     event ItemCreated(uint indexed itemId);
     event SetItemOwner(uint indexed itemId, address payable indexed owner);
@@ -66,13 +67,20 @@ contract Files is BaseToken {
         require(msg.sender == programmerAddress, "Access denied.");
         require(_programmerAddress != address(0), "Zero address.");
         programmerAddress = _programmerAddress;
+        emit SetOwner(_programmerAddress);
     }
 
     // _share is 64.64 fixed point number
     function setOwnersShare(int128 _share) external {
         require(msg.sender == programmerAddress, "Access denied.");
         ownersShare = _share;
-        emit SetOwnersShare(_share);
+        emit SetOwnerShare(_share);
+    }
+
+    function setItemOwner(uint _itemId, address payable _owner) external {
+        require(itemOwners[_itemId] == msg.sender, "Access denied.");
+        itemOwners[_itemId] = _owner;
+        emit SetItemOwner(_itemId, _owner);
     }
 
 /// Wallets ///
