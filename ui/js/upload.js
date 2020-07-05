@@ -7,19 +7,19 @@ async function upload() {
     fileReader.onload = async (e) => {
         const key = JSON.parse(e.target.result);
 
+        const arweave = Arweave.init();
         let transaction = await arweave.createTransaction({
             data: 'x' // FIXME: Upload the actual file.
         }, key);
-        console.log("Uploaded file hash:", transaction.id);
         await arweave.transactions.sign(transaction, key);
         const response = await arweave.transactions.post(transaction);
-        console.log(response)
         if(response.status != 200) {
             alert("Failed ArWeave transaction.");
             return;
         }
 
         const contractInstance = new web3.eth.Contract(await filesJsonInterface(), filesContractAddress);
+        console.log(transaction.id);
         contractInstance.methods.uploadFile(itemId,
                                             document.getElementById('version').value,
                                             document.getElementById('format').value,

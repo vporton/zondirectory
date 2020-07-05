@@ -41,7 +41,7 @@ dataSources:
           handler: handleItemCoverUpdated
         - event: ItemCreated(indexed uint256)
           handler: handleItemCreated
-        - event: ItemFilesUpdated(indexed uint256,string,uint256,bytes)
+        - event: ItemFilesUpdated(indexed uint256,string,uint256,string)
           handler: handleItemFilesUpdated
         - event: ItemUpdated(indexed uint256,string,string,uint256,uint256,string,string)
           handler: handleItemUpdated

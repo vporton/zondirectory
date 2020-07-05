@@ -36,7 +36,7 @@ contract Files is BaseToken {
                       string locale,
                       string license);
     event ItemCoverUpdated(uint indexed itemId, uint indexed version, bytes cover, uint width, uint height);
-    event ItemFilesUpdated(uint indexed itemId, string format, uint version, bytes hash);
+    event ItemFilesUpdated(uint indexed itemId, string format, uint version, string hash);
     event CategoryCreated(uint256 indexed categoryId, string title, string locale);
     event ItemAddedToCategory(uint256 indexed categoryId, uint indexed itemId);
     event SubcategoryAdded(uint256 indexed categoryId, uint indexed subId);
@@ -124,7 +124,7 @@ contract Files is BaseToken {
         emit ItemCoverUpdated(_itemId, _version, _cover, _width, _height);
     }
 
-    function uploadFile(uint _itemId, uint _version, string calldata _format, bytes calldata _hash) external {
+    function uploadFile(uint _itemId, uint _version, string calldata _format, string calldata _hash) external {
         require(itemOwners[_itemId] == msg.sender, "Attempt to modify other's item.");
         emit ItemFilesUpdated(_itemId, _format, _version, _hash);
     }
