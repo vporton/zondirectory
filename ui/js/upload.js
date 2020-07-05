@@ -3,13 +3,7 @@ async function upload() {
     const itemId = urlParams.get('id');
     if(!itemId) return; // just to be sure
 
-    const arweave = Arweave.init({
-        host: 'arweave.net',// Hostname or IP address for a Arweave host
-        port: 443,          // Port
-        protocol: 'https',  // Network protocol http or https
-        timeout: 20000,     // Network request timeouts in milliseconds
-        logging: false,     // Enable network request logging
-    });
+    const arweave = Arweave.init();
     let key = await arweave.wallets.generate();
     let transaction = await arweave.createTransaction({
         data: 'x' // FIXME: Upload the actual file.
