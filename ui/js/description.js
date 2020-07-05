@@ -17,7 +17,8 @@ function getPriceETH() {
 }
 
 function getPriceAR() {
-    return document.getElementById('sellInAR').checked ? INFINITY : web3.utils.toWei(document.getElementById('priceAR').value);
+    // FIXME: arweave
+    return document.getElementById('sellInAR').checked ? INFINITY : arweave.ar.arToWinston(document.getElementById('priceAR').value);
 }
 
 function setPriceETH(price) {

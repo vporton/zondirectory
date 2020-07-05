@@ -6,7 +6,7 @@ const urlParams = new URLSearchParams(window.location.search);
 const itemId = urlParams.get('id');
 
 function formatPrice(price) {
-    return price == INFINITY ? "-" : web3.utils.fromWei(price);
+    return price == INFINITY ? "-" : price;
 }
 
 async function showFiles(withLinks) {
@@ -104,8 +104,8 @@ $(async function() {
         document.getElementById('title').textContent = item.title;
         document.getElementById('description').textContent = item.description;
         document.getElementById('license').textContent = item.license;
-        document.getElementById('priceETH').textContent = formatPrice(item.priceETH);
-        document.getElementById('priceAR').textContent = formatPrice(item.priceAR);
+        document.getElementById('priceETH').textContent = formatPrice(web3.utils.fromWei(item.priceETH));
+        document.getElementById('priceAR').textContent = formatPrice(item.priceAR / 1000000000000);
         showFiles(item.priceETH == 0 || item.priceAR == 0);
     }
 })
