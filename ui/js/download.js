@@ -61,7 +61,7 @@ async function payAR() {
     fileReader.onload = async (e) => {
         const key = JSON.parse(e.target.result);
 
-        smartweave.readContract(arweave, AR_PST_CONTRACT_ADDRESS).then(contractState => {
+        smartweave.readContract(arweave, AR_PST_CONTRACT_ADDRESS).then(async contractState => {
             await defaultAccountPromise();
             let query = `setARWallets(first:1, orderBy:id, orderDirection:desc, where:{owner:${defaultAccount}}) {
                 arWallet
@@ -105,15 +105,21 @@ async function payAR() {
 }
 
 $(async function() {
+    console.log(itemId)
     if(itemId) {
-        const query = `itemUpdateds(first:1, orderBy:id, orderDirection:desc, where:{itemId:${itemId}}) {
-    title
-    description
-    license
-    priceETH
-    priceAR
+        const query = `{
+    itemUpdateds(first:1, orderBy:id, orderDirection:desc, where:{itemId:${itemId}}) {
+        locale
+        title
+        description
+        license
+        priceETH
+        priceAR
+    }
 }`;
-        let item = (await queryThegraph(query)).data.itemUpdateds[0];
+        const item = (await queryThegraph(query)).data.itemUpdateds[0];
+        const arweave = Arweave.init();
+        document.getElementById('locale').textContent = item.locale;
         document.getElementById('title').textContent = item.title;
         document.getElementById('description').textContent = item.description;
         document.getElementById('license').textContent = item.license;
