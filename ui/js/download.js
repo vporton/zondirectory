@@ -118,7 +118,7 @@ $(async function() {
         document.getElementById('description').textContent = item.description;
         document.getElementById('license').textContent = item.license;
         document.getElementById('priceETH').textContent = formatPrice(web3.utils.fromWei(item.priceETH));
-        document.getElementById('priceAR').textContent = formatPrice(item.priceAR / 1000000000000);
+        document.getElementById('priceAR').textContent = formatPrice(arweave.ar.winstonToAr(item.priceAR));
         showFiles(item.priceETH == 0 || item.priceAR == 0);
     }
 })
