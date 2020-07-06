@@ -176,21 +176,21 @@ contract Files is BaseToken {
     mapping(address => uint256) lastDivedendsTotals; // the value of totalDivendents at the last payment to an address
     uint256 totalDividends = 0;
     
-    function dividendsOwing(address account) internal view returns(uint256) {
-        uint256 newDividends = totalDividends - lastDivedendsTotals[account];
-        return (shares.balances(account) * newDividends) / totalSupply;
+    function dividendsOwing(address _account) internal view returns(uint256) {
+        uint256 _newDividends = totalDividends - lastDivedendsTotals[_account];
+        return (shares.balances(_account) * _newDividends) / totalSupply; // rounding down
     }
 
     function withdrawProfit() external {
-        uint256 owing = dividendsOwing(msg.sender);
+        uint256 _owing = dividendsOwing(msg.sender);
 
-        // Against rounding errors. Is this necessary?
-        if(owing > address(this).balance) owing = address(this).balance;
+        // Against rounding errors. Not necessary because of rounding down.
+        // if(owing > address(this).balance) owing = address(this).balance;
 
-        if(owing > 0) {
-            msg.sender.transfer(owing);
+        if(_owing > 0) {
+            msg.sender.transfer(_owing);
             lastDivedendsTotals[msg.sender] = totalDividends;
-            totalDividends += owing;
+            totalDividends += _owing;
         }
     }
 }
