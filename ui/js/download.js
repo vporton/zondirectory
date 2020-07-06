@@ -10,15 +10,20 @@ function formatPrice(price) {
 }
 
 async function showFiles(withLinks) {
-    let query = `itemFilesUpdateds(first:1, orderBy:version, orderDirection:desc, where:{itemId:${itemId}}) {
-    version
+    let query = `{
+    itemFilesUpdateds(first:1, orderBy:version, orderDirection:desc, where:{itemId:${itemId}}) {
+        version
+    }
 }`;
     let version = (await queryThegraph(query)).data.itemFilesUpdateds[0].version;
     const fileFields = withLinks ? 'format hash' : 'format';
-    query = `itemFilesUpdateds(orderBy:id, orderDirection:asc, where:{itemId:${itemId}, version:${version}}) {
-    ${fileFields}
+    query = `{
+    itemFilesUpdateds(orderBy:id, orderDirection:asc, where:{itemId:${itemId}, version:${version}}) {
+        ${fileFields}
+    }
 }`;
     const files = (await queryThegraph(query)).data.itemFilesUpdateds;
+    $(formats).html('');
     for(let i in files) {
         const file = files[i];
         const link = withLinks ? `<li><a href="https://arweave.net/${file.hash}">${safe_tags(file.format)}</a></li>`
