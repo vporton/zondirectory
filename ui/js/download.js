@@ -87,37 +87,47 @@ async function payAR() {
 }`;
             let arWallet = (await queryThegraph(query)).data.setARWallets[0].arWallet;
             let authorRoyalty, shareholdersRoyalty;
-            // TODO: Read royalty percent from Ethereum.
-            if(arWallet) {
-                authorRoyalty = 0.9 * price;
-                shareholdersRoyalty = 0.1 * price;
-            } else {
-                authorRoyalty = 0;
-                shareholdersRoyalty = price;
-            }
+            const contractInstance = new web3.eth.Contract(await filesJsonInterface(), filesContractAddress);
+            await defaultAccountPromise();
+            // TODO: Don't call Ethereum if no author's AR wallet.
+            contractInstance.methods.ownersShare().call(async (error, result) => {
+                if(error) {
+                    alert(error);
+                    return;
+                }
+                const ownersShare = result / 2**64;
 
-            // FIXME: check that we have enough balance before trying to pay
-            // FIrst pay to me then to the author, because in the case of a failure the buyer loses less this way.
-            let paymentFailure = false;
-            if(shareholdersRoyalty) {
-                const holder = smartweave.selectWeightedPstHolder(contractState.balances);
-                const tx = await arweave.createTransaction({ target: holder, quantity: String(shareholdersRoyalty) }, key);
-                await arweave.transactions.sign(tx, key);
-                const response = await arweave.transactions.post(tx);
-                if(response.status != 200) paymentFailure = true;
-            }
-            if(!paymentFailure && authorRoyalty) {
-                const holder = smartweave.selectWeightedPstHolder(contractState.balances);
-                const tx = await arweave.createTransaction({ target: arWallet, quantity: String(authorRoyalty) }, key);
-                await arweave.transactions.sign(tx, key);
-                const response = await arweave.transactions.post(tx);
-                if(response.status != 200) paymentFailure = true;
-            }
+                if(arWallet) {
+                    authorRoyalty = (1 - ownersShare) * price;
+                    shareholdersRoyalty = ownersShare * price;
+                } else {
+                    authorRoyalty = 0;
+                    shareholdersRoyalty = price;
+                }
 
-            if(!paymentFailure)
-                showFilesWithMessage();
-            else
-                alert("You didn't pay the full sum!");
+                // FIXME: check that we have enough balance before trying to pay
+                // FIrst pay to me then to the author, because in the case of a failure the buyer loses less this way.
+                let paymentFailure = false;
+                if(shareholdersRoyalty) {
+                    const holder = smartweave.selectWeightedPstHolder(contractState.balances);
+                    const tx = await arweave.createTransaction({ target: holder, quantity: String(shareholdersRoyalty) }, key);
+                    await arweave.transactions.sign(tx, key);
+                    const response = await arweave.transactions.post(tx);
+                    if(response.status != 200) paymentFailure = true;
+                }
+                if(!paymentFailure && authorRoyalty) {
+                    const holder = smartweave.selectWeightedPstHolder(contractState.balances);
+                    const tx = await arweave.createTransaction({ target: arWallet, quantity: String(authorRoyalty) }, key);
+                    await arweave.transactions.sign(tx, key);
+                    const response = await arweave.transactions.post(tx);
+                    if(response.status != 200) paymentFailure = true;
+                }
+
+                if(!paymentFailure)
+                    showFilesWithMessage();
+                else
+                    alert("You didn't pay the full sum!");
+            });
         });
     }
     fileReader.readAsText(document.getElementById('arWalletKeyFile').files[0]);
