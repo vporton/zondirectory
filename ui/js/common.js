@@ -1,4 +1,4 @@
-const THEGRAPH_URL = "https://api.thegraph.com/subgraphs/name/vporton/cryptozonrinkeby4";
+const THEGRAPH_URL = "https://api.thegraph.com/subgraphs/name/vporton/cryptozonrinkeby6";
 
 function safe_tags(str) {
     return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
