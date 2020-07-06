@@ -34,7 +34,7 @@ import {
 
 function generateId(event: ethereum.Event): String {
   let index = event.transaction.index.toHex().substring(2)
-  index = '0x' + index.padStart(16, '0');
+  index = '0x' + index.padStart(64, '0');
   return index + "-" + event.logIndex.toString() + "-" + event.transaction.hash.toHex();
 }
 
