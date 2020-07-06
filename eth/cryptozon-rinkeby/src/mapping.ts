@@ -1,4 +1,4 @@
-import { BigInt } from "@graphprotocol/graph-ts";
+import { ethereum, BigInt } from "@graphprotocol/graph-ts";
 import {
   Approval as ApprovalEvent,
   CategoryCreated as CategoryCreatedEvent,
@@ -32,7 +32,7 @@ import {
   Vote
 } from "../generated/schema"
 
-function generateId(event: Event): String {
+function generateId(event: ethereum.Event): String {
   let index = event.transaction.index.toHex().substring(2)
   index = '0x' + index.padStart(16, '0');
   return index + "-" + event.logIndex.toString() + "-" + event.transaction.hash.toHex();
