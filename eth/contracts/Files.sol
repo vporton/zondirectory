@@ -173,11 +173,11 @@ contract Files is BaseToken {
 
 // PST ///
 
-    mapping(address => uint256) lastDivedendsTotals; // the value of totalDivendents at the last payment to an address
+    mapping(address => uint256) lastTotalDivedends; // the value of totalDivendents at the last payment to an address
     uint256 totalDividends = 0;
     
     function dividendsOwing(address _account) internal view returns(uint256) {
-        uint256 _newDividends = totalDividends - lastDivedendsTotals[_account];
+        uint256 _newDividends = totalDividends - lastTotalDivedends[_account];
         return (shares.balances(_account) * _newDividends) / totalSupply; // rounding down
     }
 
@@ -189,7 +189,7 @@ contract Files is BaseToken {
 
         if(_owing > 0) {
             msg.sender.transfer(_owing);
-            lastDivedendsTotals[msg.sender] = totalDividends;
+            lastTotalDivedends[msg.sender] = totalDividends;
             totalDividends += _owing;
         }
     }
