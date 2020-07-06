@@ -178,7 +178,7 @@ contract Files is BaseToken {
     
     function dividendsOwing(address _account) internal view returns(uint256) {
         uint256 _newDividends = totalDividends - lastTotalDivedends[_account];
-        return (shares.balances(_account) * _newDividends) / totalSupply; // rounding down
+        return (shares.balances(_account) * _newDividends) / shares.totalSupply; // rounding down
     }
 
     function withdrawProfit() external {
