@@ -5,6 +5,7 @@ pragma solidity ^0.6.0;
 
 import './BaseToken.sol';
 import './ABDKMath64x64.sol';
+import './PST.sol';
 
 // TODO: Encode wallets and hashes as uint256
 
@@ -19,6 +20,7 @@ contract Files is BaseToken {
 
     // 64.64 fixed point number
     int128 public ownersShare = int128(1).divi(int128(10)); // 1/10
+    PST shares;
 
     uint maxId = 0;
     uint maxVoteId = 0;
@@ -49,11 +51,12 @@ contract Files is BaseToken {
     mapping (uint => uint256) pricesETH;
     mapping (uint => uint256) pricesAR;
 
-    constructor(address payable _programmerAddress) public {
+    constructor(address payable _programmerAddress, PST _shares) public {
         name = "Voting";
         decimals = 18;
         symbol = "VOT";
         programmerAddress = _programmerAddress;
+        shares = _shares;
     }
 
     receive() payable external {
@@ -166,5 +169,28 @@ contract Files is BaseToken {
 
     function getCategoryVotes(uint _child, uint _parent) external view returns (int256) {
         return votesForCategories[_child][_parent];
+    }
+
+// PST ///
+
+    mapping(address => uint256) lastDivedendsTotals; // the value of totalDivendents at the last payment to an address
+    uint256 totalDividends = 0;
+    
+    function dividendsOwing(address account) internal view returns(uint256) {
+        uint256 newDividends = totalDividends - lastDivedendsTotals[account];
+        return (shares.balances(account) * newDividends) / totalSupply;
+    }
+
+    function withdrawProfit() external {
+        uint256 owing = dividendsOwing(msg.sender);
+
+        // Against rounding errors. Is this necessary?
+        if(owing > address(this).balance) owing = address(this).balance;
+
+        if(owing > 0) {
+            msg.sender.transfer(owing);
+            lastDivedendsTotals[msg.sender] = totalDividends;
+            totalDividends += owing;
+        }
     }
 }
