@@ -190,8 +190,8 @@ contract Files is BaseToken {
 
         if(_owing > 0) {
             msg.sender.transfer(_owing);
-            lastTotalDivedends[msg.sender] = totalDividendsPaid;
             totalDividendsPaid += _owing;
+            lastTotalDivedends[msg.sender] = totalDividendsPaid;
         }
     }
 }
