@@ -57,6 +57,9 @@ Consider top-level categories like
 
 * Software sources
 
+Namely the categorization system makes this software useful. It would be useless without
+categorization.
+
 ### Non-English language
 
 ### Full text search
