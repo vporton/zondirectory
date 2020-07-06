@@ -32,9 +32,15 @@ import {
   Vote
 } from "../generated/schema"
 
+function generateId(event: Event): String {
+  let index = event.transaction.index.toHex().substring(2)
+  index = '0x' + index.padStart(16, '0');
+  return index + "-" + event.logIndex.toString() + "-" + event.transaction.hash.toHex();
+}
+
 export function handleApproval(event: ApprovalEvent): void {
   let entity = new Approval(
-    event.transaction.index.toHex() + "-" + event.logIndex.toString() + "-" + event.transaction.hash.toHex()
+    generateId(event)
   )
   entity._spender = event.params._spender
   entity._value = event.params._value
@@ -43,7 +49,7 @@ export function handleApproval(event: ApprovalEvent): void {
 
 export function handleCategoryCreated(event: CategoryCreatedEvent): void {
   let entity = new CategoryCreated(
-    event.transaction.index.toHex() + "-" + event.logIndex.toString() + "-" + event.transaction.hash.toHex()
+    generateId(event)
   )
   entity.categoryId = event.params.categoryId
   entity.title = event.params.title
@@ -53,7 +59,7 @@ export function handleCategoryCreated(event: CategoryCreatedEvent): void {
 
 export function handleItemAddedToCategory(event: ItemAddedToCategoryEvent): void {
   let entity = new ItemAddedToCategory(
-    event.transaction.index.toHex() + "-" + event.logIndex.toString() + "-" + event.transaction.hash.toHex()
+    generateId(event)
   )
   entity.categoryId = event.params.categoryId
   entity.itemId = event.params.itemId
@@ -62,7 +68,7 @@ export function handleItemAddedToCategory(event: ItemAddedToCategoryEvent): void
 
 export function handleCoverItemUpdated(event: ItemCoverUpdatedEvent): void {
   let entity = new ItemCoverUpdated(
-    event.transaction.index.toHex() + "-" + event.logIndex.toString() + "-" + event.transaction.hash.toHex()
+    generateId(event)
   )
   entity.itemId = event.params.itemId
   entity.version = event.params.version
@@ -74,7 +80,7 @@ export function handleCoverItemUpdated(event: ItemCoverUpdatedEvent): void {
 
 export function handleItemCreated(event: ItemCreatedEvent): void {
   let entity = new ItemCreated(
-    event.transaction.index.toHex() + "-" + event.logIndex.toString() + "-" + event.transaction.hash.toHex()
+    generateId(event)
   )
   entity.itemId = event.params.itemId
   entity.save()
@@ -82,7 +88,7 @@ export function handleItemCreated(event: ItemCreatedEvent): void {
 
 export function handleItemFilesUpdated(event: ItemFilesUpdatedEvent): void {
   let entity = new ItemFilesUpdated(
-    event.transaction.index.toHex() + "-" + event.logIndex.toString() + "-" + event.transaction.hash.toHex()
+    generateId(event)
   )
   entity.itemId = event.params.itemId
   entity.format = event.params.format
@@ -93,7 +99,7 @@ export function handleItemFilesUpdated(event: ItemFilesUpdatedEvent): void {
 
 export function handleItemUpdated(event: ItemUpdatedEvent): void {
   let entity = new ItemUpdated(
-    event.transaction.index.toHex() + "-" + event.logIndex.toString() + "-" + event.transaction.hash.toHex()
+    generateId(event)
   )
   entity.itemId = event.params.itemId
   entity.title = event.params.title
@@ -107,7 +113,7 @@ export function handleItemUpdated(event: ItemUpdatedEvent): void {
 
 export function handleSetARWallet(event: SetARWalletEvent): void {
   let entity = new SetARWallet(
-    event.transaction.index.toHex() + "-" + event.logIndex.toString() + "-" + event.transaction.hash.toHex()
+    generateId(event)
   )
   entity.owner = event.params.owner
   entity.arWallet = event.params.arWallet
@@ -116,7 +122,7 @@ export function handleSetARWallet(event: SetARWalletEvent): void {
 
 export function handleSetItemOwner(event: SetItemOwnerEvent): void {
   let entity = new SetItemOwner(
-    event.transaction.index.toHex() + "-" + event.logIndex.toString() + "-" + event.transaction.hash.toHex()
+    generateId(event)
   )
   entity.itemId = event.params.itemId
   entity.owner = event.params.owner
@@ -125,7 +131,7 @@ export function handleSetItemOwner(event: SetItemOwnerEvent): void {
 
 export function handleSetOwner(event: SetOwnerEvent): void {
   let entity = new SetOwner(
-    event.transaction.index.toHex() + "-" + event.logIndex.toString() + "-" + event.transaction.hash.toHex()
+    generateId(event)
   )
   entity.owner = event.params.owner
   entity.save()
@@ -133,7 +139,7 @@ export function handleSetOwner(event: SetOwnerEvent): void {
 
 export function handleSetOwnerShare(event: SetOwnerShareEvent): void {
   let entity = new SetOwnerShare(
-    event.transaction.index.toHex() + "-" + event.logIndex.toString() + "-" + event.transaction.hash.toHex()
+    generateId(event)
   )
   entity.share = event.params.share
   entity.save()
@@ -141,7 +147,7 @@ export function handleSetOwnerShare(event: SetOwnerShareEvent): void {
 
 export function handleSubcategoryAdded(event: SubcategoryAddedEvent): void {
   let entity = new SubcategoryAdded(
-    event.transaction.index.toHex() + "-" + event.logIndex.toString() + "-" + event.transaction.hash.toHex()
+    generateId(event)
   )
   entity.categoryId = event.params.categoryId
   entity.subId = event.params.subId
@@ -150,7 +156,7 @@ export function handleSubcategoryAdded(event: SubcategoryAddedEvent): void {
 
 export function handleTransfer(event: TransferEvent): void {
   let entity = new Transfer(
-    event.transaction.index.toHex() + "-" + event.logIndex.toString() + "-" + event.transaction.hash.toHex()
+    generateId(event)
   )
   entity._from = event.params._from
   entity._to = event.params._to
@@ -160,7 +166,7 @@ export function handleTransfer(event: TransferEvent): void {
 
 export function handleVote(event: VoteEvent): void {
   let entity = new Vote(
-    event.transaction.index.toHex() + "-" + event.logIndex.toString() + "-" + event.transaction.hash.toHex()
+    generateId(event)
   )
   entity.child = event.params.child
   entity.parent = event.params.parent
