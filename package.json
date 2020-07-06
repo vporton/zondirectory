@@ -2,6 +2,7 @@
   "dependencies": {
     "arweave": "^1.7.1",
     "promises-tho": "^1.1.0",
+    "smartweave": "https://arweave.net/AM-u4X2po-3Tx7fma3lRonCfLwrjI42IALwDL_YFXBs",
     "typescript": "^3.9.6"
   }
 }
