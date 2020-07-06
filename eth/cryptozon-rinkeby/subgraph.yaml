@@ -6,7 +6,7 @@ dataSources:
     name: Contract
     network: rinkeby
     source:
-      address: "0xf0aC14bFf5C803D69DE305D054556212df21989d"
+      address: "0x40Fe3D8A1dEa6AC7870b177F91f23933519c61C4"
       abi: Contract
     mapping:
       kind: ethereum/events

@@ -20,7 +20,7 @@ contract Files is BaseToken {
 
     // 64.64 fixed point number
     int128 public ownersShare = int128(1).divi(int128(10)); // 1/10
-    PST shares;
+    PST public shares;
 
     uint maxId = 0;
     uint maxVoteId = 0;

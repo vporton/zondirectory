@@ -3,7 +3,8 @@ module.exports = async ({getNamedAccounts, deployments}) => {
     const namedAccounts = await getNamedAccounts();
     const {deploy} = deployments;
     const {deployer} = namedAccounts;
-    const deployResult = await deploy('Files', {from: deployer, args: [process.env.PROGRAMMER_ADDRESS]});
+    const PST = await deployments.get('PST');
+    const deployResult = await deploy('Files', {from: deployer, args: [process.env.PROGRAMMER_ADDRESS, PST.address]});
     if (deployResult.newlyDeployed) {
         const fs = require('fs');
         fs.writeFileSync('../ui/artifacts/addresses.js', "const filesContractAddress = '" + deployResult.address + "';");
@@ -11,3 +12,4 @@ module.exports = async ({getNamedAccounts, deployments}) => {
     }
 }
 module.exports.tags = ['Files'];
+module.exports.dependencies = ['PST'];
