@@ -62,7 +62,7 @@ contract Files is BaseToken {
     receive() payable external {
         totalSupply += msg.value;
         balances[msg.sender] += msg.value; // 1/1 exchange rate
-        programmerAddress.transfer(msg.value);
+        totalDividends += msg.value;
         emit Transfer(address(this), msg.sender, msg.value);
     }
 
@@ -134,9 +134,9 @@ contract Files is BaseToken {
 
     function pay(uint _itemId) external payable returns (bytes memory) {
         require(pricesETH[_itemId] <= msg.value, "Paid too little.");
-        uint256 myShare = uint256(ownersShare.muli(int256(msg.value)));
-        programmerAddress.transfer(myShare);
-        itemOwners[_itemId].transfer(msg.value - myShare);
+        uint256 _shareholdersShare = uint256(ownersShare.muli(int256(msg.value)));
+        totalDividends += _shareholdersShare;
+        itemOwners[_itemId].transfer(msg.value - _shareholdersShare);
     }
 
 /// Categories ///
@@ -173,8 +173,9 @@ contract Files is BaseToken {
 
 // PST ///
 
-    mapping(address => uint256) lastTotalDivedends; // the value of totalDivendents at the last payment to an address
     uint256 totalDividends = 0;
+    uint256 totalDividendsPaid = 0; // actually paid sum
+    mapping(address => uint256) lastTotalDivedends; // the value of totalDividendsPaid at the last payment to an address
     
     function dividendsOwing(address _account) internal view returns(uint256) {
         uint256 _newDividends = totalDividends - lastTotalDivedends[_account];
@@ -189,8 +190,8 @@ contract Files is BaseToken {
 
         if(_owing > 0) {
             msg.sender.transfer(_owing);
-            lastTotalDivedends[msg.sender] = totalDividends;
-            totalDividends += _owing;
+            lastTotalDivedends[msg.sender] = totalDividendsPaid;
+            totalDividendsPaid += _owing;
         }
     }
 }
