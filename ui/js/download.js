@@ -62,45 +62,54 @@ async function payETH() {
 }
 
 async function payAR() {
-    const price = askPrice(document.getElementById('priceAR').textContent);
+    if(!document.getElementById('arWalletKeyFile').files[0]) {
+        alert("Select your AR wallet key file to pay!");
+        return;
+    }
+
+    let price = askPrice(document.getElementById('priceAR').textContent);
     if(!price) return;
 
-    const smartweave = require('smartweave');
     const arweave = Arweave.init();
+    price = arweave.ar.arToWinston(price);
+
+    const smartweave = require('smartweave');
     const fileReader = new FileReader();
     fileReader.onload = async (e) => {
         const key = JSON.parse(e.target.result);
 
         smartweave.readContract(arweave, AR_PST_CONTRACT_ADDRESS).then(async contractState => {
             await defaultAccountPromise();
-            let query = `setARWallets(first:1, orderBy:id, orderDirection:desc, where:{owner:${defaultAccount}}) {
-                arWallet
-            }`;
+            let query = `{
+    setARWallets(first:1, orderBy:id, orderDirection:desc, where:{owner:"${defaultAccount}"}) {
+        arWallet
+    }
+}`;
             let arWallet = (await queryThegraph(query)).data.setARWallets[0].arWallet;
-            let authorRoyalty, myRoyalty;
+            let authorRoyalty, shareholdersRoyalty;
             // TODO: Read royalty percent from Ethereum.
             if(arWallet) {
                 authorRoyalty = 0.9 * price;
-                myRoyalty = 0.1 * price;
+                shareholdersRoyalty = 0.1 * price;
             } else {
                 authorRoyalty = 0;
-                myRoyalty = price;
+                shareholdersRoyalty = price;
             }
 
             // FIXME: check that we have enough balance before trying to pay
             // FIrst pay to me then to the author, because in the case of a failure the buyer loses less this way.
             let paymentFailure = false;
-            if(myRoyalty) {
+            if(shareholdersRoyalty) {
                 const holder = smartweave.selectWeightedPstHolder(contractState.balances);
-                const tx = await arweave.transactions.create({ target: holder, quantity: myRoyalty }, key);
-                await arweave.transaction.sign(tx, key);
-                await arweave.transactions.post(tx);
+                const tx = await arweave.createTransaction({ target: holder, quantity: String(shareholdersRoyalty) }, key);
+                await arweave.transactions.sign(tx, key);
+                const response = await arweave.transactions.post(tx);
                 if(response.status != 200) paymentFailure = true;
             }
-            if(authorRoyalty) {
+            if(!paymentFailure && authorRoyalty) {
                 const holder = smartweave.selectWeightedPstHolder(contractState.balances);
-                const tx = await arweave.transactions.create({ target: atob(arWallet), quantity: authorRoyalty }, key); // FIXME: URL encoded
-                await arweave.transaction.sign(tx, key);
+                const tx = await arweave.createTransaction({ target: arWallet, quantity: String(authorRoyalty) }, key);
+                await arweave.transactions.sign(tx, key);
                 const response = await arweave.transactions.post(tx);
                 if(response.status != 200) paymentFailure = true;
             }
