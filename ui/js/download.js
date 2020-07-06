@@ -51,9 +51,14 @@ async function payETH() {
     if(!price) return;
     const contractInstance = new web3.eth.Contract(await filesJsonInterface(), filesContractAddress);
     await defaultAccountPromise();
-    contractInstance.methods.pay(itemId).send({from: defaultAccount, gas: '1000000'})
-        .then(() => showFilesWithMessage())
-        .catch(() => alert("You tried to pay below the price or payment failure!"));
+    contractInstance.methods.pay(itemId).send({from: defaultAccount, value: web3.utils.toWei(String(price*1.0000001)), gas: '1000000'},
+                                              function(error, transactionHash) {
+        if(error) {
+            alert("You tried to pay below the price or payment failure! " + err);
+        } else {
+            showFilesWithMessage();
+        }
+    });
 }
 
 async function payAR() {
