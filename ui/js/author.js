@@ -36,7 +36,7 @@ async function onLoad() {
 }
 
 async function doSetARWallet(address) {
-    const contractInstance = new web3.eth.Contract(await filesJsonInterface(), filesContractAddress);
+    const contractInstance = new web3.eth.Contract(await filesJsonInterface(), addressFiles);
     contractInstance.methods.setARWallet(defaultAccount, address)
         .send({from: defaultAccount, gas: '1000000'})
         .on('transactionHash', function(transactionHash) {

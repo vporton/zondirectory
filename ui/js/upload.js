@@ -22,7 +22,7 @@ async function upload() {
                 return;
             }
 
-            const contractInstance = new web3.eth.Contract(await filesJsonInterface(), filesContractAddress);
+            const contractInstance = new web3.eth.Contract(await filesJsonInterface(), addressFiles);
             console.log(transaction.id);
             contractInstance.methods.uploadFile(itemId,
                                                 document.getElementById('version').value,

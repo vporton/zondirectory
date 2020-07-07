@@ -49,7 +49,7 @@ function showFilesWithMessage() {
 async function payETH() {
     const price = askPrice(document.getElementById('priceETH').textContent);
     if(!price) return;
-    const contractInstance = new web3.eth.Contract(await filesJsonInterface(), filesContractAddress);
+    const contractInstance = new web3.eth.Contract(await filesJsonInterface(), addressFiles);
     await defaultAccountPromise();
     contractInstance.methods.pay(itemId).send({from: defaultAccount, value: web3.utils.toWei(String(price*1.0000001)), gas: '1000000'},
                                               function(error, transactionHash) {
@@ -87,7 +87,7 @@ async function payAR() {
 }`;
             let arWallet = (await queryThegraph(query)).data.setARWallets[0].arWallet;
             let authorRoyalty, shareholdersRoyalty;
-            const contractInstance = new web3.eth.Contract(await filesJsonInterface(), filesContractAddress);
+            const contractInstance = new web3.eth.Contract(await filesJsonInterface(), addressFiles);
             await defaultAccountPromise();
             // TODO: Don't call Ethereum if no author's AR wallet.
             contractInstance.methods.ownersShare().call(async (error, result) => {
