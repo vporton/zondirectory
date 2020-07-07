@@ -60,6 +60,8 @@ Consider top-level categories like
 
 * Software sources
 
+* Videos
+
 Namely the categorization system makes this software useful. It would be useless without
 categorization.
 
