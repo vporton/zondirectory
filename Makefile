@@ -4,18 +4,26 @@
 
 all: ui
 
-ui: out/ui/artifacts/SmartWeave.js ui-quick
+ui: ui-quick
+	make out/ui/artifacts/SmartWeave.js out/ui/artifacts/addresses.js
 
 ui-quick:
 	-rm -rf out/ui
 	mkdir -p out/ui
-	find ui -name "*.html" -o -name "*.js" -o -name "*.css" -o -name "*.json" -o -name "*.abi" | \
+	find ui -name "*.js" -o -name "*.css" -o -name "*.json" -o -name "*.abi" | \
 	  xargs cp --parents -t out/
+	find ui \( -name "*.html" -a \! -name template.html \) | \
+	  while read REPLY; do \
+	    xsltproc --stringparam input ../$$REPLY -o out/$$REPLY lib/format.xslt ui/template.html; \
+	  done
 
 out/js/SmartWeave/index.js:
 	-npx typescript --outDir out/js/SmartWeave --project libs/SmartWeave/tsconfig.json
 	# npx typescript --outDir out/js/SmartWeave libs/SmartWeave/src/*.ts
 
-out/ui/artifacts/SmartWeave.js: out/js/SmartWeave/index.js
+out/artifacts/SmartWeave.js: out/js/SmartWeave/index.js
 	# npx browserify -o ui/artifacts/SmartWeave.js out/js/SmartWeave/index.js
 	npx browserify -o $@ -r ./out/js/SmartWeave/index.js:smartweave
+
+out/ui/artifacts/%: out/artifacts/%
+	cp $< $@

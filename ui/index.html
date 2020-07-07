@@ -1,6 +1,5 @@
-<html>
-    <head>
-        <meta charset="utf-8"/>
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head id="head">
         <title>List of Items to Buy or Download</title>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/web3/1.2.9/web3.min.js"></script>
         <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
@@ -14,16 +13,18 @@
         </style>
     </head>
     <body>
-        <p><a href="author.html">Author's dashboard</a></p>
-        <h1>List of Items to Buy or Download</h1>
-        <table>
-            <thead>
-                <tr>
-                    <th>Title</th>
-                    <th>Price in ETH</th>
-                    <th>Price in AR</th>
-                </tr>
-            </thead>
-            <tbody id="theTable"></tbody>
-        </table>
+        <h1 id="title">List of Items to Buy or Download</h1>
+        <div id="body">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Title</th>
+                        <th>Price in ETH</th>
+                        <th>Price in AR</th>
+                    </tr>
+                </thead>
+                <tbody id="theTable"></tbody>
+            </table>
+        </div>
     </body>
+</html>

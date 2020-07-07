@@ -1,6 +1,5 @@
-<html>
-    <head>
-        <meta charset="utf-8"/>
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head id="head">
         <title>Item Description</title>
         <style>
             input[type=text], textarea { width: 100%;}
@@ -13,16 +12,19 @@
         <script src="js/description.js"></script>
     </head>
     <body>
-        <h1>Item Description</h1>
-        <p>Language: <input type="text" id="locale" value="en"/></p>
-        <p>Title: <input type="text" id="title"/></p>
-        <p>Description: <textarea id="description"></textarea></p>
-        <p>License: <textarea id="license"></textarea></p>
-        <p>Minimal prices:</p>
-        <p>in ETH: <input type="text" id="priceETH"/>
-            <label><input type="checkbox" id="sellInETH" onclick="sellInETHToggle(event)"/> Don't sell in ETH</label></p>
-        <p>in AR: <input type="text" id="priceAR"/>
-            <label><input type="checkbox" id="sellInAR" onclick="sellInARToggle(event)"/> Don't sell in AR</label></p>
-        <p><input type="button" value="submit" onclick="createOrUpdateItem()"/></p>
-        <p id="uploadLink" style="display: none;"><a href="">Upload file</a></p>
+        <h1 id="title">Item Description</h1>
+        <div id="body">
+            <p>Language: <input type="text" id="locale" value="en"/></p>
+            <p>Title: <input type="text" id="title"/></p>
+            <p>Description: <textarea id="description"></textarea></p>
+            <p>License: <textarea id="license"></textarea></p>
+            <p>Minimal prices:</p>
+            <p>in ETH: <input type="text" id="priceETH"/>
+                <label><input type="checkbox" id="sellInETH" onclick="sellInETHToggle(event)"/> Don't sell in ETH</label></p>
+            <p>in AR: <input type="text" id="priceAR"/>
+                <label><input type="checkbox" id="sellInAR" onclick="sellInARToggle(event)"/> Don't sell in AR</label></p>
+            <p><input type="button" value="submit" onclick="createOrUpdateItem()"/></p>
+            <p id="uploadLink" style="display: none;"><a href="">Upload file</a></p>
+        </div>
     </body>
+</html>

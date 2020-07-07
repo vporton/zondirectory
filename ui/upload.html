@@ -1,6 +1,5 @@
-<html>
-    <head>
-        <meta charset="utf-8"/>
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head id="head">
         <title>Upload a File</title>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/web3/1.2.9/web3.min.js"></script>
         <script src="https://unpkg.com/arweave/bundles/web.bundle.min.js"></script>
@@ -9,13 +8,16 @@
         <script src="js/upload.js"></script>
     </head>
     <body>
-        <h1>Upload a File</h1>
-        <p>Files set version: <input type="number" id="version"/></p>
-        <p>File format: <input type="text" id="format"/></p>
-        <p>File: <input type="file" id="file"/></p>
-        <p>AR wallet key file to pay for upload: <input type="file" id="arWalletKeyFile"/></p>
-        <p>WARNING: Your file will be made available at a URL containing a password. Anyone knowing
-            the password can download the file (however this may be illegal dependently on the
-            jurisdiction and the license). Removal of the uploaded file is not possible.</p>
-        <p><input type="button" value="submit" onclick="upload()"/></p>
+        <h1 id="title">Upload a File</h1>
+        <div id="body">
+            <p>Files set version: <input type="number" id="version"/></p>
+            <p>File format: <input type="text" id="format"/></p>
+            <p>File: <input type="file" id="file"/></p>
+            <p>AR wallet key file to pay for upload: <input type="file" id="arWalletKeyFile"/></p>
+            <p>WARNING: Your file will be made available at a URL containing a password. Anyone knowing
+                the password can download the file (however this may be illegal dependently on the
+                jurisdiction and the license). Removal of the uploaded file is not possible.</p>
+            <p><input type="button" value="submit" onclick="upload()"/></p>
+        </div>
     </body>
+</html>
