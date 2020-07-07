@@ -4,7 +4,7 @@
 
 all: ui
 
-ui: browserify ui-quick
+ui: out/ui/artifacts/SmartWeave.js ui-quick
 
 ui-quick:
 	-rm -rf out/ui
@@ -12,10 +12,10 @@ ui-quick:
 	find ui -name "*.html" -o -name "*.js" -o -name "*.css" -o -name "*.json" -o -name "*.abi" | \
 	  xargs cp --parents -t out/
 
-compile-smartweave:
+out/js/SmartWeave/index.js:
 	-npx typescript --outDir out/js/SmartWeave --project libs/SmartWeave/tsconfig.json
 	# npx typescript --outDir out/js/SmartWeave libs/SmartWeave/src/*.ts
 
-browserify: compile-smartweave
+out/ui/artifacts/SmartWeave.js: out/js/SmartWeave/index.js
 	# npx browserify -o ui/artifacts/SmartWeave.js out/js/SmartWeave/index.js
-	npx browserify -o out/ui/artifacts/SmartWeave.js -r ./out/js/SmartWeave/index.js:smartweave
+	npx browserify -o $@ -r ./out/js/SmartWeave/index.js:smartweave
