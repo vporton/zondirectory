@@ -3,7 +3,7 @@ async function onLoad() {
     // TODO: pagination
     query = `{
         itemCreateds {
-            itemId    
+            itemId
         }
     }`;
     let itemIds = (await queryThegraph(query)).data.itemCreateds;
