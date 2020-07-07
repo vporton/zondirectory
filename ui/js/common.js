@@ -1,3 +1,7 @@
+$(document).ajaxError(function( event, request, settings ) {
+    alert("Error: " + request.status);
+});
+
 const THEGRAPH_URL = "https://api.thegraph.com/subgraphs/name/vporton/cryptozon-rinkeby7";
 
 function safe_tags(str) {
