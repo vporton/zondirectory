@@ -51,6 +51,7 @@ async function payETH() {
     if(!price) return;
     const contractInstance = new web3.eth.Contract(await filesJsonInterface(), addressFiles);
     await defaultAccountPromise();
+    // FIXME: The transaction can be canceled after the files are already revealed!
     contractInstance.methods.pay(itemId).send({from: defaultAccount, value: web3.utils.toWei(String(price*1.0000001)), gas: '1000000'},
                                               function(error, transactionHash) {
         if(error) {
