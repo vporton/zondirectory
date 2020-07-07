@@ -7,6 +7,7 @@ all: ui
 ui: browserify ui-quick
 
 ui-quick:
+	-rm -rf out/ui
 	mkdir -p out/ui
 	find ui -name "*.html" -o -name "*.js" -o -name "*.css" -o -name "*.json" -o -name "*.abi" | \
 	  xargs cp --parents -t out/
