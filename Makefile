@@ -1,11 +1,11 @@
 #!/usr/bin/make -f
 
-.PHONY: all ui ui-quick compile-smartweave browserify
+.PHONY: all ui ui-quick compile-smartweave browserify compile
 
 all: ui
 
-ui: ui-quick
-	make out/ui/artifacts/SmartWeave.js out/ui/artifacts/addresses.js
+ui: ui-quick compile
+	make out/ui/artifacts/SmartWeave.js out/ui/artifacts/addresses.js out/ui/artifacts/Files.abi
 
 ui-quick:
 	-rm -rf out/ui
@@ -16,6 +16,9 @@ ui-quick:
 	  while read REPLY; do \
 	    xsltproc --stringparam input ../$$REPLY -o out/$$REPLY lib/format.xslt ui/template.html; \
 	  done
+
+compile:
+	cd eth && npx buidler compile
 
 out/js/SmartWeave/index.js:
 	-npx typescript --outDir out/js/SmartWeave --project libs/SmartWeave/tsconfig.json

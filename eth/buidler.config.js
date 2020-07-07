@@ -15,9 +15,9 @@ task("compile", "Compiles the entire project, building all artifacts", async fun
   await runSuper();
   console.log("Extracting ABIs...");
   const fs = require('fs');
-  fs.mkdir('../ui/artifacts', ()=>{});
+  fs.mkdir('../out/artifacts', ()=>{});
   const abi = JSON.parse(fs.readFileSync('artifacts/Files.json')).abi;
-  fs.writeFileSync('../ui/artifacts/Files.abi', JSON.stringify(abi));
+  fs.writeFileSync('../out/artifacts/Files.abi', JSON.stringify(abi));
 });
 
 
@@ -41,7 +41,7 @@ module.exports = {
     },
     rinkeby: {
       url: "https://rinkeby.infura.io/v3/1d0c278301fc40f3a8f40f25ae3bd328",
-      accounts: [process.env.RINKEBY_PRIVATE_KEY],
+      accounts: process.env.RINKEBY_PRIVATE_KEY ? [process.env.RINKEBY_PRIVATE_KEY] : [],
     },
   },
   namedAccounts: {
