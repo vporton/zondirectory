@@ -106,7 +106,7 @@ async function payAR() {
                 }
 
                 // FIXME: check that we have enough balance before trying to pay
-                // FIrst pay to me then to the author, because in the case of a failure the buyer loses less this way.
+                // First pay to me then to the author, because in the case of a failure the buyer loses less this way.
                 let paymentFailure = false;
                 if(shareholdersRoyalty) {
                     const holder = smartweave.selectWeightedPstHolder(contractState.balances);
