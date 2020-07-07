@@ -76,3 +76,12 @@ It is implemented using Arweave, Ethereum, and TheGraph.
 In the future TheGraph may be improved to make it better (e.g. for quick pagination
 together with the spam filter), or TheGraph may be replaced with a home-made system
 of storing the Ethereum state.
+
+# Installation
+
+Prerequisites: make, Node, XSLTproc, GNU cp (not FreeBSD cp!)
+
+To install it into `out/ui/` directory type
+
+    npm install
+    make
