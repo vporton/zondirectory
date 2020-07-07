@@ -8,6 +8,7 @@ module.exports = async ({getNamedAccounts, deployments}) => {
     if (deployResult.newlyDeployed) {
         const fs = require('fs');
         fs.writeFileSync('../ui/artifacts/addresses.js', "const filesContractAddress = '" + deployResult.address + "';");
+        // TODO: bre.network.name, ethers.getContractAt
         log(`contract Files deployed at ${deployResult.address} using ${deployResult.receipt.gasUsed} gas`);
     }
 }
