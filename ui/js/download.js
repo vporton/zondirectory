@@ -68,67 +68,74 @@ async function payAR() {
     let price = askPrice(document.getElementById('priceAR').textContent);
     if(!price) return;
 
-    const arweave = Arweave.init();
     price = arweave.ar.arToWinston(price);
 
-    const smartweave = require('smartweave');
-    const fileReader = new FileReader();
-    fileReader.onload = async (e) => {
-        const key = JSON.parse(e.target.result);
+    arweave.wallets.getBalance('1seRanklLU_1VTGkEk7P0xAwMJfA7owA1JHW5KyZKlY').then((balance) => {
+        console.log(balance, price)
+        if(Number(balance) < Number(price)) {
+            alert("Not enough money in your AR wallet!");
+            return;
+        }
 
-        smartweave.readContract(arweave, AR_PST_CONTRACT_ADDRESS).then(async contractState => {
-            await defaultAccountPromise();
-            let query = `{
-    setARWallets(first:1, orderBy:id, orderDirection:desc, where:{owner:"${defaultAccount}"}) {
-        arWallet
-    }
-}`;
-            let arWallet = (await queryThegraph(query)).data.setARWallets[0].arWallet;
-            let authorRoyalty, shareholdersRoyalty;
-            const contractInstance = new web3.eth.Contract(await filesJsonInterface(), addressFiles);
-            await defaultAccountPromise();
-            // TODO: Don't call Ethereum if no author's AR wallet.
-            contractInstance.methods.ownersShare().call(async (error, result) => {
-                if(error) {
-                    alert(error);
-                    return;
-                }
-                const ownersShare = result / 2**64;
+        const smartweave = require('smartweave');
+        const fileReader = new FileReader();
+        fileReader.onload = async (e) => {
+            const key = JSON.parse(e.target.result);
 
-                if(arWallet) {
-                    authorRoyalty = (1 - ownersShare) * price;
-                    shareholdersRoyalty = ownersShare * price;
-                } else {
-                    authorRoyalty = 0;
-                    shareholdersRoyalty = price;
-                }
+            smartweave.readContract(arweave, AR_PST_CONTRACT_ADDRESS).then(async contractState => {
+                await defaultAccountPromise();
+                let query = `{
+        setARWallets(first:1, orderBy:id, orderDirection:desc, where:{owner:"${defaultAccount}"}) {
+            arWallet
+        }
+    }`;
+                let arWallet = (await queryThegraph(query)).data.setARWallets[0].arWallet;
+                let authorRoyalty, shareholdersRoyalty;
+                const contractInstance = new web3.eth.Contract(await filesJsonInterface(), addressFiles);
+                await defaultAccountPromise();
+                // TODO: Don't call Ethereum if no author's AR wallet.
+                contractInstance.methods.ownersShare().call(async (error, result) => {
+                    if(error) {
+                        alert(error);
+                        return;
+                    }
+                    const ownersShare = result / 2**64;
 
-                // FIXME: check that we have enough balance before trying to pay
-                // First pay to me then to the author, because in the case of a failure the buyer loses less this way.
-                let paymentFailure = false;
-                if(shareholdersRoyalty) {
-                    const holder = smartweave.selectWeightedPstHolder(contractState.balances);
-                    const tx = await arweave.createTransaction({ target: holder, quantity: String(shareholdersRoyalty) }, key);
-                    await arweave.transactions.sign(tx, key);
-                    const response = await arweave.transactions.post(tx);
-                    if(response.status != 200) paymentFailure = true;
-                }
-                if(!paymentFailure && authorRoyalty) {
-                    const holder = smartweave.selectWeightedPstHolder(contractState.balances);
-                    const tx = await arweave.createTransaction({ target: arWallet, quantity: String(authorRoyalty) }, key);
-                    await arweave.transactions.sign(tx, key);
-                    const response = await arweave.transactions.post(tx);
-                    if(response.status != 200) paymentFailure = true;
-                }
+                    if(arWallet) {
+                        authorRoyalty = Math.floor((1 - ownersShare) * price);
+                        shareholdersRoyalty = Math.floor(ownersShare * price);
+                    } else {
+                        authorRoyalty = 0;
+                        shareholdersRoyalty = Math.floor(price);
+                    }
 
-                if(!paymentFailure)
-                    showFilesWithMessage();
-                else
-                    alert("You didn't pay the full sum!");
+                    // FIXME: check that we have enough balance before trying to pay
+                    // First pay to me then to the author, because in the case of a failure the buyer loses less this way.
+                    let paymentFailure = false;
+                    if(shareholdersRoyalty) {
+                        const holder = smartweave.selectWeightedPstHolder(contractState.balances);
+                        const tx = await arweave.createTransaction({ target: holder, quantity: String(shareholdersRoyalty) }, key);
+                        await arweave.transactions.sign(tx, key);
+                        const response = await arweave.transactions.post(tx);
+                        if(response.status != 200) paymentFailure = true;
+                    }
+                    if(!paymentFailure && authorRoyalty) {
+                        const holder = smartweave.selectWeightedPstHolder(contractState.balances);
+                        const tx = await arweave.createTransaction({ target: arWallet, quantity: String(authorRoyalty) }, key);
+                        await arweave.transactions.sign(tx, key);
+                        const response = await arweave.transactions.post(tx);
+                        if(response.status != 200) paymentFailure = true;
+                    }
+
+                    if(!paymentFailure)
+                        showFilesWithMessage();
+                    else
+                        alert("You didn't pay the full sum!");
+                });
             });
-        });
-    }
-    fileReader.readAsText(document.getElementById('arWalletKeyFile').files[0]);
+        }
+        fileReader.readAsText(document.getElementById('arWalletKeyFile').files[0]);
+    });
 }
 
 $(async function() {
