@@ -27,7 +27,7 @@ spam${itemId}: votes(first:1, orderBy:id, orderDirection:desc, where:{child:${it
         if(!/^item/.test(i)) continue;
         const item = items[i][0];
         const spamInfo = items[i.replace(/^item/, 'spam')][0];
-        const spamScore = spamInfo ? formatPriceETH(-spamInfo.value) : 0;
+        const spamScore = spamInfo ? formatPriceETH(spamInfo.value) : 0;
         const link = "download.html?id=" + item.itemId;
         const row = `<tr><td><a href="${link}">${safe_tags(item.title)}</a></td><td>${formatPriceETH(item.priceETH)}</td><td>${formatPriceAR(item.priceAR)}</td><td>${spamScore}</tr>`;
         $('#theTable').prepend(row);
