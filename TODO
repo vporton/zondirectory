@@ -18,3 +18,5 @@
 
 * Introduce the concept of category price to avoid polluting Root and like with recently created
   spam items and subcategories.
+
+* Make my app also a Web directory.
