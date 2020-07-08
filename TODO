@@ -15,3 +15,5 @@
 * Show user's past voting.
 
 * Save AR key file in browser's local storage.
+
+* "Sealing" item file versions to avoid partial versions.
