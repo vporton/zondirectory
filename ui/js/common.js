@@ -6,7 +6,7 @@ const THEGRAPH_URL = "https://api.thegraph.com/subgraphs/name/vporton/cryptozon-
 
 const INFINITY = (BigInt(1) << BigInt(256)) - BigInt(1);
 
-const arweave = Arweave.init();
+const arweave = window.Arweave ? Arweave.init() : undefined;
 
 function formatPriceETH(price) {
     return price == INFINITY ? '-' : web3.utils.fromWei(price);

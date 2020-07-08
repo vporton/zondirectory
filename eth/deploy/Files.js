@@ -39,7 +39,7 @@ async function createCategory(address, name) {
 async function addItemToCategory(parent, child) {
     const namedAccounts = await getNamedAccounts();
     const {deployer} = namedAccounts;   
-    await contractInstance.methods.addItemToCategory(parent, child).send({from: deployer, gas: '1000000'})
+    await contractInstance.methods.addItemToCategory(parent, child).send({from: deployer, gas: '10000000'})
 }
 
 module.exports = async ({getNamedAccounts, deployments}) => {
