@@ -48,14 +48,10 @@ module.exports = async ({getNamedAccounts, deployments}) => {
     const namedAccounts = await getNamedAccounts();
     const {deploy} = deployments;
     const {deployer} = namedAccounts;
-    const PST = await deployments.get('PST');
-    const deployResult = await deploy('Files', {from: deployer, args: [process.env.PROGRAMMER_ADDRESS, PST.address]});
+    const deployResult = await deploy('Files', {from: deployer, args: [process.env.PROGRAMMER_ADDRESS, 10000000]});
     if (deployResult.newlyDeployed) {
         const fs = require('fs');
         log(`contract Files deployed at ${deployResult.address} using ${deployResult.receipt.gasUsed} gas`);
-
-        // Acquire voting rights
-        await web3.eth.sendTransaction({to: deployResult.address, from: deployer, value: 1/*1 wei*/});
 
         await createCategory(deployResult.address, "Root");
         await createCategory(deployResult.address, "Spam");
@@ -85,4 +81,3 @@ module.exports = async ({getNamedAccounts, deployments}) => {
         mydeploy.updateAddress('Spam', await categories["Spam"], buidler.network.name);
 }
 module.exports.tags = ['Files'];
-module.exports.dependencies = ['PST'];
