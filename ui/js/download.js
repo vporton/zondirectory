@@ -71,7 +71,6 @@ async function payAR() {
     price = arweave.ar.arToWinston(price);
 
     arweave.wallets.getBalance('1seRanklLU_1VTGkEk7P0xAwMJfA7owA1JHW5KyZKlY').then((balance) => {
-        console.log(balance, price)
         if(Number(balance) < Number(price)) {
             alert("Not enough money in your AR wallet!");
             return;
