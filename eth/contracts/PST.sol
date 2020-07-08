@@ -22,14 +22,14 @@ contract PST is BaseToken {
         holdersIndexes[0] = _founder;
     }
 
-    function transfer(address _to, uint256 _value) override external returns (bool success) {
+    function transfer(address _to, uint256 _value) external override returns (bool success) {
         if (balances[_to] == 0 && _value != 0) {
             holdersIndexes[numberOfHolders++] = _to;
         }
         return BaseToken(this).transfer(_to, _value);
     }
 
-    function transferFrom(address _from, address _to, uint256 _value) override external returns (bool success) {
+    function transferFrom(address _from, address _to, uint256 _value) external override returns (bool success) {
         if (balances[_to] == 0 && _value != 0) {
             holdersIndexes[numberOfHolders++] = _to;
         }
