@@ -2,7 +2,7 @@ async function onLoad() {
     await defaultAccountPromise();
     // TODO: pagination
     query = `{
-        itemCreateds {
+        itemCreateds(first:1000) {
             itemId
         }
     }`;
