@@ -2,7 +2,6 @@ import { ethereum, BigInt } from "@graphprotocol/graph-ts";
 import {
   Approval as ApprovalEvent,
   CategoryCreated as CategoryCreatedEvent,
-  ItemAddedToCategory as ItemAddedToCategoryEvent,
   ItemCoverUpdated as ItemCoverUpdatedEvent,
   ItemCreated as ItemCreatedEvent,
   ItemFilesUpdated as ItemFilesUpdatedEvent,
@@ -11,14 +10,12 @@ import {
   SetItemOwner as SetItemOwnerEvent,
   SetOwner as SetOwnerEvent,
   SetOwnerShare as SetOwnerShareEvent,
-  SubcategoryAdded as SubcategoryAddedEvent,
   Transfer as TransferEvent,
   Vote as VoteEvent
 } from "../generated/Contract/Contract"
 import {
   Approval,
   CategoryCreated,
-  ItemAddedToCategory,
   ItemCoverUpdated,
   ItemCreated,
   ItemFilesUpdated,
@@ -27,7 +24,6 @@ import {
   SetItemOwner,
   SetOwner,
   SetOwnerShare,
-  SubcategoryAdded,
   Transfer,
   Vote
 } from "../generated/schema"
@@ -54,15 +50,6 @@ export function handleCategoryCreated(event: CategoryCreatedEvent): void {
   entity.categoryId = event.params.categoryId
   entity.title = event.params.title
   entity.locale = event.params.locale
-  entity.save()
-}
-
-export function handleItemAddedToCategory(event: ItemAddedToCategoryEvent): void {
-  let entity = new ItemAddedToCategory(
-    generateId(event)
-  )
-  entity.categoryId = event.params.categoryId
-  entity.itemId = event.params.itemId
   entity.save()
 }
 
@@ -142,15 +129,6 @@ export function handleSetOwnerShare(event: SetOwnerShareEvent): void {
     generateId(event)
   )
   entity.share = event.params.share
-  entity.save()
-}
-
-export function handleSubcategoryAdded(event: SubcategoryAddedEvent): void {
-  let entity = new SubcategoryAdded(
-    generateId(event)
-  )
-  entity.categoryId = event.params.categoryId
-  entity.subId = event.params.subId
   entity.save()
 }
 

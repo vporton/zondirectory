@@ -40,8 +40,6 @@ contract Files is BaseToken {
     event ItemCoverUpdated(uint indexed itemId, uint indexed version, bytes cover, uint width, uint height);
     event ItemFilesUpdated(uint indexed itemId, string format, uint version, string hash);
     event CategoryCreated(uint256 indexed categoryId, string title, string locale);
-    event ItemAddedToCategory(uint256 indexed categoryId, uint indexed itemId);
-    event SubcategoryAdded(uint256 indexed categoryId, uint indexed subId);
     event Vote(uint child, uint parent, int256 value);
     event Pay(uint itemId, uint256 value);
     event Donate(uint itemId, uint256 value);
@@ -156,14 +154,6 @@ contract Files is BaseToken {
 
     function createCategory(string calldata _title, string calldata _locale) external {
         emit CategoryCreated(++maxId, _title, _locale);
-    }
-
-    function addItemToCategory(uint256 _categoryId, uint256 _itemId) external {
-        emit ItemAddedToCategory(_categoryId, _itemId);
-    }
-
-    function addSubcategory(uint256 _category, uint256 _subCategory) external {
-        emit SubcategoryAdded(_category, _subCategory);
     }
 
 /// Voting ///

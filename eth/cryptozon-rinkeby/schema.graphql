@@ -41,12 +41,6 @@ type CategoryCreated @entity {
   locale: String! # string
 }
 
-type ItemAddedToCategory @entity {
-  id: ID!
-  categoryId: BigInt! # uint256
-  itemId: BigInt! # uint256
-}
-
 type ItemCoverUpdated @entity {
   id: ID!
   itemId: BigInt! # uint256
@@ -100,12 +94,6 @@ type SetOwner @entity {
 type SetOwnerShare @entity {
   id: ID!
   share: BigInt! # int128
-}
-
-type SubcategoryAdded @entity {
-  id: ID!
-  categoryId: BigInt! # uint256
-  subId: BigInt! # uint256
 }
 
 type Transfer @entity {

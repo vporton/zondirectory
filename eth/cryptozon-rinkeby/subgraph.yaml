@@ -15,7 +15,6 @@ dataSources:
       entities:
         - Approval
         - CategoryCreated
-        - ItemAddedToCategory
         - ItemCoverUpdated
         - ItemCreated
         - ItemFilesUpdated
@@ -24,7 +23,6 @@ dataSources:
         - SetItemOwner
         - SetOwner
         - SetOwnerShare
-        - SubcategoryAdded
         - Transfer
         - Vote
       abis:
@@ -35,8 +33,6 @@ dataSources:
           handler: handleApproval
         - event: CategoryCreated(indexed uint256,string,string)
           handler: handleCategoryCreated
-        - event: ItemAddedToCategory(indexed uint256,indexed uint256)
-          handler: handleItemAddedToCategory
         - event: ItemCoverUpdated(indexed uint256,indexed uint256,bytes,uint256,uint256)
           handler: handleItemCoverUpdated
         - event: ItemCreated(indexed uint256)
@@ -53,8 +49,6 @@ dataSources:
           handler: handleSetOwner
         - event: SetOwnerShare(int128)
           handler: handleSetOwnerShare
-        - event: SubcategoryAdded(indexed uint256,indexed uint256)
-          handler: handleSubcategoryAdded
         - event: Transfer(indexed address,indexed address,uint256)
           handler: handleTransfer
         - event: Vote(uint256,uint256,int256)
