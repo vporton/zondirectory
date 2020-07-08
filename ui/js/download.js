@@ -130,7 +130,6 @@ async function payAR() {
 }
 
 $(async function() {
-    console.log(itemId)
     if(itemId) {
         const query = `{
     itemUpdateds(first:1, orderBy:id, orderDirection:desc, where:{itemId:${itemId}}) {
