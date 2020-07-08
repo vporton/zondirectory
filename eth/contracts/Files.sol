@@ -192,6 +192,10 @@ contract Files is BaseToken {
         emit CategoryScoreVote(_categoryId, _vote);
     }
 
+    function getCategoryScoreVotes(uint _categoryId) external view returns (int256) {
+        return categoryScoreVotes[_categoryId];
+    }
+
 // PST ///
 
     uint256 totalDividends = 0;
