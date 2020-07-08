@@ -13,3 +13,5 @@
 * Processing of Pay and Donate events in TheGraph.
 
 * Show user's past voting.
+
+* Save AR key file in browser's local storage.
