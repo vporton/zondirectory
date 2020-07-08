@@ -79,8 +79,10 @@ module.exports = async ({getNamedAccounts, deployments}) => {
     }
     const mydeploy = require('../lib/mydeploy');
     mydeploy.updateAddress('Files', deployResult.address, buidler.network.name); // or ethers.getContractAt
-    mydeploy.updateAddress('Root', await categories["Root"], buidler.network.name);
-    mydeploy.updateAddress('Spam', await categories["Spam"], buidler.network.name);
+    if(await categories["Root"])
+        mydeploy.updateAddress('Root', await categories["Root"], buidler.network.name);
+    if(await categories["Spam"])
+        mydeploy.updateAddress('Spam', await categories["Spam"], buidler.network.name);
 }
 module.exports.tags = ['Files'];
 module.exports.dependencies = ['PST'];
