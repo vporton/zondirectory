@@ -1,0 +1,12 @@
+async function createCategory() {
+    const name = $("#title").val();
+    if(!name) return;
+
+    await defaultAccountPromise();
+    const contractInstance = new web3.eth.Contract(await filesJsonInterface(), addressFiles);
+    // TODO: Wait for a confirmation, open('add-to-category.html?id=...') page.
+    await contractInstance.methods.createCategory(name, 'en').send({from: defaultAccount, gas: '10000000'}, (error, result) => {
+        if(error) return;
+        alert("Now add this category as a child to another category(ies).");
+    });
+}
