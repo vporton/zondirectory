@@ -5,7 +5,6 @@ pragma solidity ^0.6.0;
 
 import './BaseToken.sol';
 import './ABDKMath64x64.sol';
-import './PST.sol';
 
 // TODO: Encode wallets and hashes as uint256
 
@@ -19,7 +18,8 @@ contract Files is BaseToken {
 
     // 64.64 fixed point number
     int128 public ownersShare = int128(1).divi(int128(10)); // 1/10
-    PST public shares;
+    mapping (uint => address) public holdersIndexes;
+    uint public numberOfHolders = 1;
 
     uint maxId = 0;
     uint maxVoteId = 0;
@@ -44,7 +44,7 @@ contract Files is BaseToken {
     event Pay(uint itemId, uint256 value);
     event Donate(uint itemId, uint256 value);
 
-    address payable programmerAddress;
+    address payable founder;
     mapping (uint => address payable) itemOwners;
     mapping (uint => mapping (uint => int256)) private childParentVotes;
     mapping (uint => int256) private categoryScoreVotes;
@@ -52,24 +52,43 @@ contract Files is BaseToken {
     mapping (uint => uint256) pricesETH;
     mapping (uint => uint256) pricesAR;
 
-    constructor(address payable _programmerAddress, PST _shares) public {
-        name = "Voting";
+    constructor(address payable _founder, uint256 _initialBalance) public {
+        founder = _founder;
+        name = "Cryptozon PST Token (ETH)";
         decimals = 18;
-        symbol = "VOT";
-        programmerAddress = _programmerAddress;
-        shares = _shares;
+        symbol = "CZPST";
+        totalSupply = _initialBalance;
+        holdersIndexes[0] = _founder;
     }
 
-    function setOwner(address payable _programmerAddress) external {
-        require(msg.sender == programmerAddress, "Access denied.");
-        require(_programmerAddress != address(0), "Zero address.");
-        programmerAddress = _programmerAddress;
-        emit SetOwner(_programmerAddress);
+// ERC-20 //
+
+    function transfer(address _to, uint256 _value) external override returns (bool success) {
+        if (balances[_to] == 0 && _value != 0) {
+            holdersIndexes[numberOfHolders++] = _to;
+        }
+        return BaseToken(this).transfer(_to, _value);
+    }
+
+    function transferFrom(address _from, address _to, uint256 _value) external override returns (bool success) {
+        if (balances[_to] == 0 && _value != 0) {
+            holdersIndexes[numberOfHolders++] = _to;
+        }
+        return BaseToken(this).transferFrom(_from, _to, _value);
+    }
+
+// Owners //
+
+    function setOwner(address payable _founder) external {
+        require(msg.sender == founder, "Access denied.");
+        require(_founder != address(0), "Zero address.");
+        founder = _founder;
+        emit SetOwner(_founder);
     }
 
     // _share is 64.64 fixed point number
     function setOwnersShare(int128 _share) external {
-        require(msg.sender == programmerAddress, "Access denied.");
+        require(msg.sender == founder, "Access denied.");
         ownersShare = _share;
         emit SetOwnerShare(_share);
     }
@@ -178,10 +197,10 @@ contract Files is BaseToken {
     uint256 totalDividends = 0;
     uint256 totalDividendsPaid = 0; // actually paid sum
     mapping(address => uint256) lastTotalDivedends; // the value of totalDividendsPaid at the last payment to an address
-    
+
     function dividendsOwing(address _account) internal view returns(uint256) {
         uint256 _newDividends = totalDividends - lastTotalDivedends[_account];
-        return (shares.balances(_account) * _newDividends) / shares.totalSupply(); // rounding down
+        return (balances[_account] * _newDividends) / totalSupply; // rounding down
     }
 
     function withdrawProfit() external {
