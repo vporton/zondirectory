@@ -42,7 +42,7 @@ async function onLoad() {
     for(let i in items) {
         if(!/^category/.test(i)) continue;
         const category = items[i][0];
-        if(!category) return;
+        if(!category) continue;
         const spamInfo = items[i.replace(/^category/, 'spam')][0];
         const spamScore = spamInfo ? formatPriceETH(spamInfo.value) : 0;
         const link = "index.html?cat=" + i;
@@ -51,7 +51,7 @@ async function onLoad() {
     for(let i in items) {
         if(!/^item/.test(i)) continue;
         const item = items[i][0];
-        if(!item) return;
+        if(!item) continue;
         const spamInfo = items[i.replace(/^item/, 'spam')][0];
         const spamScore = spamInfo ? formatPriceETH(spamInfo.value) : 0;
         const link = "download.html?id=" + item.itemId;
