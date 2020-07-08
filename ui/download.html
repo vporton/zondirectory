@@ -1,6 +1,6 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
     <head id="head">
-        <title>Download Item</title>
+        <title>Download Files</title>
         <style>
             input[type=text], textarea { width: 100%;}
         </style>
@@ -13,7 +13,7 @@
         <script src="js/download.js"></script>
     </head>
     <body>
-        <h1 id="title">Download Item</h1>
+        <h1 id="title">Download Files</h1>
         <div id="body">
             <p style="color: red">You are legally prohibited (unless the file license explicitly permits this) to distribute
                 or obtain the download links in any other way except by using this interface or
@@ -25,10 +25,12 @@
             <p>Description: <span id="description"></span></p>
             <p>License: <span id="license"></span></p>
             <p>Prices:</p>
-            <p>in ETH: <span id="priceETH"></span> <input type="button" value="Pay" onclick="payETH()"/></p>
-            <p>in AR: <span id="priceAR"></span> |
-                AR wallet key file: <input type="file" id="arWalletKeyFile"/>
-                <input type="button" value="Pay" onclick="payAR()"/></p>
+            <ul>
+                <li>in ETH: <span id="priceETH"></span> <input type="button" value="Buy" onclick="payETH()"/></li>
+                <li>in AR: <span id="priceAR"></span> |
+                    AR wallet key file: <input type="file" id="arWalletKeyFile"/>
+                    <input type="button" value="Buy" onclick="payAR()"/></li>
+            </ul>
             <p>File formats:</p>
             <ul id="formats"></ul>
         </div>
