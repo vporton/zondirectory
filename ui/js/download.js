@@ -9,7 +9,9 @@ async function showFiles(withLinks) {
         version
     }
 }`;
-    let version = (await queryThegraph(query)).data.itemFilesUpdateds[0].version;
+    const itemFilesUpdated = (await queryThegraph(query)).data.itemFilesUpdateds[0];
+    if(!itemFilesUpdated) return;
+    let version = itemFilesUpdated.version;
     const fileFields = withLinks ? 'format hash' : 'format';
     query = `{
     itemFilesUpdateds(orderBy:id, orderDirection:asc, where:{itemId:${itemId}, version:${version}}) {
