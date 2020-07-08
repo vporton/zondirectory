@@ -19,6 +19,7 @@ dataSources:
         - ItemCreated
         - ItemFilesUpdated
         - ItemUpdated
+        - LinkUpdated
         - SetARWallet
         - SetItemOwner
         - SetOwner
@@ -42,6 +43,8 @@ dataSources:
           handler: handleItemFilesUpdated
         - event: ItemUpdated(indexed uint256,string,string,uint256,uint256,string,string)
           handler: handleItemUpdated
+        - event: LinkUpdated(indexed uint256,string,string,string,string)
+          handler: handleLinkUpdated
         - event: SetARWallet(indexed address,string)
           handler: handleSetARWallet
         - event: SetItemOwner(indexed uint256,indexed address)

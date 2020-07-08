@@ -14,6 +14,20 @@ type _Schema_
     ]
   )
   @fulltext(
+    name: "fileSearch",
+    language: en
+    algorithm: rank,
+    include: [
+      {
+        entity: "LinkUpdated",
+        fields: [
+          { name: "title" },
+          { name: "description" },
+        ]
+      }
+    ]
+  )
+  @fulltext(
     name: "categorySearch",
     language: en
     algorithm: rank,
@@ -71,7 +85,16 @@ type ItemUpdated @entity {
   priceETH: BigInt! # uint256
   priceAR: BigInt! # uint256
   locale: String! # string
-  license: String! # bytes
+  license: String! # string
+}
+
+type LinkUpdated @entity {
+  id: ID!
+  linkId: BigInt! # uint256
+  link: String! # string
+  title: String! # string
+  description: String! # string
+  locale: String! # string
 }
 
 type SetARWallet @entity {

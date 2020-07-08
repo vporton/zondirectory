@@ -38,6 +38,8 @@ in the user interface:
 Anybody can create a category and child-parent relationship between two categories
 or between an item and a category.
 
+### Directory of Web links
+
 ### `Pay` and `Donate` events
 
 ### Voting

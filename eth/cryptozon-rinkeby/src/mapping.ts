@@ -6,6 +6,7 @@ import {
   ItemCreated as ItemCreatedEvent,
   ItemFilesUpdated as ItemFilesUpdatedEvent,
   ItemUpdated as ItemUpdatedEvent,
+  LinkUpdated as LinkUpdatedEvent,
   SetARWallet as SetARWalletEvent,
   SetItemOwner as SetItemOwnerEvent,
   SetOwner as SetOwnerEvent,
@@ -21,6 +22,7 @@ import {
   ItemCreated,
   ItemFilesUpdated,
   ItemUpdated,
+  LinkUpdated,
   SetARWallet,
   SetItemOwner,
   SetOwner,
@@ -97,6 +99,18 @@ export function handleItemUpdated(event: ItemUpdatedEvent): void {
   entity.priceAR = event.params.priceAR
   entity.locale = event.params.locale
   entity.license = event.params.license
+  entity.save()
+}
+
+export function handleLinkUpdated(event: LinkUpdatedEvent): void {
+  let entity = new LinkUpdated(
+    generateId(event)
+  )
+  entity.linkId = event.params.linkId
+  entity.link = event.params.link
+  entity.title = event.params.title
+  entity.description = event.params.description
+  entity.locale = event.params.locale
   entity.save()
 }
 

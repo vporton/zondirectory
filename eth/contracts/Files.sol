@@ -36,6 +36,11 @@ contract Files is BaseToken {
                       uint256 priceAR,
                       string locale,
                       string license);
+    event LinkUpdated(uint indexed linkId,
+                      string link,
+                      string title,
+                      string description,
+                      string locale);
     event ItemCoverUpdated(uint indexed itemId, uint indexed version, bytes cover, uint width, uint height);
     event ItemFilesUpdated(uint indexed itemId, string format, uint version, string hash);
     event CategoryCreated(uint256 indexed categoryId, string title, string locale);
@@ -134,6 +139,27 @@ contract Files is BaseToken {
         pricesETH[_itemId] = _priceETH;
         pricesAR[_itemId] = _priceAR;
         emit ItemUpdated(_itemId, _title, _description, _priceETH, _priceAR, _locale, _license);
+    }
+
+    function createLink(string calldata _link,
+                        string calldata _title,
+                        string calldata _description,
+                        string calldata _locale) external
+    {
+        itemOwners[++maxId] = msg.sender;
+        emit ItemCreated(maxId);
+        emit SetItemOwner(maxId, msg.sender);
+        emit LinkUpdated(maxId, _link, _title, _description, _locale);
+    }
+
+    function updateLink(uint _linkId,
+                        string calldata _link,
+                        string calldata _title,
+                        string calldata _description,
+                        string calldata _locale) external
+    {
+        require(itemOwners[_linkId] == msg.sender, "Attempt to modify other's item.");
+        emit LinkUpdated(_linkId, _link, _title, _description, _locale);
     }
 
     function updateItemCover(uint _itemId, uint _version, bytes calldata _cover, uint _width, uint _height) external {
