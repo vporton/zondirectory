@@ -43,6 +43,8 @@ contract Files is BaseToken {
     event ItemAddedToCategory(uint256 indexed categoryId, uint indexed itemId);
     event SubcategoryAdded(uint256 indexed categoryId, uint indexed subId);
     event Vote(uint child, uint parent, int256 value);
+    event Pay(uint itemId, uint256 value);
+    event Donate(uint itemId, uint256 value);
 
     address payable programmerAddress;
     mapping (uint => address payable) itemOwners;
@@ -136,7 +138,18 @@ contract Files is BaseToken {
         require(pricesETH[_itemId] <= msg.value, "Paid too little.");
         uint256 _shareholdersShare = uint256(ownersShare.muli(int256(msg.value)));
         totalDividends += _shareholdersShare;
+        uint256 toAuthor = msg.value - _shareholdersShare;
+        itemOwners[_itemId].transfer(toAuthor);
+        emit Pay(_itemId, toAuthor);
+    }
+
+    function donate(uint _itemId) external payable returns (bytes memory) {
+        uint256 _shareholdersShare = uint256(ownersShare.muli(int256(msg.value)));
+        totalDividends += _shareholdersShare;
         itemOwners[_itemId].transfer(msg.value - _shareholdersShare);
+        uint256 toAuthor = msg.value - _shareholdersShare;
+        itemOwners[_itemId].transfer(toAuthor);
+        emit Donate(_itemId, toAuthor);
     }
 
 /// Categories ///
