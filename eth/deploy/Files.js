@@ -9,7 +9,7 @@ function filesJsonInterface() {
 let categories = {};
 
 async function createCategory(address, name) {
-    const contractInstance = new web3.eth.Contract(await filesJsonInterface(), address);
+    const contractInstance = new web3.eth.Contract(filesJsonInterface(), address);
     const namedAccounts = await getNamedAccounts();
     const {deployer} = namedAccounts;   
     categories[name] = new Promise(async (resolve) => {
@@ -32,15 +32,17 @@ async function createCategory(address, name) {
                     [logs[0].topics[1]]);
                 const itemId = result.itemId;
                 resolve(itemId);
-            });
+            })
+            .on('error', (error) => log(`Error creating category: ` + error));
     });
 }
 
 async function addItemToCategory(parent, child) {
-    const contractInstance = new web3.eth.Contract(await filesJsonInterface(), address);
+    const contractInstance = new web3.eth.Contract(filesJsonInterface(), address);
     const namedAccounts = await getNamedAccounts();
     const {deployer} = namedAccounts;   
-    await contractInstance.methods.addItemToCategory(parent, child).send({from: deployer, gas: '10000000'})
+    await contractInstance.methods.voteChildParent(parent, child).send({from: deployer, gas: '10000000', value: 1 /*wei*/})
+        .on('error', (error) => log(`Error adding item to category: ` + error));
 }
 
 module.exports = async ({getNamedAccounts, deployments}) => {
@@ -48,11 +50,12 @@ module.exports = async ({getNamedAccounts, deployments}) => {
     const namedAccounts = await getNamedAccounts();
     const {deploy} = deployments;
     const {deployer} = namedAccounts;
+    log(`Deploying Files...`);
     const deployResult = await deploy('Files', {from: deployer, args: [process.env.PROGRAMMER_ADDRESS, 10000000]});
     if (deployResult.newlyDeployed) {
-        const fs = require('fs');
         log(`contract Files deployed at ${deployResult.address} using ${deployResult.receipt.gasUsed} gas`);
 
+        log(`Creating categories...`)
         await createCategory(deployResult.address, "Root");
         await createCategory(deployResult.address, "Spam");
         await createCategory(deployResult.address, "E-books");
@@ -66,6 +69,7 @@ module.exports = async ({getNamedAccounts, deployments}) => {
         //console.log(await Promise.all(categoryNames.map(async v => await categories[v])));
         log(`created ${allCategories.length} categories`);
 
+        log(`Creating category relations...`)
         addItemToCategory(await categories["Root"], await categories["E-books"]);
         addItemToCategory(await categories["Root"], await categories["Videos"]);
         addItemToCategory(await categories["Root"], await categories["Software"]);
