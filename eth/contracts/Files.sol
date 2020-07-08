@@ -13,7 +13,6 @@ contract Files is BaseToken {
 
     using ABDKMath64x64 for int128;
 
-    // I get 10% of sales
     string public name;
     uint8 public decimals;
     string public symbol;
