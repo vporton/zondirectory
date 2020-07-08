@@ -25,6 +25,7 @@ dataSources:
         - SetOwnerShare
         - Transfer
         - ChildParentVote
+        - CategoryScoreVote
       abis:
         - name: Contract
           file: ./abis/Contract.json
@@ -53,4 +54,6 @@ dataSources:
           handler: handleTransfer
         - event: ChildParentVote(uint256,uint256,int256)
           handler: handleChildParentVote
+        - event: CategoryScoreVote(uint256,int256)
+          handler: handleCategoryScoreVote
       file: ./src/mapping.ts

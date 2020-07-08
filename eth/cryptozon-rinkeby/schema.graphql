@@ -109,3 +109,9 @@ type ChildParentVote @entity {
   parent: BigInt! # uint256
   value: BigInt! # int256
 }
+
+type CategoryScoreVote @entity {
+  id: ID!
+  categoryId: BigInt! # uint256
+  value: BigInt! # int256
+}
