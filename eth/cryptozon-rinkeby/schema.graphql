@@ -103,6 +103,13 @@ type SetARWallet @entity {
   arWallet: String! # string
 }
 
+type SetAuthorInfo @entity {
+  id: ID!
+  owner: Bytes! # address
+  description: String! # string
+  locale: String! # string
+}
+
 type SetItemOwner @entity {
   id: ID!
   itemId: BigInt! # uint256

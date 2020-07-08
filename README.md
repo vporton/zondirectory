@@ -31,6 +31,8 @@ uploaded files, splitting them into a set of several file bundles versions.
 The main smart contract has the following features which are currently missing
 in the user interface:
 
+### Author information
+
 ### Cover images
 
 ### Categorization
