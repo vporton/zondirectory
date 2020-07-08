@@ -84,6 +84,7 @@ async function createItem() {
         .on('transactionHash', async function(receiptHash) {
             transactionHash = receiptHash;
             // console.log(await contractInstance.getPastEvents('ItemUpdated', {fromBlock:0, toBlock:'pending'}));
+            alert("Item created. After it appears in the list of items, upload files.");
         });
 }
 
@@ -96,7 +97,10 @@ async function updateItem(itemId) {
     const license = document.getElementById('license').value;
 
     contractInstance.methods.updateItem(itemId, title, description, getPriceETH(), getPriceAR(), locale, license)
-        .send({from: defaultAccount, gas: '1000000'});
+        .send({from: defaultAccount, gas: '1000000'})
+        .on('transactionHash', async function(receiptHash) {
+            alert("Item updated.");
+        });
 }
 
 $(async function() {
