@@ -36,6 +36,12 @@ async function createCategory(address, name) {
     });
 }
 
+async function addItemToCategory(parent, child) {
+    const namedAccounts = await getNamedAccounts();
+    const {deployer} = namedAccounts;   
+    await contractInstance.methods.addItemToCategory(parent, child).send({from: deployer, gas: '1000000'})
+}
+
 module.exports = async ({getNamedAccounts, deployments}) => {
     const {deployIfDifferent, log} = deployments;
     const namedAccounts = await getNamedAccounts();
@@ -51,10 +57,19 @@ module.exports = async ({getNamedAccounts, deployments}) => {
         await createCategory(deployResult.address, "E-books");
         await createCategory(deployResult.address, "Videos");
         await createCategory(deployResult.address, "Software");
+        await createCategory(deployResult.address, "Binaries");
+        await createCategory(deployResult.address, "Sources");
         var categoryNames = Object.keys(categories);
         var allCategories = categoryNames.map(v => categories[v]);
         Promise.all(allCategories);
-        console.log(await Promise.all(categoryNames.map(async v => await categories[v])));
+        //console.log(await Promise.all(categoryNames.map(async v => await categories[v])));
+        log(`created ${allCategories.length} categories`);
+        addItemToCategory(await categories["Root"], await categories["E-books"]);
+        addItemToCategory(await categories["Root"], await categories["Videos"]);
+        addItemToCategory(await categories["Root"], await categories["Software"]);
+        addItemToCategory(await categories["Software"], await categories["Binaries"]);
+        addItemToCategory(await categories["Software"], await categories["Sources"]);
+        log(`created base category structure`);
     }
     const mydeploy = require('../lib/mydeploy');
     mydeploy.updateAddress('Files', deployResult.address, buidler.network.name); // or ethers.getContractAt
