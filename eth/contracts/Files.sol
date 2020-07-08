@@ -39,14 +39,16 @@ contract Files is BaseToken {
     event ItemCoverUpdated(uint indexed itemId, uint indexed version, bytes cover, uint width, uint height);
     event ItemFilesUpdated(uint indexed itemId, string format, uint version, string hash);
     event CategoryCreated(uint256 indexed categoryId, string title, string locale);
-    event Vote(uint child, uint parent, int256 value);
+    event ChildParentVote(uint child, uint parent, int256 value);
+    event CategoryScoreVote(uint categoryId, int256 value);
     event Pay(uint itemId, uint256 value);
     event Donate(uint itemId, uint256 value);
 
     address payable programmerAddress;
     mapping (uint => address payable) itemOwners;
-    mapping (address => mapping (uint => mapping (uint => int256))) private votes;
-    mapping (uint => mapping (uint => int256)) private votesForCategories;
+    mapping (uint => mapping (uint => int256)) private childParentVotes;
+    mapping (uint => int256) private categoryScoreVotes;
+    uint numberOfCategoryScoreVotes = 0;
     mapping (uint => uint256) pricesETH;
     mapping (uint => uint256) pricesAR;
 
@@ -56,13 +58,6 @@ contract Files is BaseToken {
         symbol = "VOT";
         programmerAddress = _programmerAddress;
         shares = _shares;
-    }
-
-    receive() payable external {
-        totalSupply += msg.value;
-        balances[msg.sender] += msg.value; // 1/1 exchange rate
-        totalDividends += msg.value;
-        emit Transfer(address(this), msg.sender, msg.value);
     }
 
     function setOwner(address payable _programmerAddress) external {
@@ -157,21 +152,25 @@ contract Files is BaseToken {
 
 /// Voting ///
 
-    function voteForCategory(uint _child, uint _parent, bool _yes) external {
-        int256 _value = _yes ? int256(balances[msg.sender]) : -int256(balances[msg.sender]);
+    function voteChildParent(uint _child, uint _parent, bool _yes) external payable {
+        int256 _value = _yes ? int256(msg.value) : -int256(msg.value);
         if(_value == 0) return; // We don't want to pollute the events with zero votes.
-        int256 _newValue = votesForCategories[_child][_parent] - votes[msg.sender][_child][_parent] + _value; // reclaim the previous vote
-        votes[msg.sender][_child][_parent] = _value;
-        votesForCategories[_child][_parent] = _newValue;
-        emit Vote(_child, _parent, _newValue);
+        totalDividends += msg.value;
+        int256 _newValue = childParentVotes[_child][_parent] + _value;
+        childParentVotes[_child][_parent] = _newValue;
+        emit ChildParentVote(_child, _parent, _newValue);
     }
 
-    function voterInfo(address _voter, uint _child, uint _parent) external view returns (int256) {
-        return votes[_voter][_child][_parent];
+    function getChildParentVotes(uint _child, uint _parent) external view returns (int256) {
+        return childParentVotes[_child][_parent];
     }
 
-    function getCategoryVotes(uint _child, uint _parent) external view returns (int256) {
-        return votesForCategories[_child][_parent];
+    function categoryScoreVote(uint _categoryId, int256 _vote) external payable {
+        // See the Voting whitepaper:
+        int256 _weightedVote = int256(msg.value) * (_vote / (1<<(128+64))) * (1<<64); // approximate calculation, but OK
+        categoryScoreVotes[_categoryId] += (_weightedVote - categoryScoreVotes[_categoryId]) / int256(++numberOfCategoryScoreVotes);
+        totalDividends += msg.value;
+        emit CategoryScoreVote(_categoryId, _vote);
     }
 
 // PST ///
