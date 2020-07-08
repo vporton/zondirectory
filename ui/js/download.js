@@ -1,13 +1,7 @@
 "strict";
 
-const INFINITY = (BigInt(1) << BigInt(256)) - BigInt(1);
-
 const urlParams = new URLSearchParams(window.location.search);
 const itemId = urlParams.get('id');
-
-function formatPrice(price) {
-    return price == INFINITY ? "-" : price;
-}
 
 async function showFiles(withLinks) {
     let query = `{
@@ -154,8 +148,8 @@ $(async function() {
         document.getElementById('title').textContent = item.title;
         document.getElementById('description').textContent = item.description;
         document.getElementById('license').textContent = item.license;
-        document.getElementById('priceETH').textContent = formatPrice(web3.utils.fromWei(item.priceETH));
-        document.getElementById('priceAR').textContent = formatPrice(arweave.ar.winstonToAr(item.priceAR));
+        document.getElementById('priceETH').textContent = formatPriceETH(item.priceETH);
+        document.getElementById('priceAR').textContent = formatPriceAR(item.priceAR);
         showFiles(item.priceETH == 0 || item.priceAR == 0);
     }
 })

@@ -4,6 +4,18 @@ $(document).ajaxError(function( event, request, settings ) {
 
 const THEGRAPH_URL = "https://api.thegraph.com/subgraphs/name/vporton/cryptozon-rinkeby7";
 
+const INFINITY = (BigInt(1) << BigInt(256)) - BigInt(1);
+
+const arweave = Arweave.init();
+
+function formatPriceETH(price) {
+    return price == INFINITY ? '-' : web3.utils.fromWei(price);
+}
+
+function formatPriceAR(price) {
+    return price == INFINITY ? '-' : arweave.ar.winstonToAr(price).replace(/0+$/, '');
+}
+
 function safe_tags(str) {
     return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 }

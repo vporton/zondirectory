@@ -10,8 +10,6 @@ function sellInARToggle(event) {
     document.getElementById('priceAR').disabled = event.target.checked;
 }
 
-const INFINITY = (BigInt(1) << BigInt(256)) - BigInt(1);
-
 function getPriceETH() {
     return document.getElementById('sellInETH').checked ? INFINITY : web3.utils.toWei(document.getElementById('priceETH').value);
 }
