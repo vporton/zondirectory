@@ -37,6 +37,7 @@ async function createCategory(address, name) {
 }
 
 async function addItemToCategory(parent, child) {
+    const contractInstance = new web3.eth.Contract(await filesJsonInterface(), address);
     const namedAccounts = await getNamedAccounts();
     const {deployer} = namedAccounts;   
     await contractInstance.methods.addItemToCategory(parent, child).send({from: deployer, gas: '10000000'})
@@ -52,6 +53,10 @@ module.exports = async ({getNamedAccounts, deployments}) => {
     if (deployResult.newlyDeployed) {
         const fs = require('fs');
         log(`contract Files deployed at ${deployResult.address} using ${deployResult.receipt.gasUsed} gas`);
+
+        // Acquire voting rights
+        await web3.eth.sendTransaction({to: deployResult.address, from: deployer, value: 1/*1 wei*/});
+
         await createCategory(deployResult.address, "Root");
         await createCategory(deployResult.address, "Spam");
         await createCategory(deployResult.address, "E-books");
@@ -64,6 +69,7 @@ module.exports = async ({getNamedAccounts, deployments}) => {
         Promise.all(allCategories);
         //console.log(await Promise.all(categoryNames.map(async v => await categories[v])));
         log(`created ${allCategories.length} categories`);
+
         addItemToCategory(await categories["Root"], await categories["E-books"]);
         addItemToCategory(await categories["Root"], await categories["Videos"]);
         addItemToCategory(await categories["Root"], await categories["Software"]);
