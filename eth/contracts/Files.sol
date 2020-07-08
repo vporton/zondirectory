@@ -160,6 +160,7 @@ contract Files is BaseToken {
 
     function voteForCategory(uint _child, uint _parent, bool _yes) external {
         int256 _value = _yes ? int256(balances[msg.sender]) : -int256(balances[msg.sender]);
+        if(_value == 0) return; // We don't want to pollute the events with zero votes.
         int256 _newValue = votesForCategories[_child][_parent] - votes[msg.sender][_child][_parent] + _value; // reclaim the previous vote
         votes[msg.sender][_child][_parent] = _value;
         votesForCategories[_child][_parent] = _newValue;
