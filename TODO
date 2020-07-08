@@ -12,13 +12,4 @@
 
 * Processing of Pay and Donate events in TheGraph.
 
-* Should buying and donation acquire voting rights?
-
-* Introduce the concept of category price to avoid polluting Root and like with recently created
-  spam items and subcategories.
-
-* Make my app also a Web directory.
-
 * Show user's past voting.
-
-* Give everybody at least 1 wei voting rights to differentiate votes for and against?
