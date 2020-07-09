@@ -52,7 +52,7 @@ async function onLoad() {
             if(!category) continue;
             const spamInfo = items[i.replace(/^category/, 'spam')][0];
             const spamScore = spamInfo ? formatPriceETH(spamInfo.value) : 0;
-            const link = "index.html?cat=" + i;
+            const link = "index.html?cat=" + i.replace(/^category/, "");
             $('#subcategoies').append(`<li><a href="${link}">${safe_tags(category.title)}</a> (spam score: `-spamScore`)</li>`);
         }
     for(let i in items) {
@@ -63,6 +63,8 @@ async function onLoad() {
         if(catId) {
             const spamInfo = items[i.replace(/^item/, 'spam')][0];
             const spamScore = spamInfo ? formatPriceETH(-spamInfo.value) : 0;
+            const voteStr = `<a href='vote.html?child=${i.replace(/^item/, "")}&parent=${catId}&dir=for'>👍</a>` +
+            `<a href='vote.html?child=${i.replace(/^item/, "")}&parent=${catId}&dir=against'>👎</a>`;
             const row = `<tr><td><a href="${link}">${safe_tags(item.title)}</a></td><td>${formatPriceETH(item.priceETH)}</td><td>${formatPriceAR(item.priceAR)}</td><td>${spamScore}</tr>`;
             $('#theTable').prepend(row);
         } else {
