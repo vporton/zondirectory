@@ -16,7 +16,10 @@ async function onLoad() {
     let query;
     if(catId) {
         query = `{
-    votes(first:1000, where: {parent: ${catId}}) {
+    categoryCreateds(first:1, where:{categoryId:${catId}}) {
+        title
+    }
+    votes(first:1000, where:{parent: ${catId}}) {
         child
     }
 }`;
@@ -27,8 +30,13 @@ async function onLoad() {
     }
 }`;
     }
-    let itemIds = (await queryThegraph(query)).data[catId ? 'votes' : 'itemCreateds'];
+    const queryResult = (await queryThegraph(query)).data;
+    let itemIds = queryResult[catId ? 'votes' : 'itemCreateds'];
     if(!itemIds.length) return;
+    if(queryResult.categoryCreateds) {
+        const categoryTitle = queryResult.categoryCreateds[0].title;
+        $('#catTitle').text(categoryTitle);
+    }
     const itemIdsFlat = catId ? itemIds.map(i => i.child) : itemIds.map(i => i.itemId);
     // TODO: Don't request category title if not asked for category votes.
     function subquery(itemId) {
