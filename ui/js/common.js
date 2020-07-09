@@ -49,3 +49,7 @@ function filesJsonInterface() {
         xhttp.send();
     });
 }
+
+$(function() {
+    $('#rootLink').attr('href', "index.html?cat=" + addressRoot);
+});
