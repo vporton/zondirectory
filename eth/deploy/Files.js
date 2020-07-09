@@ -43,7 +43,7 @@ async function addItemToCategory(parent, child) {
     const contractInstance = new web3.eth.Contract(filesJsonInterface(), address);
     const namedAccounts = await getNamedAccounts();
     const {deployer} = namedAccounts;   
-    await contractInstance.methods.voteChildParent(child, parent).send({from: deployer, gas: '10000000', value: 1 /*wei*/})
+    await contractInstance.methods.voteChildParent(child, parent, true).send({from: deployer, gas: '10000000', value: 1 /*wei*/})
         .on('error', (error) => log(`Error adding item to category: ` + error));
 }
 
