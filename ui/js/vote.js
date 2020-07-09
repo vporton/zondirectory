@@ -13,3 +13,15 @@ async function vote() {
         alert("You voted " + $('[name=dir][value=for]').val());
     });
 }
+
+function onLoad() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const child = urlParams.get('child');
+    const parent = urlParams.get('parent');
+    const dir = urlParams.get('dir');
+    $('#child').val(child);
+    $('#parent').val(parent);
+    $(`[name=dir][value=${dir}]`).prop('checked', true);
+}
+
+$(onLoad);
