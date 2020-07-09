@@ -121,6 +121,7 @@ contract Files is BaseToken {
                         string calldata _locale,
                         string calldata _license) external
     {
+        require(bytes(_title).length != 0, "Empty title.");
         itemOwners[++maxId] = msg.sender;
         pricesETH[maxId] = _priceETH;
         pricesAR[maxId] = _priceAR;
@@ -138,6 +139,7 @@ contract Files is BaseToken {
                         string calldata _license) external
     {
         require(itemOwners[_itemId] == msg.sender, "Attempt to modify other's item.");
+        require(bytes(_title).length != 0, "Empty title.");
         pricesETH[_itemId] = _priceETH;
         pricesAR[_itemId] = _priceAR;
         emit ItemUpdated(_itemId, _title, _description, _priceETH, _priceAR, _locale, _license);
@@ -148,6 +150,7 @@ contract Files is BaseToken {
                         string calldata _description,
                         string calldata _locale) external
     {
+        require(bytes(_title).length != 0, "Empty title.");
         itemOwners[++maxId] = msg.sender;
         emit ItemCreated(maxId);
         emit SetItemOwner(maxId, msg.sender);
@@ -161,6 +164,7 @@ contract Files is BaseToken {
                         string calldata _locale) external
     {
         require(itemOwners[_linkId] == msg.sender, "Attempt to modify other's item.");
+        require(bytes(_title).length != 0, "Empty title.");
         emit LinkUpdated(_linkId, _link, _title, _description, _locale);
     }
 
@@ -194,6 +198,7 @@ contract Files is BaseToken {
 /// Categories ///
 
     function createCategory(string calldata _title, string calldata _locale) external {
+        require(bytes(_title).length != 0, "Empty title.");
         emit CategoryCreated(++maxId, _title, _locale);
     }
 

@@ -22,5 +22,3 @@
 * "Sealing" item file versions to avoid partial versions.
 
 * Items that a neither downloads nor web links.
-
-* Disallow title == "".
