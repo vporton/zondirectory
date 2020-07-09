@@ -19,8 +19,18 @@ async function onLoad() {
     categoryCreateds(first:1, where:{categoryId:${catId}}) {
         title
     }
-    votes(first:1000, where:{parent: ${catId}}) {
+    votes(first:1000, where:{parent:${catId}}) {
         child
+    }
+    parents: childParentVotes(first:1000, orderDirection:desc, where:{child:${catId}}) {
+        id
+        parent
+        value
+    }
+    childs: childParentVotes(first:1000, orderDirection:desc, where:{parent:${catId}}) {
+        id
+        child
+        value
     }
 }`;
     } else {
@@ -31,6 +41,29 @@ async function onLoad() {
 }`;
     }
     const queryResult = (await queryThegraph(query)).data;
+
+    let parents = new Map();
+    for(let i in queryResult.parents) {
+        const entry = queryResult.parents[i];
+        if(!parents.has(i) || parents.get[i].id > entry.id)
+            parents.set(i, {id: entry.id, value: entry.value})
+    }
+    let childs = new Map();
+    for(let i in queryResult.childs) {
+        const entry = queryResult.childs[i];
+        if(!childs.has(i) || childs.get[i].id > entry.id)
+            childs.set(i, {id: entry.id, value: entry.value})
+    }
+    for(let parent in Array.from(parents.values()).sort((a, b) => b.value - a.value)) {
+        $('#supercategories').append(`<li><a href="index.html?cat=${parent.parent}">${parent.title}</a></li>`);
+    }
+    for(let child in Array.from(childs.values()).sort((a, b) => b.value - a.value)) {
+        $('#subcategories').append(`<li><a href="index.html?cat=${child.parent}">${child.title}</a></li>`);
+    }
+    
+    $('#supercategories > li:gt(0)').css('display', 'none');
+    $('#subcategories > li:gt(9)').css('display', 'none');
+
     let itemIds = queryResult[catId ? 'votes' : 'itemCreateds'];
     if(!itemIds.length) return;
     if(queryResult.categoryCreateds) {
@@ -87,6 +120,14 @@ async function onLoad() {
             $('#theTable').prepend(row);
         }
     }
+}
+
+function moreParents() {
+    $('#supercategories > li:hidden:lt(10)').css('display', 'list-item');
+}
+
+function moreChilds() {
+    $('#subcategories > li:hidden:lt(10)').css('display', 'list-item');
 }
 
 $(onLoad);

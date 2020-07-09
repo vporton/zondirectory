@@ -137,9 +137,19 @@ async function payAR() {
     });
 }
 
+function moreParents() {
+    $('#categories > li:hidden:lt(10)').css('display', 'list-item');
+}
+
 $(async function() {
     if(itemId) {
+        // TODO: pagination
         const query = `{
+    parents: childParentVotes(first:1000, orderDirection:desc, where:{child:${itemId}}) {
+        id
+        parent
+        value
+    }
     itemUpdateds(first:1, orderBy:id, orderDirection:desc, where:{itemId:${itemId}}) {
         locale
         title
@@ -149,8 +159,20 @@ $(async function() {
         priceAR
     }
 }`;
-        const item = (await queryThegraph(query)).data.itemUpdateds[0];
-        const arweave = Arweave.init();
+        const queryResult = (await queryThegraph(query)).data;
+
+        let parents = new Map();
+        for(let i in queryResult.parents) {
+            const entry = queryResult.parents[i];
+            if(!parents.has(i) || parents.get[i].id > entry.id)
+                parents.set(i, {id: entry.id, value: entry.value})
+        }
+        for(let parent in Array.from(parents.values()).sort((a, b) => b.value - a.value)) {
+            $('#categories').append(`<li><a href="index.html?cat=${parent.parent}">${parent.title}</a></li>`);
+        }
+        $('#categories > li:gt(0)').css('display', 'none');
+
+        const item = queryResult.itemUpdateds[0];
         document.getElementById('locale').textContent = item.locale;
         document.getElementById('title').textContent = item.title;
         document.getElementById('description').textContent = item.description;
