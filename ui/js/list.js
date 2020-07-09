@@ -2,8 +2,15 @@ const urlParams = new URLSearchParams(window.location.search);
 const catId = urlParams.get('cat');
 
 async function onLoad() {
-    if(!catId)
+    if(catId) {
+        $('#addParent').attr('href', `vote.html?child=${catId}&dir=for`);
+        $('#addChild').attr('href', `vote.html?parent=${catId}&dir=for`);
+        $('#addItem').attr('href', `vote.html?parent=${catId}&dir=for`);
+    } else {
+        $('#categoryInfo').css('display', 'none');
         $('#spamScoreTH').css('display', 'none');
+        $('#addItem').css('display', 'none');
+    }
     await defaultAccountPromise();
     // TODO: pagination
     let query;

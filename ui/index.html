@@ -13,8 +13,16 @@
     </head>
     <body>
         <h1 id="title">List of Items to Buy or Download</h1>
-        <ul id="subcategories"></ul>
         <div id="body">
+            <div id="categoryInfo">
+                <p>Category: <span id="catTitle"></span></p>
+                <h2>Parent categories</h2>
+                <ul id="supercategories"></ul>
+                <p><a href="#">More...</a> <a id="addParent">Add</a></p>
+                <h2>Child categories</h2>
+                <ul id="subcategories"></ul>
+                <p><a href="#">More...</a> <a id="addChild">Add</a></p>
+            </div>
             <table>
                 <thead>
                     <tr>
@@ -26,6 +34,7 @@
                 </thead>
                 <tbody id="theTable"></tbody>
             </table>
+            <p><a id="addItem">Add item</a></p>
         </div>
     </body>
 </html>
