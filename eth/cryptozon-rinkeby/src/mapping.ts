@@ -5,6 +5,7 @@ import {
   ItemCoverUpdated as ItemCoverUpdatedEvent,
   ItemCreated as ItemCreatedEvent,
   ItemFilesUpdated as ItemFilesUpdatedEvent,
+  SetLastItemVersion as SetLastItemVersionEvent,
   ItemUpdated as ItemUpdatedEvent,
   LinkUpdated as LinkUpdatedEvent,
   SetARWallet as SetARWalletEvent,
@@ -21,6 +22,7 @@ import {
   ItemCoverUpdated,
   ItemCreated,
   ItemFilesUpdated,
+  SetLastItemVersion,
   ItemUpdated,
   LinkUpdated,
   SetARWallet,
@@ -85,6 +87,15 @@ export function handleItemFilesUpdated(event: ItemFilesUpdatedEvent): void {
   entity.format = event.params.format
   entity.version = event.params.version
   entity.hash = event.params.hash
+  entity.save()
+}
+
+export function handleSetLastItemVersion(event: SetLastItemVersionEvent): void {
+  let entity = new SetLastItemVersion(
+    generateId(event)
+  )
+  entity.itemId = event.params.itemId
+  entity.version = event.params.version
   entity.save()
 }
 

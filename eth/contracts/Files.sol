@@ -47,6 +47,7 @@ contract Files is BaseToken {
                       string locale);
     event ItemCoverUpdated(uint indexed itemId, uint indexed version, bytes cover, uint width, uint height);
     event ItemFilesUpdated(uint indexed itemId, string format, uint version, string hash);
+    event SetLastItemVersion(uint indexed itemId, uint version);
     event CategoryCreated(uint256 indexed categoryId, string title, string locale);
     event ChildParentVote(uint child, uint parent, int256 value);
     event Pay(uint itemId, uint256 value);
@@ -178,6 +179,11 @@ contract Files is BaseToken {
     function uploadFile(uint _itemId, uint _version, string calldata _format, string calldata _hash) external {
         require(itemOwners[_itemId] == msg.sender, "Attempt to modify other's item.");
         emit ItemFilesUpdated(_itemId, _format, _version, _hash);
+    }
+
+    function setLastItemVersion(uint _itemId, uint _version) external {
+        require(itemOwners[_itemId] == msg.sender, "Attempt to modify other's item.");
+        emit SetLastItemVersion(_itemId, _version);
     }
 
     function pay(uint _itemId) external payable returns (bytes memory) {

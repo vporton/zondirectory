@@ -18,6 +18,7 @@ dataSources:
         - ItemCoverUpdated
         - ItemCreated
         - ItemFilesUpdated
+        - SetLastItemVersion
         - ItemUpdated
         - LinkUpdated
         - SetARWallet
@@ -41,6 +42,8 @@ dataSources:
           handler: handleItemCreated
         - event: ItemFilesUpdated(indexed uint256,string,uint256,string)
           handler: handleItemFilesUpdated
+        - event: SetLastItemVersion(indexed uint256,uint256)
+          handler: handleSetLastItemVersion
         - event: ItemUpdated(indexed uint256,string,string,uint256,uint256,string,string)
           handler: handleItemUpdated
         - event: LinkUpdated(indexed uint256,string,string,string,string)
