@@ -46,7 +46,7 @@ contract Files is BaseToken {
                       string description,
                       string locale);
     event ItemCoverUpdated(uint indexed itemId, uint indexed version, bytes cover, uint width, uint height);
-    event ItemFilesUpdated(uint indexed itemId, string format, uint version, string hash);
+    event ItemFilesUpdated(uint indexed itemId, string format, uint indexed version, string hash);
     event SetLastItemVersion(uint indexed itemId, uint version);
     event CategoryCreated(uint256 indexed categoryId, string title, string locale);
     event ChildParentVote(uint child, uint parent, int256 value);
