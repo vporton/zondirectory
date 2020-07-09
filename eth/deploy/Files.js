@@ -1,6 +1,8 @@
 const buidler = require("@nomiclabs/buidler");
 const fs = require('fs');
 
+const {deployIfDifferent, log} = deployments;
+
 function filesJsonInterface() {
     const text = fs.readFileSync("artifacts/Files.json");
     return JSON.parse(text).abi;
@@ -41,12 +43,11 @@ async function addItemToCategory(parent, child) {
     const contractInstance = new web3.eth.Contract(filesJsonInterface(), address);
     const namedAccounts = await getNamedAccounts();
     const {deployer} = namedAccounts;   
-    await contractInstance.methods.voteChildParent(parent, child).send({from: deployer, gas: '10000000', value: 1 /*wei*/})
+    await contractInstance.methods.voteChildParent(child, parent).send({from: deployer, gas: '10000000', value: 1 /*wei*/})
         .on('error', (error) => log(`Error adding item to category: ` + error));
 }
 
 module.exports = async ({getNamedAccounts, deployments}) => {
-    const {deployIfDifferent, log} = deployments;
     const namedAccounts = await getNamedAccounts();
     const {deploy} = deployments;
     const {deployer} = namedAccounts;
