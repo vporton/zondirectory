@@ -55,7 +55,9 @@ module.exports = async ({getNamedAccounts, deployments}) => {
     if (deployResult.newlyDeployed) {
         log(`contract Files deployed at ${deployResult.address} using ${deployResult.receipt.gasUsed} gas`);
 
-        log(`Creating categories...`)
+        log(`Creating categories...`);
+        // TODO: With a small probability somebody other may create categories with the same titles,
+        // leading to crash on category ID retrieval:
         await createCategory(deployResult.address, "Root");
         await createCategory(deployResult.address, "Spam");
         await createCategory(deployResult.address, "E-books");

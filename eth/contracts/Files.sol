@@ -24,6 +24,9 @@ contract Files is BaseToken {
     uint maxId = 0;
     uint maxVoteId = 0;
 
+    // to avoid categories with duplicate titles:
+    mapping (string => mapping (string => bool)) categoryTitles; // locale => (title => bool)
+
     event SetOwner(address payable owner); // share is 64.64 fixed point number
     event SetOwnerShare(int128 share); // share is 64.64 fixed point number
     event SetARWallet(address payable indexed owner, string arWallet);
@@ -199,6 +202,10 @@ contract Files is BaseToken {
 
     function createCategory(string calldata _title, string calldata _locale) external {
         require(bytes(_title).length != 0, "Empty title.");
+        if(categoryTitles[_locale][_title])
+            return;
+        else
+            categoryTitles[_locale][_title] = true;
         emit CategoryCreated(++maxId, _title, _locale);
     }
 
