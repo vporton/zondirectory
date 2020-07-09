@@ -35,16 +35,16 @@ async function createCategory(address, name) {
                 const itemId = result.itemId;
                 resolve(itemId);
             })
-            .on('error', (error) => log(`Error creating category: ` + error));
+            .catch((error) => log(`Error creating category: ` + error));
     });
 }
 
 async function addItemToCategory(parent, child) {
     const contractInstance = new web3.eth.Contract(filesJsonInterface(), address);
     const namedAccounts = await getNamedAccounts();
-    const {deployer} = namedAccounts;   
-    await contractInstance.methods.voteChildParent(child, parent, true).send({from: deployer, gas: '10000000', value: 1 /*wei*/})
-        .on('error', (error) => log(`Error adding item to category: ` + error));
+    const {deployer} = namedAccounts;
+    await contractInstance.methods.voteChildParent(child, parent, true).send({from: deployer, gas: '1000000', value: 1 /*wei*/})
+        .catch((error) => log(`Error adding item to category: ` + error));
 }
 
 module.exports = async ({getNamedAccounts, deployments}) => {
