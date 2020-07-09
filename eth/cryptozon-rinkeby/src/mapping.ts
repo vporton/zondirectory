@@ -14,7 +14,6 @@ import {
   SetOwnerShare as SetOwnerShareEvent,
   Transfer as TransferEvent,
   ChildParentVote as ChildParentVoteEvent,
-  CategoryScoreVote as CategoryScoreVoteEvent
 } from "../generated/Contract/Contract"
 import {
   Approval,
@@ -31,7 +30,6 @@ import {
   SetOwnerShare,
   Transfer,
   ChildParentVote,
-  CategoryScoreVote,
 } from "../generated/schema"
 
 function generateId(event: ethereum.Event): String {
@@ -176,15 +174,6 @@ export function handleChildParentVote(event: ChildParentVoteEvent): void {
   )
   entity.child = event.params.child
   entity.parent = event.params.parent
-  entity.value = event.params.value
-  entity.save()
-}
-
-export function handleCategoryScoreVote(event: CategoryScoreVoteEvent): void {
-  let entity = new CategoryScoreVote(
-    generateId(event)
-  )
-  entity.categoryId = event.params.categoryId
   entity.value = event.params.value
   entity.save()
 }

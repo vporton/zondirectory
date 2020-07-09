@@ -46,15 +46,12 @@ contract Files is BaseToken {
     event ItemFilesUpdated(uint indexed itemId, string format, uint version, string hash);
     event CategoryCreated(uint256 indexed categoryId, string title, string locale);
     event ChildParentVote(uint child, uint parent, int256 value);
-    event CategoryScoreVote(uint categoryId, int256 value);
     event Pay(uint itemId, uint256 value);
     event Donate(uint itemId, uint256 value);
 
     address payable founder;
     mapping (uint => address payable) itemOwners;
     mapping (uint => mapping (uint => int256)) private childParentVotes;
-    mapping (uint => int256) private categoryScoreVotes;
-    uint numberOfCategoryScoreVotes = 0;
     mapping (uint => uint256) pricesETH;
     mapping (uint => uint256) pricesAR;
 
@@ -213,18 +210,6 @@ contract Files is BaseToken {
 
     function getChildParentVotes(uint _child, uint _parent) external view returns (int256) {
         return childParentVotes[_child][_parent];
-    }
-
-    function categoryScoreVote(uint _categoryId, int256 _vote) external payable {
-        // See the Voting whitepaper:
-        int256 _weightedVote = int256(msg.value) * (_vote / (1<<(128+64))) * (1<<64); // approximate calculation, but OK
-        categoryScoreVotes[_categoryId] += (_weightedVote - categoryScoreVotes[_categoryId]) / int256(++numberOfCategoryScoreVotes);
-        totalDividends += msg.value;
-        emit CategoryScoreVote(_categoryId, _vote);
-    }
-
-    function getCategoryScoreVotes(uint _categoryId) external view returns (int256) {
-        return categoryScoreVotes[_categoryId];
     }
 
 // PST ///
