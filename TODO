@@ -1,6 +1,3 @@
-* Category score voting can be broken by one user voting many times
-  little-by-little sums of ETH or by voting from several accounts.
-
 * License.
 
 * Don't use TheGraph when not necessary, use plain RPC.
