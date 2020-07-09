@@ -9,6 +9,9 @@ https://arweave.net/p1QUfmu70eFeYs_bUOVhx7g_UNovppmw8u5Zi3rWS0I
 This project Cryptozon allows you to sell e-books and other files for
 crypto (ETH and/or AR).
 
+It is like SmashWords e-book sales, a shareware site, Dmoz Web directory
+at once, but backed with crypto technology and community voting.
+
 You upload the file permanently and users can find it and download or
 pay for it, they also can donate to you more than your set price.
 
