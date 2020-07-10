@@ -23,7 +23,7 @@ async function createCategory(address, name) {
 function getCategoryId(address, name) {
     const contractInstance = new web3.eth.Contract(filesJsonInterface(), address);
     return new Promise(async (resolve) => {
-        contractInstance.events.once('CategoryCreated', {
+        contractInstance.once('CategoryCreated', {
             filter: {title: name, locale: 'en'}, // Using an array means OR: e.g. 20 or 23
             fromBlock: 0
         })
