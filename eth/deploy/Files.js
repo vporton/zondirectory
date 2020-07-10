@@ -26,8 +26,7 @@ function getCategoryId(address, name) {
         contractInstance.once('CategoryCreated', {
             filter: {title: name, locale: 'en'}, // Using an array means OR: e.g. 20 or 23
             fromBlock: 0
-        })
-        .on('data', function(event) {
+        }, function(event) {
             resolve(event.returnValues.categoryId);
         })
         .on('error', (error) => log(`Error getting category ID: ` + error))
