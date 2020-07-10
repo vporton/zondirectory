@@ -29,5 +29,3 @@
 * Deleting items.
 
 * Disallow operations with non-existing items/categories.
-
-* generateId() makes zero number in the beginning.

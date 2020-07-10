@@ -93,16 +93,27 @@ async function onLoad() {
         query = "{\n" + itemIdsFlat.map(i => subquery(i)).join("\n") + "\n}";
         let items = (await queryThegraph(query)).data;
         // TODO: Sort on spam score.
-        if(catId)
-            for(let i in items) {
+        if(catId) {
+            console.log(parents)
+            for(let i in parents) {
                 if(!/^category/.test(i)) continue;
-                const category = items[i][0];
+                const category = parents[i][0];
                 if(!category) continue;
                 const spamInfo = items[i.replace(/^category/, 'spam')][0];
                 const spamScore = spamInfo ? formatPriceETH(spamInfo.value) : 0;
                 const link = "index.html?cat=" + i.replace(/^category/, "");
                 $('#subcategoies').append(`<li><a href="${link}">${safe_tags(category.title)}</a> (spam score: `-spamScore`)</li>`);
             }
+            for(let i in childs) {
+                if(!/^category/.test(i)) continue;
+                const category = childs[i][0];
+                if(!category) continue;
+                const spamInfo = items[i.replace(/^category/, 'spam')][0];
+                const spamScore = spamInfo ? formatPriceETH(spamInfo.value) : 0;
+                const link = "index.html?cat=" + i.replace(/^category/, "");
+                $('#subcategoies').append(`<li><a href="${link}">${safe_tags(category.title)}</a> (spam score: `-spamScore`)</li>`);
+            }
+        }
         for(let i in items) {
             if(!/^item/.test(i)) continue;
             const item = items[i][0];
@@ -110,7 +121,6 @@ async function onLoad() {
             const link = "download.html?id=" + item.itemId;
             if(catId) {
                 const spamInfo = items[i.replace(/^item/, 'spam')][0];
-                console.log('xxx',spamInfo)
                 const spamScore = spamInfo ? formatPriceETH(new web3.utils.BN(spamInfo.value).neg()) : 0;
                 const voteStr = `<a href='vote.html?child=${i.replace(/^item/, "")}&parent=${catId}&dir=for'>👍</a>` +
                     `<a href='vote.html?child=${i.replace(/^item/, "")}&parent=${catId}&dir=against'>👎</a>`;
