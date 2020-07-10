@@ -110,7 +110,8 @@ async function onLoad() {
             const link = "download.html?id=" + item.itemId;
             if(catId) {
                 const spamInfo = items[i.replace(/^item/, 'spam')][0];
-                const spamScore = spamInfo ? formatPriceETH(-spamInfo.value) : 0;
+                console.log('xxx',spamInfo)
+                const spamScore = spamInfo ? formatPriceETH(new web3.utils.BN(spamInfo.value).neg()) : 0;
                 const voteStr = `<a href='vote.html?child=${i.replace(/^item/, "")}&parent=${catId}&dir=for'>👍</a>` +
                     `<a href='vote.html?child=${i.replace(/^item/, "")}&parent=${catId}&dir=against'>👎</a>`;
                 const row = `<tr><td><a href="${link}">${safe_tags(item.title)}</a></td><td>${formatPriceETH(item.priceETH)}</td><td>${formatPriceAR(item.priceAR)}</td><td>${spamScore} voteStr</tr>`;
