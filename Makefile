@@ -29,4 +29,5 @@ out/artifacts/SmartWeave.js: out/js/SmartWeave/index.js
 	npx browserify -o $@ -r ./out/js/SmartWeave/index.js:smartweave
 
 out/ui/artifacts/%: out/artifacts/%
+	mkdir -p out/ui/artifacts
 	cp $< $@
