@@ -1,6 +1,7 @@
 usePlugin("@nomiclabs/buidler-waffle");
 usePlugin('buidler-deploy');
 usePlugin("@nomiclabs/buidler-web3");
+usePlugin("@nomiclabs/buidler-ganache");
 
 // This is a sample Buidler task. To learn how to create your own go to
 // https://buidler.dev/guides/create-task.html
@@ -39,6 +40,11 @@ module.exports = {
           balance: '0xf0000000000000000',
         }
       ],
+    },
+    ganache: {
+      gasLimit: 6000000000,
+      defaultBalanceEther: 10,
+      url: "http://localhost:8545",
     },
     rinkeby: {
       url: "https://rinkeby.infura.io/v3/1d0c278301fc40f3a8f40f25ae3bd328",
