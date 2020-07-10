@@ -39,9 +39,11 @@ import {
 } from "../generated/schema"
 
 function generateId(event: ethereum.Event): String {
-  let index = event.transaction.index.toHex().substring(2)
-  index = '0x' + index.padStart(64, '0');
-  return index + "-" + event.logIndex.toString() + "-" + event.transaction.hash.toHex();
+  let block = event.block.number.toHex().substring(2)
+  block = '0x' + block.padStart(64, '0');
+  let logIndex = event.logIndex.toHex().substring(2)
+  logIndex = '0x' + logIndex.padStart(64, '0');
+  return block + "-" + logIndex + "-" + event.transaction.hash.toHex();
 }
 
 export function handleApproval(event: ApprovalEvent): void {
