@@ -5,8 +5,11 @@ async function onLoad() {
             arWallet
         }
     }`;
-    const arWallet = (await queryThegraph(query)).data.setARWallets[0].arWallet;
-    document.getElementById('arWallet').textContent = arWallet;
+    const queryResult = (await queryThegraph(query)).data;
+    if(queryResult.setARWallets[0]) {
+        const arWallet = queryResult.setARWallets[0].arWallet;
+        document.getElementById('arWallet').textContent = arWallet;
+    }
     query = `{
         setItemOwners(orderBy:id, orderDirection:desc, where:{owner:"${defaultAccount}"}) {
             itemId    
