@@ -14,29 +14,25 @@ async function createCategory(address, name) {
     const contractInstance = new web3.eth.Contract(filesJsonInterface(), address);
     const namedAccounts = await getNamedAccounts();
     const {deployer} = namedAccounts;   
-    categories[name] = new Promise(async (resolve) => {
-        await contractInstance.methods.createCategory(name, 'en').send({from: deployer, gas: '1000000'})
-            .on('transactionHash', async function(transactionHash) {
-                const logs = (await web3.eth.getTransactionReceipt(transactionHash)).logs;
-                const result = web3.eth.abi.decodeLog([
-                    {
-                        type: 'uint',
-                        name: 'itemId',
-                        indexed: true,
-                    }, {
-                        type: 'string',
-                        name: 'title',
-                    }, {
-                        type: 'string',
-                        name: 'locale',
-                    }],
-                    logs[0].data,
-                    [logs[0].topics[1]]);
-                const itemId = result.itemId;
-                resolve(itemId);
-            })
-            .catch((error) => log(`Error creating category: ` + error));
-    });
+    await contractInstance.methods.createCategory(name, 'en').send({from: deployer, gas: '1000000'})
+        .on('error', (error) => log(`Error creating category: ` + error))
+        .catch((error) => log(`Error creating category: ` + error));
+    categories[name] = await getCategoryId(address, name);
+}
+
+function getCategoryId(address, name) {
+    const contractInstance = new web3.eth.Contract(filesJsonInterface(), address);
+    return new Promise(async (resolve) => {
+        myContract.events.CategoryCreated({
+            filter: {title: name, locale: 'en'}, // Using an array means OR: e.g. 20 or 23
+            fromBlock: 0
+        })
+        .on('data', function(event) {
+            resolve(event.returnValues.categoryId);
+        })
+        .on('error', (error) => log(`Error getting category ID: ` + error))
+        .catch((error) => log(`Error getting category ID: ` + error));
+});
 }
 
 async function addItemToCategory(parent, child) {
@@ -44,6 +40,7 @@ async function addItemToCategory(parent, child) {
     const namedAccounts = await getNamedAccounts();
     const {deployer} = namedAccounts;
     await contractInstance.methods.voteChildParent(child, parent, true).send({from: deployer, gas: '1000000', value: 1 /*wei*/})
+        .on('error', (error) => log(`Error creating category: ` + error))
         .catch((error) => log(`Error adding item to category: ` + error));
 }
 
