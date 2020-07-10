@@ -19,7 +19,7 @@ async function onLoad() {
     categoryCreateds(first:1, where:{categoryId:${catId}}) {
         title
     }
-    votes(first:1000, where:{parent:${catId}}) {
+    childParentVotes(first:1000, where:{parent:${catId}}) {
         child
     }
     parents: childParentVotes(first:1000, orderDirection:desc, where:{child:${catId}}) {
@@ -64,7 +64,7 @@ async function onLoad() {
     $('#supercategories > li:gt(0)').css('display', 'none');
     $('#subcategories > li:gt(9)').css('display', 'none');
 
-    let itemIds = queryResult[catId ? 'votes' : 'itemCreateds'];
+    let itemIds = queryResult[catId ? 'childParentVotes' : 'itemCreateds'];
     if(!itemIds.length) return;
     if(queryResult.categoryCreateds) {
         const categoryTitle = queryResult.categoryCreateds[0].title;
@@ -84,7 +84,7 @@ async function onLoad() {
     }`
         if(catId) {
             query += `
-            spam${itemId}: votes(first:1, orderBy:id, orderDirection:desc, where:{child:${itemId}, parent:${catId}}) {
+            spam${itemId}: childParentVotes(first:1, orderBy:id, orderDirection:desc, where:{child:${itemId}, parent:${catId}}) {
                 value
             }`;
         }
