@@ -14,7 +14,7 @@ type _Schema_
     ]
   )
   @fulltext(
-    name: "fileSearch",
+    name: "linkSearch",
     language: en
     algorithm: rank,
     include: [
