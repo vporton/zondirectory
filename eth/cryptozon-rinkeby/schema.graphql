@@ -145,3 +145,19 @@ type ChildParentVote @entity {
   parent: BigInt! # uint256
   value: BigInt! # int256
 }
+
+type Pay @entity {
+  id: ID!
+  payer: Bytes! # address
+  payee: Bytes! # address
+  itemId: BigInt! # uint256
+  value: BigInt! # int256
+}
+
+type Donate @entity {
+  id: ID!
+  payer: Bytes! # address
+  payee: Bytes! # address
+  itemId: BigInt! # uint256
+  value: BigInt! # int256
+}

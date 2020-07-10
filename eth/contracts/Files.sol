@@ -50,8 +50,8 @@ contract Files is BaseToken {
     event SetLastItemVersion(uint indexed itemId, uint version);
     event CategoryCreated(uint256 indexed categoryId, string title, string locale);
     event ChildParentVote(uint child, uint parent, int256 value);
-    event Pay(uint itemId, uint256 value);
-    event Donate(uint itemId, uint256 value);
+    event Pay(address indexed payer, address indexed payee, uint indexed itemId, uint256 value);
+    event Donate(address indexed payer, address indexed payee, uint indexed itemId, uint256 value);
 
     address payable founder;
     mapping (uint => address payable) itemOwners;
@@ -192,7 +192,7 @@ contract Files is BaseToken {
         totalDividends += _shareholdersShare;
         uint256 toAuthor = msg.value - _shareholdersShare;
         itemOwners[_itemId].transfer(toAuthor);
-        emit Pay(_itemId, toAuthor);
+        emit Pay(msg.sender, itemOwners[_itemId], _itemId, toAuthor);
     }
 
     function donate(uint _itemId) external payable returns (bytes memory) {
@@ -201,7 +201,7 @@ contract Files is BaseToken {
         itemOwners[_itemId].transfer(msg.value - _shareholdersShare);
         uint256 toAuthor = msg.value - _shareholdersShare;
         itemOwners[_itemId].transfer(toAuthor);
-        emit Donate(_itemId, toAuthor);
+        emit Donate(msg.sender, itemOwners[_itemId], _itemId, toAuthor);
     }
 
 /// Categories ///

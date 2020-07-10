@@ -15,6 +15,8 @@ import {
   SetOwnerShare as SetOwnerShareEvent,
   Transfer as TransferEvent,
   ChildParentVote as ChildParentVoteEvent,
+  Pay as PayEvent,
+  Donate as DonateEvent,
 } from "../generated/Contract/Contract"
 import {
   Approval,
@@ -32,6 +34,8 @@ import {
   SetOwnerShare,
   Transfer,
   ChildParentVote,
+  Pay,
+  Donate,
 } from "../generated/schema"
 
 function generateId(event: ethereum.Event): String {
@@ -185,6 +189,28 @@ export function handleChildParentVote(event: ChildParentVoteEvent): void {
   )
   entity.child = event.params.child
   entity.parent = event.params.parent
+  entity.value = event.params.value
+  entity.save()
+}
+
+export function handlePay(event: PayEvent): void {
+  let entity = new Pay(
+    generateId(event)
+  )
+  entity.payer = event.params.payer
+  entity.payee = event.params.payee
+  entity.itemId = event.params.itemId
+  entity.value = event.params.value
+  entity.save()
+}
+
+export function handleDonate(event: DonateEvent): void {
+  let entity = new Donate(
+    generateId(event)
+  )
+  entity.payer = event.params.payer
+  entity.payee = event.params.payee
+  entity.itemId = event.params.itemId
   entity.value = event.params.value
   entity.save()
 }

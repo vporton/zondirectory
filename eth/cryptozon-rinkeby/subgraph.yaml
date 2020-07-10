@@ -28,6 +28,8 @@ dataSources:
         - SetOwnerShare
         - Transfer
         - ChildParentVote
+        - Pay
+        - Donate
       abis:
         - name: Contract
           file: ./abis/Contract.json
@@ -62,4 +64,8 @@ dataSources:
           handler: handleTransfer
         - event: ChildParentVote(uint256,uint256,int256)
           handler: handleChildParentVote
+        - event: Pay(indexed address,indexed address,indexed uint256,uint256)
+          handler: handlePay
+        - event: Donate(indexed address,indexed address,indexed uint256,uint256)
+          handler: handleDonate
       file: ./src/mapping.ts
