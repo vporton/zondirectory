@@ -234,7 +234,7 @@ contract Files is BaseToken {
 
     function voteChildParent(uint _child, uint _parent, bool _yes) external payable {
         require(entries[_child] != EntryKind.NONE, "Child does not exist.");
-        require(entries[_parent] != EntryKind.CATEGORY, "Must be a category.");
+        require(entries[_parent] == EntryKind.CATEGORY, "Must be a category.");
         int256 _value = _yes ? int256(msg.value) : -int256(msg.value);
         if(_value == 0) return; // We don't want to pollute the events with zero votes.
         totalDividends += msg.value;
