@@ -16,7 +16,7 @@
 
 * "Sealing" item file versions to avoid partial versions.
 
-* Items that a neither downloads nor web links.
+* Items that are neither downloads nor web links.
 
 * Advise to install Brave or MetaMask.
 
@@ -25,3 +25,5 @@
 * Terms of Service.
 
 * Shareware XML uploads.
+
+* Ask before closing the page with files.
