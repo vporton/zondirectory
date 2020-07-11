@@ -29,24 +29,6 @@ The software supports uploading multiple files per item and versioning of
 uploaded files, splitting them into a set of several file bundles versions.
 (Usually the UI should show just the last version.)
 
-## Future features
-
-The main smart contract has the following features which are currently missing
-in the user interface:
-
-### Author information
-
-### Cover images
-
-### Categorization
-
-Anybody can create a category and child-parent relationship between two categories
-or between an item and a category.
-
-### Directory of Web links
-
-### `Pay` and `Donate` events
-
 ### Voting
 
 You can send Ether to the main contract address. This way you obtain voting rights
@@ -73,6 +55,17 @@ Consider top-level categories like
 
 Namely the categorization system makes this software useful. It would be useless without
 categorization.
+
+## Future features
+
+The main smart contract has the following features which are currently missing
+in the user interface:
+
+### Author information
+
+### Cover images
+
+### Directory of Web links
 
 ### Non-English language
 
