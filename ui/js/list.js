@@ -61,9 +61,9 @@ async function onLoad() {
         const categoryTitle = queryResult.categoryCreateds[0].title;
         $('#catTitle').text(categoryTitle);
     }
-    const itemIds = queryResult['itemCreateds'] ? queryResult['itemCreateds'][0] : [];
+    const itemIds = queryResult['itemCreateds'] ? queryResult['itemCreateds'] : [];
     const entryIdsFlat = catId ? parentIDs.concat(childIDs, itemIds.map(i => i.child))
-                              : itemIds.map(i => i.itemId);
+                               : itemIds.map(i => i.itemId);
     if(entryIdsFlat.length) {
         // TODO: Don't request category title if not asked for category votes.
         function subquery(itemId) {
