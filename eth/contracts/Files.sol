@@ -12,6 +12,8 @@ contract Files is BaseToken {
 
     using ABDKMath64x64 for int128;
 
+    enum EntryKind { NONE, DOWNLOADS, LINK, CATEGORY }
+
     string public name;
     uint8 public decimals;
     string public symbol;
@@ -22,6 +24,8 @@ contract Files is BaseToken {
     uint public numberOfHolders = 1;
 
     uint maxId = 0;
+
+    mapping (uint => EntryKind) entries;
 
     // to avoid categories with duplicate titles:
     mapping (string => mapping (string => bool)) categoryTitles; // locale => (title => bool)
@@ -128,6 +132,7 @@ contract Files is BaseToken {
         itemOwners[++maxId] = msg.sender;
         pricesETH[maxId] = _priceETH;
         pricesAR[maxId] = _priceAR;
+        entries[maxId] = EntryKind.DOWNLOADS;
         emit ItemCreated(maxId);
         emit SetItemOwner(maxId, msg.sender);
         emit ItemUpdated(maxId, _title, _description, _priceETH, _priceAR, _locale, _license);
@@ -142,6 +147,7 @@ contract Files is BaseToken {
                         string calldata _license) external
     {
         require(itemOwners[_itemId] == msg.sender, "Attempt to modify other's item.");
+        require(entries[maxId] == EntryKind.DOWNLOADS, "Item does not exist.");
         require(bytes(_title).length != 0, "Empty title.");
         pricesETH[_itemId] = _priceETH;
         pricesAR[_itemId] = _priceAR;
@@ -155,6 +161,7 @@ contract Files is BaseToken {
     {
         require(bytes(_title).length != 0, "Empty title.");
         itemOwners[++maxId] = msg.sender;
+        entries[maxId] = EntryKind.LINK;
         emit ItemCreated(maxId);
         emit SetItemOwner(maxId, msg.sender);
         emit LinkUpdated(maxId, _link, _title, _description, _locale);
@@ -168,25 +175,31 @@ contract Files is BaseToken {
     {
         require(itemOwners[_linkId] == msg.sender, "Attempt to modify other's item.");
         require(bytes(_title).length != 0, "Empty title.");
+        require(entries[maxId] == EntryKind.LINK, "Link does not exist.");
         emit LinkUpdated(_linkId, _link, _title, _description, _locale);
     }
 
     function updateItemCover(uint _itemId, uint _version, bytes calldata _cover, uint _width, uint _height) external {
+        EntryKind kind = entries[maxId];
+        require(kind == EntryKind.DOWNLOADS || kind == EntryKind.LINK, "Entry does not exist.");
         emit ItemCoverUpdated(_itemId, _version, _cover, _width, _height);
     }
 
     function uploadFile(uint _itemId, uint _version, string calldata _format, string calldata _hash) external {
         require(itemOwners[_itemId] == msg.sender, "Attempt to modify other's item.");
+        require(entries[maxId] == EntryKind.DOWNLOADS, "Item does not exist.");
         emit ItemFilesUpdated(_itemId, _format, _version, _hash);
     }
 
     function setLastItemVersion(uint _itemId, uint _version) external {
         require(itemOwners[_itemId] == msg.sender, "Attempt to modify other's item.");
+        require(entries[maxId] == EntryKind.DOWNLOADS, "Item does not exist.");
         emit SetLastItemVersion(_itemId, _version);
     }
 
     function pay(uint _itemId) external payable returns (bytes memory) {
         require(pricesETH[_itemId] <= msg.value, "Paid too little.");
+        require(entries[maxId] == EntryKind.DOWNLOADS, "Item does not exist.");
         uint256 _shareholdersShare = uint256(ownersShare.muli(int256(msg.value)));
         totalDividends += _shareholdersShare;
         uint256 toAuthor = msg.value - _shareholdersShare;
@@ -195,6 +208,7 @@ contract Files is BaseToken {
     }
 
     function donate(uint _itemId) external payable returns (bytes memory) {
+        require(entries[maxId] == EntryKind.DOWNLOADS, "Item does not exist.");
         uint256 _shareholdersShare = uint256(ownersShare.muli(int256(msg.value)));
         totalDividends += _shareholdersShare;
         itemOwners[_itemId].transfer(msg.value - _shareholdersShare);
@@ -211,12 +225,15 @@ contract Files is BaseToken {
             return;
         else
             categoryTitles[_locale][_title] = true;
-        emit CategoryCreated(++maxId, _title, _locale);
+        entries[++maxId] = EntryKind.CATEGORY;
+        emit CategoryCreated(maxId, _title, _locale);
     }
 
 /// Voting ///
 
     function voteChildParent(uint _child, uint _parent, bool _yes) external payable {
+        require(entries[_child] != EntryKind.NONE, "Child does not exist.");
+        require(entries[_parent] != EntryKind.CATEGORY, "Must be a category.");
         int256 _value = _yes ? int256(msg.value) : -int256(msg.value);
         if(_value == 0) return; // We don't want to pollute the events with zero votes.
         totalDividends += msg.value;
