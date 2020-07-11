@@ -25,3 +25,5 @@
 * Shareware XML uploads.
 
 * Ask before closing the page with files.
+
+* JavaScript XSS protection.
