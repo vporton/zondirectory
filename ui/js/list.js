@@ -98,7 +98,9 @@ async function onLoad() {
                 const spamInfo = items['rspam' + categoryId][0];
                 const spamScore = spamInfo ? formatPriceETH(new web3.utils.BN(spamInfo.value).neg()) : 0;
                 const link = "index.html?cat=" + categoryId;
-                $('#supercategories').append(`<li><a href="${link}">${safe_tags(category.title)}</a> (spam score: ${spamScore})</li>`);
+                const voteStr = `<a href='vote.html?child=${catId}&parent=${categoryId}&dir=for'>👍</a>` +
+                    `<a href='vote.html?child=${catId}&parent=${categoryId}&dir=against'>👎</a>`;
+                $('#supercategories').append(`<li><a href="${link}">${safe_tags(category.title)}</a> (spam score: ${spamScore} ${voteStr})</li>`);
             }
             for(let i in childIDs) {
                 const categoryId = childIDs[i];
@@ -107,7 +109,9 @@ async function onLoad() {
                 const spamInfo = items['spam' + categoryId][0];
                 const spamScore = spamInfo ? formatPriceETH(new web3.utils.BN(spamInfo.value).neg()) : 0;
                 const link = "index.html?cat=" + categoryId;
-                $('#subcategories').append(`<li><a href="${link}">${safe_tags(category.title)}</a> (spam score: ${spamScore})</li>`);
+                const voteStr = `<a href='vote.html?child=${categoryId}&parent=${catId}&dir=for'>👍</a>` +
+                    `<a href='vote.html?child=${categoryId}&parent=${catId}&dir=against'>👎</a>`;
+                $('#subcategories').append(`<li><a href="${link}">${safe_tags(category.title)}</a> (spam score: ${spamScore} ${voteStr})</li>`);
             }
     
             $('#supercategories > li:gt(0)').css('display', 'none');
