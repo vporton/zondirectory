@@ -160,28 +160,29 @@ contract Files is BaseToken {
                         string calldata _locale) external
     {
         require(bytes(_title).length != 0, "Empty title.");
-        itemOwners[++maxId] = msg.sender;
+        //itemOwners[++maxId] = msg.sender;
         entries[maxId] = EntryKind.LINK;
         emit ItemCreated(maxId);
         emit SetItemOwner(maxId, msg.sender);
         emit LinkUpdated(maxId, _link, _title, _description, _locale);
     }
 
-    function updateLink(uint _linkId,
-                        string calldata _link,
-                        string calldata _title,
-                        string calldata _description,
-                        string calldata _locale) external
-    {
-        require(itemOwners[_linkId] == msg.sender, "Attempt to modify other's item.");
-        require(bytes(_title).length != 0, "Empty title.");
-        require(entries[maxId] == EntryKind.LINK, "Link does not exist.");
-        emit LinkUpdated(_linkId, _link, _title, _description, _locale);
-    }
+    // Can be used for spam.
+    // function updateLink(uint _linkId,
+    //                     string calldata _link,
+    //                     string calldata _title,
+    //                     string calldata _description,
+    //                     string calldata _locale) external
+    // {
+    //     require(itemOwners[_linkId] == msg.sender, "Attempt to modify other's item.");
+    //     require(bytes(_title).length != 0, "Empty title.");
+    //     require(entries[maxId] == EntryKind.LINK, "Link does not exist.");
+    //     emit LinkUpdated(_linkId, _link, _title, _description, _locale);
+    // }
 
     function updateItemCover(uint _itemId, uint _version, bytes calldata _cover, uint _width, uint _height) external {
         EntryKind kind = entries[maxId];
-        require(kind == EntryKind.DOWNLOADS || kind == EntryKind.LINK, "Entry does not exist.");
+        require(kind == EntryKind.DOWNLOADS /*|| kind == EntryKind.LINK*/, "Entry does not exist.");
         emit ItemCoverUpdated(_itemId, _version, _cover, _width, _height);
     }
 
