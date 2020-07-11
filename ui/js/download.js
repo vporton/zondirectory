@@ -88,7 +88,8 @@ async function payAR() {
             arWallet
         }
     }`;
-                let arWallet = (await queryThegraph(query)).data.setARWallets[0].arWallet;
+                const queryResult = (await queryThegraph(query)).data;
+                let arWallet = queryResult.setARWallets[0] ? queryResult.setARWallets[0].arWallet : null;
                 let authorRoyalty, shareholdersRoyalty;
                 const contractInstance = new web3.eth.Contract(await filesJsonInterface(), addressFiles);
                 await defaultAccountPromise();
