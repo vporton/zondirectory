@@ -22,7 +22,6 @@ contract Files is BaseToken {
     uint public numberOfHolders = 1;
 
     uint maxId = 0;
-    uint maxVoteId = 0;
 
     // to avoid categories with duplicate titles:
     mapping (string => mapping (string => bool)) categoryTitles; // locale => (title => bool)
