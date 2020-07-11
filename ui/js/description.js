@@ -24,7 +24,7 @@ function setPriceETH(price) {
         document.getElementById('sellInETH').checked = true;
         document.getElementById('priceETH').disabled = true;
     } else {
-        document.getElementById('priceETH').value = web3.utils.fromWei(price);
+        document.getElementById('priceETH').value = formatPriceETH(price);
     }
 }
 
@@ -34,7 +34,7 @@ function setPriceAR(price) {
         document.getElementById('priceAR').disabled = true;
     } else {
         const arweave = Arweave.init();
-        document.getElementById('priceAR').value = arweave.ar.winstonToAr(price);
+        document.getElementById('priceAR').value = formatPriceAR(price);
     }
 }
 

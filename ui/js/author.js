@@ -33,7 +33,7 @@ async function onLoad() {
     for(let i in items) {
         const item = items[i][0];
         const link = "description.html?id=" + item.itemId;
-        const row = `<tr><td><a href="${link}">${safe_tags(item.title)}</a></td><td>${web3.utils.fromWei(item.priceETH)}</td><td>${arweave.ar.winstonToAr(item.priceAR)}</td></tr>`;
+        const row = `<tr><td><a href="${link}">${safe_tags(item.title)}</a></td><td>${formatPriceETH(item.priceETH)}</td><td>${formatPriceAR(item.priceAR)}</td></tr>`;
         $('#theTable').append(row);
     }
 }
