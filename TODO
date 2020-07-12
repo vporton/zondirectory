@@ -32,3 +32,5 @@
 * Voting for entries of owned category disturbs author's intentions.
 
 * `orderBy` forgotten.
+
+* Not owned (= not modificable) links.

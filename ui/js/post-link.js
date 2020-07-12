@@ -19,11 +19,12 @@ async function createItem() {
     const description = document.getElementById('description').value;
     const link = document.getElementById('link').value;
     const kind = $('input[name=kind]:checked');
+    const owned = true;
 
     let transactionHash = null;
     let events = [];
 
-    contractInstance.methods.createLink(link, title, description, locale, kind)
+    contractInstance.methods.createLink(link, title, description, locale, kind, owned)
         .send({from: defaultAccount, gas: '1000000'})
         .on('transactionHash', async function(receiptHash) {
             transactionHash = receiptHash;
