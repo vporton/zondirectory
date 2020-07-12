@@ -34,3 +34,5 @@
 * Processing `arweave:` URL scheme and blogging engine.
 
 * Renaming owned categories.
+
+* Check that no JavaScript errors on owned categories.

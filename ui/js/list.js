@@ -16,7 +16,7 @@ async function onLoad() {
     let query;
     if(catId) {
         query = `{
-    categoryCreateds(first:1, where:{categoryId:${catId}}) {
+    categoryCreateds(first:1, where:{categoryId:${catId}, owner:0}) {
         title
     }
     childParentVotes(first:1000, where:{parent:${catId}}) {
