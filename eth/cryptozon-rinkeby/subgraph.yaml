@@ -6,8 +6,8 @@ dataSources:
     name: Contract
     network: rinkeby
     source:
-      address: "0x542825F1F3445Df5B252C37F1b41E96dBb2f0d9A"
-      startBlock: 6826249
+      address: "0xc93b782C7719518075DdbBef3b28ec1772B67BCc"
+      startBlock: 6827205
       abi: Contract
     mapping:
       kind: ethereum/events
