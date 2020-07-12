@@ -134,7 +134,12 @@ type SetOwner @entity {
   owner: Bytes! # address
 }
 
-type SetOwnerShare @entity {
+type SetSalesOwnerShare @entity {
+  id: ID!
+  share: BigInt! # int128
+}
+
+type SetUpvotesOwnerShare @entity {
   id: ID!
   share: BigInt! # int128
 }

@@ -13,7 +13,8 @@ import {
   SetAuthorInfo as SetAuthorInfoEvent,
   SetItemOwner as SetItemOwnerEvent,
   SetOwner as SetOwnerEvent,
-  SetOwnerShare as SetOwnerShareEvent,
+  SetSalesOwnerShare as SetSalesOwnerShareEvent,
+  SetUpvotesOwnerShare as SetUpvotesOwnerShareEvent,
   Transfer as TransferEvent,
   ChildParentVote as ChildParentVoteEvent,
   Pay as PayEvent,
@@ -33,7 +34,8 @@ import {
   SetAuthorInfo,
   SetItemOwner,
   SetOwner,
-  SetOwnerShare,
+  SetSalesOwnerShare,
+  SetUpvotesOwnerShare,
   Transfer,
   ChildParentVote,
   Pay,
@@ -179,8 +181,16 @@ export function handleSetOwner(event: SetOwnerEvent): void {
   entity.save()
 }
 
-export function handleSetOwnerShare(event: SetOwnerShareEvent): void {
-  let entity = new SetOwnerShare(
+export function handleSetSalesOwnerShare(event: SetSalesOwnerShareEvent): void {
+  let entity = new SetSalesOwnerShare(
+    generateId(event)
+  )
+  entity.share = event.params.share
+  entity.save()
+}
+
+export function handleSetUpvotesOwnerShare(event: SetUpvotesOwnerShareEvent): void {
+  let entity = new SetUpvotesOwnerShare(
     generateId(event)
   )
   entity.share = event.params.share

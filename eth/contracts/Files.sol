@@ -22,7 +22,8 @@ contract Files is BaseToken {
     string public symbol;
 
     // 64.64 fixed point number
-    int128 public ownersShare = int128(1).divi(int128(10)); // 1/10
+    int128 public salesOwnersShare = int128(1).divi(int128(10)); // 10%
+    int128 public upvotesOwnersShare = int128(1).divi(int128(2)); // 50%
     mapping (uint => address) public holdersIndexes;
     uint public numberOfHolders = 1;
 
@@ -34,7 +35,8 @@ contract Files is BaseToken {
     mapping (string => mapping (string => bool)) categoryTitles; // locale => (title => bool)
 
     event SetOwner(address payable owner); // share is 64.64 fixed point number
-    event SetOwnerShare(int128 share); // share is 64.64 fixed point number
+    event SetSalesOwnerShare(int128 share); // share is 64.64 fixed point number
+    event SetUpvotesOwnerShare(int128 share); // share is 64.64 fixed point number
     event SetARWallet(address payable indexed owner, string arWallet);
     event SetAuthorInfo(address payable indexed owner, string description, string locale);
     event ItemCreated(uint indexed itemId);
@@ -102,10 +104,16 @@ contract Files is BaseToken {
     }
 
     // _share is 64.64 fixed point number
-    function setOwnersShare(int128 _share) external {
+    function setSalesOwnersShare(int128 _share) external {
         require(msg.sender == founder, "Access denied.");
-        ownersShare = _share;
-        emit SetOwnerShare(_share);
+        salesOwnersShare = _share;
+        emit SetSalesOwnerShare(_share);
+    }
+
+    function setUpvotesOwnersShare(int128 _share) external {
+        require(msg.sender == founder, "Access denied.");
+        upvotesOwnersShare = _share;
+        emit SetUpvotesOwnerShare(_share);
     }
 
     function setItemOwner(uint _itemId, address payable _owner) external {
@@ -209,7 +217,7 @@ contract Files is BaseToken {
     function pay(uint _itemId) external payable returns (bytes memory) {
         require(pricesETH[_itemId] <= msg.value, "Paid too little.");
         require(entries[maxId] == EntryKind.DOWNLOADS, "Item does not exist.");
-        uint256 _shareholdersShare = uint256(ownersShare.muli(int256(msg.value)));
+        uint256 _shareholdersShare = uint256(salesOwnersShare.muli(int256(msg.value)));
         totalDividends += _shareholdersShare;
         uint256 toAuthor = msg.value - _shareholdersShare;
         itemOwners[_itemId].transfer(toAuthor);
@@ -218,7 +226,7 @@ contract Files is BaseToken {
 
     function donate(uint _itemId) external payable returns (bytes memory) {
         require(entries[maxId] == EntryKind.DOWNLOADS, "Item does not exist.");
-        uint256 _shareholdersShare = uint256(ownersShare.muli(int256(msg.value)));
+        uint256 _shareholdersShare = uint256(salesOwnersShare.muli(int256(msg.value)));
         totalDividends += _shareholdersShare;
         itemOwners[_itemId].transfer(msg.value - _shareholdersShare);
         uint256 toAuthor = msg.value - _shareholdersShare;
@@ -256,12 +264,16 @@ contract Files is BaseToken {
     function voteChildParent(uint _child, uint _parent, bool _yes) external payable {
         require(entries[_child] != EntryKind.NONE, "Child does not exist.");
         require(entries[_parent] == EntryKind.CATEGORY, "Must be a category.");
-        require(itemOwners[_parent] == address(0), "Can't vote for an owned category.");
         int256 _value = _yes ? int256(msg.value) : -int256(msg.value);
         if(_value == 0) return; // We don't want to pollute the events with zero votes.
         totalDividends += msg.value;
         int256 _newValue = childParentVotes[_child][_parent] + _value;
         childParentVotes[_child][_parent] = _newValue;
+        if(_yes) {
+            uint256 _shareholdersShare = uint256(upvotesOwnersShare.muli(int256(msg.value)));
+            totalDividends += _shareholdersShare;
+            itemOwners[_child].transfer(msg.value - _shareholdersShare);
+        }
         emit ChildParentVote(_child, _parent, _newValue, 0);
     }
 

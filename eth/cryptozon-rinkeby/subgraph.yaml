@@ -27,7 +27,8 @@ dataSources:
         - SetAuthorInfo
         - SetItemOwner
         - SetOwner
-        - SetOwnerShare
+        - SetSalesOwnerShare
+        - SetUpvotesOwnerShare
         - Transfer
         - ChildParentVote
         - Pay
@@ -62,7 +63,9 @@ dataSources:
           handler: handleSetItemOwner
         - event: SetOwner(address)
           handler: handleSetOwner
-        - event: SetOwnerShare(int128)
+        - event: SetSalesOwnerShare(int128)
+          handler: handleSetOwnerShare
+        - event: SetUpvotesOwnerShare(int128)
           handler: handleSetOwnerShare
         - event: Transfer(indexed address,indexed address,uint256)
           handler: handleTransfer
