@@ -1,0 +1,25 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head id="head">
+        <title>Post Link or Message</title>
+        <style>
+            input[type=text], textarea { width: 100%;}
+        </style>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/web3/1.2.9/web3.min.js"></script>
+        <script src="artifacts/addresses.js"></script>
+        <script src="js/common.js"></script>
+        <script src="js/post-link.js"></script>
+    </head>
+    <body>
+        <h1 id="title">Post Link or Message</h1>
+        <div id="body">
+            <p>Language: <input type="text" id="locale" value="en"/></p>
+            <p>Title: <input type="text" id="title"/></p>
+            <p>Description: <textarea id="description"></textarea></p>
+            <p>Link: <input type="text" id="link"/></p>
+            <p>Link type:
+                <label><input type="radio" name="kind" value="0"/> Directory entry</label>
+                <label><input type="radio" name="kind" value="1"/> Message</label></p>
+            <p><input type="button" value="submit" onclick="createOrUpdateItem()"/></p>
+        </div>
+    </body>
+</html>
