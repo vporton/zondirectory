@@ -236,16 +236,17 @@ contract Files is BaseToken {
 
 /// Categories ///
 
-    function createCategory(string calldata _title, string calldata _locale, address payable _owner) external {
+    function createCategory(string calldata _title, string calldata _locale, bool _owned) external {
         require(bytes(_title).length != 0, "Empty title.");
-        if(_owner == address(0)) {
+        address payable _owner = _owned ? msg.sender : address(0);
+        if(!_owned) {
             if(categoryTitles[_locale][_title])
                 return;
             else
                 categoryTitles[_locale][_title] = true;
         }
         entries[++maxId] = EntryKind.CATEGORY;
-        if(_owner != address(0)) // check to speed-up
+        if(_owned) // check to speed-up
             itemOwners[maxId] = _owner;
         // Yes, issue _owner two times, for faster information retrieval
         emit CategoryCreated(maxId, _owner);
