@@ -175,13 +175,15 @@ contract Files is BaseToken {
                         string calldata _title,
                         string calldata _description,
                         string calldata _locale,
-                        uint256 _linkKind) external
+                        uint256 _linkKind,
+                        bool _owned) external
     {
         require(bytes(_title).length != 0, "Empty title.");
-        //itemOwners[++maxId] = msg.sender; // FIXME
-        entries[++maxId] = EntryKind.LINK;
+        address payable _owner = _owned ? msg.sender : address(0);
+        itemOwners[++maxId] = _owner;
+        entries[maxId] = EntryKind.LINK;
         emit ItemCreated(maxId);
-        emit SetItemOwner(maxId, msg.sender);
+        if (_owned) emit SetItemOwner(maxId, _owner);
         emit LinkUpdated(maxId, _link, _title, _description, _locale, _linkKind);
     }
 
