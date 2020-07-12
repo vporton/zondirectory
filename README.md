@@ -67,6 +67,10 @@ in the user interface:
 
 ### Directory of Web links
 
+### Twitter-like messages / blogs
+
+### Categories owned by a user
+
 ### Non-English language
 
 ### Full text search
