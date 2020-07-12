@@ -59,7 +59,11 @@ contract Files is BaseToken {
     event SetLastItemVersion(uint indexed itemId, uint version);
     event CategoryCreated(uint256 indexed categoryId, address indexed owner); // zero owner - no owner
     event CategoryUpdated(uint256 indexed categoryId, string title, string locale);
-    event ChildParentVote(uint child, uint parent, int256 value, int256 featureLevel);
+    event ChildParentVote(uint child,
+                          uint parent,
+                          int256 value,
+                          int256 featureLevel,
+                          bool primary); // Vote is primary if parent owner is zero or it's an owner's vote.
     event Pay(address indexed payer, address indexed payee, uint indexed itemId, uint256 value);
     event Donate(address indexed payer, address indexed payee, uint indexed itemId, uint256 value);
 
@@ -269,13 +273,14 @@ contract Files is BaseToken {
         if(_value == 0) return; // We don't want to pollute the events with zero votes.
         int256 _newValue = childParentVotes[_child][_parent] + _value;
         childParentVotes[_child][_parent] = _newValue;
-        if(_yes && itemOwners[_child] != address(0)) {
+        address _owner = itemOwners[_child];
+        if(_yes && _owner != address(0)) {
             uint256 _shareholdersShare = uint256(upvotesOwnersShare.muli(int256(msg.value)));
             totalDividends += _shareholdersShare;
             itemOwners[_child].transfer(msg.value - _shareholdersShare);
         } else
             totalDividends += msg.value;
-        emit ChildParentVote(_child, _parent, _newValue, 0);
+        emit ChildParentVote(_child, _parent, _newValue, 0, _owner == address(0) || _owner == msg.sender);
     }
 
     // _value > 0 - present
@@ -283,7 +288,7 @@ contract Files is BaseToken {
         require(entries[_child] != EntryKind.NONE, "Child does not exist.");
         require(entries[_parent] == EntryKind.CATEGORY, "Must be a category.");
         require(itemOwners[_parent] == msg.sender, "Access denied.");
-        emit ChildParentVote(_child, _parent, _value, _featureLevel);
+        emit ChildParentVote(_child, _parent, _value, _featureLevel, true);
     }
 
     function getChildParentVotes(uint _child, uint _parent) external view returns (int256) {

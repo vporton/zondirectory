@@ -215,6 +215,7 @@ export function handleChildParentVote(event: ChildParentVoteEvent): void {
   entity.parent = event.params.parent
   entity.value = event.params.value
   entity.featureLevel = event.params.featureLevel
+  entity.primary = event.params.primary
   entity.save()
 }
 

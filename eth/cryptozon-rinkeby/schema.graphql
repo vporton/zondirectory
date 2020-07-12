@@ -157,6 +157,7 @@ type ChildParentVote @entity {
   parent: BigInt! # uint256
   value: BigInt! # int256
   featureLevel: BigInt! # int256
+  primary: Boolean # bool
 }
 
 type Pay @entity {
