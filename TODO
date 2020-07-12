@@ -34,3 +34,7 @@
 * `orderBy` forgotten.
 
 * Not owned (= not modificable) links.
+
+* Full-text search.
+
+* Show correct community voting scores for childs of owned categories.
