@@ -55,7 +55,8 @@ contract Files is BaseToken {
     event ItemCoverUpdated(uint indexed itemId, uint indexed version, bytes cover, uint width, uint height);
     event ItemFilesUpdated(uint indexed itemId, string format, uint indexed version, string hash);
     event SetLastItemVersion(uint indexed itemId, uint version);
-    event CategoryCreated(uint256 indexed categoryId, string title, string locale, address indexed owner); // zero owner - no owner
+    event CategoryCreated(uint256 indexed categoryId, address indexed owner); // zero owner - no owner
+    event CategoryUpdated(uint256 indexed categoryId, string title, string locale);
     event ChildParentVote(uint child, uint parent, int256 value, int256 featureLevel);
     event Pay(address indexed payer, address indexed payee, uint indexed itemId, uint256 value);
     event Donate(address indexed payer, address indexed payee, uint indexed itemId, uint256 value);
@@ -95,7 +96,7 @@ contract Files is BaseToken {
 
     function setOwner(address payable _founder) external {
         require(msg.sender == founder, "Access denied.");
-        require(_founder != address(0), "Zero address.");
+        require(_founder != address(0), "Zero address."); // also prevents makeing owned categories unowned (spam)
         founder = _founder;
         emit SetOwner(_founder);
     }
@@ -187,6 +188,7 @@ contract Files is BaseToken {
     }
 
     function updateItemCover(uint _itemId, uint _version, bytes calldata _cover, uint _width, uint _height) external {
+        require(itemOwners[_itemId] == msg.sender, "Access denied."); // only owned links
         EntryKind kind = entries[maxId];
         require(kind == EntryKind.DOWNLOADS /*|| kind == EntryKind.LINK*/, "Entry does not exist.");
         emit ItemCoverUpdated(_itemId, _version, _cover, _width, _height);
@@ -228,14 +230,25 @@ contract Files is BaseToken {
 
     function createCategory(string calldata _title, string calldata _locale, address payable _owner) external {
         require(bytes(_title).length != 0, "Empty title.");
-        if(categoryTitles[_locale][_title])
-            return;
-        else
-            categoryTitles[_locale][_title] = true;
+        if(_owner == address(0)) {
+            if(categoryTitles[_locale][_title])
+                return;
+            else
+                categoryTitles[_locale][_title] = true;
+        }
         entries[++maxId] = EntryKind.CATEGORY;
         if(_owner != address(0)) // check to speed-up
             itemOwners[maxId] = _owner;
-        emit CategoryCreated(maxId, _title, _locale, _owner);
+        // Yes, issue _owner two times, for faster information retrieval
+        emit CategoryCreated(maxId, _owner);
+        emit SetItemOwner(maxId, _owner);
+        emit CategoryUpdated(maxId, _title, _locale);
+    }
+
+    function updateCategory(uint _categoryId, string calldata _title, string calldata _locale) external {
+        require(itemOwners[_categoryId] == msg.sender, "Access denied.");
+        require(entries[_categoryId] == EntryKind.CATEGORY, "Must be a category.");
+        emit CategoryUpdated(maxId, _title, _locale);
     }
 
 /// Voting ///
