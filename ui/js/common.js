@@ -24,7 +24,11 @@ function queryThegraph(query) {
     query = query.replace(/\\/g, '\\').replace(/"/g, '\\"').replace(/\n/g, "\\n");
     return new Promise((resolve, error) => {
         $.post(THEGRAPH_URL, `{ "query": "${query}" }`, function(data) {
-            resolve(data);
+            // TODO: Correct error handling.
+            if(data.errors) {
+                alert(data.errors.map(e => e.message).join("\n"));
+            } else
+                resolve(data);
         });
     });
 }
