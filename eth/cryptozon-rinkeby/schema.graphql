@@ -53,6 +53,7 @@ type CategoryCreated @entity {
   categoryId: BigInt! # uint256
   title: String! # string
   locale: String! # string
+  owner: Bytes! # address
 }
 
 type ItemCoverUpdated @entity {
@@ -101,6 +102,7 @@ type LinkUpdated @entity {
   title: String! # string
   description: String! # string
   locale: String! # string
+  linkKind: BigInt! # uint256
 }
 
 type SetARWallet @entity {
@@ -144,6 +146,7 @@ type ChildParentVote @entity {
   child: BigInt! # uint256
   parent: BigInt! # uint256
   value: BigInt! # int256
+  featureLevel: BigInt! # int256
 }
 
 type Pay @entity {

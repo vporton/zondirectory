@@ -62,6 +62,7 @@ export function handleCategoryCreated(event: CategoryCreatedEvent): void {
   entity.categoryId = event.params.categoryId
   entity.title = event.params.title
   entity.locale = event.params.locale
+  entity.owner = event.params.owner
   entity.save()
 }
 
@@ -128,6 +129,7 @@ export function handleLinkUpdated(event: LinkUpdatedEvent): void {
   entity.title = event.params.title
   entity.description = event.params.description
   entity.locale = event.params.locale
+  entity.linkKind = event.params.linkKind
   entity.save()
 }
 
@@ -192,6 +194,7 @@ export function handleChildParentVote(event: ChildParentVoteEvent): void {
   entity.child = event.params.child
   entity.parent = event.params.parent
   entity.value = event.params.value
+  entity.featureLevel = event.params.featureLevel
   entity.save()
 }
 

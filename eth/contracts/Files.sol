@@ -14,6 +14,9 @@ contract Files is BaseToken {
 
     enum EntryKind { NONE, DOWNLOADS, LINK, CATEGORY }
 
+    uint256 constant LINK_KIND_LINK = 0;
+    uint256 constant LINK_KIND_MESSAGE = 1;
+
     string public name;
     uint8 public decimals;
     string public symbol;
@@ -47,12 +50,13 @@ contract Files is BaseToken {
                       string link,
                       string title,
                       string description,
-                      string locale);
+                      string locale,
+                      uint256 indexed linkKind);
     event ItemCoverUpdated(uint indexed itemId, uint indexed version, bytes cover, uint width, uint height);
     event ItemFilesUpdated(uint indexed itemId, string format, uint indexed version, string hash);
     event SetLastItemVersion(uint indexed itemId, uint version);
-    event CategoryCreated(uint256 indexed categoryId, string title, string locale);
-    event ChildParentVote(uint child, uint parent, int256 value);
+    event CategoryCreated(uint256 indexed categoryId, string title, string locale, address indexed owner); // zero owner - no owner
+    event ChildParentVote(uint child, uint parent, int256 value, int256 featureLevel);
     event Pay(address indexed payer, address indexed payee, uint indexed itemId, uint256 value);
     event Donate(address indexed payer, address indexed payee, uint indexed itemId, uint256 value);
 
@@ -157,28 +161,30 @@ contract Files is BaseToken {
     function createLink(string calldata _link,
                         string calldata _title,
                         string calldata _description,
-                        string calldata _locale) external
+                        string calldata _locale,
+                        uint256 _linkKind) external
     {
         require(bytes(_title).length != 0, "Empty title.");
         //itemOwners[++maxId] = msg.sender;
         entries[maxId] = EntryKind.LINK;
         emit ItemCreated(maxId);
         emit SetItemOwner(maxId, msg.sender);
-        emit LinkUpdated(maxId, _link, _title, _description, _locale);
+        emit LinkUpdated(maxId, _link, _title, _description, _locale, _linkKind);
     }
 
     // Can be used for spam.
-    // function updateLink(uint _linkId,
-    //                     string calldata _link,
-    //                     string calldata _title,
-    //                     string calldata _description,
-    //                     string calldata _locale) external
-    // {
-    //     require(itemOwners[_linkId] == msg.sender, "Attempt to modify other's item.");
-    //     require(bytes(_title).length != 0, "Empty title.");
-    //     require(entries[maxId] == EntryKind.LINK, "Link does not exist.");
-    //     emit LinkUpdated(_linkId, _link, _title, _description, _locale);
-    // }
+    function updateLink(uint _linkId,
+                        string calldata _link,
+                        string calldata _title,
+                        string calldata _description,
+                        string calldata _locale,
+                        uint256 _linkKind) external
+    {
+        require(itemOwners[_linkId] == msg.sender, "Attempt to modify other's link."); // only owned links
+        require(bytes(_title).length != 0, "Empty title.");
+        require(entries[maxId] == EntryKind.LINK, "Link does not exist.");
+        emit LinkUpdated(_linkId, _link, _title, _description, _locale, _linkKind);
+    }
 
     function updateItemCover(uint _itemId, uint _version, bytes calldata _cover, uint _width, uint _height) external {
         EntryKind kind = entries[maxId];
@@ -220,14 +226,16 @@ contract Files is BaseToken {
 
 /// Categories ///
 
-    function createCategory(string calldata _title, string calldata _locale) external {
+    function createCategory(string calldata _title, string calldata _locale, address payable _owner) external {
         require(bytes(_title).length != 0, "Empty title.");
         if(categoryTitles[_locale][_title])
             return;
         else
             categoryTitles[_locale][_title] = true;
         entries[++maxId] = EntryKind.CATEGORY;
-        emit CategoryCreated(maxId, _title, _locale);
+        if(_owner != address(0)) // check to speed-up
+            itemOwners[maxId] = _owner;
+        emit CategoryCreated(maxId, _title, _locale, _owner);
     }
 
 /// Voting ///
@@ -235,12 +243,21 @@ contract Files is BaseToken {
     function voteChildParent(uint _child, uint _parent, bool _yes) external payable {
         require(entries[_child] != EntryKind.NONE, "Child does not exist.");
         require(entries[_parent] == EntryKind.CATEGORY, "Must be a category.");
+        require(itemOwners[_parent] == address(0), "Can't vote for an owned category.");
         int256 _value = _yes ? int256(msg.value) : -int256(msg.value);
         if(_value == 0) return; // We don't want to pollute the events with zero votes.
         totalDividends += msg.value;
         int256 _newValue = childParentVotes[_child][_parent] + _value;
         childParentVotes[_child][_parent] = _newValue;
-        emit ChildParentVote(_child, _parent, _newValue);
+        emit ChildParentVote(_child, _parent, _newValue, 0);
+    }
+
+    // _value > 0 - present
+    function setMyChildParent(uint _child, uint _parent, int128 _value, int128 _featureLevel) external {
+        require(entries[_child] != EntryKind.NONE, "Child does not exist.");
+        require(entries[_parent] == EntryKind.CATEGORY, "Must be a category.");
+        require(itemOwners[_parent] == msg.sender, "Access denied.");
+        emit ChildParentVote(_child, _parent, _value, _featureLevel);
     }
 
     function getChildParentVotes(uint _child, uint _parent) external view returns (int256) {

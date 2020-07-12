@@ -37,7 +37,7 @@ dataSources:
       eventHandlers:
         - event: Approval(indexed address,indexed address,uint256)
           handler: handleApproval
-        - event: CategoryCreated(indexed uint256,string,string)
+        - event: CategoryCreated(indexed uint256,string,string,indexed address)
           handler: handleCategoryCreated
         - event: ItemCoverUpdated(indexed uint256,indexed uint256,bytes,uint256,uint256)
           handler: handleItemCoverUpdated
@@ -49,7 +49,7 @@ dataSources:
           handler: handleSetLastItemVersion
         - event: ItemUpdated(indexed uint256,string,string,uint256,uint256,string,string)
           handler: handleItemUpdated
-        - event: LinkUpdated(indexed uint256,string,string,string,string)
+        - event: LinkUpdated(indexed uint256,string,string,string,string,indexed uint256)
           handler: handleLinkUpdated
         - event: SetARWallet(indexed address,string)
           handler: handleSetARWallet
@@ -63,7 +63,7 @@ dataSources:
           handler: handleSetOwnerShare
         - event: Transfer(indexed address,indexed address,uint256)
           handler: handleTransfer
-        - event: ChildParentVote(uint256,uint256,int256)
+        - event: ChildParentVote(uint256,uint256,int256,int256)
           handler: handleChildParentVote
         - event: Pay(indexed address,indexed address,indexed uint256,uint256)
           handler: handlePay
