@@ -190,7 +190,7 @@ contract Files is BaseToken {
     function updateItemCover(uint _itemId, uint _version, bytes calldata _cover, uint _width, uint _height) external {
         require(itemOwners[_itemId] == msg.sender, "Access denied."); // only owned links
         EntryKind kind = entries[maxId];
-        require(kind == EntryKind.DOWNLOADS /*|| kind == EntryKind.LINK*/, "Entry does not exist.");
+        require(kind != EntryKind.NONE, "Entry does not exist.");
         emit ItemCoverUpdated(_itemId, _version, _cover, _width, _height);
     }
 
