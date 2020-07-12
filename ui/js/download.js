@@ -175,7 +175,7 @@ $(async function() {
         if(parentIDs) {
             function subquery(catId) {
                 let query = `
-            category${catId}: categoryCreateds(first:1, orderBy: id, orderDirection:asc, where:{categoryId:${catId}, owner:0}) {
+            category${catId}: categoryCreateds(first:1, orderBy: id, orderDirection:asc, where:{categoryId:${catId}}) {
                 title
             }`
                 query += `
