@@ -266,14 +266,14 @@ contract Files is BaseToken {
         require(entries[_parent] == EntryKind.CATEGORY, "Must be a category.");
         int256 _value = _yes ? int256(msg.value) : -int256(msg.value);
         if(_value == 0) return; // We don't want to pollute the events with zero votes.
-        totalDividends += msg.value;
         int256 _newValue = childParentVotes[_child][_parent] + _value;
         childParentVotes[_child][_parent] = _newValue;
-        if(_yes) {
+        if(_yes && itemOwners[_child] != address(0)) {
             uint256 _shareholdersShare = uint256(upvotesOwnersShare.muli(int256(msg.value)));
             totalDividends += _shareholdersShare;
             itemOwners[_child].transfer(msg.value - _shareholdersShare);
-        }
+        } else
+            totalDividends += msg.value;
         emit ChildParentVote(_child, _parent, _newValue, 0);
     }
 
