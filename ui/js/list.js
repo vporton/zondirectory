@@ -8,6 +8,7 @@ async function onLoad() {
         $('#addItem').attr('href', `vote.html?parent=${catId}&dir=for`);
     } else {
         $('#categoryInfo').css('display', 'none');
+        $('#categoryInfo2').css('display', 'none');
         $('#spamScoreTH').css('display', 'none');
         $('#addItem').css('display', 'none');
     }
@@ -29,6 +30,11 @@ async function onLoad() {
         value
     }
     childs: childParentVotes(first:1000, orderDirection:desc, where:{parent:${catId}}) {
+        id
+        child
+        value
+    }
+    ownedChilds: childParentVotes(first:1000, orderDirection:desc, where:{parent:${catId}}) {
         id
         child
         value
@@ -74,6 +80,14 @@ async function onLoad() {
             priceETH
             priceAR
         }
+        link${itemId}: linkUpdateds(first:1, orderBy:id, orderDirection:desc, where:{linkId:${itemId}}) {
+            linkId # TODO: Superfluous
+            title
+            link
+        }
+        categoryCreate${itemId}: categoryCreateds(first:1, orderBy: id, orderDirection:asc, where:{categoryId:${itemId}}) {
+            owner
+        }
         category${itemId}: categoryUpdateds(first:1, orderBy: id, orderDirection:asc, where:{categoryId:${itemId}}) {
             title
         }`
@@ -112,12 +126,13 @@ async function onLoad() {
                 const link = "index.html?cat=" + categoryId;
                 const voteStr = `<a href='vote.html?child=${categoryId}&parent=${catId}&dir=for'>👍</a>` +
                     `<a href='vote.html?child=${categoryId}&parent=${catId}&dir=against'>👎</a>`;
-                $('#subcategories').append(`<li><a href="${link}">${safe_tags(category.title)}</a> (spam score: ${spamScore} ${voteStr})</li>`);
+                $(items['categoryCreate' + categoryId][0].owner.test(/^0x0+$/) ? '#ownedSubcategories' : '#subcategories')
+                    .append(`<li><a href="${link}">${safe_tags(category.title)}</a> (spam score: ${spamScore} ${voteStr})</li>`);
             }
-    
+
             $('#supercategories > li:gt(0)').css('display', 'none');
             $('#subcategories > li:gt(9)').css('display', 'none');
-                }
+        }
         for(let i in items) {
             if(!/^item/.test(i)) continue;
             const item = items[i][0];
@@ -133,6 +148,20 @@ async function onLoad() {
             } else {
                 const row = `<tr><td><a href="${link}">${safe_tags(item.title)}</a></td><td>${formatPriceETH(item.priceETH)}</td><td>${formatPriceAR(item.priceAR)}</td>`;
                 $('#theTable').prepend(row);
+            }
+        }
+        for(let i in items) {
+            if(!/^link/.test(i)) continue;
+            const item = items[i][0];
+            if(!item) continue;
+            const link = "entry.html?id=" + item.linkId;
+            if(catId) {
+                const spamInfo = items[i.replace(/^link/, 'spam')][0];
+                const spamScore = spamInfo ? formatPriceETH(new web3.utils.BN(spamInfo.value).neg()) : 0;
+                const voteStr = `<a href='vote.html?child=${i.replace(/^link/, "")}&parent=${catId}&dir=for'>👍</a>` +
+                    `<a href='vote.html?child=${i.replace(/^link/, "")}&parent=${catId}&dir=against'>👎</a>`;
+                const row = `<li><a href="${link}">${safe_tags(item.title)}</a> (spam score: ${spamScore} ${voteStr})</li>`;
+                $('#links').prepend(row);
             }
         }
     }
