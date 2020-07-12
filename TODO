@@ -35,6 +35,4 @@
 
 * Renaming owned categories.
 
-* Check that no JavaScript errors on owned categories.
-
 * `locale` belongs to `Created` or to `Updated` events?
