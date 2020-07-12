@@ -15,8 +15,9 @@ async function onLoad() {
     // TODO: pagination
     let query;
     if(catId) {
+        // FIXME: Filter out owned categories.
         query = `{
-    categoryCreateds(first:1, where:{categoryId:${catId}}) {
+    categoryUpdateds(first:1, orderDirection:desc, where:{categoryId:${catId}}) {
         title
     }
     childParentVotes(first:1000, where:{parent:${catId}}) {
@@ -57,8 +58,8 @@ async function onLoad() {
     const parentIDs = Array.from(parents.values()).sort((a, b) => b.value - a.value).map(e => e.parent);
     const childIDs = Array.from(childs.values()).sort((a, b) => b.value - a.value).map(e => e.child);
 
-    if(queryResult.categoryCreateds) {
-        const categoryTitle = queryResult.categoryCreateds[0].title;
+    if(queryResult.categoryUpdateds) {
+        const categoryTitle = queryResult.categoryUpdateds[0].title;
         $('#catTitle').text(categoryTitle);
     }
     const itemIds = queryResult['itemCreateds'] ? queryResult['itemCreateds'] : [];
@@ -73,7 +74,7 @@ async function onLoad() {
             priceETH
             priceAR
         }
-        category${itemId}: categoryCreateds(first:1, orderBy: id, orderDirection:asc, where:{categoryId:${itemId}}) {
+        category${itemId}: categoryUpdateds(first:1, orderBy: id, orderDirection:asc, where:{categoryId:${itemId}}) {
             title
         }`
             if(catId) {

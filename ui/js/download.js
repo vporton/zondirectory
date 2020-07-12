@@ -185,7 +185,7 @@ $(async function() {
                 return query;
             }
             const query2 = "{\n" + parentIDs.map(i => subquery(i)).join("\n") + "\n}";
-            let items = (await queryThegraph(query2)).data;
+            let items = parentIDs.length ? (await queryThegraph(query2)).data : [];
 
             for(let i in parentIDs) {
                 const categoryId = parentIDs[i];
