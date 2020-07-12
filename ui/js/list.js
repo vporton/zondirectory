@@ -16,7 +16,6 @@ async function onLoad() {
     // TODO: pagination
     let query;
     if(catId) {
-        // FIXME: Filter out owned categories.
         query = `{
     categoryUpdateds(first:1, orderDirection:desc, where:{categoryId:${catId}}) {
         title
@@ -30,11 +29,6 @@ async function onLoad() {
         value
     }
     childs: childParentVotes(first:1000, orderDirection:desc, where:{parent:${catId}, primary:true}) {
-        id
-        child
-        value
-    }
-    ownedChilds: childParentVotes(first:1000, orderDirection:desc, where:{parent:${catId}}) {
         id
         child
         value
