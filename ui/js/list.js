@@ -120,7 +120,7 @@ async function onLoad() {
                 const link = "index.html?cat=" + categoryId;
                 const voteStr = `<a href='vote.html?child=${categoryId}&parent=${catId}&dir=for'>👍</a>` +
                     `<a href='vote.html?child=${categoryId}&parent=${catId}&dir=against'>👎</a>`;
-                $(items['categoryCreate' + categoryId][0].owner.test(/^0x0+$/) ? '#ownedSubcategories' : '#subcategories')
+                $(/^0x0+$/.test(items['categoryCreate' + categoryId][0].owner) ? '#ownedSubcategories' : '#subcategories')
                     .append(`<li><a href="${link}">${safe_tags(category.title)}</a> (spam score: ${spamScore} ${voteStr})</li>`);
             }
 
