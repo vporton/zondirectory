@@ -29,7 +29,7 @@ async function onLoad() {
         parent
         value
     }
-    childs: childParentVotes(first:1000, orderDirection:desc, where:{parent:${catId}}) {
+    childs: childParentVotes(first:1000, orderDirection:desc, where:{parent:${catId}, primary:true}) {
         id
         child
         value
