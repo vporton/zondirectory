@@ -10,7 +10,10 @@
         <h1 id="title">Create New Category</h1>
         <div id="body">
             <p>Category name: <input type="text" id="title"/></p>
-            <!--p>Category language: <input type="locale"/></p-->
+            <p>Category language: <input type="locale" value="en"/></p>
+            <p>Category is owned by you: <input type="checkbox" id="owned"/>
+                (Others cannot post to a category owned by you, but owned categories receive
+                less promotion and search engine hits than regular categories. If doubt, leave unchecked.)</p>
             <p><input type="button" value="Create" onclick="createCategory()"/></p>
         </div>
     </body>
