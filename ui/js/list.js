@@ -58,7 +58,7 @@ async function onLoad() {
     const parentIDs = Array.from(parents.values()).sort((a, b) => b.value - a.value).map(e => e.parent);
     const childIDs = Array.from(childs.values()).sort((a, b) => b.value - a.value).map(e => e.child);
 
-    if(queryResult.categoryUpdateds[0]) {
+    if(queryResult.categoryUpdateds && queryResult.categoryUpdateds[0]) {
         const categoryTitle = queryResult.categoryUpdateds[0].title;
         $('#catTitle').text(categoryTitle);
     }
