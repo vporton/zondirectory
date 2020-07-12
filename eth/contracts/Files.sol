@@ -178,8 +178,8 @@ contract Files is BaseToken {
                         uint256 _linkKind) external
     {
         require(bytes(_title).length != 0, "Empty title.");
-        //itemOwners[++maxId] = msg.sender;
-        entries[maxId] = EntryKind.LINK;
+        //itemOwners[++maxId] = msg.sender; // FIXME
+        entries[++maxId] = EntryKind.LINK;
         emit ItemCreated(maxId);
         emit SetItemOwner(maxId, msg.sender);
         emit LinkUpdated(maxId, _link, _title, _description, _locale, _linkKind);
