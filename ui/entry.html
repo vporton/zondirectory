@@ -1,0 +1,24 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head id="head">
+        <title>Link</title>
+        <style>
+            input[type=text], textarea { width: 100%;}
+        </style>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/web3/1.2.9/web3.min.js"></script>
+        <script src="artifacts/addresses.js"></script>
+        <script src="js/addresses2.js"></script>
+        <script src="js/common.js"></script>
+        <script src="js/entry.js"></script>
+    </head>
+    <body>
+        <h1 id="title">Link</h1>
+        <div id="body">
+            <p>Categories:</p>
+            <ul id="categories"></ul>
+            <p><a href="#" onclick="moreParents(); return false">More...</a> <a id="addParent">Add</a></p>
+            <p>Language: <span id="locale"></span></p>
+            <p>Title: <a id="link"><span id="title"></span></a></p>
+            <p>Description: <span id="description"></span></p>
+        </div>
+    </body>
+</html>
