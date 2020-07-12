@@ -18,7 +18,7 @@ async function createItem() {
     const title = document.getElementById('title').value;
     const description = document.getElementById('description').value;
     const link = document.getElementById('link').value;
-    const kind = $('input[name=kind]:checked)');
+    const kind = $('input[name=kind]:checked');
 
     let transactionHash = null;
     let events = [];
