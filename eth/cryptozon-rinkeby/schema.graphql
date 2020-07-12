@@ -33,7 +33,7 @@ type _Schema_
     algorithm: rank,
     include: [
       {
-        entity: "CategoryCreated",
+        entity: "CategoryUpdated",
         fields: [
           { name: "title" },
         ]
@@ -51,9 +51,14 @@ type Approval @entity {
 type CategoryCreated @entity {
   id: ID!
   categoryId: BigInt! # uint256
+  owner: Bytes! # address
+}
+
+type CategoryUpdated @entity {
+  id: ID!
+  categoryId: BigInt! # uint256
   title: String! # string
   locale: String! # string
-  owner: Bytes! # address
 }
 
 type ItemCoverUpdated @entity {

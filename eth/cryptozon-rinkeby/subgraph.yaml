@@ -16,6 +16,7 @@ dataSources:
       entities:
         - Approval
         - CategoryCreated
+        - CategoryUpdated
         - ItemCoverUpdated
         - ItemCreated
         - ItemFilesUpdated
@@ -37,8 +38,10 @@ dataSources:
       eventHandlers:
         - event: Approval(indexed address,indexed address,uint256)
           handler: handleApproval
-        - event: CategoryCreated(indexed uint256,string,string,indexed address)
+        - event: CategoryCreated(indexed uint256,indexed address)
           handler: handleCategoryCreated
+        - event: CategoryUpdated(indexed uint256,string,string)
+          handler: handleCategoryUpdated
         - event: ItemCoverUpdated(indexed uint256,indexed uint256,bytes,uint256,uint256)
           handler: handleItemCoverUpdated
         - event: ItemCreated(indexed uint256)

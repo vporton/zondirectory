@@ -2,6 +2,7 @@ import { ethereum, BigInt } from "@graphprotocol/graph-ts";
 import {
   Approval as ApprovalEvent,
   CategoryCreated as CategoryCreatedEvent,
+  CategoryUpdated as CategoryUpdatedEvent,
   ItemCoverUpdated as ItemCoverUpdatedEvent,
   ItemCreated as ItemCreatedEvent,
   ItemFilesUpdated as ItemFilesUpdatedEvent,
@@ -21,6 +22,7 @@ import {
 import {
   Approval,
   CategoryCreated,
+  CategoryUpdated,
   ItemCoverUpdated,
   ItemCreated,
   ItemFilesUpdated,
@@ -60,9 +62,17 @@ export function handleCategoryCreated(event: CategoryCreatedEvent): void {
     generateId(event)
   )
   entity.categoryId = event.params.categoryId
+  entity.owner = event.params.owner
+  entity.save()
+}
+
+export function handleCategoryUpdated(event: CategoryUpdatedEvent): void {
+  let entity = new CategoryUpdated(
+    generateId(event)
+  )
+  entity.categoryId = event.params.categoryId
   entity.title = event.params.title
   entity.locale = event.params.locale
-  entity.owner = event.params.owner
   entity.save()
 }
 
