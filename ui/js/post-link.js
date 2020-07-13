@@ -54,11 +54,12 @@ $(async function() {
     const itemId = urlParams.get('id');
     if(itemId) {
         const query = `{
-    linkUpdateds(first:1, orderBy:itemId, orderDirection:desc, where:{itemId:${itemId}}) {
+    linkUpdateds(first:1, orderBy:linkId, orderDirection:desc, where:{linkId:${itemId}}) {
         link
         title
         description
         locale
+        linkKind
     }
 }`;
         let item = (await queryThegraph(query)).data.linkUpdateds[0];
@@ -66,7 +67,7 @@ $(async function() {
         document.getElementById('title').value = item.title;
         document.getElementById('description').textContent = item.description;
         document.getElementById('locale').textContent = item.locale;
-        $(`input[name=kind][value=${item.kind}]`).prop('checked', true);
+        $(`input[name=kind][value=${item.linkKind}]`).prop('checked', true);
     }
 
 })

@@ -20,22 +20,41 @@ async function onLoad() {
     if(!itemIds.length) return;
     const itemIdsFlat = itemIds.map(i => i.itemId);
     function subquery(itemId) {
-        return `item${itemId}: itemUpdateds(first:1, orderBy:id, orderDirection:desc, where:{itemId:${itemId}}) {
-    itemId
-    title
-    priceETH
-    priceAR
-}`
+        return `    item${itemId}: itemUpdateds(first:1, orderBy:id, orderDirection:desc, where:{itemId:${itemId}}) {
+        itemId
+        title
+        priceETH
+        priceAR
+    }
+    category${itemId}: categoryUpdateds(first:1, orderBy:id, orderDirection:desc, where:{categoryId:${itemId}}) {
+        categoryId
+        title
+    }
+    link${itemId}: linkUpdateds(first:1, orderBy:id, orderDirection:desc, where:{linkId:${itemId}}) {
+        linkId
+        link
+        title
+    }`
     }
     query = "{\n" + itemIdsFlat.map(i => subquery(i)).join("\n") + "\n}";
     let items = (await queryThegraph(query)).data;
-    const arweave = Arweave.init();
     for(let i in items) {
+        if(!/^item/.test(i)) continue;
         const item = items[i][0];
         if(!item) continue;
         const link = "description.html?id=" + item.itemId;
         const row = `<tr><td><a href="${link}">${safe_tags(item.title)}</a></td><td>${formatPriceETH(item.priceETH)}</td><td>${formatPriceAR(item.priceAR)}</td></tr>`;
         $('#theTable').append(row);
+    }
+    for(let i in items) {
+        if(!/^link/.test(i)) continue;
+        const item = items[i][0];
+        if(!item) continue;
+        const link = "index.html?id=" + item.linkId;
+        // FIXME: proper escape in attr
+        // TODO: editing links
+        const row = `<li><a href="${safe_tags(item.link)}">${safe_tags(item.title)}</a> (<a href="post-link.html?id=${item.linkId}">edit</a>)</li>`;
+        $('#links').append(row);
     }
 }
 
