@@ -32,6 +32,7 @@ async function onLoad() {
     const arweave = Arweave.init();
     for(let i in items) {
         const item = items[i][0];
+        if(!item) continue;
         const link = "description.html?id=" + item.itemId;
         const row = `<tr><td><a href="${link}">${safe_tags(item.title)}</a></td><td>${formatPriceETH(item.priceETH)}</td><td>${formatPriceAR(item.priceAR)}</td></tr>`;
         $('#theTable').append(row);
