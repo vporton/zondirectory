@@ -20,7 +20,7 @@ describe("Files", function() {
     const VOTE_AMOUNT = 1.22;
 
     const Files = await ethers.getContractFactory("Files");
-    const files = await Files.deploy(await founder.getAddress(), myToWei('100'));
+    const files = await Files.deploy(await founder.getAddress(), myToWei(100));
     await files.deployed();
 
     files.connect(founder).transfer(await partner.getAddress(), myToWei(PARTNER_PERCENT));
@@ -39,7 +39,7 @@ describe("Files", function() {
     await files.connect(buyer).voteChildParent(itemId, unownedCategoryId, {value: myToWei(VOTE_AMOUNT)});
 
     // TODO: Test setting fees.
-    const totalDividend1 = (FIRST_PURCHASE + SECOND_PURCHASE) * 0.1 + VOTE_AMOUNT * 0.5;
+    const totalDividend1 = (FIRST_PURCHASE + SECOND_PURCHASE) * 0.1 + VOTE_AMOUNT * 0.5 + VOTE_AMOUNT;
     const founderDividend1 = await files.dividendsOwing(await founder.getAddress());
     const expectedFounderDividend1 = totalDividend1 * (100 - PARTNER_PERCENT) / 100;
     console.log(ethers.utils.formatEther(founderDividend1), expectedFounderDividend1);
