@@ -36,3 +36,6 @@
 
 * Use <script src="https://arweave.net/wPwixxLKoF1c5EjLBViT9VjJWwE15-wmJYTyN5fz0rU"></script> for
   SmartWeave.JS
+
+* Full/nick names of users are necessary to display disambiguation for owned
+  categories. Probably require nicks to be unique.
