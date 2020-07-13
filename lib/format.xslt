@@ -4,7 +4,7 @@
                 xmlns:html="http://www.w3.org/1999/xhtml"
                 version="1.0">
 
-    <xsl:output method="xml" version="1.1"/>
+    <xsl:output method="html" version="5.0"/>
 
     <xsl:param name="input"/>
 
@@ -16,12 +16,12 @@
         </xsl:copy>
     </xsl:template>
 
-    <xsl:template match="html:*[not(node())]">
+    <!-- <xsl:template match="html:*[not(node())]">
         <xsl:copy>
             <xsl:apply-templates select="@*"/>
             <xsl:text> </xsl:text>
         </xsl:copy>
-    </xsl:template>
+    </xsl:template> -->
 
     <xsl:template match="xi:include">
         <xsl:variable name="id" select="substring(@href,2)"/>
