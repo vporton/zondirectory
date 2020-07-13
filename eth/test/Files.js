@@ -52,7 +52,7 @@ describe("Files", function() {
     await files.connect(founder).withdrawProfit();
 
     await files.connect(buyer).donate(itemId, {value: myToWei(SECOND_PURCHASE)});
-    const totalDividend2 = SECOND_PURCHASE * 0.1;
+    const totalDividend2 = SECOND_PURCHASE * 0.1 + totalDividend1 * PARTNER_PERCENT / 100;
     const founderDividend2 = await files.dividendsOwing(await founder.getAddress());
     const partnerDividend2 = await files.dividendsOwing(await partner.getAddress());
     const expectedFounderDividend2 = totalDividend2 * (100 - PARTNER_PERCENT) / 100;
