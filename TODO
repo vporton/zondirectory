@@ -43,4 +43,4 @@
 
 * Should donation fee be different?
 
-* Charge a fee on uploading.
+* Charge a fee on uploading. you can use price endpoint, arweave.net/price/<byteSize>
