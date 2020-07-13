@@ -24,8 +24,6 @@ contract Files is BaseToken {
     // 64.64 fixed point number
     int128 public salesOwnersShare = int128(1).divi(int128(10)); // 10%
     int128 public upvotesOwnersShare = int128(1).divi(int128(2)); // 50%
-    mapping (uint => address) public holdersIndexes;
-    uint public numberOfHolders = 1;
 
     uint maxId = 0;
 
@@ -79,24 +77,17 @@ contract Files is BaseToken {
         decimals = 18;
         symbol = "CZPST";
         totalSupply = _initialBalance;
-        holdersIndexes[0] = _founder;
     }
 
 // ERC-20 //
 
-    function transfer(address _to, uint256 _value) external override returns (bool success) {
-        if (balances[_to] == 0 && _value != 0) {
-            holdersIndexes[numberOfHolders++] = _to;
-        }
-        return BaseToken(this).transfer(_to, _value);
-    }
+    // function transfer(address _to, uint256 _value) external override returns (bool success) {
+    //     return BaseToken(this).transfer(_to, _value);
+    // }
 
-    function transferFrom(address _from, address _to, uint256 _value) external override returns (bool success) {
-        if (balances[_to] == 0 && _value != 0) {
-            holdersIndexes[numberOfHolders++] = _to;
-        }
-        return BaseToken(this).transferFrom(_from, _to, _value);
-    }
+    // function transferFrom(address _from, address _to, uint256 _value) external override returns (bool success) {
+    //     return BaseToken(this).transferFrom(_from, _to, _value);
+    // }
 
 // Owners //
 

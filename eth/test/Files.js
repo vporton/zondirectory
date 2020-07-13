@@ -10,9 +10,13 @@ describe("Files", function() {
   it("Dividends", async function() {
     const [deployer, founder, partner, seller, buyer] = await ethers.getSigners();
 
+    const PARTNER_PERCENT = '30';
+
     const Files = await ethers.getContractFactory("Files");
-    const files = await Files.deploy(await founder.getAddress(), 10000000);
+    const files = await Files.deploy(await founder.getAddress(), 100);
     await files.deployed();
+
+    files.transfer(await partner.getAddress(), web3.utils.toWei(PARTNER_PERCENT));
 
     const ownedCategoryId = (await extractEvent(files.connect(seller).createCategory("Owned category", "en", true), 'CategoryCreated')).categoryId;
     const unownedCategoryId = (await extractEvent(files.connect(seller).createCategory("Unowned category", "en", false), 'CategoryCreated')).categoryId;
