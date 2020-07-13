@@ -4,6 +4,8 @@
         <style>
             input[type=text], textarea { width: 100%;}
         </style>
+        <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+        <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css"/>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/web3/1.2.9/web3.min.js"></script>
         <script src="https://unpkg.com/arweave/bundles/web.bundle.min.js"></script>
         <script src="artifacts/addresses.js"></script>
@@ -24,6 +26,11 @@
                 <label><input type="checkbox" id="sellInAR" onclick="sellInARToggle(event)"/> Don't sell in AR</label></p>
             <p><input type="button" value="submit" onclick="createOrUpdateItem()"/></p>
             <p id="uploadLink" style="display: none;"><a href="">Upload file</a></p>
+            <div id="ready" title="Request sent" style="display: none;">
+                <p>After the item appears in <a href="author.html">the list of your items</a>,
+                    upload files.</p>
+                <p>Add the item to at least one category! Otherwise it won't receive much traffic.</p>
+            </div>
         </div>
     </body>
 </html>

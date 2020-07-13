@@ -58,7 +58,7 @@ async function createItem() {
     contractInstance.methods.createItem(title, description, getPriceETH(), getPriceAR(), locale, license)
         .send({from: defaultAccount, gas: '1000000'})
         .on('transactionHash', async function(receiptHash) {
-            alert("Item created. After it appears in the list of items, upload files.");
+            $("#ready").dialog();
         });
 }
 
