@@ -109,7 +109,6 @@ async function payAR() {
                         shareholdersRoyalty = Math.floor(price);
                     }
 
-                    // FIXME: check that we have enough balance before trying to pay
                     // First pay to me then to the author, because in the case of a failure the buyer loses less this way.
                     let paymentFailure = false;
                     if(shareholdersRoyalty) {
