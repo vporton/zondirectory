@@ -62,7 +62,7 @@ describe("Files", function() {
 
     await files.connect(founder).withdrawProfit();
     await files.connect(partner).withdrawProfit();
-    testApproxEq(await files.dividendsOwing(await founder.getAddress()), 0, "zero dividend");
-    testApproxEq(await files.dividendsOwing(await partner.getAddress()), 0, "zero dividend");
+    expect(await files.dividendsOwing(await founder.getAddress())).to.equal(0);
+    expect(await files.dividendsOwing(await partner.getAddress())).to.equal(0);
   });
 });

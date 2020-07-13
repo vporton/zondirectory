@@ -292,7 +292,7 @@ contract Files is BaseToken {
 
     uint256 totalDividends = 0;
     uint256 totalDividendsPaid = 0; // actually paid sum
-    mapping(address => uint256) lastTotalDivedends; // the value of totalDividendsPaid at the last payment to an address
+    mapping(address => uint256) lastTotalDivedends; // the value of totalDividends after the last payment to an address
 
     function _dividendsOwing(address _account) internal view returns(uint256) {
         uint256 _newDividends = totalDividends - lastTotalDivedends[_account];
@@ -307,12 +307,12 @@ contract Files is BaseToken {
         uint256 _owing = _dividendsOwing(msg.sender);
 
         // Against rounding errors. Not necessary because of rounding down.
-        // if(owing > address(this).balance) owing = address(this).balance;
+        // if(_owing > address(this).balance) _owing = address(this).balance;
 
         if(_owing > 0) {
             msg.sender.transfer(_owing);
             totalDividendsPaid += _owing;
-            lastTotalDivedends[msg.sender] = totalDividendsPaid;
+            lastTotalDivedends[msg.sender] = totalDividends;
         }
     }
 }
