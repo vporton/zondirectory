@@ -36,9 +36,25 @@ module.exports = {
     buidlerevm: {
       accounts: [
         {
-          privateKey: '0xe0bb3d8b2933d3d9284a7ba24ff0c3cf86233912cfc75a92901b74c7e9470211',
+          privateKey: '0x0e206566a53a138f9500dd3ffaf12bbf3c773a34a0e78e6710b0726b82951e6d', // 0xfd95BF6727416050008dB2551c94C86D21bA3b77
           balance: '0xf0000000000000000',
-        }
+        },
+        {
+          privateKey: '0x3d258b188e1e2bd69821990cc143830ce2be03dc24774c787090de8ef6bca214', // 0x4948C09461d37946Ea13b98d2C3f2D3C185fde2f
+          balance: '0xf0000000000000000',
+        },
+        {
+          privateKey: '0xdfe891177936f97142e0b8c6eefb7042d051536984a2bf2c46def1f01d37bf87', // 0x5530B1eC2bCD7B2fbDF780Ab5e7A4dE40541F3A8
+          balance: '0xf0000000000000000',
+        },
+        {
+          privateKey: '0xc37ae67042d02207a663c52522dc805089c3effb4aaf8e70195782e18b7c919a', // 0x2E8a38DA64876002DFF88B0f2855f7eE6A2B0aaD
+          balance: '0xf0000000000000000',
+        },
+        {
+          privateKey: '0xabcf6549a244d5314780a2e8943ce40cbcb172add81263a75672b64edc62d442', // 0x86169a588E2dd02cEae0366cCf5e3bfac59B6b55
+          balance: '0xf0000000000000000',
+        },
       ],
     },
     ganache: {
