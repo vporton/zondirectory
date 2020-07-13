@@ -55,33 +55,9 @@ async function createItem() {
     const description = document.getElementById('description').value;
     const license = document.getElementById('license').value;
 
-    let transactionHash = null;
-    let events = [];
-
-//     function onEvent(error, event) {
-//         //var myResults = contractInstance.ItemUpdated({}, {fromBlock:'pending', toBlock:'pending'}, function(error, logs){ console.log('logs', logs) }).get(function(error, logs){ /*console.log('logs', logs)*/ });
-// //        console.log('log', myResults);
-//         // events.push(log);
-//         // for(let i in events) {
-//         //     let event = events[i];
-//         //     if(event.transactionHash == transactionHash) {
-//         //         console.log('myResults', myResults);
-//         //         const event = receipt.logs.ItemUpdated;
-//         //         const itemId = event.returnValues.id;
-//         //         open('upload.html?id=' + itemId);
-//         //         filter.stopWatching();
-//         //         clearInterval(intervalHandle);
-//         //     }
-//         // }
-//     }
-
-    // contractInstance.events.ItemUpdated({fromBlock:'pending'}, onEvent); // does not call the callback
-
     contractInstance.methods.createItem(title, description, getPriceETH(), getPriceAR(), locale, license)
         .send({from: defaultAccount, gas: '1000000'})
         .on('transactionHash', async function(receiptHash) {
-            transactionHash = receiptHash;
-            // console.log(await contractInstance.getPastEvents('ItemUpdated', {fromBlock:0, toBlock:'pending'}));
             alert("Item created. After it appears in the list of items, upload files.");
         });
 }
