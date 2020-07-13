@@ -1,4 +1,4 @@
-const { expect } = require("chai");
+const { expect, assert } = require("chai");
 // const Files = artifacts.require("Files");
 
 async function extractEvent(response, eventName) {
@@ -8,6 +8,11 @@ async function extractEvent(response, eventName) {
 
 function myToWei(n) {
   return ethers.utils.parseEther(String(n));
+}
+
+function testApproxEq(a, b, msg) {
+  const epsilon = 1 ** -10;
+  assert(a/b > 1 - epsilon && a/b < 1 + epsilon, msg);
 }
 
 describe("Files", function() {
@@ -43,7 +48,6 @@ describe("Files", function() {
     const totalDividend1 = FIRST_PURCHASE * 0.1 + OWNED_VOTE_AMOUNT * 0.5 + UNOWNED_VOTE_AMOUNT;
     const founderDividend1 = await files.dividendsOwing(await founder.getAddress());
     const expectedFounderDividend1 = totalDividend1 * (100 - PARTNER_PERCENT) / 100;
-    console.log(ethers.utils.formatEther(founderDividend1), expectedFounderDividend1);
-    //console.log(Number(founderDividend1.toString()) / Number(expectedFounderDividend1.toString()));
+    testApproxEq(ethers.utils.formatEther(founderDividend1), expectedFounderDividend1, "founder dividend 1");
   });
 });
