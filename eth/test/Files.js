@@ -40,7 +40,7 @@ describe("Files", function() {
                   1, // ignore it
                   'en',
                   'commercial'), 'ItemCreated')).itemId;
-    await files.connect(buyer).pay(itemId, {value: myToWei(FIRST_PURCHASE)})
+    await files.connect(buyer).pay(itemId, {value: myToWei(FIRST_PURCHASE)});
     await files.connect(buyer).voteChildParent(itemId, ownedCategoryId, true, {value: myToWei(OWNED_VOTE_AMOUNT)});
     await files.connect(buyer).voteChildParent(unownedCategoryId, ownedCategoryId, true, {value: myToWei(UNOWNED_VOTE_AMOUNT)});
 
@@ -49,5 +49,20 @@ describe("Files", function() {
     const founderDividend1 = await files.dividendsOwing(await founder.getAddress());
     const expectedFounderDividend1 = totalDividend1 * (100 - PARTNER_PERCENT) / 100;
     testApproxEq(ethers.utils.formatEther(founderDividend1), expectedFounderDividend1, "founder dividend 1");
+    await files.connect(founder).withdrawProfit();
+
+    await files.connect(buyer).donate(itemId, {value: myToWei(SECOND_PURCHASE)});
+    const totalDividend2 = SECOND_PURCHASE * 0.1;
+    const founderDividend2 = await files.dividendsOwing(await founder.getAddress());
+    const partnerDividend2 = await files.dividendsOwing(await partner.getAddress());
+    const expectedFounderDividend2 = totalDividend2 * (100 - PARTNER_PERCENT) / 100;
+    const expectedPartnerDividend2 = (totalDividend1 + totalDividend2) * PARTNER_PERCENT / 100;
+    testApproxEq(ethers.utils.formatEther(founderDividend2), expectedFounderDividend2, "founder dividend 2");
+    testApproxEq(ethers.utils.formatEther(partnerDividend2), expectedPartnerDividend2, "patner dividend 2");
+
+    await files.connect(founder).withdrawProfit();
+    await files.connect(partner).withdrawProfit();
+    testApproxEq(await files.dividendsOwing(await founder.getAddress()), 0, "zero dividend");
+    testApproxEq(await files.dividendsOwing(await partner.getAddress()), 0, "zero dividend");
   });
 });
