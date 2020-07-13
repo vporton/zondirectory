@@ -22,14 +22,9 @@
 
 * JavaScript XSS protection.
 
-* Messaging like Twitter. Named "tweet" sets may be owned.
-  "Tweets" in multiple categories.
-  Reward authors for upvoted "tweets"?
-  Items linking to Arweave pages.
+* Blogging.
 
 * Processing `arweave:` URL scheme and blogging engine.
-
-* Voting for entries of owned category disturbs author's intentions.
 
 * `orderBy` forgotten.
 
