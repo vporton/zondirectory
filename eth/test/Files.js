@@ -31,7 +31,7 @@ describe("Files", function() {
     const itemId = (await extractEvent(files.connect(seller)
       .createItem("Item 1",
                   "xxx",
-                  web3.utils.toWei('2.0'),
+                  myToWei(2.0),
                   1, // ignore it
                   'en',
                   'commercial'), 'ItemCreated')).itemId;
