@@ -226,7 +226,6 @@ contract Files is BaseToken {
         require(entries[maxId] == EntryKind.DOWNLOADS, "Item does not exist.");
         uint256 _shareholdersShare = uint256(salesOwnersShare.muli(int256(msg.value)));
         totalDividends += _shareholdersShare;
-        itemOwners[_itemId].transfer(msg.value - _shareholdersShare);
         uint256 toAuthor = msg.value - _shareholdersShare;
         itemOwners[_itemId].transfer(toAuthor);
         emit Donate(msg.sender, itemOwners[_itemId], _itemId, toAuthor);
