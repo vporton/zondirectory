@@ -21,15 +21,10 @@ async function createItem() {
     const kind = $('input[name=kind]:checked');
     const owned = true;
 
-    let transactionHash = null;
-    let events = [];
-
     contractInstance.methods.createLink(link, title, description, locale, kind, owned)
         .send({from: defaultAccount, gas: '1000000'})
         .on('transactionHash', async function(receiptHash) {
-            transactionHash = receiptHash;
-            // console.log(await contractInstance.getPastEvents('ItemUpdated', {fromBlock:0, toBlock:'pending'}));
-            alert("Link created. Add it to some categories.");
+            $('#ready').dialog();
         });
 }
 
@@ -45,7 +40,7 @@ async function updateItem(itemId) {
     contractInstance.methods.updateItem(itemId, link, title, description, locale, kind)
         .send({from: defaultAccount, gas: '1000000'})
         .on('transactionHash', async function(receiptHash) {
-            alert("Item updated.");
+            $('#ready').dialog();
         });
 }
 

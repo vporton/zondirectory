@@ -18,7 +18,7 @@ async function createCategory() {
     // TODO: Wait for a confirmation, open('vote.html?id=...') page.
     await contractInstance.methods.createCategory(name, locale, owned).send({from: defaultAccount, gas: '10000000'}, (error, result) => {
         if(error) return;
-        alert("Now add this category as a child to another category(ies).");
+        $("#ready").dialog();
     });
 }
 

@@ -1,6 +1,8 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
     <head id="head">
         <title>Create New Category</title>
+        <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+        <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css"/>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/web3/1.2.9/web3.min.js"></script>
         <script src="artifacts/addresses.js"></script>
         <script src="js/common.js"></script>
@@ -15,6 +17,11 @@
                 (Others cannot post to a category owned by you, but owned categories receive
                 less promotion and search engine hits than regular categories. If doubt, leave unchecked.)</p>
             <p><input type="button" value="Create" onclick="createCategory()"/></p>
+            <div id="ready" title="Request sent" style="display: none;">
+                <p>After your new category appears in <a href="author.html">the list of your categories</a>,
+                    add it as a child to at least suitable one bigger category!
+                    Otherwise it won't receive much traffic.</p>
+            </div>
         </div>
     </body>
 </html>
