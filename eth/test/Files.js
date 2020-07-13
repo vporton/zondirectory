@@ -12,7 +12,6 @@ describe("Files", function() {
 
     const Files = await ethers.getContractFactory("Files");
     const files = await Files.deploy(process.env.PROGRAMMER_ADDRESS, 10000000);
-
     await files.deployed();
 
     const ownedCategoryId = (await extractEvent(files.connect(seller).createCategory("Owned category", "en", true), 'CategoryCreated')).categoryId;
