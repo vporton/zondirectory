@@ -50,11 +50,18 @@ async function onLoad() {
         if(!/^link/.test(i)) continue;
         const item = items[i][0];
         if(!item) continue;
-        const link = "index.html?id=" + item.linkId;
         // FIXME: proper escape in attr
-        // TODO: editing links
         const row = `<li><a href="${safe_tags(item.link)}">${safe_tags(item.title)}</a> (<a href="post-link.html?id=${item.linkId}">edit</a>)</li>`;
         $('#links').append(row);
+    }
+    for(let i in items) {
+        if(!/^category/.test(i)) continue;
+        const item = items[i][0];
+        if(!item) continue;
+        const link = "index.html?cat=" + item.categoryId;
+        // TODO: Edit category name.
+        const row = `<li><a href="${link}">${safe_tags(item.title)}</a></li>`;
+        $('#categories').append(row);
     }
 }
 
