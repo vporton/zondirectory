@@ -76,6 +76,7 @@ contract Files is BaseToken {
         name = "Cryptozon PST Token (ETH)";
         decimals = 18;
         symbol = "CZPST";
+        balances[_founder] = _initialBalance;
         totalSupply = _initialBalance;
     }
 
