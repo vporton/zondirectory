@@ -11,6 +11,9 @@ describe("Files", function() {
     const [deployer, founder, partner, seller, buyer] = await ethers.getSigners();
 
     const PARTNER_PERCENT = '30';
+    const FIRST_PURCHASE = '3.535';
+    const SECOND_PURCHASE = '2.335';
+    const VOTE_AMOUNT = '1.22';
 
     const Files = await ethers.getContractFactory("Files");
     const files = await Files.deploy(await founder.getAddress(), web3.utils.toWei('100'));
@@ -27,6 +30,8 @@ describe("Files", function() {
                   1, // ignore it
                   'en',
                   'commercial'), 'ItemCreated')).itemId;
-    await files.connect(buyer).pay(itemId, {value: web3.utils.toWei('3.0')})
+    await files.connect(buyer).pay(itemId, {value: web3.utils.toWei(FIRST_PURCHASE)})
+    await files.connect(buyer).vote(itemId, ownedCategoryId, {value: web3.utils.toWei(VOTE_AMOUNT)});
+    await files.connect(buyer).vote(itemId, unownedCategoryId, {value: web3.utils.toWei(VOTE_AMOUNT)});
   });
 });

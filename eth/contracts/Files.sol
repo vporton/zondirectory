@@ -295,7 +295,7 @@ contract Files is BaseToken {
     uint256 totalDividendsPaid = 0; // actually paid sum
     mapping(address => uint256) lastTotalDivedends; // the value of totalDividendsPaid at the last payment to an address
 
-    function dividendsOwing(address _account) internal view returns(uint256) {
+    function dividendsOwing(address _account) external view returns(uint256) {
         uint256 _newDividends = totalDividends - lastTotalDivedends[_account];
         return (balances[_account] * _newDividends) / totalSupply; // rounding down
     }
