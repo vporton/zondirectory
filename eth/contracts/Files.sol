@@ -24,6 +24,7 @@ contract Files is BaseToken {
     // 64.64 fixed point number
     int128 public salesOwnersShare = int128(1).divi(int128(10)); // 10%
     int128 public upvotesOwnersShare = int128(1).divi(int128(2)); // 50%
+    int128 public uploadOwnersShare = int128(15).divi(int128(100)); // 15%
 
     uint maxId = 0;
 
@@ -32,9 +33,13 @@ contract Files is BaseToken {
     // to avoid categories with duplicate titles:
     mapping (string => mapping (string => bool)) categoryTitles; // locale => (title => bool)
 
+    mapping (string => bool) nicks;
+
     event SetOwner(address payable owner); // share is 64.64 fixed point number
     event SetSalesOwnerShare(int128 share); // share is 64.64 fixed point number
     event SetUpvotesOwnerShare(int128 share); // share is 64.64 fixed point number
+    event SetUploadOwnerShare(int128 share); // share is 64.64 fixed point number
+    event SetNick(address payable indexed owner, string nick);
     event SetARWallet(address payable indexed owner, string arWallet);
     event SetAuthorInfo(address payable indexed owner, string description, string locale);
     event ItemCreated(uint indexed itemId);
@@ -80,16 +85,6 @@ contract Files is BaseToken {
         totalSupply = _initialBalance;
     }
 
-// ERC-20 //
-
-    // function transfer(address _to, uint256 _value) external override returns (bool success) {
-    //     return BaseToken(this).transfer(_to, _value);
-    // }
-
-    // function transferFrom(address _from, address _to, uint256 _value) external override returns (bool success) {
-    //     return BaseToken(this).transferFrom(_from, _to, _value);
-    // }
-
 // Owners //
 
     function setOwner(address payable _founder) external {
@@ -112,6 +107,12 @@ contract Files is BaseToken {
         emit SetUpvotesOwnerShare(_share);
     }
 
+    function setUploadOwnersShare(int128 _share) external {
+        require(msg.sender == founder, "Access denied.");
+        uploadOwnersShare = _share;
+        emit SetUploadOwnerShare(_share);
+    }
+
     function setItemOwner(uint _itemId, address payable _owner) external {
         require(itemOwners[_itemId] == msg.sender, "Access denied.");
         itemOwners[_itemId] = _owner;
@@ -120,12 +121,16 @@ contract Files is BaseToken {
 
 /// Wallets ///
 
-    function setARWallet(address payable _owner, string calldata _arWallet) external {
-        emit SetARWallet(_owner, _arWallet);
+    function setARWallet(string calldata _arWallet) external {
+        emit SetARWallet(msg.sender, _arWallet);
     }
 
-    function setAuthorInfo(address payable _owner, string calldata _description, string calldata _locale) external {
-        emit SetAuthorInfo(_owner, _description, _locale);
+    function setNick(string calldata _nick) external {
+        emit SetNick(msg.sender, _nick);
+    }
+
+    function setAuthorInfo(string calldata _description, string calldata _locale) external {
+        emit SetAuthorInfo(msg.sender, _description, _locale);
     }
 
 /// Items ///
