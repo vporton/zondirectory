@@ -23,6 +23,7 @@ function onLoad() {
     $('#child').val(child);
     $('#parent').val(parent);
     $(`[name=dir][value=${dir}]`).prop('checked', true);
+    $('.category').categoryChooser();
 }
 
 $(onLoad);

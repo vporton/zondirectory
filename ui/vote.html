@@ -1,16 +1,19 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
     <head id="head">
         <title>Vote for Category Content or Subcategory</title>
+        <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+        <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css"/>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/web3/1.2.9/web3.min.js"></script>
         <script src="artifacts/addresses.js"></script>
         <script src="js/common.js"></script>
+        <script src="js/category-chooser.js"></script>
         <script src="js/vote.js"></script>
     </head>
     <body>
         <h1 id="title">Vote for Category Content or Subcategory</h1>
         <div id="body">
             <p>Child item or category ID: <input type="number" id="child"/></p>
-            <p>Parent category ID: <input type="number" id="parent"/></p>
+            <p>Parent category ID: <input type="number" id="parent" class="category"/></p>
             <p><label><input type="radio" name="dir" value="for"/> Vote for</label>
                 <label><input type="radio" name="dir" value="against"/> Vote against</label></p>
             <p><input type="button" value="Vote" onclick="vote()"/></p>
