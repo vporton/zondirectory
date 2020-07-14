@@ -116,6 +116,12 @@ type SetARWallet @entity {
   arWallet: String! # string
 }
 
+type SetNick @entity {
+  id: ID!
+  owner: Bytes! # address
+  nick: String! # string
+}
+
 type SetAuthorInfo @entity {
   id: ID!
   owner: Bytes! # address

@@ -34,7 +34,7 @@ contract Files is BaseToken {
     mapping (string => mapping (string => bool)) categoryTitles; // locale => (title => bool)
 
     mapping (string => address payable) nickAddresses;
-    mapping ((address payable) => string) addressNicks;
+    mapping (address => string) addressNicks;
 
     event SetOwner(address payable owner); // share is 64.64 fixed point number
     event SetSalesOwnerShare(int128 share); // share is 64.64 fixed point number
@@ -128,9 +128,9 @@ contract Files is BaseToken {
 
     // TODO: Test.
     function setNick(string calldata _nick) external {
-        require(nickAddresses[_nick] == address(0), "Nick taken.")
+        require(nickAddresses[_nick] == address(0), "Nick taken.");
         nickAddresses[addressNicks[msg.sender]] = address(0);
-        nickAddresses[_nick] = _nick;
+        nickAddresses[_nick] = msg.sender;
         addressNicks[msg.sender] = _nick;
         emit SetNick(msg.sender, _nick);
     }

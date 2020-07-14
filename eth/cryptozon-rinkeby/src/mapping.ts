@@ -10,6 +10,7 @@ import {
   ItemUpdated as ItemUpdatedEvent,
   LinkUpdated as LinkUpdatedEvent,
   SetARWallet as SetARWalletEvent,
+  SetNick as SetNickEvent,
   SetAuthorInfo as SetAuthorInfoEvent,
   SetItemOwner as SetItemOwnerEvent,
   SetOwner as SetOwnerEvent,
@@ -32,6 +33,7 @@ import {
   ItemUpdated,
   LinkUpdated,
   SetARWallet,
+  SetNick,
   SetAuthorInfo,
   SetItemOwner,
   SetOwner,
@@ -153,6 +155,15 @@ export function handleSetARWallet(event: SetARWalletEvent): void {
   )
   entity.owner = event.params.owner
   entity.arWallet = event.params.arWallet
+  entity.save()
+}
+
+export function handleSetNick(event: SetNickEvent): void {
+  let entity = new SetNick(
+    generateId(event)
+  )
+  entity.owner = event.params.owner
+  entity.nick = event.params.nick
   entity.save()
 }
 
