@@ -33,7 +33,8 @@ contract Files is BaseToken {
     // to avoid categories with duplicate titles:
     mapping (string => mapping (string => bool)) categoryTitles; // locale => (title => bool)
 
-    mapping (string => bool) nicks;
+    mapping (string => address payable) nickAddresses;
+    mapping ((address payable) => string) addressNicks;
 
     event SetOwner(address payable owner); // share is 64.64 fixed point number
     event SetSalesOwnerShare(int128 share); // share is 64.64 fixed point number
@@ -125,7 +126,12 @@ contract Files is BaseToken {
         emit SetARWallet(msg.sender, _arWallet);
     }
 
+    // TODO: Test.
     function setNick(string calldata _nick) external {
+        require(nickAddresses[_nick] == address(0), "Nick taken.")
+        nickAddresses[addressNicks[msg.sender]] = address(0);
+        nickAddresses[_nick] = _nick;
+        addressNicks[msg.sender] = _nick;
         emit SetNick(msg.sender, _nick);
     }
 
