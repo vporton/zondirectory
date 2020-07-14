@@ -2,7 +2,7 @@ $(document).ajaxError(function( event, request, settings ) {
     alert("Error: " + request.status);
 });
 
-const THEGRAPH_URL = "https://api.thegraph.com/subgraphs/name/vporton/cryptozon-rinkeby17";
+const THEGRAPH_URL = "https://api.thegraph.com/subgraphs/name/vporton/cryptozon-rinkeby18";
 
 const INFINITY = (BigInt(1) << BigInt(256)) - BigInt(1);
 
