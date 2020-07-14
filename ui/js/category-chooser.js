@@ -4,7 +4,7 @@
         this.after(`<label><input type='checkbox'/> My</label>`);
         const input = this;
         async function completer(request, response) {
-            const checkbox = input.next().first();
+            const checkbox = input.next().find(':checkbox');
             const my = checkbox.is(':checked');
             await defaultAccountPromise();
             const owner = my ? defaultAccount : '0x0000000000000000000000000000000000000000';
