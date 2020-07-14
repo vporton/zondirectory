@@ -79,6 +79,7 @@ export function handleCategoryUpdated(event: CategoryUpdatedEvent): void {
   entity.categoryId = event.params.categoryId
   entity.title = event.params.title
   entity.locale = event.params.locale
+  entity.owner = event.params.owner
   entity.save()
 }
 

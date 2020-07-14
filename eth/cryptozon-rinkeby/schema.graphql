@@ -59,6 +59,7 @@ type CategoryUpdated @entity {
   categoryId: BigInt! # uint256
   title: String! # string
   locale: String! # string
+  owner: Bytes! # address
 }
 
 type ItemCoverUpdated @entity {

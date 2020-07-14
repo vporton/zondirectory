@@ -62,7 +62,7 @@ contract Files is BaseToken {
     event ItemFilesUpdated(uint indexed itemId, string format, uint indexed version, string hash);
     event SetLastItemVersion(uint indexed itemId, uint version);
     event CategoryCreated(uint256 indexed categoryId, address indexed owner); // zero owner - no owner
-    event CategoryUpdated(uint256 indexed categoryId, string title, string locale);
+    event CategoryUpdated(uint256 indexed categoryId, string title, string locale, address indexed owner);
     event ChildParentVote(uint child,
                           uint parent,
                           int256 value,
@@ -259,13 +259,13 @@ contract Files is BaseToken {
         // Yes, issue _owner two times, for faster information retrieval
         emit CategoryCreated(maxId, _owner);
         emit SetItemOwner(maxId, _owner);
-        emit CategoryUpdated(maxId, _title, _locale);
+        emit CategoryUpdated(maxId, _title, _locale, _owner);
     }
 
     function updateCategory(uint _categoryId, string calldata _title, string calldata _locale) external {
         require(itemOwners[_categoryId] == msg.sender, "Access denied.");
         require(entries[_categoryId] == EntryKind.CATEGORY, "Must be a category.");
-        emit CategoryUpdated(maxId, _title, _locale);
+        emit CategoryUpdated(maxId, _title, _locale, msg.sender);
     }
 
 /// Voting ///
