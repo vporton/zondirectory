@@ -37,10 +37,6 @@
 * Use <script src="https://arweave.net/wPwixxLKoF1c5EjLBViT9VjJWwE15-wmJYTyN5fz0rU"></script> for
   SmartWeave.JS
 
-* Full/nick names of users are necessary to display disambiguation for owned
-  categories. Probably require nicks to be unique.
-  Personal links.
-
 * Should donation fee be different?
 
 * Charge a fee on uploading. you can use price endpoint, arweave.net/price/<byteSize>
