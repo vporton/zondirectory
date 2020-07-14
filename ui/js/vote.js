@@ -3,7 +3,7 @@ async function vote() {
     if(!amount) return;
 
     const child = $('#child').val();
-    const parent = $('#parent').val();
+    const parent = $('#parent').val().replace(/:.*/, "");
     const yes = $('[name=dir][value=for]').is(":checked");
 
     await defaultAccountPromise();
