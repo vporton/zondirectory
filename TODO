@@ -38,6 +38,3 @@
   SmartWeave.JS
 
 * Should donation fee be different?
-
-* Charge a fee on uploading. you can use price endpoint, arweave.net/price/<byteSize>
-  "You have both options, /price/<byteSize> and /price/<byteSize>/<walletAddy>"
