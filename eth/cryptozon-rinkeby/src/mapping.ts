@@ -172,6 +172,7 @@ export function handleSetAuthorInfo(event: SetAuthorInfoEvent): void {
     generateId(event)
   )
   entity.owner = event.params.owner
+  entity.link = event.params.link
   entity.description = event.params.description
   entity.locale = event.params.locale
   entity.save()

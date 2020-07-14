@@ -61,8 +61,8 @@ dataSources:
           handler: handleSetARWallet
         - event: SetNick(indexed address,string)
           handler: handleSetNick
-        - event: SetAuthorInfo(indexed address,string,string)
-          handler: handleSetAuthroInfo
+        - event: SetAuthorInfo(indexed address,string,string,string)
+          handler: handleSetAuthorInfo
         - event: SetItemOwner(indexed uint256,indexed address)
           handler: handleSetItemOwner
         - event: SetOwner(address)

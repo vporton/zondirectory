@@ -42,7 +42,7 @@ contract Files is BaseToken {
     event SetUploadOwnerShare(int128 share); // share is 64.64 fixed point number
     event SetNick(address payable indexed owner, string nick);
     event SetARWallet(address payable indexed owner, string arWallet);
-    event SetAuthorInfo(address payable indexed owner, string description, string locale);
+    event SetAuthorInfo(address payable indexed owner, string link, string description, string locale);
     event ItemCreated(uint indexed itemId);
     event SetItemOwner(uint indexed itemId, address payable indexed owner);
     event ItemUpdated(uint indexed itemId,
@@ -135,8 +135,8 @@ contract Files is BaseToken {
         emit SetNick(msg.sender, _nick);
     }
 
-    function setAuthorInfo(string calldata _description, string calldata _locale) external {
-        emit SetAuthorInfo(msg.sender, _description, _locale);
+    function setAuthorInfo(string calldata _link, string calldata _description, string calldata _locale) external {
+        emit SetAuthorInfo(msg.sender, _link, _description, _locale);
     }
 
 /// Items ///

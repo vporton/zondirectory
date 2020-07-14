@@ -125,6 +125,7 @@ type SetNick @entity {
 type SetAuthorInfo @entity {
   id: ID!
   owner: Bytes! # address
+  link: String! # string
   description: String! # string
   locale: String! # string
 }
