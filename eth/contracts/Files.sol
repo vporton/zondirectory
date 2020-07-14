@@ -31,7 +31,7 @@ contract Files is BaseToken {
     mapping (uint => EntryKind) entries;
 
     // to avoid categories with duplicate titles:
-    mapping (string => mapping (string => bool)) categoryTitles; // locale => (title => bool)
+    mapping (string => mapping (string => uint)) categoryTitles; // locale => (title => id)
 
     mapping (string => address payable) nickAddresses;
     mapping (address => string) addressNicks;
@@ -146,7 +146,7 @@ contract Files is BaseToken {
                         uint256 _priceETH,
                         uint256 _priceAR,
                         string calldata _locale,
-                        string calldata _license) external
+                        string calldata _license) external returns (uint)
     {
         require(bytes(_title).length != 0, "Empty title.");
         itemOwners[++maxId] = msg.sender;
@@ -156,6 +156,7 @@ contract Files is BaseToken {
         emit ItemCreated(maxId);
         emit SetItemOwner(maxId, msg.sender);
         emit ItemUpdated(maxId, _title, _description, _priceETH, _priceAR, _locale, _license);
+        return maxId;
     }
 
     function updateItem(uint _itemId,
@@ -179,7 +180,7 @@ contract Files is BaseToken {
                         string calldata _description,
                         string calldata _locale,
                         uint256 _linkKind,
-                        bool _owned) external
+                        bool _owned) external returns (uint)
     {
         require(bytes(_title).length != 0, "Empty title.");
         address payable _owner = _owned ? msg.sender : address(0);
@@ -188,6 +189,7 @@ contract Files is BaseToken {
         emit ItemCreated(maxId);
         if (_owned) emit SetItemOwner(maxId, _owner);
         emit LinkUpdated(maxId, _link, _title, _description, _locale, _linkKind);
+        return maxId;
     }
 
     // Can be used for spam.
@@ -244,22 +246,25 @@ contract Files is BaseToken {
 
 /// Categories ///
 
-    function createCategory(string calldata _title, string calldata _locale, bool _owned) external {
+    function createCategory(string calldata _title, string calldata _locale, bool _owned) external returns (uint) {
         require(bytes(_title).length != 0, "Empty title.");
         address payable _owner = _owned ? msg.sender : address(0);
+        ++maxId;
         if(!_owned) {
-            if(categoryTitles[_locale][_title])
-                return;
+            uint _id = categoryTitles[_locale][_title];
+            if(_id != 0)
+                return _id;
             else
-                categoryTitles[_locale][_title] = true;
+                categoryTitles[_locale][_title] = maxId;
         }
-        entries[++maxId] = EntryKind.CATEGORY;
+        entries[maxId] = EntryKind.CATEGORY;
         if(_owned) // check to speed-up
             itemOwners[maxId] = _owner;
         // Yes, issue _owner two times, for faster information retrieval
         emit CategoryCreated(maxId, _owner);
         emit SetItemOwner(maxId, _owner);
         emit CategoryUpdated(maxId, _title, _locale, _owner);
+        return maxId;
     }
 
     function updateCategory(uint _categoryId, string calldata _title, string calldata _locale) external {

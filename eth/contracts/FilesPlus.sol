@@ -2,10 +2,12 @@
 
 pragma solidity ^0.6.0;
 
-contract FilesPlus {
-    address files;
+import './Files.sol';
 
-    constructor(address _files) public {
+contract FilesPlus {
+    Files files;
+
+    constructor(Files _files) public {
         files = _files;
     }
 
@@ -18,6 +20,7 @@ contract FilesPlus {
                         uint[] calldata _categories,
                         uint256[] calldata _votes) external
     {
+        files.createItem(_title, _description, _priceETH, _priceAR, _locale, _license);
     }
 
     function createLink(string calldata _link,
@@ -29,6 +32,7 @@ contract FilesPlus {
                         uint[] calldata _categories,
                         uint256[] calldata _votes) external
     {
+        files.createLink(_link, _title, _description, _locale, _linkKind, _owned);
     }
 
     function createCategory(string calldata _title,
@@ -37,5 +41,6 @@ contract FilesPlus {
                             uint[] calldata _categories,
                             uint256[] calldata _votes) external
     {
+        files.createCategory(_title, _locale, _owned);
     }
 }
