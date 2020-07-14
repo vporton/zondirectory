@@ -17,10 +17,10 @@ contract FilesPlus {
                         uint256 _priceAR,
                         string calldata _locale,
                         string calldata _license,
-                        uint[] calldata _categories,
-                        uint256[] calldata _votes) external
+                        uint256[] calldata _votingInfo) external
     {
-        files.createItem(_title, _description, _priceETH, _priceAR, _locale, _license);
+        uint _id = files.createItem(_title, _description, _priceETH, _priceAR, _locale, _license);
+        vote(_id, _votingInfo);
     }
 
     function createLink(string calldata _link,
@@ -29,18 +29,22 @@ contract FilesPlus {
                         string calldata _locale,
                         uint256 _linkKind,
                         bool _owned,
-                        uint[] calldata _categories,
-                        uint256[] calldata _votes) external
+                        uint256[] calldata _votingInfo) external
     {
-        files.createLink(_link, _title, _description, _locale, _linkKind, _owned);
+        uint _id = files.createLink(_link, _title, _description, _locale, _linkKind, _owned);
+        vote(_id, _votingInfo);
     }
 
     function createCategory(string calldata _title,
                             string calldata _locale,
                             bool _owned,
-                            uint[] calldata _categories,
-                            uint256[] calldata _votes) external
+                            uint256[] calldata _votingInfo) external
     {
-        files.createCategory(_title, _locale, _owned);
+        uint _id = files.createCategory(_title, _locale, _owned);
+        vote(_id, _votingInfo);
+    }
+
+    function vote(uint _id, uint256[] memory _votingInfo) internal {
+
     }
 }
