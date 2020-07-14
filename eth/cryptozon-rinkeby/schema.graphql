@@ -144,6 +144,11 @@ type SetUpvotesOwnerShare @entity {
   share: BigInt! # int128
 }
 
+type SetUploadOwnerShare @entity {
+  id: ID!
+  share: BigInt! # int128
+}
+
 type Transfer @entity {
   id: ID!
   _from: Bytes! # address
