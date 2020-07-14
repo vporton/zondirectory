@@ -45,6 +45,14 @@ contract FilesPlus {
     }
 
     function vote(uint _id, uint256[] memory _votingInfo) internal {
-
+        for(uint i = 0; i < _votingInfo.length - 1; i += 2) {
+            uint _parent = _votingInfo[i];
+            uint256 _amount = _votingInfo[i+1];
+            if(files.itemOwners(_id) == msg.sender) {
+                files.setMyChildParent(_id, _parent, int256(_amount), 0);
+            } else {
+                files.voteChildParent(_id, _parent, true);
+            }
+        }
     }
 }

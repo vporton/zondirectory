@@ -71,11 +71,11 @@ contract Files is BaseToken {
     event Pay(address indexed payer, address indexed payee, uint indexed itemId, uint256 value);
     event Donate(address indexed payer, address indexed payee, uint indexed itemId, uint256 value);
 
-    address payable founder;
-    mapping (uint => address payable) itemOwners;
+    address payable public founder;
+    mapping (uint => address payable) public itemOwners;
     mapping (uint => mapping (uint => int256)) private childParentVotes;
-    mapping (uint => uint256) pricesETH;
-    mapping (uint => uint256) pricesAR;
+    mapping (uint => uint256) public pricesETH;
+    mapping (uint => uint256) public pricesAR;
 
     constructor(address payable _founder, uint256 _initialBalance) public {
         founder = _founder;
@@ -293,7 +293,7 @@ contract Files is BaseToken {
     }
 
     // _value > 0 - present
-    function setMyChildParent(uint _child, uint _parent, int128 _value, int128 _featureLevel) external {
+    function setMyChildParent(uint _child, uint _parent, int256 _value, int256 _featureLevel) external {
         require(entries[_child] != EntryKind.NONE, "Child does not exist.");
         require(entries[_parent] == EntryKind.CATEGORY, "Must be a category.");
         require(itemOwners[_parent] == msg.sender, "Access denied.");
