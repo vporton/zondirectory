@@ -84,10 +84,10 @@ async function payAR() {
             smartweave.readContract(arweave, AR_PST_CONTRACT_ADDRESS).then(async contractState => {
                 await defaultAccountPromise();
                 let query = `{
-        setARWallets(first:1, orderBy:id, orderDirection:desc, where:{owner:"${defaultAccount}"}) {
-            arWallet
-        }
-    }`;
+    setARWallets(first:1, orderBy:id, orderDirection:desc, where:{owner:"${defaultAccount}"}) {
+        arWallet
+    }
+}`;
                 const queryResult = (await queryThegraph(query)).data;
                 let arWallet = queryResult.setARWallets[0] ? queryResult.setARWallets[0].arWallet : null;
                 let authorRoyalty, shareholdersRoyalty;
