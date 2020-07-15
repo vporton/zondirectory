@@ -45,9 +45,9 @@
     $.fn.multiVoterData = function() {
         let cats = [];
         let amounts = [];
-        this.find('input[name=cat]:gt(0)').each(c => cats.push(c.val()));
-        this.find('input[name=amount]').each(c => amounts.push(c.val()));
-        let result;
+        this.find('input[name=cat]:gt(0)').each((i, c) => cats.push(c.value));
+        this.find('input[name=amount]').each((i, c) => amounts.push(c.value));
+        let result = [];
         for(var i in cats) {
             const cat = cats[i].replace(/^([0-9]*).*/, '$1');
             if(!cat) continue;

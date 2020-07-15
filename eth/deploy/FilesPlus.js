@@ -3,11 +3,6 @@ const buidler = require("@nomiclabs/buidler");
 
 const {deployIfDifferent, log} = deployments;
 
-function filesJsonInterface() {
-    const text = fs.readFileSync("artifacts/Files.json");
-    return JSON.parse(text).abi;
-}
-
 module.exports = async ({getNamedAccounts, deployments}) => {
     const namedAccounts = await getNamedAccounts();
     const {deploy} = deployments;
