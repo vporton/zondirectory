@@ -292,6 +292,20 @@ contract Files is BaseToken {
         emit ChildParentVote(_child, _parent, _newValue, 0, _owner == address(0) || _owner == msg.sender);
     }
 
+    // TODO: Test.
+    function voteForOwnChild(uint _child, uint _parent) external payable {
+        require(entries[_child] != EntryKind.NONE, "Child does not exist.");
+        require(entries[_parent] == EntryKind.CATEGORY, "Must be a category.");
+        address _owner = itemOwners[_child];
+        require(_owner == msg.sender, "Must be owner.");
+        if(msg.value == 0) return; // We don't want to pollute the events with zero votes.
+        int256 _value = upvotesOwnersShare.inv().muli(int256(msg.value));
+        int256 _newValue = childParentVotes[_child][_parent] + _value;
+        childParentVotes[_child][_parent] = _newValue;
+        totalDividends += msg.value;
+        emit ChildParentVote(_child, _parent, _newValue, 0, _owner == address(0) || _owner == msg.sender);
+    }
+
     // _value > 0 - present
     function setMyChildParent(uint _child, uint _parent, int256 _value, int256 _featureLevel) external {
         require(entries[_child] != EntryKind.NONE, "Child does not exist.");
