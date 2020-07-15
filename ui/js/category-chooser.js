@@ -1,7 +1,8 @@
 (function( $ ) {
 
     $.fn.categoryChooser = function() {
-        this.after(`<label><input type='checkbox'/> My</label>`);
+        this.attr('placeholder', "Start typing (case sensitive)")
+        this.after(`<label><input type='checkbox'/> My only</label>`);
         const input = this;
         async function completer(request, response) {
             const checkbox = input.next().find(':checkbox');
@@ -26,6 +27,7 @@
             const p = $('#multiVoterTmpl').clone(false);
             p.css('display', 'block');
             const input = p.find('input');
+            p.append(" | Vote amount in ETH: <input> ");
             p.append(`<input type='button' value='Delete' onclick='$(event.target).closest("p").remove()'>`);
             input.categoryChooser();
             $('#multiVoter').append(p);
@@ -38,6 +40,10 @@
         this.append(add)
         add.click(_multiVoterAdd);
         _multiVoterAdd();
+    }
+
+    $.fn.multiVoterData = function() {
+
     }
 
 }( jQuery ));
