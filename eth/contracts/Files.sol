@@ -286,7 +286,7 @@ contract Files is BaseToken {
         if(_yes && _owner != address(0)) {
             uint256 _shareholdersShare = uint256(upvotesOwnersShare.muli(int256(msg.value)));
             totalDividends += _shareholdersShare;
-            itemOwners[_child].transfer(msg.value - _shareholdersShare);
+            _owner.transfer(msg.value - _shareholdersShare);
         } else
             totalDividends += msg.value;
         emit ChildParentVote(_child, _parent, _newValue, 0, _owner == address(0) || _owner == msg.sender);
