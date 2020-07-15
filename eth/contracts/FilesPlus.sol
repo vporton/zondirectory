@@ -3,8 +3,12 @@
 pragma solidity ^0.6.0;
 
 import './Files.sol';
+import './ABDKMath64x64.sol';
 
 contract FilesPlus {
+
+    using ABDKMath64x64 for int128;
+
     Files files;
 
     constructor(Files _files) public {
@@ -45,11 +49,13 @@ contract FilesPlus {
     }
 
     function vote(uint _id, uint256[] memory _votingInfo) internal {
+        int128 _upvotesOwnersShare = files.upvotesOwnersShare();
         for(uint i = 0; i + 1 < _votingInfo.length; i += 2) {
             uint _parent = _votingInfo[i];
             uint256 _amount = _votingInfo[i+1];
             if(files.itemOwners(_parent) == msg.sender) {
-                files.voteForOwnChild(_id, _parent);
+                uint256 _value = uint256(_upvotesOwnersShare.muli(int256(_amount)));
+                files.voteForOwnChild.value(_value)(_id, _parent);
             } else {
                 files.voteChildParent.value(_amount)(_id, _parent, true);
             }
