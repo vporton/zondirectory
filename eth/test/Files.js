@@ -24,6 +24,7 @@ describe("Files", function() {
     const SECOND_PURCHASE = 2.335;
     const OWNED_VOTE_AMOUNT = 1.22;
     const UNOWNED_VOTE_AMOUNT = 1.97;
+    const MYOWN_VOTE_AMOUNT = 2.11;
 
     const Files = await ethers.getContractFactory("Files");
     const files = await Files.deploy(await founder.getAddress(), myToWei(100));
@@ -64,5 +65,10 @@ describe("Files", function() {
     await files.connect(partner).withdrawProfit();
     expect(await files.dividendsOwing(await founder.getAddress())).to.equal(0);
     expect(await files.dividendsOwing(await partner.getAddress())).to.equal(0);
+
+    // More voting tests:
+    await files.connect(seller).voteForOwnChild(itemId, ownedCategoryId, {value: myToWei(MYOWN_VOTE_AMOUNT)});
+    const amountVoted = await files.getChildParentVotes(itemId, ownedCategoryId);
+    testApproxEq(ethers.utils.formatEther(amountVoted), OWNED_VOTE_AMOUNT + MYOWN_VOTE_AMOUNT * 2.0);
   });
 });

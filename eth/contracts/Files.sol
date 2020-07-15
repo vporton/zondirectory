@@ -292,7 +292,6 @@ contract Files is BaseToken {
         emit ChildParentVote(_child, _parent, _newValue, 0, _owner == address(0) || _owner == msg.sender);
     }
 
-    // TODO: Test.
     function voteForOwnChild(uint _child, uint _parent) external payable {
         require(entries[_child] != EntryKind.NONE, "Child does not exist.");
         require(entries[_parent] == EntryKind.CATEGORY, "Must be a category.");
