@@ -47,16 +47,9 @@ async function payETH() {
     if(!price) return;
     const contractInstance = new web3.eth.Contract(await filesJsonInterface(), addressFiles);
     await defaultAccountPromise();
-    // FIXME: The transaction can be canceled after the files are already revealed!
-    // 'confirmation' event is not fired: https://github.com/ethereum/web3.js/issues/2104#issuecomment-654899409
-    contractInstance.methods.pay(itemId).send({from: defaultAccount, value: web3.utils.toWei(String(price*1.0000001)), gas: '1000000'},
-                                              function(error, transactionHash) {
-        if(error) {
-            alert("You tried to pay below the price or payment failure! " + err);
-        } else {
-            showFilesWithMessage();
-        }
-    });
+    await contractInstance.methods.pay(itemId).send({from: defaultAccount, value: web3.utils.toWei(String(price*1.0000001)), gas: '1000000'})
+        .then(showFilesWithMessage)
+        .catch(err => alert("You tried to pay below the price or payment failure! " + err));
 }
 
 async function payAR() {
