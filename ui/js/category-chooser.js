@@ -49,7 +49,10 @@
         this.find('input[name=amount]').each(c => amounts.push(c.val()));
         let result;
         for(var i in cats) {
-            result.push(cats[i]);
+            const cat = cats[i].replace(/^([0-9]*).*/, '$1');
+            if(!cat) continue;
+            if(!/^[0-9]+(\.[0-9]+)?$/.test(amounts[i])) continue;
+            result.push(cat);
             result.push(web3.utils.toWei(amounts[i]));
         }
         return result;
