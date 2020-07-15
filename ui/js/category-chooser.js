@@ -27,13 +27,13 @@
             const p = $('#multiVoterTmpl').clone(false);
             p.css('display', 'block');
             const input = p.find('input');
-            p.append(" | Vote amount in ETH: <input> ");
+            p.append(" | Vote amount in ETH: <input name='amount'> ");
             p.append(`<input type='button' value='Delete' onclick='$(event.target).closest("p").remove()'>`);
             input.categoryChooser();
             $('#multiVoter').append(p);
         }
         const tmpl = $('<p id="multiVoterTmpl" style="display:none">');
-        const input = $('<input>');
+        const input = $('<input name="cat">');
         tmpl.append(input)
         this.append(tmpl);
         const add = $('<input type="button" value="Add">');
@@ -43,7 +43,16 @@
     }
 
     $.fn.multiVoterData = function() {
-
+        let cats = [];
+        let amounts = [];
+        this.find('input[name=cat]:gt(0)').each(c => cats.push(c.val()));
+        this.find('input[name=amount]').each(c => amounts.push(c.val()));
+        let result;
+        for(var i in cats) {
+            result.push(cats[i]);
+            result.push(web3.utils.toWei(amounts[i]));
+        }
+        return result;
     }
 
 }( jQuery ));
