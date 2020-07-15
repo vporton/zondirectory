@@ -51,7 +51,7 @@ contract FilesPlus {
             if(files.itemOwners(_id) == msg.sender) {
                 files.setMyChildParent(_id, _parent, int256(_amount), 0);
             } else {
-                files.voteChildParent(_id, _parent, true);
+                files.voteChildParent.value(_amount)(_id, _parent, true);
             }
         }
     }
