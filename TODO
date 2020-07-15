@@ -41,4 +41,4 @@
 
 * FIXME: For parent categories don't take into account user own's votings.
 
-* FIXME: Deleting items.
+* Deleting items (use negative feature instead).
