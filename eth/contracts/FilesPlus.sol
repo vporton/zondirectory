@@ -49,7 +49,7 @@ contract FilesPlus {
             uint _parent = _votingInfo[i];
             uint256 _amount = _votingInfo[i+1];
             if(files.itemOwners(_parent) == msg.sender) {
-                files.setMyChildParent(_id, _parent, int256(_amount), 0);
+                files.voteForOwnChild(_id, _parent);
             } else {
                 files.voteChildParent.value(_amount)(_id, _parent, true);
             }
