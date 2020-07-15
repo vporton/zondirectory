@@ -49,7 +49,6 @@ contract FilesPlus {
     }
 
     function vote(uint _id, uint256[] memory _votingInfo) internal {
-        int128 _upvotesOwnersShare = files.upvotesOwnersShare();
         for(uint i = 0; i + 1 < _votingInfo.length; i += 2) {
             uint _parent = _votingInfo[i];
             uint256 _amount = _votingInfo[i+1];

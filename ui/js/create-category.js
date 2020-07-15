@@ -3,6 +3,7 @@ async function onLoad() {
     await defaultAccountPromise();
     const contractInstance = new web3.eth.Contract(await filesJsonInterface(), addressFiles);    
     contractInstance.methods.balanceOf(defaultAccount).call({from: defaultAccount, gas: '10000000'}, function(error, result){
+        console.log(error)
         $('#value').html(result == 0 ? '<strong>zero</strong>' : formatPriceETH(result));
     });
 }
@@ -19,7 +20,7 @@ async function createCategory() {
     const { votes: votingData, sum: amount } = await $('#multiVoter').multiVoterData();
     // TODO: Wait for a confirmation, open('vote.html?id=...') page.
     await contractInstance.methods.createCategory(name, locale, owned, votingData)
-            .send({from: defaultAccount, value: amount, gas: '10000000'}, (error, result) => {
+            .send({from: defaultAccount, value: amount, gas: '1000000'}, (error, result) => {
         if(error) return;
         $("#ready").dialog();
     });
