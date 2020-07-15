@@ -26,7 +26,7 @@
             const p = $('#multiVoterTmpl').clone(false);
             p.css('display', 'block');
             const input = p.find('input');
-            p.append("<input type='button' value='Delete'>");
+            p.append(`<input type='button' value='Delete' onclick='$(event.target).closest("p").remove()'>`);
             input.categoryChooser();
             $('#multiVoter').append(p);
         }
@@ -37,6 +37,6 @@
         const add = $('<input type="button" value="Add">');
         this.append(add)
         add.click(_multiVoterAdd);
-}
+    }
 
 }( jQuery ));
