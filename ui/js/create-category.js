@@ -16,14 +16,14 @@ async function createCategory() {
     const owned = $('#owned').is(':checked');
 
     await defaultAccountPromise();
-    const contractInstance = new web3.eth.Contract(await filesPlusJsonInterface(), addressFilesPlus);
-    const { votes: votingData, sum: amount } = await $('#multiVoter').multiVoterData();
+    const contractInstance = new web3.eth.Contract(await filesJsonInterface(), addressFiles);
     // TODO: Wait for a confirmation, open('vote.html?id=...') page.
-    await contractInstance.methods.createCategory(name, locale, owned, votingData)
-            .send({from: defaultAccount, value: amount, gas: '1000000'}, (error, result) => {
+    const response = await contractInstance.methods.createCategory(name, locale, owned)
+            .send({from: defaultAccount, gas: '1000000'}, (error, result) => {
         if(error) return;
-        $("#ready").dialog();
     });
+    const catId = response.events.CategoryCreated.returnValues.categoryId;
+    await $('#multiVoter').doMultiVote(catId);
 }
 
 $(onLoad);

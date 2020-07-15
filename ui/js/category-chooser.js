@@ -42,7 +42,7 @@
         _multiVoterAdd();
     }
 
-    $.fn.multiVoterData = async function() {
+    $.fn.multiVoterData = function() {
         // const contractInstance = new web3.eth.Contract(await filesJsonInterface(), addressFiles);
         // return await contractInstance.methods.upvotesOwnersShare().call()
         //     .then(async (shareResult) => {
@@ -51,28 +51,41 @@
         let cats = [];
         let amounts = [];
         let myFlags = [];
-        this.find('input[name=cat]:gt(0)').each((i, c) => cats.push(c.value));
-        this.find('input[name=amount]').each((i, c) => amounts.push(c.value));
+        this.find('input[name=cat]:gt(0)').each((i, c) => cats.push(c.value.replace(/^([0-9]*).*/, '$1')));
+        this.find('input[name=amount]').each((i, c) => amounts.push(web3.utils.toWei(c.value)));
         this.find('input[type=checkbox]').each((i, c) => myFlags.push(c.checked));
-        let result = [];
-        let sum = 0;
-        for(var i in cats) {
-            const cat = cats[i].replace(/^([0-9]*).*/, '$1');
-            if(!cat) continue;
-            if(!/^[0-9]+(\.[0-9]+)?$/.test(amounts[i])) continue;
-            const amount = amounts[i];
-            if(!myFlags[i]) {
-                sum += amount;
-            }
-            result.push(cat);
-            result.push(web3.utils.toWei(amount));
-        }
         return {
-            votes: result,
-            sum: web3.utils.toWei(String(sum * 1.0000001)), // with reserve
+            cats,
+            amounts,
+            myFlags,
         };
-            // })
-            // .catch(alert);
+        // })
+        // .catch(alert);
+    }
+
+    $.fn.doMultiVote = async function(itemId) {
+        const {
+            cats,
+            amounts,
+        } = this.multiVoterData();
+
+        await defaultAccountPromise();
+        const contractInstance = new web3.eth.Contract(await filesJsonInterface(), addressFiles);
+        for(var i in cats) {
+            const parent = cats[i];
+            const amount = amounts[i];
+            await contractInstance.methods.itemOwners(parent).call()
+                .then(async (owner) => {
+                    if(owner == defaultAccount) {
+                        await contractInstance.methods.setMyChildParent(itemId, parent, amount, 0)
+                            .send({from: defaultAccount, gas: '1000000'});
+                    } else {
+                        console.log(itemId, parent, true, amount)
+                        await contractInstance.methods.voteChildParent(itemId, parent, true)
+                            .send({from: defaultAccount, value: amount, gas: '1000000'});
+                    }
+                });
+        }
     }
 
 }( jQuery ));

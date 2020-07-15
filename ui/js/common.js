@@ -42,8 +42,6 @@ let defaultAccount;
 function defaultAccountPromise() { return web3.eth.getAccounts(); }
 defaultAccountPromise().then( function (result, x) { defaultAccount = result[0] });
 
-// TODO: Duplicate code below.
-
 function filesJsonInterface() {
     return new Promise((resolve) => {
         var xhttp = new XMLHttpRequest();
@@ -52,18 +50,6 @@ function filesJsonInterface() {
                 resolve(JSON.parse(xhttp.responseText));
         };
         xhttp.open("GET", "artifacts/Files.abi", true);
-        xhttp.send();
-    });
-}
-
-function filesPlusJsonInterface() {
-    return new Promise((resolve) => {
-        var xhttp = new XMLHttpRequest();
-        xhttp.onreadystatechange = function() {
-            if (this.readyState == 4 && this.status == 200)
-                resolve(JSON.parse(xhttp.responseText));
-        };
-        xhttp.open("GET", "artifacts/FilesPlus.abi", true);
         xhttp.send();
     });
 }
