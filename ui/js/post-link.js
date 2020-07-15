@@ -21,11 +21,13 @@ async function createItem() {
     const kind = $('input[name=kind]:checked');
     const owned = true;
 
-    contractInstance.methods.createLink(link, title, description, locale, kind, owned)
+    const response = contractInstance.methods.createLink(link, title, description, locale, kind, owned)
         .send({from: defaultAccount, gas: '1000000'})
         .on('transactionHash', async function(receiptHash) {
             $('#ready').dialog();
         });
+    const linkId = response.events.CategoryCreated.returnValues.linkId;
+    await $('#multiVoter').doMultiVote(linkId);
 }
 
 async function updateItem(itemId) {

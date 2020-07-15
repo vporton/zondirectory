@@ -55,11 +55,13 @@ async function createItem() {
     const description = document.getElementById('description').value;
     const license = document.getElementById('license').value;
 
-    contractInstance.methods.createItem(title, description, getPriceETH(), getPriceAR(), locale, license)
+    const response = contractInstance.methods.createItem(title, description, getPriceETH(), getPriceAR(), locale, license)
         .send({from: defaultAccount, gas: '1000000'})
         .on('transactionHash', async function(receiptHash) {
             $("#ready").dialog();
         });
+    const itemId = response.events.CategoryCreated.returnValues.linkId;
+    await $('#multiVoter').doMultiVote(itemId);
 }
 
 async function updateItem(itemId) {

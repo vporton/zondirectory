@@ -17,7 +17,6 @@ async function createCategory() {
 
     await defaultAccountPromise();
     const contractInstance = new web3.eth.Contract(await filesJsonInterface(), addressFiles);
-    // TODO: Wait for a confirmation, open('vote.html?id=...') page.
     const response = await contractInstance.methods.createCategory(name, locale, owned)
             .send({from: defaultAccount, gas: '1000000'}, (error, result) => {
         if(error) return;

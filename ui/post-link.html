@@ -9,6 +9,7 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/web3/1.2.9/web3.min.js"></script>
         <script src="artifacts/addresses.js"></script>
         <script src="js/common.js"></script>
+        <script src="js/category-chooser.js"></script>
         <script src="js/post-link.js"></script>
     </head>
     <body>
@@ -21,12 +22,8 @@
             <p>Link type:
                 <label><input type="radio" name="kind" value="0"/> Directory entry</label>
                 <label><input type="radio" name="kind" value="1"/> Message</label></p>
+            <div id="multiVoter"></div>
             <p><input type="button" value="submit" onclick="createOrUpdateItem()"/></p>
-            <div id="ready" title="Request sent" style="display: none;">
-                <p>After your new link appears in <a href="author.html">the list of your links</a>,
-                    add it as a child to at least one suitable category!
-                    Otherwise it won't receive much traffic.</p>
-            </div>
         </div>
     </body>
 </html>

@@ -10,6 +10,7 @@
         <script src="https://unpkg.com/arweave/bundles/web.bundle.min.js"></script>
         <script src="artifacts/addresses.js"></script>
         <script src="js/common.js"></script>
+        <script src="js/category-chooser.js"></script>
         <script src="js/description.js"></script>
     </head>
     <body>
@@ -26,11 +27,7 @@
                 <label><input type="checkbox" id="sellInAR" onclick="sellInARToggle(event)"/> Don't sell in AR</label></p>
             <p><input type="button" value="submit" onclick="createOrUpdateItem()"/></p>
             <p id="uploadLink" style="display: none;"><a href="">Upload file</a></p>
-            <div id="ready" title="Request sent" style="display: none;">
-                <p>After the item appears in <a href="author.html">the list of your items</a>,
-                    upload files.</p>
-                <p>Add the item to at least one category! Otherwise it won't receive much traffic.</p>
-            </div>
+            <div id="multiVoter"></div>
         </div>
     </body>
 </html>
