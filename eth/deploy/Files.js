@@ -14,10 +14,11 @@ async function createCategory(address, blockNumber, name) {
     const contractInstance = new web3.eth.Contract(filesJsonInterface(), address);
     const namedAccounts = await getNamedAccounts();
     const {deployer} = namedAccounts;
-    await contractInstance.methods.createCategory(name, 'en', false)
+    const catId = await contractInstance.methods.createCategory(name, 'en', false)
         .send({from: deployer, gas: '1000000'})
         .on('error', (error) => log(`Error creating category: ` + error))
         .catch((error) => log(`Error creating category: ` + error));
+    console.log(catId);
     log(`created category "${name}"...`);
     // It does not work on Infura Rinkeby as of 10 Jul 2020:
     // categories[name] = await getCategoryId(address, blockNumber, name, contractInstance);
