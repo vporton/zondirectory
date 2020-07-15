@@ -2,6 +2,7 @@ const urlParams = new URLSearchParams(window.location.search);
 const catId = urlParams.get('cat');
 
 async function onLoad() {
+    let queryResult0; // TODO: Declare where used.
     if(catId) {
         $('#addParent').attr('href', `vote.html?child=${catId}&dir=for`);
         $('#addChild').attr('href', `vote.html?parent=${catId}&dir=for`);
@@ -17,13 +18,12 @@ async function onLoad() {
     let query;
     if(catId) {
         query = `{
-{
     categoryUpdateds(first:1, orderDirection:desc, where:{categoryId:${catId}}) {
         owner
         title
     }
 }`;
-        const queryResult0 = (await queryThegraph(query)).data;
+        queryResult0 = (await queryThegraph(query)).data;
         const isOwned = !/^0x0+$/.test(queryResult0.categoryUpdateds[0].owner);
         query = `{
     childParentVotes(first:1000, where:{parent:${catId}}) {
@@ -78,7 +78,7 @@ async function onLoad() {
     const parentIDs = parentIDsA.concat(parentIDsB);
     const childIDs = Array.from(childs.values()).sort((a, b) => b.value - a.value).map(e => e.child);
 
-    if(queryResult0.categoryUpdateds && queryResult0.categoryUpdateds[0]) {
+    if(queryResult0 && queryResult0.categoryUpdateds && queryResult0.categoryUpdateds[0]) {
         const categoryTitle = queryResult0.categoryUpdateds[0].title;
         $('#catTitle').text(categoryTitle);
     }
@@ -140,7 +140,6 @@ async function onLoad() {
                 const link = "index.html?cat=" + categoryId;
                 const voteStr = `<a href='vote.html?child=${categoryId}&parent=${catId}&dir=for'>👍</a>` +
                     `<a href='vote.html?child=${categoryId}&parent=${catId}&dir=against'>👎</a>`;
-                console.log(items['categoryCreate' + categoryId][0].owner)
                 $(/^0x0+$/.test(items['categoryCreate' + categoryId][0].owner) ? '#subcategories' : '#ownedSubcategories')
                     .append(`<li><a href="${link}">${safe_tags(category.title)}</a> (spam score: ${spamScore} ${voteStr})</li>`);
             }
