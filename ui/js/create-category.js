@@ -1,5 +1,5 @@
 async function onLoad() {
-    $('#voter').multiVoter();
+    $('#multiVoter').multiVoter();
     await defaultAccountPromise();
     const contractInstance = new web3.eth.Contract(await filesJsonInterface(), addressFiles);    
     contractInstance.methods.balanceOf(defaultAccount).call({from: defaultAccount, gas: '10000000'}, function(error, result){

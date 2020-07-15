@@ -22,12 +22,21 @@
     };
 
     $.fn.multiVoter = function() {
-        const tmpl = $('<p>');
+        function _multiVoterAdd() {
+            const p = $('#multiVoterTmpl').clone(false);
+            p.css('display', 'block');
+            const input = p.find('input');
+            p.append("<input type='button' value='Delete'>");
+            input.categoryChooser();
+            $('#multiVoter').append(p);
+        }
+        const tmpl = $('<p id="multiVoterTmpl" style="display:none">');
         const input = $('<input>');
         tmpl.append(input)
         this.append(tmpl);
-        tmpl.append("<input type='button' value='Delete'>");
-        input.categoryChooser();
-    }
+        const add = $('<input type="button" value="Add">');
+        this.append(add)
+        add.click(_multiVoterAdd);
+}
 
 }( jQuery ));
