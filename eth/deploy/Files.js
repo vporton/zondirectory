@@ -18,7 +18,7 @@ async function createCategory(address, blockNumber, name) {
         .send({from: deployer, gas: '1000000'})
         .on('error', (error) => log(`Error creating category: ` + error))
         .catch((error) => log(`Error creating category: ` + error));
-    categories[name] = getCategoryId(response);
+    categories[name] = await getCategoryId(response);
     log(`created category "${name}" (${await categories[name]})...`);
 }
 
@@ -36,7 +36,8 @@ function getCategoryId(response) {
     .catch((error) => errorHandler(`Error getting category ID: ` + error));
 }
 
-async function addItemToCategory(parent, child) {
+async function addItemToCategory(address, parent, child) {
+    log(`${parent} -> ${child}`);
     const contractInstance = new web3.eth.Contract(filesJsonInterface(), address);
     const namedAccounts = await getNamedAccounts();
     const {deployer} = namedAccounts;
@@ -69,11 +70,11 @@ module.exports = async ({getNamedAccounts, deployments}) => {
         log(`created ${allCategories.length} categories`);
 
         log(`Creating category relations...`)
-        addItemToCategory(await categories["Root"], await categories["E-books"]);
-        addItemToCategory(await categories["Root"], await categories["Videos"]);
-        addItemToCategory(await categories["Root"], await categories["Software"]);
-        addItemToCategory(await categories["Software"], await categories["Binaries"]);
-        addItemToCategory(await categories["Software"], await categories["Sources"]);
+        await addItemToCategory(deployResult.address, await categories["Root"], await categories["E-books"]);
+        await addItemToCategory(deployResult.address, await categories["Root"], await categories["Videos"]);
+        await addItemToCategory(deployResult.address, await categories["Root"], await categories["Software"]);
+        await addItemToCategory(deployResult.address, await categories["Software"], await categories["Binaries"]);
+        await addItemToCategory(deployResult.address, await categories["Software"], await categories["Sources"]);
         log(`created base category structure`);
     }
     const mydeploy = require('../lib/mydeploy');
