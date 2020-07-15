@@ -16,9 +16,10 @@ async function createCategory() {
 
     await defaultAccountPromise();
     const contractInstance = new web3.eth.Contract(await filesPlusJsonInterface(), addressFilesPlus);
-    const votingData = $('#multiVoter').multiVoterData();
+    const { votes: votingData, sum: amount } = await $('#multiVoter').multiVoterData();
     // TODO: Wait for a confirmation, open('vote.html?id=...') page.
-    await contractInstance.methods.createCategory(name, locale, owned, votingData).send({from: defaultAccount, gas: '10000000'}, (error, result) => {
+    await contractInstance.methods.createCategory(name, locale, owned, votingData)
+            .send({from: defaultAccount, value: amount, gas: '10000000'}, (error, result) => {
         if(error) return;
         $("#ready").dialog();
     });
