@@ -40,3 +40,5 @@
 * Should donation fee be different?
 
 * When voting for user's own item, a part of his money is returned, it should be clarified.
+
+* FIXME: msg.sender vs tx.origin!
