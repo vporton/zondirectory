@@ -37,6 +37,7 @@
         const add = $('<input type="button" value="Add">');
         this.append(add)
         add.click(_multiVoterAdd);
+        _multiVoterAdd();
     }
 
 }( jQuery ));
