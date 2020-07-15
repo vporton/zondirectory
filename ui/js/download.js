@@ -94,7 +94,7 @@ async function payAR() {
                 const contractInstance = new web3.eth.Contract(await filesJsonInterface(), addressFiles);
                 await defaultAccountPromise();
                 // TODO: Don't call Ethereum if no author's AR wallet.
-                contractInstance.methods.ownersShare().call(async (error, result) => {
+                contractInstance.methods.salesOwnersShare().call(async (error, result) => {
                     if(error) {
                         alert(error);
                         return;
