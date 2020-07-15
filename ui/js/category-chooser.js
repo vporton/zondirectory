@@ -67,7 +67,10 @@
                     result.push(cat);
                     result.push(web3.utils.toWei(amount));
                 }
-                return { votes: result, sum: web3.utils.toWei(String(sum * ownersShare)) };
+                return {
+                    votes: result,
+                    sum: web3.utils.toWei(String(sum * ownersShare * 1.0000001)), // with reserve
+                };
             })
             .catch(alert);
     }
