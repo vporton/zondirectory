@@ -2,7 +2,7 @@
 
     $.fn.categoryChooser = function() {
         this.attr('placeholder', "Start typing (case sensitive)")
-        this.after(`<label><input type='checkbox'/> My only</label>`);
+        this.after(`<label><input type='checkbox'/> My</label>`);
         const input = this;
         async function completer(request, response) {
             const checkbox = input.next().find(':checkbox');
@@ -37,7 +37,7 @@
         tmpl.append(input)
         this.append(tmpl);
         const add = $('<input type="button" value="Add">');
-        this.append(add)
+        this.after(add)
         add.click(_multiVoterAdd);
         _multiVoterAdd();
     }
