@@ -282,7 +282,7 @@ contract Files is BaseToken {
         if(_value == 0) return; // We don't want to pollute the events with zero votes.
         int256 _newValue = childParentVotes[_child][_parent] + _value;
         childParentVotes[_child][_parent] = _newValue;
-        address _owner = itemOwners[_child];
+        address payable _owner = itemOwners[_child];
         if(_yes && _owner != address(0)) {
             uint256 _shareholdersShare = uint256(upvotesOwnersShare.muli(int256(msg.value)));
             totalDividends += _shareholdersShare;
