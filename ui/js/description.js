@@ -55,9 +55,9 @@ async function createItem() {
     const description = document.getElementById('description').value;
     const license = document.getElementById('license').value;
 
-    const response = contractInstance.methods.createItem(title, description, getPriceETH(), getPriceAR(), locale, license)
+    const response = await contractInstance.methods.createItem(title, description, getPriceETH(), getPriceAR(), locale, license)
         .send({from: defaultAccount, gas: '1000000'});
-    const itemId = response.events.ItemCreated.returnValues.linkId;
+    const itemId = response.events.ItemCreated.returnValues.itemId;
     await $('#multiVoter').doMultiVote(itemId);
 }
 
@@ -77,6 +77,8 @@ async function updateItem(itemId) {
 }
 
 $(async function() {
+    $('#multiVoter').multiVoter();
+
     const urlParams = new URLSearchParams(window.location.search);
     const itemId = urlParams.get('id');
     if(itemId) {
