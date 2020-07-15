@@ -21,12 +21,9 @@ async function createItem() {
     const kind = $('input[name=kind]:checked');
     const owned = true;
 
-    const response = contractInstance.methods.createLink(link, title, description, locale, kind, owned)
+    const response = await contractInstance.methods.createLink(link, title, description, locale, kind, owned)
         .send({from: defaultAccount, gas: '1000000'})
-        .on('transactionHash', async function(receiptHash) {
-            $('#ready').dialog();
-        });
-    const linkId = response.events.CategoryCreated.returnValues.linkId;
+    const linkId = response.events.ItemCreated.returnValues.itemId;
     await $('#multiVoter').doMultiVote(linkId);
 }
 
@@ -47,6 +44,8 @@ async function updateItem(itemId) {
 }
 
 $(async function() {
+    $('#multiVoter').multiVoter();
+
     const urlParams = new URLSearchParams(window.location.search);
     const itemId = urlParams.get('id');
     if(itemId) {
