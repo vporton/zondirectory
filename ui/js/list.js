@@ -17,18 +17,29 @@ async function onLoad() {
     let query;
     if(catId) {
         query = `{
+{
     categoryUpdateds(first:1, orderDirection:desc, where:{categoryId:${catId}}) {
+        owner
         title
     }
+}`;
+        const queryResult0 = (await queryThegraph(query)).data;
+        const isOwned = !/^0x0+$/.test(queryResult0.categoryUpdateds[0].owner);
+        query = `{
     childParentVotes(first:1000, where:{parent:${catId}}) {
         child
     }
-    parents: childParentVotes(first:1000, orderDirection:desc, where:{child:${catId}}) {
+    parentsA: childParentVotes(first:1000, orderDirection:desc, where:{child:${catId} primary:false}) {
         id
         parent
         value
     }
-    childs: childParentVotes(first:1000, orderDirection:desc, where:{parent:${catId} primary:true}) {
+    parentsB: childParentVotes(first:1000, orderDirection:desc, where:{child:${catId} primary:true}) {
+        id
+        parent
+        value
+    }
+    childs: childParentVotes(first:1000, orderDirection:desc, where:{parent:${catId} primary:${isOwned}}) {
         id
         child
         value
@@ -43,9 +54,16 @@ async function onLoad() {
     }
     const queryResult = (await queryThegraph(query)).data;
 
-    let parents = new Map();
-    for(let i in queryResult.parents) {
-        const entry = queryResult.parents[i];
+    //const allParents = queryResult.parentsA.concat(queryResult.parentsB);
+    let parentsA = new Map();
+    let parentsB = new Map();
+    for(let i in queryResult.parentsA) {
+        const entry = queryResult.parentsA[i];
+        if(!parents.has(i) || parents.get[i].id > entry.id)
+            parents.set(i, {id: entry.id, parent: entry.parent, value: entry.value})
+    }
+    for(let i in queryResult.parentsB) {
+        const entry = queryResult.parentsB[i];
         if(!parents.has(i) || parents.get[i].id > entry.id)
             parents.set(i, {id: entry.id, parent: entry.parent, value: entry.value})
     }
@@ -55,11 +73,13 @@ async function onLoad() {
         if(!childs.has(i) || childs.get[i].id > entry.id)
             childs.set(i, {id: entry.id, child: entry.child, value: entry.value})
     }
-    const parentIDs = Array.from(parents.values()).sort((a, b) => b.value - a.value).map(e => e.parent);
+    const parentIDsA = Array.from(parentsA.values()).sort((a, b) => b.value - a.value).map(e => e.parent);
+    const parentIDsB = Array.from(parentsB.values()).sort((a, b) => b.value - a.value).map(e => e.parent);
+    const parentIDs = parentIDsA.concat(parentIDsB);
     const childIDs = Array.from(childs.values()).sort((a, b) => b.value - a.value).map(e => e.child);
 
-    if(queryResult.categoryUpdateds && queryResult.categoryUpdateds[0]) {
-        const categoryTitle = queryResult.categoryUpdateds[0].title;
+    if(queryResult0.categoryUpdateds && queryResult0.categoryUpdateds[0]) {
+        const categoryTitle = queryResult0.categoryUpdateds[0].title;
         $('#catTitle').text(categoryTitle);
     }
     const itemIds = queryResult['itemCreateds'] ? queryResult['itemCreateds'] : [];

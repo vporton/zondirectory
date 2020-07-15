@@ -67,7 +67,7 @@ contract Files is BaseToken {
                           uint parent,
                           int256 value,
                           int256 featureLevel,
-                          bool primary); // Vote is primary if parent owner is zero or it's an owner's vote.
+                          bool primary); // Vote is primary if it's an owner's vote.
     event Pay(address indexed payer, address indexed payee, uint indexed itemId, uint256 value);
     event Donate(address indexed payer, address indexed payee, uint indexed itemId, uint256 value);
 
@@ -289,7 +289,7 @@ contract Files is BaseToken {
             _owner.transfer(msg.value - _shareholdersShare);
         } else
             totalDividends += msg.value;
-        emit ChildParentVote(_child, _parent, _newValue, 0, _owner == address(0) || _owner == msg.sender);
+        emit ChildParentVote(_child, _parent, _newValue, 0, false);
     }
 
     function voteForOwnChild(uint _child, uint _parent) external payable {
@@ -302,7 +302,7 @@ contract Files is BaseToken {
         int256 _newValue = childParentVotes[_child][_parent] + _value;
         childParentVotes[_child][_parent] = _newValue;
         totalDividends += msg.value;
-        emit ChildParentVote(_child, _parent, _newValue, 0, _owner == address(0) || _owner == msg.sender);
+        emit ChildParentVote(_child, _parent, _newValue, 0, false);
     }
 
     // _value > 0 - present

@@ -147,7 +147,12 @@ $(async function() {
 
         // TODO: pagination
         const query = `{
-    parents: childParentVotes(first:1000, orderDirection:desc, where:{child:${itemId}}) {
+    parentsA: childParentVotes(first:1000, orderDirection:desc, where:{child:${itemId} primary:false}) {
+        id
+        parent
+        value
+    }
+    parentsB: childParentVotes(first:1000, orderDirection:desc, where:{child:${itemId} primary:true}) {
         id
         parent
         value
@@ -163,13 +168,21 @@ $(async function() {
 }`;
         const queryResult = (await queryThegraph(query)).data;
 
-        let parents = new Map();
-        for(let i in queryResult.parents) {
-            const entry = queryResult.parents[i];
+        let parentsA = new Map();
+        let parentsB = new Map();
+        for(let i in queryResult.parentsA) {
+            const entry = queryResult.parentsA[i];
             if(!parents.has(i) || parents.get[i].id > entry.id)
                 parents.set(i, {id: entry.id, parent: entry.parent, value: entry.value})
         }
-        const parentIDs = Array.from(parents.values()).sort((a, b) => b.value - a.value).map(e => e.parent);
+        for(let i in queryResult.parentsB) {
+            const entry = queryResult.parentsB[i];
+            if(!parents.has(i) || parents.get[i].id > entry.id)
+                parents.set(i, {id: entry.id, parent: entry.parent, value: entry.value})
+        }
+        const parentIDsA = Array.from(parentsA.values()).sort((a, b) => b.value - a.value).map(e => e.parent);
+        const parentIDsB = Array.from(parentsB.values()).sort((a, b) => b.value - a.value).map(e => e.parent);
+        const parentIDs = parentIDsA.concat(parentIDsB);
 
         if(parentIDs) {
             function subquery(catId) {
