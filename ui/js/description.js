@@ -39,8 +39,7 @@ function setPriceAR(price) {
 }
 
 async function createOrUpdateItem() {
-    const urlParams = new URLSearchParams(window.location.search);
-    const itemId = urlParams.get('id');
+    const itemId = numParam('id');
     if(itemId)
         updateItem(itemId);
     else
@@ -79,8 +78,7 @@ async function updateItem(itemId) {
 $(async function() {
     $('#multiVoter').multiVoter();
 
-    const urlParams = new URLSearchParams(window.location.search);
-    const itemId = urlParams.get('id');
+    const itemId = numParam('id');
     if(itemId) {
         $('#uploadLink > a').attr('href', "upload.html?id="+itemId);
         $('#uploadLink').css('display', 'block');

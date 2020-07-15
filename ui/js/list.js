@@ -1,5 +1,4 @@
-const urlParams = new URLSearchParams(window.location.search);
-const catId = urlParams.get('cat');
+const catId = numParam('cat');
 
 async function onLoad() {
     let queryResult0; // TODO: Declare where used.

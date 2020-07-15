@@ -1,6 +1,5 @@
 async function upload() {
-    const urlParams = new URLSearchParams(window.location.search);
-    const itemId = urlParams.get('id');
+    const itemId = numParam('id');
     if(!itemId) return; // just to be sure
 
     const keyFileReader = new FileReader();

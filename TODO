@@ -20,8 +20,6 @@
 
 * Ask before closing the page with files.
 
-* JavaScript XSS protection.
-
 * Blogging.
 
 * Processing `arweave:` URL scheme and blogging engine.

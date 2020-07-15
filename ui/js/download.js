@@ -1,7 +1,6 @@
 "strict";
 
-const urlParams = new URLSearchParams(window.location.search);
-const itemId = urlParams.get('id');
+const itemId = numParam('id');
 
 async function showFiles(withLinks) {
     let query = `{

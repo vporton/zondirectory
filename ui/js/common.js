@@ -8,6 +8,11 @@ const INFINITY = (BigInt(1) << BigInt(256)) - BigInt(1);
 
 const arweave = window.Arweave ? Arweave.init() : undefined;
 
+function numParam(name) {
+    const val = numParam('id');
+    return /^[0-9]+$/.test(val) ? val : 0;
+}
+
 function formatPriceETH(price) {
     return price == INFINITY ? '-' : web3.utils.fromWei(price);
 }

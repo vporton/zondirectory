@@ -16,9 +16,9 @@ async function vote() {
 }
 
 function onLoad() {
+    const child = numParam('child');
+    const parent = numParam('parent');
     const urlParams = new URLSearchParams(window.location.search);
-    const child = urlParams.get('child');
-    const parent = urlParams.get('parent');
     const dir = urlParams.get('dir');
     $('#child').val(child);
     $('#parent').val(parent);

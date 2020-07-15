@@ -3,8 +3,7 @@
 // let itemEvents;
 
 async function createOrUpdateItem() {
-    const urlParams = new URLSearchParams(window.location.search);
-    const itemId = urlParams.get('id');
+    const itemId = numParam('id');
     if(itemId)
         updateItem(itemId);
     else
@@ -46,8 +45,7 @@ async function updateItem(itemId) {
 $(async function() {
     $('#multiVoter').multiVoter();
 
-    const urlParams = new URLSearchParams(window.location.search);
-    const itemId = urlParams.get('id');
+    const itemId = numParam('id');
     if(itemId) {
         const query = `{
     linkUpdateds(first:1, orderBy:linkId, orderDirection:desc, where:{linkId:${itemId}}) {
