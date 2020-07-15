@@ -21,4 +21,13 @@
         this.autocomplete({source: completer});
     };
 
+    $.fn.multiVoter = function() {
+        const tmpl = $('<p>');
+        const input = $('<input>');
+        tmpl.append(input)
+        this.append(tmpl);
+        tmpl.append("<input type='button' value='Delete'>");
+        input.categoryChooser();
+    }
+
 }( jQuery ));
