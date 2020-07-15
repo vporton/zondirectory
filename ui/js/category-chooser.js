@@ -43,36 +43,36 @@
     }
 
     $.fn.multiVoterData = async function() {
-        const contractInstance = new web3.eth.Contract(await filesJsonInterface(), addressFiles);
-        return await contractInstance.methods.upvotesOwnersShare().call()
-            .then(async (shareResult) => {
-                const ownersShare = shareResult / 2**64;
+        // const contractInstance = new web3.eth.Contract(await filesJsonInterface(), addressFiles);
+        // return await contractInstance.methods.upvotesOwnersShare().call()
+        //     .then(async (shareResult) => {
+        //         const ownersShare = shareResult / 2**64;
 
-                let cats = [];
-                let amounts = [];
-                let myFlags = [];
-                this.find('input[name=cat]:gt(0)').each((i, c) => cats.push(c.value));
-                this.find('input[name=amount]').each((i, c) => amounts.push(c.value));
-                this.find('input[type=checkbox]').each((i, c) => myFlags.push(c.checked));
-                let result = [];
-                let sum = 0;
-                for(var i in cats) {
-                    const cat = cats[i].replace(/^([0-9]*).*/, '$1');
-                    if(!cat) continue;
-                    if(!/^[0-9]+(\.[0-9]+)?$/.test(amounts[i])) continue;
-                    const amount = amounts[i];
-                    if(!myFlags[i]) {
-                        sum += amount;
-                    }
-                    result.push(cat);
-                    result.push(web3.utils.toWei(amount));
-                }
-                return {
-                    votes: result,
-                    sum: web3.utils.toWei(String(sum * ownersShare * 1.0000001)), // with reserve
-                };
-            })
-            .catch(alert);
+        let cats = [];
+        let amounts = [];
+        let myFlags = [];
+        this.find('input[name=cat]:gt(0)').each((i, c) => cats.push(c.value));
+        this.find('input[name=amount]').each((i, c) => amounts.push(c.value));
+        this.find('input[type=checkbox]').each((i, c) => myFlags.push(c.checked));
+        let result = [];
+        let sum = 0;
+        for(var i in cats) {
+            const cat = cats[i].replace(/^([0-9]*).*/, '$1');
+            if(!cat) continue;
+            if(!/^[0-9]+(\.[0-9]+)?$/.test(amounts[i])) continue;
+            const amount = amounts[i];
+            if(!myFlags[i]) {
+                sum += amount;
+            }
+            result.push(cat);
+            result.push(web3.utils.toWei(amount));
+        }
+        return {
+            votes: result,
+            sum: web3.utils.toWei(String(sum * 1.0000001)), // with reserve
+        };
+            // })
+            // .catch(alert);
     }
 
 }( jQuery ));
