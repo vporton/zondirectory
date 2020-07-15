@@ -59,13 +59,13 @@ async function onLoad() {
     let parentsB = new Map();
     for(let i in queryResult.parentsA) {
         const entry = queryResult.parentsA[i];
-        if(!parents.has(i) || parents.get[i].id > entry.id)
-            parents.set(i, {id: entry.id, parent: entry.parent, value: entry.value})
+        if(!parentsA.has(i) || parentsA.get[i].id > entry.id)
+            parentsA.set(i, {id: entry.id, parent: entry.parent, value: entry.value})
     }
     for(let i in queryResult.parentsB) {
         const entry = queryResult.parentsB[i];
-        if(!parents.has(i) || parents.get[i].id > entry.id)
-            parents.set(i, {id: entry.id, parent: entry.parent, value: entry.value})
+        if(!parentsB.has(i) || parentsB.get[i].id > entry.id)
+            parentsB.set(i, {id: entry.id, parent: entry.parent, value: entry.value})
     }
     let childs = new Map();
     for(let i in queryResult.childs) {
