@@ -9,7 +9,8 @@ const INFINITY = (BigInt(1) << BigInt(256)) - BigInt(1);
 const arweave = window.Arweave ? Arweave.init() : undefined;
 
 function numParam(name) {
-    const val = numParam('id');
+    const urlParams = new URLSearchParams(window.location.search);
+    const val = urlParams.get(name);
     return /^[0-9]+$/.test(val) ? val : 0;
 }
 
