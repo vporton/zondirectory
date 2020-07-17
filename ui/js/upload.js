@@ -55,7 +55,7 @@ async function upload() {
                     contractInstance.methods.uploadFile(itemId,
                                                         document.getElementById('version').value,
                                                         document.getElementById('format').value,
-                                                        Arweave.utils.b64UrlToBuffer(transaction.id))
+                                                        Array.from(Arweave.utils.b64UrlToBuffer(transaction.id)))
                         .send({from: defaultAccount, gas: '1000000'})
                         .then(() => open('description.html?id=' + itemId));
                 });
