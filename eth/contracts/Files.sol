@@ -6,8 +6,6 @@ pragma experimental ABIEncoderV2;
 import './BaseToken.sol';
 import './ABDKMath64x64.sol';
 
-// TODO: Encode wallets and hashes as uint256
-
 contract Files is BaseToken {
 
     using ABDKMath64x64 for int128;
