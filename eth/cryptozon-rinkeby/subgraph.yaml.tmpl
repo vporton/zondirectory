@@ -49,7 +49,7 @@ dataSources:
           handler: handleItemCoverUpdated
         - event: ItemCreated(indexed uint256)
           handler: handleItemCreated
-        - event: ItemFilesUpdated(indexed uint256,string,indexed uint256,string)
+        - event: ItemFilesUpdated(indexed uint256,string,indexed uint256,bytes)
           handler: handleItemFilesUpdated
         - event: SetLastItemVersion(indexed uint256,uint256)
           handler: handleSetLastItemVersion

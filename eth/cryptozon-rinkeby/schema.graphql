@@ -81,7 +81,7 @@ type ItemFilesUpdated @entity {
   itemId: BigInt! # uint256
   format: String! # string
   version: BigInt! # uint256
-  hash: String! # string
+  hash: Bytes! # bytes[32]
 }
 
 type SetLastItemVersion @entity {

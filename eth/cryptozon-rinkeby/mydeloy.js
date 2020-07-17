@@ -10,6 +10,7 @@ function main() {
     const tmpl = fs.readFileSync('subgraph.yaml.tmpl', 'utf8');
     const yaml = tmpl.replace('@network@', network).replace('@Files@', data.Files).replace('@FilesBlock@', data.FilesBlock);
     fs.writeFileSync('subgraph.yaml', yaml);
+/*
     console.log("Executing `yarn deploy`...");
     exec("yarn deploy", (error, stdout, stderr) => {
         if (error) {
@@ -22,6 +23,7 @@ function main() {
         }
         console.log(`stdout: ${stdout}`);
     });
+*/
 }
 
 main();
