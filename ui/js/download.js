@@ -2,6 +2,9 @@
 
 const itemId = numParam('id');
 
+const fromHexString = hexString =>
+  new Uint8Array(hexString.match(/.{1,2}/g).map(byte => parseInt(byte, 16)));
+
 async function showFiles(withLinks) {
     let query = `{
     itemFilesUpdateds(first:1, orderBy:version, orderDirection:desc, where:{itemId:${itemId}}) {
@@ -21,7 +24,7 @@ async function showFiles(withLinks) {
     $(formats).html('');
     for(let i in files) {
         const file = files[i];
-        const url = `https://arweave.net/${Arweave.utils.bufferTob64Url(file.hash)}`;
+        const url = `https://arweave.net/${Arweave.utils.bufferTob64Url(fromHexString(file.hash.substring(2)))}`;
         const link = withLinks ? `<li><a href="${url}">${safe_tags(file.format)}</a></li>`
                                : `<li>${safe_tags(file.format)}</li>`;
         $(formats).append(link);
