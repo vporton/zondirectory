@@ -36,3 +36,5 @@
   SmartWeave.JS
 
 * Should donation fee be different?
+
+* Arweave.utils.b64UrlToBuffer(hash)

@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 pragma solidity ^0.6.0;
-//pragma experimental ABIEncoderV2;
+pragma experimental ABIEncoderV2;
 
 import './BaseToken.sol';
 import './ABDKMath64x64.sol';
@@ -59,7 +59,7 @@ contract Files is BaseToken {
                       string locale,
                       uint256 indexed linkKind);
     event ItemCoverUpdated(uint indexed itemId, uint indexed version, bytes cover, uint width, uint height);
-    event ItemFilesUpdated(uint indexed itemId, string format, uint indexed version, string hash);
+    event ItemFilesUpdated(uint indexed itemId, string format, uint indexed version, bytes[32] hash);
     event SetLastItemVersion(uint indexed itemId, uint version);
     event CategoryCreated(uint256 indexed categoryId, address indexed owner); // zero owner - no owner
     event CategoryUpdated(uint256 indexed categoryId, string title, string locale, address indexed owner);
@@ -213,7 +213,7 @@ contract Files is BaseToken {
         emit ItemCoverUpdated(_itemId, _version, _cover, _width, _height);
     }
 
-    function uploadFile(uint _itemId, uint _version, string calldata _format, string calldata _hash) external {
+    function uploadFile(uint _itemId, uint _version, string calldata _format, bytes[32] calldata _hash) external {
         require(itemOwners[_itemId] == msg.sender, "Attempt to modify other's item.");
         require(entries[maxId] == EntryKind.DOWNLOADS, "Item does not exist.");
         emit ItemFilesUpdated(_itemId, _format, _version, _hash);

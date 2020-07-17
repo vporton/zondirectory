@@ -21,7 +21,8 @@ async function showFiles(withLinks) {
     $(formats).html('');
     for(let i in files) {
         const file = files[i];
-        const link = withLinks ? `<li><a href="https://arweave.net/${file.hash}">${safe_tags(file.format)}</a></li>`
+        const link = `https://arweave.net/${Arweave.utils.bufferTob64Url(file.hash)}`;
+        const link = withLinks ? `<li><a href="${link}">${safe_tags(file.format)}</a></li>`
                                : `<li>${safe_tags(file.format)}</li>`;
         $(formats).append(link);
     }
