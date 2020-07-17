@@ -39,7 +39,7 @@ function queryThegraph(query) {
     });
 }
 
-const web3 = new Web3(window.web3.currentProvider);
+const web3 = new Web3(window.web3 ? window.web3.currentProvider : "https://rinkeby.infura.io/v3/1d0c278301fc40f3a8f40f25ae3bd328");
 window.ethereum.enable();
 
 // FIXME: If MetaMask is missing or locked.
