@@ -16,6 +16,7 @@ artifacts/
 cache/
 deployments/
 ui/js/SmartWeave/
+subgraph.yaml
 
 # C extensions
 *.so

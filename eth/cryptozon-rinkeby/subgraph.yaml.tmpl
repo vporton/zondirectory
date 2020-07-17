@@ -4,10 +4,10 @@ schema:
 dataSources:
   - kind: ethereum/contract
     name: Contract
-    network: rinkeby
+    network: @network@
     source:
-      address: "0xA4FFAc938cDc2Acc42b0885DC386D645c0Ce3c7a"
-      startBlock: 6846079
+      address: "@Files@"
+      startBlock: @FilesBlock@
       abi: Contract
     mapping:
       kind: ethereum/events
