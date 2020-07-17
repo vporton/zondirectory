@@ -2,7 +2,7 @@ $(document).ajaxError(function( event, request, settings ) {
     alert("Error: " + request.status);
 });
 
-const THEGRAPH_URL = "https://api.thegraph.com/subgraphs/name/vporton/cryptozon-rinkeby23";
+const THEGRAPH_URL = addressTheGraph;
 
 const INFINITY = (BigInt(1) << BigInt(256)) - BigInt(1);
 
@@ -39,7 +39,7 @@ function queryThegraph(query) {
     });
 }
 
-const web3 = new Web3(window.web3 ? window.web3.currentProvider : "https://rinkeby.infura.io/v3/1d0c278301fc40f3a8f40f25ae3bd328");
+const web3 = new Web3(window.web3 ? window.web3.currentProvider : addressWeb3Provider);
 window.ethereum.enable();
 
 // FIXME: If MetaMask is missing or locked.
