@@ -6,9 +6,10 @@ async function onLoad() {
         $('#addParent').attr('href', `vote.html?child=${catId}&dir=for`);
         $('#addChild').attr('href', `vote.html?parent=${catId}&dir=for`);
         $('#addItem').attr('href', `vote.html?parent=${catId}&dir=for`);
+        $('#allCategoriesDiv').css('display', 'none');
     } else {
         $('#categoryInfo').css('display', 'none');
-        $('#categoryInfo2').css('display', 'none');
+        $('#ownedSubcategoriesDiv').css('display', 'none');
         $('#spamScoreTH').css('display', 'none');
         $('#addItem').css('display', 'none');
     }
@@ -49,6 +50,9 @@ async function onLoad() {
     itemCreateds(first:1000) {
         itemId
     }
+    categoryCreateds(first:1000) {
+        categoryId
+    }
 }`;
     }
     const queryResult = (await queryThegraph(query)).data;
@@ -83,7 +87,7 @@ async function onLoad() {
     }
     const itemIds = queryResult['itemCreateds'] ? queryResult['itemCreateds'] : [];
     const entryIdsFlat = catId ? parentIDs.concat(childIDs, itemIds.map(i => i.child))
-                               : itemIds.map(i => i.itemId);
+                               : queryResult['itemCreateds'].map(i => i.itemId).concat(queryResult['categoryCreateds'].map(i => i.categoryId));
     if(entryIdsFlat.length) {
         // TODO: Don't request category title if not asked for category votes.
         function subquery(itemId) {
@@ -102,6 +106,7 @@ async function onLoad() {
             owner
         }
         category${itemId}: categoryUpdateds(first:1, orderBy: id, orderDirection:asc, where:{categoryId:${itemId}}) {
+            categoryId # TODO: Superfluous
             title
         }`
             if(catId) {
@@ -116,7 +121,7 @@ async function onLoad() {
             }
             return query;
         }
-        query = "{\n" + entryIdsFlat.map(i => subquery(i)).join("\n") + "\n}";
+        query = "{\n" + entryIdsFlat.map(i => subquery(i)).join("\n") + "\n}"; // TODO: inefficient
         let items = (await queryThegraph(query)).data;
         if(catId) {
             for(let i in parentIDs) {
@@ -168,15 +173,25 @@ async function onLoad() {
             const item = items[i][0];
             if(!item) continue;
             const link = "entry.html?id=" + item.linkId;
+            let spamScore, voteStr;
             if(catId) {
                 const spamInfo = items[i.replace(/^link/, 'spam')][0];
-                const spamScore = spamInfo ? formatPriceETH(new web3.utils.BN(spamInfo.value).neg()) : 0;
-                const voteStr = `<a href='vote.html?child=${i.replace(/^link/, "")}&parent=${catId}&dir=for'>👍</a>` +
+                spamScore = spamInfo ? formatPriceETH(new web3.utils.BN(spamInfo.value).neg()) : 0;
+                voteStr = `<a href='vote.html?child=${i.replace(/^link/, "")}&parent=${catId}&dir=for'>👍</a>` +
                     `<a href='vote.html?child=${i.replace(/^link/, "")}&parent=${catId}&dir=against'>👎</a>`;
-                const row = `<li><a href="${link}">${safe_tags(item.title)}</a> (spam score: ${spamScore} ${voteStr})</li>`;
-                $('#links').prepend(row);
             }
+            const spamInfo = catId ? ` (spam score: ${spamScore} ${voteStr})` : ``;
+            const row = `<li><a href="${link}">${safe_tags(item.title)}</a>${spamInfo}</li>`;
+            $('#links').prepend(row);
         }
+        if(!catId)
+            for(let i in items) {
+                if(!/^category/.test(i)) continue;
+                const item = items[i][0];
+                if(!item) continue;
+                const link = "index.html?cat=" + item.categoryId;
+                $('#categories').append(`<li><a href="${link}">${safe_tags(item.title)}</a></li>`);
+            }
     }
 }
 
