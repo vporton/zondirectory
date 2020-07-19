@@ -12,7 +12,10 @@ async function showFiles(withLinks) {
     }
 }`;
     const itemFilesUpdated = (await queryThegraph(query)).data.itemFilesUpdateds[0];
-    if(!itemFilesUpdated) return;
+    if(!itemFilesUpdated) {
+        $('.buy').css('display', 'none');
+        return;
+    }
     let version = itemFilesUpdated.version;
     const fileFields = withLinks ? 'format hash' : 'format';
     query = `{
@@ -57,7 +60,7 @@ async function payETH() {
 }
 
 async function donateETH() {
-    const price = askPrice(0);
+    const price = prompt("Your donation amount:", '0.1');
     if(!price) return;
     const contractInstance = new web3.eth.Contract(await filesJsonInterface(), addressFiles);
     await defaultAccountPromise();
@@ -65,7 +68,7 @@ async function donateETH() {
         .catch(err => alert("Payment failure! " + err));
 }
 
-async function doPayAR(price) {
+async function doPayAR(price, showFiles) {
     const smartweave = require('smartweave');
     const fileReader = new FileReader();
     fileReader.onload = async (e) => {
@@ -78,62 +81,64 @@ async function doPayAR(price) {
         arWallet
     }
 }`;
-        const queryResult = (await queryThegraph(query)).data;
-        let arWallet = queryResult.setARWallets[0] ? queryResult.setARWallets[0].arWallet : null;
-        
-        arweave.wallets.jwkToAddress(key)
-            .then((userAddress) => {
-                return arweave.wallets.getBalance(userAddress);
-            })
-            .then(async balance => {
-                if(Number(balance) < Number(price)) {
-                    alert("Not enough money in your AR wallet!");
-                    return;
-                }
-        
-                let authorRoyalty, shareholdersRoyalty;
-                await defaultAccountPromise();
-                // TODO: Don't call Ethereum if no author's AR wallet.
-                const contractInstance = new web3.eth.Contract(await filesJsonInterface(), addressFiles);
-                contractInstance.methods.salesOwnersShare().call(async (error, result) => {
-                    if(error) {
-                        alert(error);
+            const queryResult = (await queryThegraph(query)).data;
+            let arWallet = queryResult.setARWallets[0] ? queryResult.setARWallets[0].arWallet : null;
+            
+            arweave.wallets.jwkToAddress(key)
+                .then((userAddress) => {
+                    return arweave.wallets.getBalance(userAddress);
+                })
+                .then(async balance => {
+                    if(Number(balance) < Number(price)) {
+                        alert("Not enough money in your AR wallet!");
                         return;
                     }
-                    const ownersShare = result / 2**64;
+            
+                    let authorRoyalty, shareholdersRoyalty;
+                    await defaultAccountPromise();
+                    // TODO: Don't call Ethereum if no author's AR wallet.
+                    const contractInstance = new web3.eth.Contract(await filesJsonInterface(), addressFiles);
+                    contractInstance.methods.salesOwnersShare().call(async (error, result) => {
+                        if(error) {
+                            alert(error);
+                            return;
+                        }
+                        const ownersShare = result / 2**64;
 
-                    if(arWallet) {
-                        authorRoyalty = Math.floor((1 - ownersShare) * price);
-                        shareholdersRoyalty = Math.floor(ownersShare * price);
-                    } else {
-                        authorRoyalty = 0;
-                        shareholdersRoyalty = Math.floor(price);
-                    }
+                        if(arWallet) {
+                            authorRoyalty = Math.floor((1 - ownersShare) * price);
+                            shareholdersRoyalty = Math.floor(ownersShare * price);
+                        } else {
+                            authorRoyalty = 0;
+                            shareholdersRoyalty = Math.floor(price);
+                        }
 
-                    // First pay to me then to the author, because in the case of a failure the buyer loses less this way.
-                    let paymentFailure = false;
-                    if(shareholdersRoyalty) {
-                        const holder = smartweave.selectWeightedPstHolder(contractState.balances);
-                        const tx = await arweave.createTransaction({ target: holder, quantity: String(shareholdersRoyalty) }, key);
-                        await arweave.transactions.sign(tx, key);
-                        const response = await arweave.transactions.post(tx);
-                        if(response.status != 200) paymentFailure = true;
-                    }
-                    if(!paymentFailure && authorRoyalty) {
-                        const holder = smartweave.selectWeightedPstHolder(contractState.balances);
-                        const tx = await arweave.createTransaction({ target: arWallet, quantity: String(authorRoyalty) }, key);
-                        await arweave.transactions.sign(tx, key);
-                        const response = await arweave.transactions.post(tx);
-                        if(response.status != 200) paymentFailure = true;
-                    }
+                        // First pay to me then to the author, because in the case of a failure the buyer loses less this way.
+                        let paymentFailure = false;
+                        if(shareholdersRoyalty) {
+                            const holder = smartweave.selectWeightedPstHolder(contractState.balances);
+                            const tx = await arweave.createTransaction({ target: holder, quantity: String(shareholdersRoyalty) }, key);
+                            await arweave.transactions.sign(tx, key);
+                            const response = await arweave.transactions.post(tx);
+                            if(response.status != 200) paymentFailure = true;
+                        }
+                        if(!paymentFailure && authorRoyalty) {
+                            const holder = smartweave.selectWeightedPstHolder(contractState.balances);
+                            const tx = await arweave.createTransaction({ target: arWallet, quantity: String(authorRoyalty) }, key);
+                            await arweave.transactions.sign(tx, key);
+                            const response = await arweave.transactions.post(tx);
+                            if(response.status != 200) paymentFailure = true;
+                        }
 
-                    if(!paymentFailure)
-                        showFilesWithMessage();
-                    else
-                        alert("You didn't pay the full sum!");
+                        if(showFiles) {
+                            if(!paymentFailure)
+                                showFilesWithMessage();
+                            else
+                                alert("You didn't pay the full sum!");
+                        }
                     });
                 });
-            });
+        });
     }
     fileReader.readAsText(document.getElementById('arWalletKeyFile').files[0]);
 }
@@ -148,20 +153,20 @@ async function payAR() {
     if(!price) return;
 
     price = arweave.ar.arToWinston(price);
-    await doPayAR(price);
+    await doPayAR(price, true);
 }
 
-async function donteAR() {
+async function donateAR() {
     if(!document.getElementById('arWalletKeyFile').files[0]) {
         alert("Select your AR wallet key file to pay!");
         return;
     }
 
-    let price = askPrice(0);
+    let price = prompt("Your donation amount:", '10.0');
     if(!price) return;
 
     price = arweave.ar.arToWinston(price);
-    await doPayAR(price);
+    await doPayAR(price, false);
 }
 
 function moreParents() {
@@ -247,6 +252,10 @@ $(async function() {
         document.getElementById('license').textContent = item.license;
         document.getElementById('priceETH').textContent = formatPriceETH(item.priceETH);
         document.getElementById('priceAR').textContent = formatPriceAR(item.priceAR);
+        if(item.priceETH == INFINITY)
+            $('#buyETH').css('display', 'none');
+        if(item.priceAR == INFINITY)
+            $('#buyAR').css('display', 'none');
         showFiles(item.priceETH == 0 || item.priceAR == 0);
     }
 })
