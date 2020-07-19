@@ -40,7 +40,7 @@ function queryThegraph(query) {
 }
 
 const web3 = new Web3(window.web3 ? window.web3.currentProvider : addressWeb3Provider);
-window.ethereum.enable();
+if(window.ethereum) window.ethereum.enable();
 
 // FIXME: If MetaMask is missing or locked.
 let defaultAccount;
