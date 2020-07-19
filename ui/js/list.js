@@ -152,7 +152,8 @@ async function onLoad() {
             $('#subcategories > li:gt(9)').css('display', 'none');
         }
         // FIXME: Sort order (item2 before item10!)
-        for(let i in items) {
+        const itemKeys = Object.keys(items).sort((a, b) => a.replace(/[^0-9]/g, "") - b.replace(/[^0-9]/g, "")).reverse();
+        for(let i of itemKeys) {
             if(!/^item/.test(i)) continue;
             const item = items[i][0];
             if(!item) continue;
@@ -169,7 +170,7 @@ async function onLoad() {
                 $('#theTable').prepend(row);
             }
         }
-        for(let i in items) {
+        for(let i of itemKeys) {
             if(!/^link/.test(i)) continue;
             const item = items[i][0];
             if(!item) continue;
@@ -186,7 +187,7 @@ async function onLoad() {
             $('#links').prepend(row);
         }
         if(!catId)
-            for(let i in items) {
+            for(let i of itemKeys) {
                 if(!/^category[0-9]+/.test(i)) continue;
                 const item = items[i][0];
                 if(!item) continue;
