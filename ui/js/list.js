@@ -47,10 +47,10 @@ async function onLoad() {
 }`;
     } else {
         query = `{
-    itemCreateds(first:1000) {
+    itemCreateds(first:1000, orderBy:itemId, orderDirection:desc) {
         itemId
     }
-    categoryCreateds(first:1000) {
+    categoryCreateds(first:1000, orderBy:categoryId, orderDirection:desc) {
         categoryId
     }
 }`;
@@ -122,7 +122,7 @@ async function onLoad() {
             return query;
         }
         query = "{\n" + entryIdsFlat.map(i => subquery(i)).join("\n") + "\n}"; // TODO: inefficient
-        let items = (await queryThegraph(query)).data;
+        const items = (await queryThegraph(query)).data;
         if(catId) {
             for(let i in parentIDs) {
                 const categoryId = parentIDs[i];
@@ -151,6 +151,7 @@ async function onLoad() {
             $('#supercategories > li:gt(0)').css('display', 'none');
             $('#subcategories > li:gt(9)').css('display', 'none');
         }
+        // FIXME: Sort order (item2 before item10!)
         for(let i in items) {
             if(!/^item/.test(i)) continue;
             const item = items[i][0];
