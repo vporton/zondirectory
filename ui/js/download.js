@@ -24,7 +24,8 @@ async function showFiles(withLinks) {
     $(formats).html('');
     for(let i in files) {
         const file = files[i];
-        const url = `https://arweave.net/${Arweave.utils.bufferTob64Url(fromHexString(file.hash.substring(2)))}`;
+        const url = withLinks ? `https://arweave.net/${Arweave.utils.bufferTob64Url(fromHexString(file.hash.substring(2)))}`
+                              : null;
         const link = withLinks ? `<li><a href="${url}">${safe_tags(file.format)}</a></li>`
                                : `<li>${safe_tags(file.format)}</li>`;
         $(formats).append(link);
@@ -55,41 +56,45 @@ async function payETH() {
         .catch(err => alert("You tried to pay below the price or payment failure! " + err));
 }
 
-async function payAR() {
-    if(!document.getElementById('arWalletKeyFile').files[0]) {
-        alert("Select your AR wallet key file to pay!");
-        return;
-    }
-
-    let price = askPrice(document.getElementById('priceAR').textContent);
+async function donateETH() {
+    const price = askPrice(0);
     if(!price) return;
+    const contractInstance = new web3.eth.Contract(await filesJsonInterface(), addressFiles);
+    await defaultAccountPromise();
+    await contractInstance.methods.donate(itemId).send({from: defaultAccount, value: web3.utils.toWei(String(price)), gas: '1000000'})
+        .catch(err => alert("Payment failure! " + err));
+}
 
-    price = arweave.ar.arToWinston(price);
+async function doPayAR(price) {
+    const smartweave = require('smartweave');
+    const fileReader = new FileReader();
+    fileReader.onload = async (e) => {
+        const key = JSON.parse(e.target.result);
 
-    arweave.wallets.getBalance('1seRanklLU_1VTGkEk7P0xAwMJfA7owA1JHW5KyZKlY').then((balance) => {
-        if(Number(balance) < Number(price)) {
-            alert("Not enough money in your AR wallet!");
-            return;
-        }
-
-        const smartweave = require('smartweave');
-        const fileReader = new FileReader();
-        fileReader.onload = async (e) => {
-            const key = JSON.parse(e.target.result);
-
-            smartweave.readContract(arweave, AR_PST_CONTRACT_ADDRESS).then(async contractState => {
-                await defaultAccountPromise();
-                let query = `{
+        smartweave.readContract(arweave, AR_PST_CONTRACT_ADDRESS).then(async contractState => {
+            await defaultAccountPromise();
+            let query = `{
     setARWallets(first:1, orderBy:id, orderDirection:desc, where:{owner:"${defaultAccount}"}) {
         arWallet
     }
 }`;
-                const queryResult = (await queryThegraph(query)).data;
-                let arWallet = queryResult.setARWallets[0] ? queryResult.setARWallets[0].arWallet : null;
+        const queryResult = (await queryThegraph(query)).data;
+        let arWallet = queryResult.setARWallets[0] ? queryResult.setARWallets[0].arWallet : null;
+        
+        arweave.wallets.jwkToAddress(key)
+            .then((userAddress) => {
+                return arweave.wallets.getBalance(userAddress);
+            })
+            .then(async balance => {
+                if(Number(balance) < Number(price)) {
+                    alert("Not enough money in your AR wallet!");
+                    return;
+                }
+        
                 let authorRoyalty, shareholdersRoyalty;
-                const contractInstance = new web3.eth.Contract(await filesJsonInterface(), addressFiles);
                 await defaultAccountPromise();
                 // TODO: Don't call Ethereum if no author's AR wallet.
+                const contractInstance = new web3.eth.Contract(await filesJsonInterface(), addressFiles);
                 contractInstance.methods.salesOwnersShare().call(async (error, result) => {
                     if(error) {
                         alert(error);
@@ -126,11 +131,37 @@ async function payAR() {
                         showFilesWithMessage();
                     else
                         alert("You didn't pay the full sum!");
+                    });
                 });
             });
-        }
-        fileReader.readAsText(document.getElementById('arWalletKeyFile').files[0]);
-    });
+    }
+    fileReader.readAsText(document.getElementById('arWalletKeyFile').files[0]);
+}
+
+async function payAR() {
+    if(!document.getElementById('arWalletKeyFile').files[0]) {
+        alert("Select your AR wallet key file to pay!");
+        return;
+    }
+
+    let price = askPrice(document.getElementById('priceAR').textContent);
+    if(!price) return;
+
+    price = arweave.ar.arToWinston(price);
+    await doPayAR(price);
+}
+
+async function donteAR() {
+    if(!document.getElementById('arWalletKeyFile').files[0]) {
+        alert("Select your AR wallet key file to pay!");
+        return;
+    }
+
+    let price = askPrice(0);
+    if(!price) return;
+
+    price = arweave.ar.arToWinston(price);
+    await doPayAR(price);
 }
 
 function moreParents() {
