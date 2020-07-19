@@ -186,7 +186,7 @@ async function onLoad() {
         }
         if(!catId)
             for(let i in items) {
-                if(!/^category/.test(i)) continue;
+                if(!/^category[0-9]+/.test(i)) continue;
                 const item = items[i][0];
                 if(!item) continue;
                 const link = "index.html?cat=" + item.categoryId;
