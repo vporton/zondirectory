@@ -143,12 +143,12 @@ $(async function() {
 
         // TODO: pagination
         const query = `{
-    parentsA: childParentVotes(first:1000, orderDirection:desc, where:{child:${itemId} primary:false}) {
+    parentsA: childParentVotes(first:1000, orderBy:id, orderDirection:desc, where:{child:${itemId} primary:false}) {
         id
         parent
         value
     }
-    parentsB: childParentVotes(first:1000, orderDirection:desc, where:{child:${itemId} primary:true}) {
+    parentsB: childParentVotes(first:1000, orderBy:id, orderDirection:desc, where:{child:${itemId} primary:true}) {
         id
         parent
         value
@@ -183,7 +183,7 @@ $(async function() {
         if(parentIDs) {
             function subquery(catId) {
                 let query = `
-            category${catId}: categoryUpdateds(first:1, orderBy: id, orderDirection:asc, where:{categoryId:${catId}}) {
+            category${catId}: categoryUpdateds(first:1, orderBy:id, orderDirection:asc, where:{categoryId:${catId}}) {
                 title
             }`
                 query += `

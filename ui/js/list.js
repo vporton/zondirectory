@@ -18,7 +18,7 @@ async function onLoad() {
     let query;
     if(catId) {
         query = `{
-    categoryUpdateds(first:1, orderDirection:desc, where:{categoryId:${catId}}) {
+    categoryUpdateds(first:1, orderBy:id, orderDirection:desc, where:{categoryId:${catId}}) {
         owner
         title
     }
@@ -29,17 +29,17 @@ async function onLoad() {
     childParentVotes(first:1000, where:{parent:${catId}}) {
         child
     }
-    parentsA: childParentVotes(first:1000, orderDirection:desc, where:{child:${catId} primary:false}) {
+    parentsA: childParentVotes(first:1000, orderBy:id, orderDirection:desc, where:{child:${catId} primary:false}) {
         id
         parent
         value
     }
-    parentsB: childParentVotes(first:1000, orderDirection:desc, where:{child:${catId} primary:true}) {
+    parentsB: childParentVotes(first:1000, orderBy:id, orderDirection:desc, where:{child:${catId} primary:true}) {
         id
         parent
         value
     }
-    childs: childParentVotes(first:1000, orderDirection:desc, where:{parent:${catId} primary:${isOwned}}) {
+    childs: childParentVotes(first:1000, orderBy:id, orderDirection:desc, where:{parent:${catId} primary:${isOwned}}) {
         id
         child
         value
