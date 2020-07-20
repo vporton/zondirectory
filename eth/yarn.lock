@@ -40,6 +40,20 @@
     node-fetch "^2.6.0"
     solc "^0.6.3"
 
+"@ethereum-waffle/compiler@^3.0.2":
+  version "3.0.2"
+  resolved "https://registry.yarnpkg.com/@ethereum-waffle/compiler/-/compiler-3.0.2.tgz#26dd7e63369e3c2ba458d6a26c43afe98e1e200e"
+  integrity sha512-PV6vtaX9szv4aFd5lXqGgfEbWFOkk2975AUDYHZQERWd9e4oerb1FNjQeXBDlYUjBX2UQ1tLlQFkqud2jcBYBg==
+  dependencies:
+    "@resolver-engine/imports" "^0.3.3"
+    "@resolver-engine/imports-fs" "^0.3.3"
+    "@types/mkdirp" "^0.5.2"
+    "@types/node-fetch" "^2.5.5"
+    ethers "^5.0.1"
+    mkdirp "^0.5.1"
+    node-fetch "^2.6.0"
+    solc "^0.6.3"
+
 "@ethereum-waffle/ens@^3.0.0":
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/@ethereum-waffle/ens/-/ens-3.0.0.tgz#44e0b58918cf76a31f5189637621dbf85d2f8acf"
@@ -7270,6 +7284,20 @@ solc@^0.4.20:
     require-from-string "^1.1.0"
     semver "^5.3.0"
     yargs "^4.7.1"
+
+solc@^0.6.11:
+  version "0.6.11"
+  resolved "https://registry.yarnpkg.com/solc/-/solc-0.6.11.tgz#3205b13c8162a02c5d8f1d85ff267889a5095467"
+  integrity sha512-qMe8epy45eMzXZ9IGDk986NGjakC5/s+yPGuO99YsDaJQitxDAd3rIItlzxgfEvjr0xNJ3IaqGAGvvJ0/59nfA==
+  dependencies:
+    command-exists "^1.2.8"
+    commander "3.0.2"
+    fs-extra "^0.30.0"
+    js-sha3 "0.8.0"
+    memorystream "^0.3.1"
+    require-from-string "^2.0.0"
+    semver "^5.5.0"
+    tmp "0.0.33"
 
 solc@^0.6.3:
   version "0.6.10"
