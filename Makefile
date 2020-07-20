@@ -6,7 +6,7 @@ all: ui
 
 ui: ui-quick compile
 	make out/ui/artifacts/SmartWeave.js out/ui/artifacts/addresses.js \
-	  out/ui/artifacts/Files.abi out/ui/artifacts/FilesPlus.abi
+	  out/ui/artifacts/Files.abi
 
 ui-quick:
 	-rm -rf out/ui
