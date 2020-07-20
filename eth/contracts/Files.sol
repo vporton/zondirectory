@@ -23,7 +23,8 @@ contract Files is BaseToken {
     int128 public salesOwnersShare = int128(1).divi(int128(10)); // 10%
     int128 public upvotesOwnersShare = int128(1).divi(int128(2)); // 50%
     int128 public uploadOwnersShare = int128(15).divi(int128(100)); // 15%
-    int128 public affiliateShare = int128(1).divi(int128(2)); // 50%
+    int128 public buyerAffiliateShare = int128(1).divi(int128(10)); // 10%
+    int128 public sellerAffiliateShare = int128(15).divi(int128(100)); // 15%
 
     uint maxId = 0;
 
@@ -39,6 +40,8 @@ contract Files is BaseToken {
     event SetSalesOwnerShare(int128 share); // share is 64.64 fixed point number
     event SetUpvotesOwnerShare(int128 share); // share is 64.64 fixed point number
     event SetUploadOwnerShare(int128 share); // share is 64.64 fixed point number
+    event SetBuyerAffiliateShare(int128 share); // share is 64.64 fixed point number
+    event SetSellerAffiliateShare(int128 share); // share is 64.64 fixed point number
     event SetNick(address payable indexed owner, string nick);
     event SetARWallet(address payable indexed owner, string arWallet);
     event SetAuthorInfo(address payable indexed owner, string link, string description, string locale);
@@ -111,6 +114,18 @@ contract Files is BaseToken {
         require(msg.sender == founder, "Access denied.");
         uploadOwnersShare = _share;
         emit SetUploadOwnerShare(_share);
+    }
+
+    function setBuyerAffiliateShare(int128 _share) external {
+        require(msg.sender == founder, "Access denied.");
+        buyerAffiliateShare = _share;
+        emit SetBuyerAffiliateShare(_share);
+    }
+
+    function setSellerAffiliateShare(int128 _share) external {
+        require(msg.sender == founder, "Access denied.");
+        sellerAffiliateShare = _share;
+        emit SetSellerAffiliateShare(_share);
     }
 
     function setItemOwner(uint _itemId, address payable _owner) external {
@@ -228,9 +243,10 @@ contract Files is BaseToken {
         require(entries[maxId] == EntryKind.DOWNLOADS, "Item does not exist.");
         setAffiliate(_affiliate);
         uint256 _shareholdersShare = uint256(salesOwnersShare.muli(int256(msg.value)));
-        payToShareholders(_shareholdersShare);
+        address payable _author = itemOwners[_itemId];
+        payToShareholders(_shareholdersShare, _author);
         uint256 toAuthor = msg.value - _shareholdersShare;
-        itemOwners[_itemId].transfer(toAuthor);
+        _author.transfer(toAuthor);
         emit Pay(msg.sender, itemOwners[_itemId], _itemId, toAuthor);
     }
 
@@ -238,9 +254,10 @@ contract Files is BaseToken {
         require(entries[maxId] == EntryKind.DOWNLOADS, "Item does not exist.");
         setAffiliate(_affiliate);
         uint256 _shareholdersShare = uint256(salesOwnersShare.muli(int256(msg.value)));
-        payToShareholders(_shareholdersShare);
+        address payable _author = itemOwners[_itemId];
+        payToShareholders(_shareholdersShare, _author);
         uint256 toAuthor = msg.value - _shareholdersShare;
-        itemOwners[_itemId].transfer(toAuthor);
+        _author.transfer(toAuthor);
         emit Donate(msg.sender, itemOwners[_itemId], _itemId, toAuthor);
     }
 
@@ -287,10 +304,10 @@ contract Files is BaseToken {
         address payable _owner = itemOwners[_child];
         if(_yes && _owner != address(0)) {
             uint256 _shareholdersShare = uint256(upvotesOwnersShare.muli(int256(msg.value)));
-            payToShareholders(_shareholdersShare);
+            payToShareholders(_shareholdersShare, _owner);
             _owner.transfer(msg.value - _shareholdersShare);
         } else
-            payToShareholders(msg.value);
+            payToShareholders(msg.value, address(0));
         emit ChildParentVote(_child, _parent, _newValue, 0, false);
     }
 
@@ -303,7 +320,7 @@ contract Files is BaseToken {
         int256 _value = upvotesOwnersShare.inv().muli(int256(msg.value));
         int256 _newValue = childParentVotes[_child][_parent] + _value;
         childParentVotes[_child][_parent] = _newValue;
-        payToShareholders(msg.value);
+        payToShareholders(msg.value, address(0));
         emit ChildParentVote(_child, _parent, _newValue, 0, false);
     }
 
@@ -347,12 +364,22 @@ contract Files is BaseToken {
         }
     }
 
-    function payToShareholders(uint256 _amount) internal {
+    function payToShareholders(uint256 _amount, address _author) internal {
         address payable _affiliate = affiliates[msg.sender];
-        uint256 _affiliateAmount = uint256(affiliateShare.muli(int256(_amount)));
-        _affiliate.transfer(_affiliateAmount);
-        require(_amount >= _affiliateAmount, "Attempt to pay negative amount.");
-        totalDividends += _amount - _affiliateAmount;
+        uint256 _shareHoldersAmount = _amount;
+        if(_affiliate != address(0)) {
+            uint256 _buyerAffiliateAmount = uint256(buyerAffiliateShare.muli(int256(_amount)));
+            _affiliate.transfer(_buyerAffiliateAmount);
+            require(_shareHoldersAmount >= _buyerAffiliateAmount, "Attempt to pay negative amount.");
+            _shareHoldersAmount -= _buyerAffiliateAmount;
+        }
+        if(_author != address(0)) {
+            uint256 _sellerAffiliateAmount = uint256(sellerAffiliateShare.muli(int256(_amount)));
+            _affiliate.transfer(_sellerAffiliateAmount);
+            require(_shareHoldersAmount >= _sellerAffiliateAmount, "Attempt to pay negative amount.");
+            _shareHoldersAmount -= _sellerAffiliateAmount;
+        }
+        totalDividends += _shareHoldersAmount;
     }
 
 /// Affiliates ///
