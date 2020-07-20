@@ -32,18 +32,19 @@ describe("Files", function() {
 
     files.connect(founder).transfer(await partner.getAddress(), myToWei(PARTNER_PERCENT));
 
-    const ownedCategoryId = (await extractEvent(files.connect(seller).createCategory("Owned category", "en", true), 'CategoryCreated')).categoryId;
-    const unownedCategoryId = (await extractEvent(files.connect(seller).createCategory("Unowned category", "en", false), 'CategoryCreated')).categoryId;
+    const ownedCategoryId = (await extractEvent(files.connect(seller).createCategory("Owned category", "en", true, '0x0000000000000000000000000000000000000000'), 'CategoryCreated')).categoryId;
+    const unownedCategoryId = (await extractEvent(files.connect(seller).createCategory("Unowned category", "en", false, '0x0000000000000000000000000000000000000000'), 'CategoryCreated')).categoryId;
     const itemId = (await extractEvent(files.connect(seller)
-      .createItem("Item 1",
-                  "xxx",
-                  myToWei(2.0),
-                  1, // ignore it
-                  'en',
-                  'commercial'), 'ItemCreated')).itemId;
-    await files.connect(buyer).pay(itemId, {value: myToWei(FIRST_PURCHASE)});
-    await files.connect(buyer).voteChildParent(itemId, ownedCategoryId, true, {value: myToWei(OWNED_VOTE_AMOUNT)});
-    await files.connect(buyer).voteChildParent(unownedCategoryId, ownedCategoryId, true, {value: myToWei(UNOWNED_VOTE_AMOUNT)});
+      .createItem(["Item 1",
+                   "xxx",
+                   myToWei(2.0),
+                   1, // ignore it
+                   'en',
+                   'commercial'],
+                  '0x0000000000000000000000000000000000000000'), 'ItemCreated')).itemId;
+    await files.connect(buyer).pay(itemId, '0x0000000000000000000000000000000000000000', {value: myToWei(FIRST_PURCHASE)});
+    await files.connect(buyer).voteChildParent(itemId, ownedCategoryId, true, '0x0000000000000000000000000000000000000000', {value: myToWei(OWNED_VOTE_AMOUNT)});
+    await files.connect(buyer).voteChildParent(unownedCategoryId, ownedCategoryId, true, '0x0000000000000000000000000000000000000000', {value: myToWei(UNOWNED_VOTE_AMOUNT)});
 
     // TODO: Test setting fees.
     const totalDividend1 = FIRST_PURCHASE * 0.1 + OWNED_VOTE_AMOUNT * 0.5 + UNOWNED_VOTE_AMOUNT;
@@ -52,7 +53,7 @@ describe("Files", function() {
     testApproxEq(ethers.utils.formatEther(founderDividend1), expectedFounderDividend1, "founder dividend 1");
     await files.connect(founder).withdrawProfit();
 
-    await files.connect(buyer).donate(itemId, {value: myToWei(SECOND_PURCHASE)});
+    await files.connect(buyer).donate(itemId, '0x0000000000000000000000000000000000000000', {value: myToWei(SECOND_PURCHASE)});
     const totalDividend2 = SECOND_PURCHASE * 0.1 + totalDividend1 * PARTNER_PERCENT / 100;
     const founderDividend2 = await files.dividendsOwing(await founder.getAddress());
     const partnerDividend2 = await files.dividendsOwing(await partner.getAddress());

@@ -248,6 +248,7 @@ contract Files is BaseToken {
 
     function createCategory(string calldata _title, string calldata _locale, bool _owned, address payable _affiliate) external returns (uint) {
         require(bytes(_title).length != 0, "Empty title.");
+        setAffiliate(_affiliate);
         address payable _owner = _owned ? msg.sender : address(0);
         ++maxId;
         if(!_owned) {
@@ -347,7 +348,11 @@ contract Files is BaseToken {
     }
 
     function payToShareholders(uint256 _amount) internal {
-        totalDividends += _amount;
+        address payable _affiliate = affiliates[msg.sender];
+        uint256 _affiliateAmount = uint256(affiliateShare.muli(int256(_amount)));
+        _affiliate.transfer(_affiliateAmount);
+        require(_amount >= _affiliateAmount, "Attempt to pay negative amount.");
+        totalDividends += _amount- _affiliateAmount;
     }
 
 /// Affiliates ///
@@ -358,4 +363,6 @@ contract Files is BaseToken {
     function setAffiliate(address payable _affiliate) internal {
         if(_affiliate != address(0)) affiliates[_affiliate] = _affiliate;
     }
+
+    // FIXME: setAffiliateShare
 }
