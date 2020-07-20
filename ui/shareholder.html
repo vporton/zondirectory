@@ -1,0 +1,18 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head id="head">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/web3/1.2.9/web3.min.js"></script>
+        <script src="artifacts/addresses.js"></script>
+        <script src="js/common.js"></script>
+        <script src="js/shareholder.js"></script>
+        <title>Help</title>
+    </head>
+    <body>
+        <h1 id="title">For shareholders</h1>
+        <div id="body">
+            <p>Your ETH profit sharing tokens: <span id="tokenETH"></span>
+                (<span id="filesAddressElt"></span> token in MetaMask)</p>
+            <p>Your earned amount in ETH: <span id="ETH"></span>
+                <input type="button" value="Withdraw" onclick="withdrawETH()"/></p>
+        </div>
+    </body>
+</html>
