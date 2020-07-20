@@ -352,7 +352,7 @@ contract Files is BaseToken {
         uint256 _affiliateAmount = uint256(affiliateShare.muli(int256(_amount)));
         _affiliate.transfer(_affiliateAmount);
         require(_amount >= _affiliateAmount, "Attempt to pay negative amount.");
-        totalDividends += _amount- _affiliateAmount;
+        totalDividends += _amount - _affiliateAmount;
     }
 
 /// Affiliates ///
