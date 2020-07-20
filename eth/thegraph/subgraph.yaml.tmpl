@@ -81,4 +81,8 @@ dataSources:
           handler: handlePay
         - event: Donate(indexed address,indexed address,indexed uint256,uint256)
           handler: handleDonate
+        - event: SetBuyerAffiliateShare(int128)
+          handler: handleSetBuyerAffiliateShare
+        - event: SetSellerAffiliateShare(int128)
+          handler: handleSetSellerAffiliateShare
       file: ./src/mapping.ts
