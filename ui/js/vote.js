@@ -8,7 +8,7 @@ async function vote() {
 
     await defaultAccountPromise();
     const contractInstance = new web3.eth.Contract(await filesJsonInterface(), addressFiles);
-    await contractInstance.methods.voteChildParent(child, parent, yes)
+    await contractInstance.methods.voteChildParent(child, parent, yes, '0x0000000000000000000000000000000000000000')
         .send({from: defaultAccount, value: web3.utils.toWei(amount), gas: '10000000'}, (error, result) => {
             if(error) return;
             alert("You voted " + $('[name=dir][value=for]').val());

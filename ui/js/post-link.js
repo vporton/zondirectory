@@ -20,7 +20,7 @@ async function createItem() {
     const kind = $('input[name=kind]:checked');
     const owned = true;
 
-    const response = await contractInstance.methods.createLink(link, title, description, locale, kind, owned)
+    const response = await contractInstance.methods.createLink({link, title, description, locale, kind}, owned, '0x0000000000000000000000000000000000000000')
         .send({from: defaultAccount, gas: '1000000'})
     const linkId = response.events.ItemCreated.returnValues.itemId;
     await $('#multiVoter').doMultiVote(linkId);
@@ -35,7 +35,7 @@ async function updateItem(itemId) {
     const link = document.getElementById('link').value;
     const kind = $('input[name=kind]:checked');
 
-    contractInstance.methods.updateItem(itemId, link, title, description, locale, kind)
+    contractInstance.Item(itemId, {link, title, description, locale, kind}, '0x0000000000000000000000000000000000000000')
         .send({from: defaultAccount, gas: '1000000'})
         .on('transactionHash', async function(receiptHash) {
             $('#ready').dialog();
