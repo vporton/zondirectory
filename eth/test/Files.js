@@ -46,15 +46,18 @@ describe("Files", function() {
     await files.connect(buyer).voteChildParent(itemId, ownedCategoryId, true, '0x0000000000000000000000000000000000000000', {value: myToWei(OWNED_VOTE_AMOUNT)});
     await files.connect(buyer).voteChildParent(unownedCategoryId, ownedCategoryId, true, '0x0000000000000000000000000000000000000000', {value: myToWei(UNOWNED_VOTE_AMOUNT)});
 
+    const salesOwnersShare = await files.salesOwnersShare() / 2**64;
+    const upvotesOwnersShare = await files.upvotesOwnersShare() / 2**64;
+
     // TODO: Test setting fees.
-    const totalDividend1 = FIRST_PURCHASE * 0.1 + OWNED_VOTE_AMOUNT * 0.5 + UNOWNED_VOTE_AMOUNT;
+    const totalDividend1 = FIRST_PURCHASE * salesOwnersShare + OWNED_VOTE_AMOUNT * upvotesOwnersShare + UNOWNED_VOTE_AMOUNT;
     const founderDividend1 = await files.dividendsOwing(await founder.getAddress());
     const expectedFounderDividend1 = totalDividend1 * (100 - PARTNER_PERCENT) / 100;
     testApproxEq(ethers.utils.formatEther(founderDividend1), expectedFounderDividend1, "founder dividend 1");
     await files.connect(founder).withdrawProfit();
 
     await files.connect(buyer).donate(itemId, '0x0000000000000000000000000000000000000000', {value: myToWei(SECOND_PURCHASE)});
-    const totalDividend2 = SECOND_PURCHASE * 0.1 + totalDividend1 * PARTNER_PERCENT / 100;
+    const totalDividend2 = SECOND_PURCHASE * salesOwnersShare + totalDividend1 * PARTNER_PERCENT / 100;
     const founderDividend2 = await files.dividendsOwing(await founder.getAddress());
     const partnerDividend2 = await files.dividendsOwing(await partner.getAddress());
     const expectedFounderDividend2 = totalDividend2 * (100 - PARTNER_PERCENT) / 100;
