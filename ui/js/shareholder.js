@@ -1,4 +1,5 @@
 $(async function() {
+    $('#filesAddressElt').text(addressFiles);
     await defaultAccountPromise();
     const contractInstance = new web3.eth.Contract(await filesJsonInterface(), addressFiles);
     const tokenETH = await contractInstance.methods.balanceOf(defaultAccount).call();
