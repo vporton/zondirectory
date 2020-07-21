@@ -390,7 +390,7 @@ contract Files is BaseToken {
     function setAffiliate(address payable _affiliate) internal {
         // if(affiliates[_affiliate] == address(0))
         //     affiliates[_affiliate] = _affiliate;
-        if(uint256(affiliates[_affiliate]) > 1)
+        if(uint256(_affiliate) > 1)
             affiliates[_affiliate] = _affiliate;
     }
 }
