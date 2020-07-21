@@ -134,7 +134,7 @@ contract Files is BaseToken {
         emit SetItemOwner(_itemId, _owner);
     }
 
-/// Wallets ///
+// Wallets //
 
     function setARWallet(string calldata _arWallet) external {
         emit SetARWallet(msg.sender, _arWallet);
@@ -153,7 +153,7 @@ contract Files is BaseToken {
         emit SetAuthorInfo(msg.sender, _link, _description, _locale);
     }
 
-/// Items ///
+// Items //
 
     struct ItemInfo {
         string title;
@@ -261,7 +261,7 @@ contract Files is BaseToken {
         emit Donate(msg.sender, itemOwners[_itemId], _itemId, toAuthor);
     }
 
-/// Categories ///
+// Categories //
 
     function createCategory(string calldata _title, string calldata _locale, bool _owned, address payable _affiliate) external returns (uint) {
         require(bytes(_title).length != 0, "Empty title.");
@@ -291,7 +291,7 @@ contract Files is BaseToken {
         emit CategoryUpdated(maxId, _title, _locale, msg.sender);
     }
 
-/// Voting ///
+// Voting //
 
     function voteChildParent(uint _child, uint _parent, bool _yes, address payable _affiliate) external payable {
         require(entries[_child] != EntryKind.NONE, "Child does not exist.");
@@ -336,7 +336,7 @@ contract Files is BaseToken {
         return childParentVotes[_child][_parent];
     }
 
-// PST ///
+// PST //
 
     uint256 totalDividends = 0;
     uint256 totalDividendsPaid = 0; // actually paid sum
@@ -382,7 +382,7 @@ contract Files is BaseToken {
         totalDividends += _shareHoldersAmount;
     }
 
-/// Affiliates ///
+// Affiliates //
 
     mapping (address => address payable) affiliates;
 
