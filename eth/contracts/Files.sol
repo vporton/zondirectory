@@ -375,7 +375,7 @@ contract Files is BaseToken {
         }
         if(_author != address(0)) {
             uint256 _sellerAffiliateAmount = uint256(sellerAffiliateShare.muli(int256(_amount)));
-            _affiliate.transfer(_sellerAffiliateAmount);
+            payable(_author).transfer(_sellerAffiliateAmount);
             require(_shareHoldersAmount >= _sellerAffiliateAmount, "Attempt to pay negative amount.");
             _shareHoldersAmount -= _sellerAffiliateAmount;
         }

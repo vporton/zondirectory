@@ -12,12 +12,12 @@ function myToWei(n) {
 
 function testApproxEq(a, b, msg) {
   const epsilon = 1 ** -10;
-  assert(a/b > 1 - epsilon && a/b < 1 + epsilon, msg);
+  assert(a/b > 1 - epsilon && a/b < 1 + epsilon, `${a} ~ ${b}: ${msg}`);
 }
 
 describe("Files", function() {
   it("Dividends", async function() {
-    const [deployer, founder, partner, seller, buyer] = await ethers.getSigners();
+    const [deployer, founder, partner, seller, seller2, buyer, buyer2, affiliate] = await ethers.getSigners();
 
     const PARTNER_PERCENT = 30;
     const FIRST_PURCHASE = 3.535;
@@ -48,6 +48,8 @@ describe("Files", function() {
 
     const salesOwnersShare = await files.salesOwnersShare() / 2**64;
     const upvotesOwnersShare = await files.upvotesOwnersShare() / 2**64;
+    const buyerAffiliateShare = await files.buyerAffiliateShare() / 2**64;
+    const sellerAffiliateShare = await files.sellerAffiliateShare() / 2**64;
 
     // TODO: Test setting fees.
     const totalDividend1 = FIRST_PURCHASE * salesOwnersShare + OWNED_VOTE_AMOUNT * upvotesOwnersShare + UNOWNED_VOTE_AMOUNT;
@@ -74,5 +76,24 @@ describe("Files", function() {
     await files.connect(seller).voteForOwnChild(itemId, ownedCategoryId, {value: myToWei(MYOWN_VOTE_AMOUNT)});
     const amountVoted = await files.getChildParentVotes(itemId, ownedCategoryId);
     testApproxEq(ethers.utils.formatEther(amountVoted), OWNED_VOTE_AMOUNT + MYOWN_VOTE_AMOUNT * 2.0);
+
+    await files.connect(founder).withdrawProfit();
+    await files.connect(partner).withdrawProfit();
+
+    // Test affiliates
+    const itemId2 = (await extractEvent(files.connect(seller2)
+      .createItem(["Item 2",
+                   "xxx",
+                   myToWei(2.0),
+                   1, // ignore it
+                   'en',
+                   'commercial'],
+                   await affiliate.getAddress()), 'ItemCreated')).itemId;
+    await files.connect(buyer2).pay(itemId2, await affiliate.getAddress(), {value: myToWei(FIRST_PURCHASE)});
+    await files.connect(buyer2).donate(itemId2, '0x0000000000000000000000000000000000000000', {value: myToWei(SECOND_PURCHASE)});
+    const expectedPartnerDividentWithoutAffiliate =
+      (FIRST_PURCHASE + SECOND_PURCHASE) * salesOwnersShare * (1 - buyerAffiliateShare - sellerAffiliateShare) * PARTNER_PERCENT / 100;
+    const partnerDividentWithoutAffiliate = await files.dividendsOwing(await partner.getAddress());
+    testApproxEq(ethers.utils.formatEther(partnerDividentWithoutAffiliate), expectedPartnerDividentWithoutAffiliate, "divident minus affiliate");
   });
 });
