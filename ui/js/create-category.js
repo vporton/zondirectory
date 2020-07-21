@@ -17,7 +17,7 @@ async function createCategory() {
 
     await defaultAccountPromise();
     const contractInstance = new web3.eth.Contract(await filesJsonInterface(), addressFiles);
-    const response = await contractInstance.methods.createCategory(name, locale, owned, '0x0000000000000000000000000000000000000000')
+    const response = await contractInstance.methods.createCategory(name, locale, owned, '0x0000000000000000000000000000000000000001')
             .send({from: defaultAccount, gas: '1000000'}, (error, result) => {
         if(error) return;
     });

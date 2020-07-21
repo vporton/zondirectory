@@ -55,7 +55,7 @@ async function createItem() {
     const license = document.getElementById('license').value;
 
     const response = await contractInstance.methods.createItem({title, description, priceETH: getPriceETH(), priceAR: getPriceAR(), locale, license},
-                                                               '0x0000000000000000000000000000000000000000')
+                                                               '0x0000000000000000000000000000000000000001')
         .send({from: defaultAccount, gas: '1000000'});
     const itemId = response.events.ItemCreated.returnValues.itemId;
     await $('#multiVoter').doMultiVote(itemId);

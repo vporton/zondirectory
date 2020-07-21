@@ -14,7 +14,7 @@ async function createCategory(address, blockNumber, name) {
     const contractInstance = new web3.eth.Contract(filesJsonInterface(), address);
     const namedAccounts = await getNamedAccounts();
     const {deployer} = namedAccounts;
-    const response = await contractInstance.methods.createCategory(name, 'en', false, '0x0000000000000000000000000000000000000000')
+    const response = await contractInstance.methods.createCategory(name, 'en', false, '0x0000000000000000000000000000000000000001')
         .send({from: deployer, gas: '1000000'})
         .on('error', (error) => log(`Error creating category: ` + error))
         .catch((error) => log(`Error creating category: ` + error));
@@ -41,7 +41,7 @@ async function addItemToCategory(address, parent, child) {
     const contractInstance = new web3.eth.Contract(filesJsonInterface(), address);
     const namedAccounts = await getNamedAccounts();
     const {deployer} = namedAccounts;
-    await contractInstance.methods.voteChildParent(child, parent, true, '0x0000000000000000000000000000000000000000').send({from: deployer, gas: '1000000', value: 1 /*wei*/})
+    await contractInstance.methods.voteChildParent(child, parent, true, '0x0000000000000000000000000000000000000001').send({from: deployer, gas: '1000000', value: 1 /*wei*/})
         .on('error', (error) => log(`Error creating category: ` + error))
         .catch((error) => log(`Error adding item to category: ` + error));
 }

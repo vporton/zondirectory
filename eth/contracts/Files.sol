@@ -367,13 +367,13 @@ contract Files is BaseToken {
     function payToShareholders(uint256 _amount, address _author) internal {
         address payable _affiliate = affiliates[msg.sender];
         uint256 _shareHoldersAmount = _amount;
-        if(_affiliate != address(0)) {
+        if(uint(_affiliate) > 1) {
             uint256 _buyerAffiliateAmount = uint256(buyerAffiliateShare.muli(int256(_amount)));
             _affiliate.transfer(_buyerAffiliateAmount);
             require(_shareHoldersAmount >= _buyerAffiliateAmount, "Attempt to pay negative amount.");
             _shareHoldersAmount -= _buyerAffiliateAmount;
         }
-        if(_author != address(0)) {
+        if(uint(_author) > 1) {
             uint256 _sellerAffiliateAmount = uint256(sellerAffiliateShare.muli(int256(_amount)));
             payable(_author).transfer(_sellerAffiliateAmount);
             require(_shareHoldersAmount >= _sellerAffiliateAmount, "Attempt to pay negative amount.");
@@ -388,7 +388,8 @@ contract Files is BaseToken {
 
     // Last affiliate wins.
     function setAffiliate(address payable _affiliate) internal {
-        if(_affiliate != address(0)) affiliates[_affiliate] = _affiliate;
+        if(affiliates[_affiliate] == address(0))
+            affiliates[_affiliate] = _affiliate;
     }
 
     // FIXME: setAffiliateShare

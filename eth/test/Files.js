@@ -32,8 +32,8 @@ describe("Files", function() {
 
     files.connect(founder).transfer(await partner.getAddress(), myToWei(PARTNER_PERCENT));
 
-    const ownedCategoryId = (await extractEvent(files.connect(seller).createCategory("Owned category", "en", true, '0x0000000000000000000000000000000000000000'), 'CategoryCreated')).categoryId;
-    const unownedCategoryId = (await extractEvent(files.connect(seller).createCategory("Unowned category", "en", false, '0x0000000000000000000000000000000000000000'), 'CategoryCreated')).categoryId;
+    const ownedCategoryId = (await extractEvent(files.connect(seller).createCategory("Owned category", "en", true, '0x0000000000000000000000000000000000000001'), 'CategoryCreated')).categoryId;
+    const unownedCategoryId = (await extractEvent(files.connect(seller).createCategory("Unowned category", "en", false, '0x0000000000000000000000000000000000000001'), 'CategoryCreated')).categoryId;
     const itemId = (await extractEvent(files.connect(seller)
       .createItem(["Item 1",
                    "xxx",
@@ -41,10 +41,10 @@ describe("Files", function() {
                    1, // ignore it
                    'en',
                    'commercial'],
-                  '0x0000000000000000000000000000000000000000'), 'ItemCreated')).itemId;
-    await files.connect(buyer).pay(itemId, '0x0000000000000000000000000000000000000000', {value: myToWei(FIRST_PURCHASE)});
-    await files.connect(buyer).voteChildParent(itemId, ownedCategoryId, true, '0x0000000000000000000000000000000000000000', {value: myToWei(OWNED_VOTE_AMOUNT)});
-    await files.connect(buyer).voteChildParent(unownedCategoryId, ownedCategoryId, true, '0x0000000000000000000000000000000000000000', {value: myToWei(UNOWNED_VOTE_AMOUNT)});
+                  '0x0000000000000000000000000000000000000001'), 'ItemCreated')).itemId;
+    await files.connect(buyer).pay(itemId, '0x0000000000000000000000000000000000000001', {value: myToWei(FIRST_PURCHASE)});
+    await files.connect(buyer).voteChildParent(itemId, ownedCategoryId, true, '0x0000000000000000000000000000000000000001', {value: myToWei(OWNED_VOTE_AMOUNT)});
+    await files.connect(buyer).voteChildParent(unownedCategoryId, ownedCategoryId, true, '0x0000000000000000000000000000000000000001', {value: myToWei(UNOWNED_VOTE_AMOUNT)});
 
     const salesOwnersShare = await files.salesOwnersShare() / 2**64;
     const upvotesOwnersShare = await files.upvotesOwnersShare() / 2**64;
@@ -58,7 +58,7 @@ describe("Files", function() {
     testApproxEq(ethers.utils.formatEther(founderDividend1), expectedFounderDividend1, "founder dividend 1");
     await files.connect(founder).withdrawProfit();
 
-    await files.connect(buyer).donate(itemId, '0x0000000000000000000000000000000000000000', {value: myToWei(SECOND_PURCHASE)});
+    await files.connect(buyer).donate(itemId, '0x0000000000000000000000000000000000000001', {value: myToWei(SECOND_PURCHASE)});
     const totalDividend2 = SECOND_PURCHASE * salesOwnersShare + totalDividend1 * PARTNER_PERCENT / 100;
     const founderDividend2 = await files.dividendsOwing(await founder.getAddress());
     const partnerDividend2 = await files.dividendsOwing(await partner.getAddress());
@@ -90,8 +90,8 @@ describe("Files", function() {
                    'commercial'],
                    await affiliate.getAddress()), 'ItemCreated')).itemId;
     await files.connect(buyer2).pay(itemId2, await affiliate.getAddress(), {value: myToWei(FIRST_PURCHASE)});
-    await files.connect(buyer2).donate(itemId2, '0x0000000000000000000000000000000000000000', {value: myToWei(SECOND_PURCHASE)});
-    await files.connect(buyer).donate(itemId2, '0x0000000000000000000000000000000000000000', {value: myToWei(SECOND_PURCHASE)});
+    await files.connect(buyer2).donate(itemId2, '0x0000000000000000000000000000000000000001', {value: myToWei(SECOND_PURCHASE)});
+    await files.connect(buyer).donate(itemId2, '0x0000000000000000000000000000000000000001', {value: myToWei(SECOND_PURCHASE)});
     const expectedPartnerDividentWithoutAffiliate =
       salesOwnersShare *
       ((FIRST_PURCHASE + SECOND_PURCHASE) * (1 - buyerAffiliateShare - sellerAffiliateShare) + SECOND_PURCHASE * (1 - sellerAffiliateShare)) *
