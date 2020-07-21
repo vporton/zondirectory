@@ -181,7 +181,7 @@ contract Files is BaseToken {
     function updateItem(uint _itemId, ItemInfo calldata _info) external
     {
         require(itemOwners[_itemId] == msg.sender, "Attempt to modify other's item.");
-        require(entries[[_itemId] == EntryKind.DOWNLOADS, "Item does not exist.");
+        require(entries[_itemId] == EntryKind.DOWNLOADS, "Item does not exist.");
         require(bytes(_info.title).length != 0, "Empty title.");
         pricesETH[_itemId] = _info.priceETH;
         pricesAR[_itemId] = _info.priceAR;
@@ -214,13 +214,13 @@ contract Files is BaseToken {
     {
         require(itemOwners[_linkId] == msg.sender, "Attempt to modify other's link."); // only owned links
         require(bytes(_info.title).length != 0, "Empty title.");
-        require(entries[[_itemId] == EntryKind.LINK, "Link does not exist.");
+        require(entries[_itemId] == EntryKind.LINK, "Link does not exist.");
         emit LinkUpdated(_linkId, _info.link, _info.title, _info.description, _info.locale, _info.linkKind);
     }
 
     function updateItemCover(uint _itemId, uint _version, bytes calldata _cover, uint _width, uint _height) external {
         require(itemOwners[_itemId] == msg.sender, "Access denied."); // only owned entries
-        EntryKind kind = entries[[_itemId];
+        EntryKind kind = entries[_itemId];
         require(kind != EntryKind.NONE, "Entry does not exist.");
         emit ItemCoverUpdated(_itemId, _version, _cover, _width, _height);
     }
@@ -228,13 +228,13 @@ contract Files is BaseToken {
     function uploadFile(uint _itemId, uint _version, string calldata _format, bytes calldata _hash) external {
         require(_hash.length == 32, "Wrong hash length.");
         require(itemOwners[_itemId] == msg.sender, "Attempt to modify other's item.");
-        require(entries[[_itemId] == EntryKind.DOWNLOADS, "Item does not exist.");
+        require(entries[_itemId] == EntryKind.DOWNLOADS, "Item does not exist.");
         emit ItemFilesUpdated(_itemId, _format, _version, _hash);
     }
 
     function setLastItemVersion(uint _itemId, uint _version) external {
         require(itemOwners[_itemId] == msg.sender, "Attempt to modify other's item.");
-        require(entries[[_itemId] == EntryKind.DOWNLOADS, "Item does not exist.");
+        require(entries[_itemId] == EntryKind.DOWNLOADS, "Item does not exist.");
         emit SetLastItemVersion(_itemId, _version);
     }
 
