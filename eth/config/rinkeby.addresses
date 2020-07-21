@@ -1,8 +1,8 @@
 {
-  "Files": "0x5FE20958C6474bEC073f707c521637bfaB5C9429",
+  "Files": "0xdCac4a26dDB232d1534fD9Ef22E31318885F2604",
   "Root": "1",
   "Spam": "2",
-  "FilesBlock": 6874712,
+  "FilesBlock": 6879381,
   "Web3Provider": "https://rinkeby.infura.io/v3/1d0c278301fc40f3a8f40f25ae3bd328",
-  "TheGraph": "https://api.thegraph.com/subgraphs/name/vporton/cryptozon-rinkeby26"
+  "TheGraph": "https://api.thegraph.com/subgraphs/name/vporton/cryptozon-rinkeby27"
 }
