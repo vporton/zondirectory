@@ -91,8 +91,11 @@ describe("Files", function() {
                    await affiliate.getAddress()), 'ItemCreated')).itemId;
     await files.connect(buyer2).pay(itemId2, await affiliate.getAddress(), {value: myToWei(FIRST_PURCHASE)});
     await files.connect(buyer2).donate(itemId2, '0x0000000000000000000000000000000000000000', {value: myToWei(SECOND_PURCHASE)});
+    await files.connect(buyer).donate(itemId2, '0x0000000000000000000000000000000000000000', {value: myToWei(SECOND_PURCHASE)});
     const expectedPartnerDividentWithoutAffiliate =
-      (FIRST_PURCHASE + SECOND_PURCHASE) * salesOwnersShare * (1 - buyerAffiliateShare - sellerAffiliateShare) * PARTNER_PERCENT / 100;
+      salesOwnersShare *
+      ((FIRST_PURCHASE + SECOND_PURCHASE) * (1 - buyerAffiliateShare - sellerAffiliateShare) + SECOND_PURCHASE * (1 - sellerAffiliateShare)) *
+      PARTNER_PERCENT / 100;
     const partnerDividentWithoutAffiliate = await files.dividendsOwing(await partner.getAddress());
     testApproxEq(ethers.utils.formatEther(partnerDividentWithoutAffiliate), expectedPartnerDividentWithoutAffiliate, "divident minus affiliate");
   });
