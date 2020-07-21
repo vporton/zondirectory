@@ -214,7 +214,7 @@ contract Files is BaseToken {
     {
         require(itemOwners[_linkId] == msg.sender, "Attempt to modify other's link."); // only owned links
         require(bytes(_info.title).length != 0, "Empty title.");
-        require(entries[_itemId] == EntryKind.LINK, "Link does not exist.");
+        require(entries[_linkId] == EntryKind.LINK, "Link does not exist.");
         emit LinkUpdated(_linkId, _info.link, _info.title, _info.description, _info.locale, _info.linkKind);
     }
 
