@@ -391,6 +391,4 @@ contract Files is BaseToken {
         if(affiliates[_affiliate] == address(0))
             affiliates[_affiliate] = _affiliate;
     }
-
-    // FIXME: setAffiliateShare
 }
