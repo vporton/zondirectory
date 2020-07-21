@@ -4,5 +4,5 @@
   "Spam": "2",
   "FilesBlock": 6879381,
   "Web3Provider": "https://rinkeby.infura.io/v3/1d0c278301fc40f3a8f40f25ae3bd328",
-  "TheGraph": "https://api.thegraph.com/subgraphs/name/vporton/cryptozon-rinkeby27"
+  "TheGraph": "https://api.thegraph.com/subgraphs/name/vporton/cryptozon-rinkeby28"
 }
