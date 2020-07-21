@@ -81,7 +81,7 @@
                             .send({from: defaultAccount, gas: '1000000'});
                     } else {
                         console.log(itemId, parent, true, amount)
-                        await contractInstance.methods.voteChildParent(itemId, parent, true)
+                        await contractInstance.methods.voteChildParent(itemId, parent, true, '0x0000000000000000000000000000000000000001')
                             .send({from: defaultAccount, value: amount, gas: '1000000'});
                     }
                 });

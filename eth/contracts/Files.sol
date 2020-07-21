@@ -23,6 +23,8 @@ contract Files is BaseToken {
     int128 public salesOwnersShare = int128(1).divi(int128(10)); // 10%
     int128 public upvotesOwnersShare = int128(1).divi(int128(2)); // 50%
     int128 public uploadOwnersShare = int128(15).divi(int128(100)); // 15%
+    int128 public buyerAffiliateShare = int128(1).divi(int128(10)); // 10%
+    int128 public sellerAffiliateShare = int128(15).divi(int128(100)); // 15%
 
     uint maxId = 0;
 
@@ -38,6 +40,8 @@ contract Files is BaseToken {
     event SetSalesOwnerShare(int128 share); // share is 64.64 fixed point number
     event SetUpvotesOwnerShare(int128 share); // share is 64.64 fixed point number
     event SetUploadOwnerShare(int128 share); // share is 64.64 fixed point number
+    event SetBuyerAffiliateShare(int128 share); // share is 64.64 fixed point number
+    event SetSellerAffiliateShare(int128 share); // share is 64.64 fixed point number
     event SetNick(address payable indexed owner, string nick);
     event SetARWallet(address payable indexed owner, string arWallet);
     event SetAuthorInfo(address payable indexed owner, string link, string description, string locale);
@@ -112,13 +116,25 @@ contract Files is BaseToken {
         emit SetUploadOwnerShare(_share);
     }
 
+    function setBuyerAffiliateShare(int128 _share) external {
+        require(msg.sender == founder, "Access denied.");
+        buyerAffiliateShare = _share;
+        emit SetBuyerAffiliateShare(_share);
+    }
+
+    function setSellerAffiliateShare(int128 _share) external {
+        require(msg.sender == founder, "Access denied.");
+        sellerAffiliateShare = _share;
+        emit SetSellerAffiliateShare(_share);
+    }
+
     function setItemOwner(uint _itemId, address payable _owner) external {
         require(itemOwners[_itemId] == msg.sender, "Access denied.");
         itemOwners[_itemId] = _owner;
         emit SetItemOwner(_itemId, _owner);
     }
 
-/// Wallets ///
+// Wallets //
 
     function setARWallet(string calldata _arWallet) external {
         emit SetARWallet(msg.sender, _arWallet);
@@ -137,76 +153,74 @@ contract Files is BaseToken {
         emit SetAuthorInfo(msg.sender, _link, _description, _locale);
     }
 
-/// Items ///
+// Items //
 
-    function createItem(string calldata _title,
-                        string calldata _description,
-                        uint256 _priceETH,
-                        uint256 _priceAR,
-                        string calldata _locale,
-                        string calldata _license) external returns (uint)
+    struct ItemInfo {
+        string title;
+        string description;
+        uint256 priceETH;
+        uint256 priceAR;
+        string locale;
+        string license;
+    }
+
+    function createItem(ItemInfo calldata _info, address payable _affiliate) external returns (uint)
     {
-        require(bytes(_title).length != 0, "Empty title.");
+        require(bytes(_info.title).length != 0, "Empty title.");
+        setAffiliate(_affiliate);
         itemOwners[++maxId] = msg.sender;
-        pricesETH[maxId] = _priceETH;
-        pricesAR[maxId] = _priceAR;
+        pricesETH[maxId] = _info.priceETH;
+        pricesAR[maxId] = _info.priceAR;
         entries[maxId] = EntryKind.DOWNLOADS;
         emit ItemCreated(maxId);
         emit SetItemOwner(maxId, msg.sender);
-        emit ItemUpdated(maxId, _title, _description, _priceETH, _priceAR, _locale, _license);
+        emit ItemUpdated(maxId, _info.title, _info.description, _info.priceETH, _info.priceAR, _info.locale, _info.license);
         return maxId;
     }
 
-    function updateItem(uint _itemId,
-                        string calldata _title,
-                        string calldata _description,
-                        uint256 _priceETH,
-                        uint256 _priceAR,
-                        string calldata _locale,
-                        string calldata _license) external
+    function updateItem(uint _itemId, ItemInfo calldata _info) external
     {
         require(itemOwners[_itemId] == msg.sender, "Attempt to modify other's item.");
-        require(entries[maxId] == EntryKind.DOWNLOADS, "Item does not exist.");
-        require(bytes(_title).length != 0, "Empty title.");
-        pricesETH[_itemId] = _priceETH;
-        pricesAR[_itemId] = _priceAR;
-        emit ItemUpdated(_itemId, _title, _description, _priceETH, _priceAR, _locale, _license);
+        require(entries[_itemId] == EntryKind.DOWNLOADS, "Item does not exist.");
+        require(bytes(_info.title).length != 0, "Empty title.");
+        pricesETH[_itemId] = _info.priceETH;
+        pricesAR[_itemId] = _info.priceAR;
+        emit ItemUpdated(_itemId, _info.title, _info.description, _info.priceETH, _info.priceAR, _info.locale, _info.license);
     }
 
-    function createLink(string calldata _link,
-                        string calldata _title,
-                        string calldata _description,
-                        string calldata _locale,
-                        uint256 _linkKind,
-                        bool _owned) external returns (uint)
+    struct LinkInfo {
+        string link;
+        string title;
+        string description;
+        string locale;
+        uint256 linkKind;
+    }
+
+    function createLink(LinkInfo calldata _info, bool _owned, address payable _affiliate) external returns (uint)
     {
-        require(bytes(_title).length != 0, "Empty title.");
+        require(bytes(_info.title).length != 0, "Empty title.");
+        setAffiliate(_affiliate);
         address payable _owner = _owned ? msg.sender : address(0);
         itemOwners[++maxId] = _owner;
         entries[maxId] = EntryKind.LINK;
         emit ItemCreated(maxId);
         if (_owned) emit SetItemOwner(maxId, _owner);
-        emit LinkUpdated(maxId, _link, _title, _description, _locale, _linkKind);
+        emit LinkUpdated(maxId, _info.link, _info.title, _info.description, _info.locale, _info.linkKind);
         return maxId;
     }
 
     // Can be used for spam.
-    function updateLink(uint _linkId,
-                        string calldata _link,
-                        string calldata _title,
-                        string calldata _description,
-                        string calldata _locale,
-                        uint256 _linkKind) external
+    function updateLink(uint _linkId, LinkInfo calldata _info) external
     {
         require(itemOwners[_linkId] == msg.sender, "Attempt to modify other's link."); // only owned links
-        require(bytes(_title).length != 0, "Empty title.");
-        require(entries[maxId] == EntryKind.LINK, "Link does not exist.");
-        emit LinkUpdated(_linkId, _link, _title, _description, _locale, _linkKind);
+        require(bytes(_info.title).length != 0, "Empty title.");
+        require(entries[_linkId] == EntryKind.LINK, "Link does not exist.");
+        emit LinkUpdated(_linkId, _info.link, _info.title, _info.description, _info.locale, _info.linkKind);
     }
 
     function updateItemCover(uint _itemId, uint _version, bytes calldata _cover, uint _width, uint _height) external {
         require(itemOwners[_itemId] == msg.sender, "Access denied."); // only owned entries
-        EntryKind kind = entries[maxId];
+        EntryKind kind = entries[_itemId];
         require(kind != EntryKind.NONE, "Entry does not exist.");
         emit ItemCoverUpdated(_itemId, _version, _cover, _width, _height);
     }
@@ -214,39 +228,44 @@ contract Files is BaseToken {
     function uploadFile(uint _itemId, uint _version, string calldata _format, bytes calldata _hash) external {
         require(_hash.length == 32, "Wrong hash length.");
         require(itemOwners[_itemId] == msg.sender, "Attempt to modify other's item.");
-        require(entries[maxId] == EntryKind.DOWNLOADS, "Item does not exist.");
+        require(entries[_itemId] == EntryKind.DOWNLOADS, "Item does not exist.");
         emit ItemFilesUpdated(_itemId, _format, _version, _hash);
     }
 
     function setLastItemVersion(uint _itemId, uint _version) external {
         require(itemOwners[_itemId] == msg.sender, "Attempt to modify other's item.");
-        require(entries[maxId] == EntryKind.DOWNLOADS, "Item does not exist.");
+        require(entries[_itemId] == EntryKind.DOWNLOADS, "Item does not exist.");
         emit SetLastItemVersion(_itemId, _version);
     }
 
-    function pay(uint _itemId) external payable returns (bytes memory) {
+    function pay(uint _itemId, address payable _affiliate) external payable returns (bytes memory) {
         require(pricesETH[_itemId] <= msg.value, "Paid too little.");
-        require(entries[maxId] == EntryKind.DOWNLOADS, "Item does not exist.");
+        require(entries[_itemId] == EntryKind.DOWNLOADS, "Item does not exist.");
+        setAffiliate(_affiliate);
         uint256 _shareholdersShare = uint256(salesOwnersShare.muli(int256(msg.value)));
-        totalDividends += _shareholdersShare;
+        address payable _author = itemOwners[_itemId];
+        payToShareholders(_shareholdersShare, _author);
         uint256 toAuthor = msg.value - _shareholdersShare;
-        itemOwners[_itemId].transfer(toAuthor);
+        _author.transfer(toAuthor);
         emit Pay(msg.sender, itemOwners[_itemId], _itemId, toAuthor);
     }
 
-    function donate(uint _itemId) external payable returns (bytes memory) {
-        require(entries[maxId] == EntryKind.DOWNLOADS, "Item does not exist.");
+    function donate(uint _itemId, address payable _affiliate) external payable returns (bytes memory) {
+        require(entries[_itemId] == EntryKind.DOWNLOADS, "Item does not exist.");
+        setAffiliate(_affiliate);
         uint256 _shareholdersShare = uint256(salesOwnersShare.muli(int256(msg.value)));
-        totalDividends += _shareholdersShare;
+        address payable _author = itemOwners[_itemId];
+        payToShareholders(_shareholdersShare, _author);
         uint256 toAuthor = msg.value - _shareholdersShare;
-        itemOwners[_itemId].transfer(toAuthor);
+        _author.transfer(toAuthor);
         emit Donate(msg.sender, itemOwners[_itemId], _itemId, toAuthor);
     }
 
-/// Categories ///
+// Categories //
 
-    function createCategory(string calldata _title, string calldata _locale, bool _owned) external returns (uint) {
+    function createCategory(string calldata _title, string calldata _locale, bool _owned, address payable _affiliate) external returns (uint) {
         require(bytes(_title).length != 0, "Empty title.");
+        setAffiliate(_affiliate);
         address payable _owner = _owned ? msg.sender : address(0);
         ++maxId;
         if(!_owned) {
@@ -269,14 +288,15 @@ contract Files is BaseToken {
     function updateCategory(uint _categoryId, string calldata _title, string calldata _locale) external {
         require(itemOwners[_categoryId] == msg.sender, "Access denied.");
         require(entries[_categoryId] == EntryKind.CATEGORY, "Must be a category.");
-        emit CategoryUpdated(maxId, _title, _locale, msg.sender);
+        emit CategoryUpdated(_categoryId, _title, _locale, msg.sender);
     }
 
-/// Voting ///
+// Voting //
 
-    function voteChildParent(uint _child, uint _parent, bool _yes) external payable {
+    function voteChildParent(uint _child, uint _parent, bool _yes, address payable _affiliate) external payable {
         require(entries[_child] != EntryKind.NONE, "Child does not exist.");
         require(entries[_parent] == EntryKind.CATEGORY, "Must be a category.");
+        setAffiliate(_affiliate);
         int256 _value = _yes ? int256(msg.value) : -int256(msg.value);
         if(_value == 0) return; // We don't want to pollute the events with zero votes.
         int256 _newValue = childParentVotes[_child][_parent] + _value;
@@ -284,10 +304,10 @@ contract Files is BaseToken {
         address payable _owner = itemOwners[_child];
         if(_yes && _owner != address(0)) {
             uint256 _shareholdersShare = uint256(upvotesOwnersShare.muli(int256(msg.value)));
-            totalDividends += _shareholdersShare;
+            payToShareholders(_shareholdersShare, _owner);
             _owner.transfer(msg.value - _shareholdersShare);
         } else
-            totalDividends += msg.value;
+            payToShareholders(msg.value, address(0));
         emit ChildParentVote(_child, _parent, _newValue, 0, false);
     }
 
@@ -300,7 +320,7 @@ contract Files is BaseToken {
         int256 _value = upvotesOwnersShare.inv().muli(int256(msg.value));
         int256 _newValue = childParentVotes[_child][_parent] + _value;
         childParentVotes[_child][_parent] = _newValue;
-        totalDividends += msg.value;
+        payToShareholders(msg.value, address(0));
         emit ChildParentVote(_child, _parent, _newValue, 0, false);
     }
 
@@ -316,7 +336,7 @@ contract Files is BaseToken {
         return childParentVotes[_child][_parent];
     }
 
-// PST ///
+// PST //
 
     uint256 totalDividends = 0;
     uint256 totalDividendsPaid = 0; // actually paid sum
@@ -342,5 +362,35 @@ contract Files is BaseToken {
             totalDividendsPaid += _owing;
             lastTotalDivedends[msg.sender] = totalDividends;
         }
+    }
+
+    function payToShareholders(uint256 _amount, address _author) internal {
+        address payable _affiliate = affiliates[msg.sender];
+        uint256 _shareHoldersAmount = _amount;
+        if(uint(_affiliate) > 1) {
+            uint256 _buyerAffiliateAmount = uint256(buyerAffiliateShare.muli(int256(_amount)));
+            _affiliate.transfer(_buyerAffiliateAmount);
+            require(_shareHoldersAmount >= _buyerAffiliateAmount, "Attempt to pay negative amount.");
+            _shareHoldersAmount -= _buyerAffiliateAmount;
+        }
+        if(uint(_author) > 1) {
+            uint256 _sellerAffiliateAmount = uint256(sellerAffiliateShare.muli(int256(_amount)));
+            payable(_author).transfer(_sellerAffiliateAmount);
+            require(_shareHoldersAmount >= _sellerAffiliateAmount, "Attempt to pay negative amount.");
+            _shareHoldersAmount -= _sellerAffiliateAmount;
+        }
+        totalDividends += _shareHoldersAmount;
+    }
+
+// Affiliates //
+
+    mapping (address => address payable) affiliates;
+
+    // Last affiliate wins.
+    function setAffiliate(address payable _affiliate) internal {
+        // if(affiliates[_affiliate] == address(0))
+        //     affiliates[_affiliate] = _affiliate;
+        if(uint256(_affiliate) > 1)
+            affiliates[_affiliate] = _affiliate;
     }
 }
