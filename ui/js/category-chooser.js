@@ -8,10 +8,10 @@
             const checkbox = input.next().find(':checkbox');
             const my = checkbox.is(':checked');
             await defaultAccountPromise();
-            const owner = my ? defaultAccount : '0x0000000000000000000000000000000000000000';
+            const name = my ? 'ownedCategoryUpdateds' : 'categoryUpdateds';
             let query = `{
-    categoryUpdateds(first:20, orderBy:title, orderDirection:asc,
-            where:{title_starts_with:${JSON.stringify(request.term)} owner:"${owner}"}) {
+        categoryUpdateds: ${name}(first:20, orderBy:title, orderDirection:asc,
+            where:{title_starts_with:${JSON.stringify(request.term)}}) {
         title
         categoryId
     }
