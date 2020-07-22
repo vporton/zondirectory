@@ -15,16 +15,25 @@ async function onLoad() {
 async function createCategory() {
     const name = $("#title").val();
     if(!name) return;
+    const description = $("#description").val();
+    const shortDescription = $("#shortDescription").val();
     const locale = $("#locale").val();
     if(!locale) return;
     const owned = $('#owned').is(':checked');
 
     await defaultAccountPromise();
     const contractInstance = new web3.eth.Contract(await filesJsonInterface(), await getAddress('Files'));
-    const response = await contractInstance.methods.createCategory(name, locale, owned, '0x0000000000000000000000000000000000000001')
-            .send({from: defaultAccount, gas: '1000000'}, (error, result) => {
-        if(error) return;
-    });
+    if(owned) {
+        const response = await contractInstance.methods.createCategory(name, locale, '0x0000000000000000000000000000000000000001')
+                .send({from: defaultAccount, gas: '1000000'}, (error, result) => {
+            if(error) return;
+        });
+    } else {
+        const response = await contractInstance.methods.createOwnedCategory({name, locale, shortDescription, description}, '0x0000000000000000000000000000000000000001')
+                .send({from: defaultAccount, gas: '1000000'}, (error, result) => {
+            if(error) return;
+        });
+    }
     const catId = response.events.CategoryCreated.returnValues.categoryId;
     await $('#multiVoter').doMultiVote(catId);
 }

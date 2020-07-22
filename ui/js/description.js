@@ -52,9 +52,10 @@ async function createItem() {
     const locale = document.getElementById('locale').value;
     const title = document.getElementById('title').value;
     const description = document.getElementById('description').value;
+    const shortDescription = document.getElementById('shortDescription').value;
     const license = document.getElementById('license').value;
 
-    const response = await contractInstance.methods.createItem({title, description, priceETH: getPriceETH(), priceAR: getPriceAR(), locale, license},
+    const response = await contractInstance.methods.createItem({title, shortDescription, description, priceETH: getPriceETH(), priceAR: getPriceAR(), locale, license},
                                                                '0x0000000000000000000000000000000000000001')
         .send({from: defaultAccount, gas: '1000000'});
     const itemId = response.events.ItemCreated.returnValues.itemId;
@@ -67,9 +68,10 @@ async function updateItem(itemId) {
     const locale = document.getElementById('locale').value;
     const title = document.getElementById('title').value;
     const description = document.getElementById('description').value;
+    const shortDescription = document.getElementById('shortDescription').value;
     const license = document.getElementById('license').value;
 
-    contractInstance.methods.updateItem(itemId, {title, description, priceETH: getPriceETH(), priceAR: getPriceAR(), locale, license})
+    contractInstance.methods.updateItem(itemId, {title, shortDescription, description, priceETH: getPriceETH(), priceAR: getPriceAR(), locale, license})
         .send({from: defaultAccount, gas: '1000000'})
         .on('transactionHash', async function(receiptHash) {
             alert("Item updated.");
