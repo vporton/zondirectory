@@ -94,8 +94,7 @@ async function onLoad() {
     const itemIds = queryResult['itemCreateds'] ? queryResult['itemCreateds'] : [];
     const entryIdsFlat = catId ? parentIDs.concat(childIDs, itemIds.map(i => i.child))
                                : queryResult['itemCreateds'].map(i => i.itemId)
-                                .concat(queryResult['categoryCreateds'])
-                                .map(i => i.categoryId);
+                                .concat(queryResult['categoryCreateds'].map(i => i.categoryId));
     if(entryIdsFlat.length) {
         // TODO: Don't request category title if not asked for category votes.
         function subquery(itemId) {
