@@ -59,7 +59,6 @@ type CategoryUpdated @entity {
   categoryId: BigInt! # uint256
   title: String! # string
   locale: String! # string
-  owner: Bytes! # address
 }
 
 type ItemCoverUpdated @entity {
@@ -94,6 +93,7 @@ type ItemUpdated @entity {
   id: ID!
   itemId: BigInt! # uint256
   title: String! # string
+  shortDescription: String! # string
   description: String! # string
   priceETH: BigInt! # uint256
   priceAR: BigInt! # uint256
@@ -106,6 +106,7 @@ type LinkUpdated @entity {
   linkId: BigInt! # uint256
   link: String! # string
   title: String! # string
+  shortDescription: String! # string
   description: String! # string
   locale: String! # string
   linkKind: BigInt! # uint256
@@ -127,6 +128,7 @@ type SetAuthorInfo @entity {
   id: ID!
   owner: Bytes! # address
   link: String! # string
+  shortDescription: String! # string
   description: String! # string
   locale: String! # string
 }

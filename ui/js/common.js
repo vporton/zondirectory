@@ -27,7 +27,7 @@ function safe_tags(str) {
 function queryThegraph(query) {
     query = query.replace(/\\/g, '\\').replace(/"/g, '\\"').replace(/\n/g, "\\n");
     return new Promise(async (resolve, error) => {
-        const THEGRAPH_URL = await getAddress('TheGraph');
+        const THEGRAPH_URL = "https://api.thegraph.com/subgraphs/name/" + await getAddress('TheGraph');
         $.post(THEGRAPH_URL, `{ "query": "${query}" }`, function(data) {
             // TODO: Correct error handling.
             if(data.errors) {

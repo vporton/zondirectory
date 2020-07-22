@@ -79,7 +79,6 @@ export function handleCategoryUpdated(event: CategoryUpdatedEvent): void {
   entity.categoryId = event.params.categoryId
   entity.title = event.params.title
   entity.locale = event.params.locale
-  entity.owner = event.params.owner
   entity.save()
 }
 
@@ -128,12 +127,13 @@ export function handleItemUpdated(event: ItemUpdatedEvent): void {
     generateId(event)
   )
   entity.itemId = event.params.itemId
-  entity.title = event.params.title
-  entity.description = event.params.description
-  entity.priceETH = event.params.priceETH
-  entity.priceAR = event.params.priceAR
-  entity.locale = event.params.locale
-  entity.license = event.params.license
+  entity.title = event.params.info.title
+  entity.shortDescription = event.params.info.shortDescription
+  entity.description = event.params.info.description
+  entity.priceETH = event.params.info.priceETH
+  entity.priceAR = event.params.info.priceAR
+  entity.locale = event.params.info.locale
+  entity.license = event.params.info.license
   entity.save()
 }
 
@@ -144,6 +144,7 @@ export function handleLinkUpdated(event: LinkUpdatedEvent): void {
   entity.linkId = event.params.linkId
   entity.link = event.params.link
   entity.title = event.params.title
+  entity.shortDescription = event.params.shortDescription
   entity.description = event.params.description
   entity.locale = event.params.locale
   entity.linkKind = event.params.linkKind
@@ -174,6 +175,7 @@ export function handleSetAuthorInfo(event: SetAuthorInfoEvent): void {
   )
   entity.owner = event.params.owner
   entity.link = event.params.link
+  entity.shortDescription = event.params.shortDescription
   entity.description = event.params.description
   entity.locale = event.params.locale
   entity.save()

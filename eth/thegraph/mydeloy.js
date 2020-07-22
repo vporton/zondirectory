@@ -13,7 +13,7 @@ function main() {
     fs.writeFileSync('subgraph.yaml', yaml);
 
     const tmpl2 = fs.readFileSync('package.json.tmpl', 'utf8');
-    const pjson = tmpl.replace('@TheGraphShort@', data.TheGraphShort);
+    const pjson = tmpl2.replace('@TheGraph@', data.TheGraph);
     fs.writeFileSync('package.json', pjson);
 
 /*
