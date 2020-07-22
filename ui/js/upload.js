@@ -11,7 +11,7 @@ async function upload() {
         fileReader.onload = async (e) => {
             const fileContent = new Uint8Array(e.target.result);
 
-            const contractInstance = new web3.eth.Contract(await filesJsonInterface(), addressFiles);
+            const contractInstance = new web3.eth.Contract(await filesJsonInterface(), await getAddress('Files'));
             await defaultAccountPromise();
             contractInstance.methods.uploadOwnersShare().call(async (error, result) => {
                 if(error) {
@@ -50,7 +50,7 @@ async function upload() {
                         return;
                     }
 
-                    const contractInstance = new web3.eth.Contract(await filesJsonInterface(), addressFiles);
+                    const contractInstance = new web3.eth.Contract(await filesJsonInterface(), await getAddress('Files'));
                     console.log(transaction.id);
                     contractInstance.methods.uploadFile(itemId,
                                                         document.getElementById('version').value,

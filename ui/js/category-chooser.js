@@ -43,7 +43,7 @@
     }
 
     $.fn.multiVoterData = function() {
-        // const contractInstance = new web3.eth.Contract(await filesJsonInterface(), addressFiles);
+        // const contractInstance = new web3.eth.Contract(await filesJsonInterface(), await getAddress('Files'));
         // return await contractInstance.methods.upvotesOwnersShare().call()
         //     .then(async (shareResult) => {
         //         const ownersShare = shareResult / 2**64;
@@ -70,7 +70,7 @@
         } = this.multiVoterData();
 
         await defaultAccountPromise();
-        const contractInstance = new web3.eth.Contract(await filesJsonInterface(), addressFiles);
+        const contractInstance = new web3.eth.Contract(await filesJsonInterface(), await getAddress('Files'));
         for(var i in cats) {
             const parent = cats[i];
             const amount = amounts[i];

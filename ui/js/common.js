@@ -2,8 +2,6 @@ $(document).ajaxError(function( event, request, settings ) {
     alert("Error: " + request.status);
 });
 
-const THEGRAPH_URL = addressTheGraph;
-
 const INFINITY = (BigInt(1) << BigInt(256)) - BigInt(1);
 
 const arweave = window.Arweave ? Arweave.init() : undefined;
@@ -28,7 +26,8 @@ function safe_tags(str) {
 
 function queryThegraph(query) {
     query = query.replace(/\\/g, '\\').replace(/"/g, '\\"').replace(/\n/g, "\\n");
-    return new Promise((resolve, error) => {
+    return new Promise(async (resolve, error) => {
+        const THEGRAPH_URL = await getAddress('TheGraph');
         $.post(THEGRAPH_URL, `{ "query": "${query}" }`, function(data) {
             // TODO: Correct error handling.
             if(data.errors) {
@@ -48,6 +47,7 @@ let defaultAccount;
 function defaultAccountPromise() { return web3.eth.getAccounts(); }
 defaultAccountPromise().then( function (result, x) { defaultAccount = result[0] });
 
+// TODO: Load it once!
 function filesJsonInterface() {
     return new Promise((resolve) => {
         var xhttp = new XMLHttpRequest();
@@ -60,6 +60,20 @@ function filesJsonInterface() {
     });
 }
 
-$(function() {
-    $('#rootLink').attr('href', "index.html?cat=" + addressRoot);
+let addressesFile = null;
+
+function getAddressesFile() {
+    if(addressesFile) return addressesFile;
+    return new Promise((resolve) => {
+        fetch("artifacts/rinkeby.addresses")
+            .then(response => resolve(addressesFile = response.json()));
+    });
+}
+
+async function getAddress(name) {
+    return (await getAddressesFile())[name];
+}
+
+$(async function() {
+    $('#rootLink').attr('href', "index.html?cat=" + await getAddress('Root'));
 });

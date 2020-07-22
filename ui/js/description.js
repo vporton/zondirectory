@@ -47,7 +47,7 @@ async function createOrUpdateItem() {
 }
 
 async function createItem() {
-    const contractInstance = new web3.eth.Contract(await filesJsonInterface(), addressFiles);
+    const contractInstance = new web3.eth.Contract(await filesJsonInterface(), await getAddress('Files'));
 
     const locale = document.getElementById('locale').value;
     const title = document.getElementById('title').value;
@@ -62,7 +62,7 @@ async function createItem() {
 }
 
 async function updateItem(itemId) {
-    const contractInstance = new web3.eth.Contract(await filesJsonInterface(), addressFiles);
+    const contractInstance = new web3.eth.Contract(await filesJsonInterface(), await getAddress('Files'));
 
     const locale = document.getElementById('locale').value;
     const title = document.getElementById('title').value;
