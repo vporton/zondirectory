@@ -109,7 +109,7 @@ async function getWeb3() {
 }
 
 $(async function() {
-    const choosenNetwork = Number(getCookie('web3network'));
+    const choosenNetwork = getCookie('web3network');
     if(window.web3 && choosenNetwork != window.web3.currentProvider.chainId) {
         alert("Wrong browser/MetaMask Ethereum network choosen! Change your Ethereum network or settings.")
     }
