@@ -8,6 +8,7 @@ type _Schema_
         entity: "ItemUpdated",
         fields: [
           { name: "title" },
+          { name: "shortDescription" },
           { name: "description" },
         ]
       }
@@ -22,6 +23,7 @@ type _Schema_
         entity: "LinkUpdated",
         fields: [
           { name: "title" },
+          { name: "shortDescription" },
           { name: "description" },
         ]
       }
@@ -36,6 +38,21 @@ type _Schema_
         entity: "CategoryUpdated",
         fields: [
           { name: "title" },
+        ]
+      }
+    ]
+  )
+  @fulltext(
+    name: "categorySearch2",
+    language: en
+    algorithm: rank,
+    include: [
+      {
+        entity: "OwnedCategoryUpdated",
+        fields: [
+          { name: "title" },
+          { name: "shortDescription" },
+          { name: "description" },
         ]
       }
     ]
@@ -59,6 +76,16 @@ type CategoryUpdated @entity {
   categoryId: BigInt! # uint256
   title: String! # string
   locale: String! # string
+}
+
+type OwnedCategoryUpdated @entity {
+  id: ID!
+  categoryId: BigInt! # uint256
+  title: String! # string
+  shortDescription: String! # string
+  description: String! # string
+  locale: String! # string
+  owner: Bytes! # address
 }
 
 type ItemCoverUpdated @entity {
