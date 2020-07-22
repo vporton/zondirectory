@@ -78,13 +78,15 @@
                 .then(async (owner) => {
                     if(owner == defaultAccount) {
                         await contractInstance.methods.setMyChildParent(itemId, parent, amount, 0)
-                            .send({from: defaultAccount, gas: '1000000'});
+                            .send({from: defaultAccount, gas: '1000000'})
+                            .catch(err => alert);
                     } else {
-                        console.log(itemId, parent, true, amount)
                         await contractInstance.methods.voteChildParent(itemId, parent, true, '0x0000000000000000000000000000000000000001')
-                            .send({from: defaultAccount, value: amount, gas: '1000000'});
+                            .send({from: defaultAccount, value: amount, gas: '1000000'})
+                            .catch(err => alert);
                     }
-                });
+                })
+                .catch(err => alert);
         }
     }
 
