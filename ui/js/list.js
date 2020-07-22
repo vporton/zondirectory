@@ -19,12 +19,14 @@ async function onLoad() {
     if(catId) {
         query = `{
     categoryUpdateds(first:1, orderBy:id, orderDirection:desc, where:{categoryId:${catId}}) {
-        owner
+        title
+    }
+    ownedCategoryUpdateds(first:1, orderBy:id, orderDirection:desc, where:{categoryId:${catId}}) {
         title
     }
 }`;
         queryResult0 = (await queryThegraph(query)).data;
-        const isOwned = !/^0x0+$/.test(queryResult0.categoryUpdateds[0].owner);
+        const isOwned = queryResult0.ownedCategoryUpdateds.length != 0;
         query = `{
     childParentVotes(first:1000, where:{parent:${catId}}) {
         child
@@ -85,6 +87,10 @@ async function onLoad() {
         const categoryTitle = queryResult0.categoryUpdateds[0].title;
         $('#catTitle').text(categoryTitle);
     }
+    if(queryResult0 && queryResult0.ownedCategoryUpdateds && queryResult0.ownedCategoryUpdateds[0]) {
+        const categoryTitle = queryResult0.ownedCategoryUpdateds[0].title;
+        $('#catTitle').text(categoryTitle);
+    }
     const itemIds = queryResult['itemCreateds'] ? queryResult['itemCreateds'] : [];
     const entryIdsFlat = catId ? parentIDs.concat(childIDs, itemIds.map(i => i.child))
                                : queryResult['itemCreateds'].map(i => i.itemId).concat(queryResult['categoryCreateds'].map(i => i.categoryId));
@@ -106,6 +112,10 @@ async function onLoad() {
             owner
         }
         category${itemId}: categoryUpdateds(first:1, orderBy: id, orderDirection:asc, where:{categoryId:${itemId}}) {
+            categoryId # TODO: Superfluous
+            title
+        }
+        ownedCategory${itemId}: ownedCategoryUpdateds(first:1, orderBy: id, orderDirection:asc, where:{categoryId:${itemId}}) {
             categoryId # TODO: Superfluous
             title
         }`
@@ -138,13 +148,14 @@ async function onLoad() {
             for(let i in childIDs) {
                 const categoryId = childIDs[i];
                 const category = items['category' + categoryId][0];
+                if(!category) category = items['ownedCategory' + categoryId][0];
                 if(!category) continue;
                 const spamInfo = items['spam' + categoryId][0];
                 const spamScore = spamInfo ? formatPriceETH(new web3.utils.BN(spamInfo.value).neg()) : 0;
                 const link = "index.html?cat=" + categoryId;
                 const voteStr = `<a href='vote.html?child=${categoryId}&parent=${catId}&dir=for'>👍</a>` +
                     `<a href='vote.html?child=${categoryId}&parent=${catId}&dir=against'>👎</a>`;
-                $(/^0x0+$/.test(items['categoryCreate' + categoryId][0].owner) ? '#subcategories' : '#ownedSubcategories')
+                $(items['ownedCategory' + categoryId][0] ? '#ownedSubcategories' : '#subcategories')
                     .append(`<li><a href="${link}">${safe_tags(category.title)}</a> (spam score: ${spamScore} ${voteStr})</li>`);
             }
 
