@@ -1,0 +1,21 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head id="head">
+        <title>Author's Dashboard</title>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/web3/1.2.9/web3.min.js"></script>
+        <script src="https://unpkg.com/arweave/bundles/web.bundle.min.js"></script>
+        <script src="js/common.js"></script>
+        <script src="js/settings.js"></script>
+    </head>
+    <body>
+        <h1 id="title">Settings</h1>
+        <div id="body">
+            <p>This page uses cookies.</p>
+            <p>Select your Ethereum network:
+                <select id="web3network" onchange="networkChange()">
+                    <option value="0x1">Mainnet</option>
+                    <option value="0x4">Rinkeby (test mode)</option>
+                </select>
+            </p>
+        </div>
+    </body>
+</html>

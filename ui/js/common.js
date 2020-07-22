@@ -38,14 +38,28 @@ function queryThegraph(query) {
     });
 }
 
-const web3 = new Web3(window.web3 ? window.web3.currentProvider : addressWeb3Provider);
-if(window.ethereum) window.ethereum.enable();
+function getCookie(cname) {
+    var name = cname + "=";
+    var decodedCookie = decodeURIComponent(document.cookie);
+    var ca = decodedCookie.split(';');
+    for(var i = 0; i <ca.length; i++) {
+        var c = ca[i];
+        while (c.charAt(0) == ' ') {
+        c = c.substring(1);
+        }
+        if (c.indexOf(name) == 0) {
+        return c.substring(name.length, c.length);
+        }
+    }
+    return "";
+}
+
+let web3;
 
 // FIXME: If MetaMask is missing or locked.
 let defaultAccount;
 // web3.eth.defaultAccount = web3.eth.accounts[0];
-function defaultAccountPromise() { return web3.eth.getAccounts(); }
-defaultAccountPromise().then( function (result, x) { defaultAccount = result[0] });
+async function defaultAccountPromise() { return (await getWeb3()).eth.getAccounts(); }
 
 // TODO: Load it once!
 function filesJsonInterface() {
@@ -74,6 +88,22 @@ async function getAddress(name) {
     return (await getAddressesFile())[name];
 }
 
+let myWeb3 = null;
+
+async function getWeb3() {
+    if(myWeb3) return myWeb3;
+    return myWeb3 = new Web3(window.web3 ? window.web3.currentProvider : await getAddress('Web3Provider'));
+}
+
 $(async function() {
+    web3 = await getWeb3();
+    defaultAccount = (await defaultAccountPromise())[0];
+
+    const choosenNetwork = Number(getCookie('web3network'));
+    if(choosenNetwork != web3.currentProvider.chainId) {
+        alert("Wrong browser/MetaMask Ethereum network choosen! Change your Ethereum network or settings.")
+    }
+
+    if(window.ethereum) window.ethereum.enable();
     $('#rootLink').attr('href', "index.html?cat=" + await getAddress('Root'));
 });
