@@ -3,6 +3,7 @@ import {
   Approval as ApprovalEvent,
   CategoryCreated as CategoryCreatedEvent,
   CategoryUpdated as CategoryUpdatedEvent,
+  OwnedCategoryUpdated as OwnedCategoryUpdatedEvent,
   ItemCoverUpdated as ItemCoverUpdatedEvent,
   ItemCreated as ItemCreatedEvent,
   ItemFilesUpdated as ItemFilesUpdatedEvent,
@@ -26,6 +27,7 @@ import {
   Approval,
   CategoryCreated,
   CategoryUpdated,
+  OwnedCategoryUpdated,
   ItemCoverUpdated,
   ItemCreated,
   ItemFilesUpdated,
@@ -79,6 +81,19 @@ export function handleCategoryUpdated(event: CategoryUpdatedEvent): void {
   entity.categoryId = event.params.categoryId
   entity.title = event.params.title
   entity.locale = event.params.locale
+  entity.save()
+}
+
+export function handleOwnedCategoryUpdated(event: OwnedCategoryUpdatedEvent): void {
+  let entity = new OwnedCategoryUpdated(
+    generateId(event)
+  )
+  entity.categoryId = event.params.categoryId
+  entity.title = event.params.title
+  entity.shortDescription = event.params.shortDescription
+  entity.description = event.params.description
+  entity.locale = event.params.locale
+  entity.owner = event.params.owner
   entity.save()
 }
 

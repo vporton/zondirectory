@@ -93,7 +93,9 @@ async function onLoad() {
     }
     const itemIds = queryResult['itemCreateds'] ? queryResult['itemCreateds'] : [];
     const entryIdsFlat = catId ? parentIDs.concat(childIDs, itemIds.map(i => i.child))
-                               : queryResult['itemCreateds'].map(i => i.itemId).concat(queryResult['categoryCreateds'].map(i => i.categoryId));
+                               : queryResult['itemCreateds'].map(i => i.itemId)
+                                .concat(queryResult['categoryCreateds'])
+                                .map(i => i.categoryId);
     if(entryIdsFlat.length) {
         // TODO: Don't request category title if not asked for category votes.
         function subquery(itemId) {
@@ -147,7 +149,7 @@ async function onLoad() {
             }
             for(let i in childIDs) {
                 const categoryId = childIDs[i];
-                const category = items['category' + categoryId][0];
+                let category = items['category' + categoryId][0];
                 if(!category) category = items['ownedCategory' + categoryId][0];
                 if(!category) continue;
                 const spamInfo = items['spam' + categoryId][0];

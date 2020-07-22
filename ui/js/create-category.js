@@ -25,12 +25,12 @@ async function createCategory() {
     const contractInstance = new web3.eth.Contract(await filesJsonInterface(), await getAddress('Files'));
     let response;
     if(owned) {
-        response = await contractInstance.methods.createCategory(name, locale, '0x0000000000000000000000000000000000000001')
+        response = await contractInstance.methods.createOwnedCategory({title: name, locale, shortDescription, description}, '0x0000000000000000000000000000000000000001')
                 .send({from: defaultAccount, gas: '1000000'}, (error, result) => {
             if(error) return;
         });
     } else {
-        response = await contractInstance.methods.createOwnedCategory({name, locale, shortDescription, description}, '0x0000000000000000000000000000000000000001')
+        response = await contractInstance.methods.createCategory(name, locale, '0x0000000000000000000000000000000000000001')
                 .send({from: defaultAccount, gas: '1000000'}, (error, result) => {
             if(error) return;
         });
