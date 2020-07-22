@@ -12,9 +12,9 @@ function main() {
     const yaml = tmpl.replace('@network@', network).replace('@Files@', data.Files).replace('@FilesBlock@', data.FilesBlock);
     fs.writeFileSync('subgraph.yaml', yaml);
 
-    const tmpl2 = fs.readFileSync('pakage.json.tmpl', 'utf8');
+    const tmpl2 = fs.readFileSync('package.json.tmpl', 'utf8');
     const pjson = tmpl.replace('@TheGraphShort@', data.TheGraphShort);
-    fs.writeFileSync('pakage.json', pjson);
+    fs.writeFileSync('package.json', pjson);
 
 /*
     console.log("Executing `yarn deploy`...");
