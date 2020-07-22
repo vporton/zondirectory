@@ -81,9 +81,9 @@ contract Files is BaseToken {
 
     constructor(address payable _founder, uint256 _initialBalance) public {
         founder = _founder;
-        name = "Cryptozon PST Token (ETH)";
+        name = "Zon Directory PST Token (ETH)";
         decimals = 18;
-        symbol = "CZPST";
+        symbol = "ZDPSTE";
         balances[_founder] = _initialBalance;
         totalSupply = _initialBalance;
     }
