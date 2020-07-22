@@ -79,7 +79,18 @@ let addressesFile = null;
 function getAddressesFile() {
     if(addressesFile) return addressesFile;
     return new Promise((resolve) => {
-        fetch("artifacts/rinkeby.addresses")
+        let networkName;
+        switch(getCookie('web3network')) {
+            case '0x1':
+                networkName = 'mainnet';
+                break;
+            case '0x4':
+                networkName = 'rinkeby';
+                break;
+            default:
+                alert("Unsupported Ethereum network!");
+        }
+        fetch(`artifacts/${networkName}.addresses`)
             .then(response => resolve(addressesFile = response.json()));
     });
 }
@@ -96,13 +107,13 @@ async function getWeb3() {
 }
 
 $(async function() {
-    web3 = await getWeb3();
-    defaultAccount = (await defaultAccountPromise())[0];
-
     const choosenNetwork = Number(getCookie('web3network'));
-    if(choosenNetwork != web3.currentProvider.chainId) {
+    if(window.web3 && choosenNetwork != window.web3.currentProvider.chainId) {
         alert("Wrong browser/MetaMask Ethereum network choosen! Change your Ethereum network or settings.")
     }
+
+    web3 = await getWeb3();
+    defaultAccount = (await defaultAccountPromise())[0];
 
     if(window.ethereum) window.ethereum.enable();
     $('#rootLink').attr('href', "index.html?cat=" + await getAddress('Root'));
