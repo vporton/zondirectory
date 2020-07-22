@@ -14,7 +14,7 @@ async function createCategory(address, blockNumber, name) {
     const contractInstance = new web3.eth.Contract(filesJsonInterface(), address);
     const namedAccounts = await getNamedAccounts();
     const {deployer} = namedAccounts;
-    const response = await contractInstance.methods.createCategory(name, 'en', false, '0x0000000000000000000000000000000000000001')
+    const response = await contractInstance.methods.createCategory(name, 'en', '0x0000000000000000000000000000000000000001')
         .send({from: deployer, gas: '1000000'})
         .on('error', (error) => log(`Error creating category: ` + error))
         .catch((error) => log(`Error creating category: ` + error));
