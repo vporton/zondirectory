@@ -114,6 +114,9 @@ $(async function() {
         alert("Wrong browser/MetaMask Ethereum network choosen! Change your Ethereum network or settings.")
     }
 
+    if(choosenNetwork != '0x1')
+        $('#testModeWarnining').css('display', 'block');
+
     web3 = await getWeb3();
     defaultAccount = (await defaultAccountPromise())[0];
 
