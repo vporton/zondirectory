@@ -125,5 +125,5 @@ async function onLoad() {
     $('#rootLink').attr('href', "index.html?cat=" + await getAddress('Root'));
 }
 
-//$(onLoad); // window.web3.currentProvider.chainId is sometimes undefined
-window.onload = onLoad
+//window.addEventListener('load', onLoad); // window.web3.currentProvider.chainId is sometimes undefined
+window.addEventListener('load', onLoad);

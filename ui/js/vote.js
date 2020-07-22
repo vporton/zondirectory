@@ -26,4 +26,4 @@ function onLoad() {
     $('.category').categoryChooser();
 }
 
-$(onLoad);
+window.addEventListener('load', onLoad);

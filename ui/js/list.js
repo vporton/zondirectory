@@ -205,4 +205,4 @@ function moreChilds() {
     $('#subcategories > li:hidden:lt(10)').css('display', 'list-item');
 }
 
-$(onLoad);
+window.addEventListener('load', onLoad);

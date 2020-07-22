@@ -91,4 +91,4 @@ function setARWalletFromkeyFile(event) {
     fileReader.readAsText(event.target.files[0]);
 }
 
-$(onLoad);
+window.addEventListener('load', onLoad);

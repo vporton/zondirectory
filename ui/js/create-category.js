@@ -29,4 +29,4 @@ async function createCategory() {
     await $('#multiVoter').doMultiVote(catId);
 }
 
-$(onLoad);
+window.addEventListener('load', onLoad);
