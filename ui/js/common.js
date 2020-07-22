@@ -80,7 +80,9 @@ function getAddressesFile() {
     if(addressesFile) return addressesFile;
     return new Promise((resolve) => {
         let networkName;
-        switch(getCookie('web3network')) {
+        let chainId = getCookie('web3network');
+        if(!chainId) chainId = '0x1';
+        switch(chainId) {
             case '0x1':
                 networkName = 'mainnet';
                 break;
