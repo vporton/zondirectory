@@ -1,4 +1,8 @@
 async function onLoad() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const id = urlParams.get('id');
+    if(id) $('head').prepend(`<meta name="robots" content="noindex" />`);
+
     $('#multiVoter').multiVoter();
     await defaultAccountPromise();
     const contractInstance = new web3.eth.Contract(await filesJsonInterface(), await getAddress('Files'));

@@ -43,6 +43,10 @@ async function updateItem(itemId) {
 }
 
 $(async function() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const id = urlParams.get('id');
+    if(id) $('head').prepend(`<meta name="robots" content="noindex" />`);
+
     $('#multiVoter').multiVoter();
 
     const itemId = numParam('id');
