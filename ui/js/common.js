@@ -108,7 +108,9 @@ async function getWeb3() {
     return myWeb3 = new Web3(window.web3 ? window.web3.currentProvider : await getAddress('Web3Provider'));
 }
 
-$(async function() {
+async function onLoad() {
+    if(window.ethereum) window.ethereum.enable();
+
     const choosenNetwork = getCookie('web3network');
     if(window.web3 && choosenNetwork != window.web3.currentProvider.chainId) {
         alert("Wrong browser/MetaMask Ethereum network choosen! Change your Ethereum network or settings.")
@@ -120,6 +122,8 @@ $(async function() {
     web3 = await getWeb3();
     defaultAccount = (await defaultAccountPromise())[0];
 
-    if(window.ethereum) window.ethereum.enable();
     $('#rootLink').attr('href', "index.html?cat=" + await getAddress('Root'));
-});
+}
+
+//$(onLoad); // window.web3.currentProvider.chainId is sometimes undefined
+window.onload = onLoad
