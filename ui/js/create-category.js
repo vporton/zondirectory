@@ -27,12 +27,12 @@ async function createCategory() {
     if(owned) {
         response = await contractInstance.methods.createOwnedCategory({title: name, locale, shortDescription, description}, '0x0000000000000000000000000000000000000001')
                 .send({from: defaultAccount, gas: '1000000'}, (error, result) => {
-            if(error) return;
+            if(error) return; // FIXME
         });
     } else {
         response = await contractInstance.methods.createCategory(name, locale, '0x0000000000000000000000000000000000000001')
                 .send({from: defaultAccount, gas: '1000000'}, (error, result) => {
-            if(error) return;
+            if(error) return; // FIXME
         });
     }
     const catId = response.events.CategoryCreated.returnValues.categoryId;
