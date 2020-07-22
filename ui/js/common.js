@@ -125,5 +125,5 @@ async function onLoad() {
     $('#rootLink').attr('href', "index.html?cat=" + await getAddress('Root'));
 }
 
-//window.addEventListener('load', onLoad); // window.web3.currentProvider.chainId is sometimes undefined
+//window.addEventListener('load', onLoad); // window.web3.currentProvider.chainId is sometimes undefined (https://github.com/brave/brave-browser/issues/10854)
 window.addEventListener('load', onLoad);
