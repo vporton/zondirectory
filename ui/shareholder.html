@@ -1,6 +1,9 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
     <head id="head">
         <script src="https://cdnjs.cloudflare.com/ajax/libs/web3/1.2.9/web3.min.js"></script>
+        <script src="https://unpkg.com/arweave/bundles/web.bundle.min.js"></script>
+        <script src="artifacts/SmartWeave.js"></script>
+        <script src="js/addresses2.js"></script>
         <script src="js/common.js"></script>
         <script src="js/shareholder.js"></script>
         <title>For shareholders</title>
@@ -12,6 +15,8 @@
                 (<span id="filesAddressElt"></span> token in MetaMask)</p>
             <p>Your earned amount in ETH: <span id="ETH"></span>
                 <input type="button" value="Withdraw" onclick="withdrawETH()"/></p>
+            <p>Your AR wallet (<a href="author.html">Set</a>): <span id="arWallet"></span></p>
+            <p>Your AR profit sharing tokens: <span id="tokenAR"></span></p>
         </div>
     </body>
 </html>
