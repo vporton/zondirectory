@@ -5,8 +5,9 @@
 all: ui
 
 ui: ui-quick compile
-	make out/ui/artifacts/SmartWeave.js out/ui/artifacts/addresses.js \
+	make out/ui/artifacts/SmartWeave.js \
 	  out/ui/artifacts/Files.abi
+	cp -f eth/data/rinkeby.addresses out/ui/artifacts/
 
 ui-quick:
 	-rm -rf out/ui

@@ -4,19 +4,28 @@
         <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
         <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css"/>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/web3/1.2.9/web3.min.js"></script>
-        <script src="artifacts/addresses.js"></script>
         <script src="js/common.js"></script>
         <script src="js/category-chooser.js"></script>
         <script src="js/create-category.js"></script>
+        <style>
+            textarea { width: 100% }
+            #description { height: 10ex }
+        </style>
     </head>
     <body>
         <h1 id="title">Create New Category</h1>
         <div id="body">
             <p>Category name: <input type="text" id="title"/></p>
             <p>Category language: <input type="text" id="locale" value="en"/></p>
-            <p>Category is owned by you: <input type="checkbox" id="owned"/>
+            <p>Category is owned by you:
+                <input type="checkbox" id="owned"
+                       onclick="$('#ownedInfo').css('display', event.target.checked ? 'block' : 'none')"/>
                 (Others cannot post to a category owned by you, but owned categories receive
                 less promotion and search engine hits than regular categories. If doubt, leave unchecked.)</p>
+            <div id="ownedInfo" style="display: none">
+                <p>Short (meta) description: <textarea id="shortDescription"></textarea></p>
+                <p>Description: <textarea id="description"></textarea></p>
+            </div>
             <h2>Parent categories</h2>
             <p>You vote for parent categories with ETH, with the discount TODO.
                 For your owned parent categories voting is free.

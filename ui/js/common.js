@@ -2,8 +2,6 @@ $(document).ajaxError(function( event, request, settings ) {
     alert("Error: " + request.status);
 });
 
-const THEGRAPH_URL = addressTheGraph;
-
 const INFINITY = (BigInt(1) << BigInt(256)) - BigInt(1);
 
 const arweave = window.Arweave ? Arweave.init() : undefined;
@@ -28,7 +26,8 @@ function safe_tags(str) {
 
 function queryThegraph(query) {
     query = query.replace(/\\/g, '\\').replace(/"/g, '\\"').replace(/\n/g, "\\n");
-    return new Promise((resolve, error) => {
+    return new Promise(async (resolve, error) => {
+        const THEGRAPH_URL = "https://api.thegraph.com/subgraphs/name/" + await getAddress('TheGraph');
         $.post(THEGRAPH_URL, `{ "query": "${query}" }`, function(data) {
             // TODO: Correct error handling.
             if(data.errors) {
@@ -39,15 +38,30 @@ function queryThegraph(query) {
     });
 }
 
-const web3 = new Web3(window.web3 ? window.web3.currentProvider : addressWeb3Provider);
-if(window.ethereum) window.ethereum.enable();
+function getCookie(cname) {
+    var name = cname + "=";
+    var decodedCookie = decodeURIComponent(document.cookie);
+    var ca = decodedCookie.split(';');
+    for(var i = 0; i <ca.length; i++) {
+        var c = ca[i];
+        while (c.charAt(0) == ' ') {
+        c = c.substring(1);
+        }
+        if (c.indexOf(name) == 0) {
+        return c.substring(name.length, c.length);
+        }
+    }
+    return "";
+}
+
+let web3;
 
 // FIXME: If MetaMask is missing or locked.
 let defaultAccount;
 // web3.eth.defaultAccount = web3.eth.accounts[0];
-function defaultAccountPromise() { return web3.eth.getAccounts(); }
-defaultAccountPromise().then( function (result, x) { defaultAccount = result[0] });
+async function defaultAccountPromise() { return (await getWeb3()).eth.getAccounts(); }
 
+// TODO: Load it once!
 function filesJsonInterface() {
     return new Promise((resolve) => {
         var xhttp = new XMLHttpRequest();
@@ -60,6 +74,56 @@ function filesJsonInterface() {
     });
 }
 
-$(function() {
-    $('#rootLink').attr('href', "index.html?cat=" + addressRoot);
-});
+let addressesFile = null;
+
+function getAddressesFile() {
+    if(addressesFile) return addressesFile;
+    return new Promise((resolve) => {
+        let networkName;
+        let chainId = getCookie('web3network');
+        if(!chainId) chainId = '0x1';
+        switch(chainId) {
+            case '0x1':
+                networkName = 'mainnet';
+                break;
+            case '0x4':
+                networkName = 'rinkeby';
+                break;
+            default:
+                alert("Unsupported Ethereum network!");
+        }
+        fetch(`artifacts/${networkName}.addresses`)
+            .then(response => resolve(addressesFile = response.json()));
+    });
+}
+
+async function getAddress(name) {
+    return (await getAddressesFile())[name];
+}
+
+let myWeb3 = null;
+
+async function getWeb3() {
+    if(myWeb3) return myWeb3;
+    return myWeb3 = new Web3(window.web3 ? window.web3.currentProvider : await getAddress('Web3Provider'));
+}
+
+async function onLoad() {
+    if(window.ethereum) window.ethereum.enable();
+
+    const choosenNetwork = getCookie('web3network');
+    if(window.web3 && choosenNetwork != window.web3.currentProvider.chainId) {
+        alert("Wrong browser/MetaMask Ethereum network choosen! Change your Ethereum network or settings.")
+    }
+
+    if(choosenNetwork != '0x1')
+        $('#testModeWarnining').css('display', 'block');
+
+    web3 = await getWeb3();
+    defaultAccount = (await defaultAccountPromise())[0];
+
+    $('#rootLink').attr('href', "index.html?cat=" + await getAddress('Root'));
+}
+
+//window.addEventListener('load', onLoad); // window.web3.currentProvider.chainId is sometimes undefined (https://github.com/brave/brave-browser/issues/10854)
+window.addEventListener('load', onLoad);

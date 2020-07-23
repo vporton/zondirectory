@@ -44,19 +44,14 @@ contract Files is BaseToken {
     event SetSellerAffiliateShare(int128 share); // share is 64.64 fixed point number
     event SetNick(address payable indexed owner, string nick);
     event SetARWallet(address payable indexed owner, string arWallet);
-    event SetAuthorInfo(address payable indexed owner, string link, string description, string locale);
+    event SetAuthorInfo(address payable indexed owner, string link, string shortDescription, string description, string locale);
     event ItemCreated(uint indexed itemId);
     event SetItemOwner(uint indexed itemId, address payable indexed owner);
-    event ItemUpdated(uint indexed itemId,
-                      string title,
-                      string description,
-                      uint256 priceETH,
-                      uint256 priceAR,
-                      string locale,
-                      string license);
+    event ItemUpdated(uint indexed itemId, ItemInfo info);
     event LinkUpdated(uint indexed linkId,
                       string link,
                       string title,
+                      string shortDescription,
                       string description,
                       string locale,
                       uint256 indexed linkKind);
@@ -64,7 +59,12 @@ contract Files is BaseToken {
     event ItemFilesUpdated(uint indexed itemId, string format, uint indexed version, bytes hash);
     event SetLastItemVersion(uint indexed itemId, uint version);
     event CategoryCreated(uint256 indexed categoryId, address indexed owner); // zero owner - no owner
-    event CategoryUpdated(uint256 indexed categoryId, string title, string locale, address indexed owner);
+    event CategoryUpdated(uint256 indexed categoryId, string title, string locale);
+    event OwnedCategoryUpdated(uint256 indexed categoryId,
+                               string title, string shortDescription,
+                               string description,
+                               string locale,
+                               address indexed owner);
     event ChildParentVote(uint child,
                           uint parent,
                           int256 value,
@@ -81,9 +81,9 @@ contract Files is BaseToken {
 
     constructor(address payable _founder, uint256 _initialBalance) public {
         founder = _founder;
-        name = "Cryptozon PST Token (ETH)";
+        name = "Zon Directory PST Token (ETH)";
         decimals = 18;
-        symbol = "CZPST";
+        symbol = "ZDPSTE";
         balances[_founder] = _initialBalance;
         totalSupply = _initialBalance;
     }
@@ -149,14 +149,18 @@ contract Files is BaseToken {
         emit SetNick(msg.sender, _nick);
     }
 
-    function setAuthorInfo(string calldata _link, string calldata _description, string calldata _locale) external {
-        emit SetAuthorInfo(msg.sender, _link, _description, _locale);
+    function setAuthorInfo(string calldata _link,
+                           string calldata _shortDescription,
+                           string calldata _description,
+                           string calldata _locale) external {
+        emit SetAuthorInfo(msg.sender, _link, _shortDescription, _description, _locale);
     }
 
 // Items //
 
     struct ItemInfo {
         string title;
+        string shortDescription;
         string description;
         uint256 priceETH;
         uint256 priceAR;
@@ -174,7 +178,7 @@ contract Files is BaseToken {
         entries[maxId] = EntryKind.DOWNLOADS;
         emit ItemCreated(maxId);
         emit SetItemOwner(maxId, msg.sender);
-        emit ItemUpdated(maxId, _info.title, _info.description, _info.priceETH, _info.priceAR, _info.locale, _info.license);
+        emit ItemUpdated(maxId, _info);
         return maxId;
     }
 
@@ -185,12 +189,13 @@ contract Files is BaseToken {
         require(bytes(_info.title).length != 0, "Empty title.");
         pricesETH[_itemId] = _info.priceETH;
         pricesAR[_itemId] = _info.priceAR;
-        emit ItemUpdated(_itemId, _info.title, _info.description, _info.priceETH, _info.priceAR, _info.locale, _info.license);
+        emit ItemUpdated(_itemId, _info);
     }
 
     struct LinkInfo {
         string link;
         string title;
+        string shortDescription;
         string description;
         string locale;
         uint256 linkKind;
@@ -205,7 +210,7 @@ contract Files is BaseToken {
         entries[maxId] = EntryKind.LINK;
         emit ItemCreated(maxId);
         if (_owned) emit SetItemOwner(maxId, _owner);
-        emit LinkUpdated(maxId, _info.link, _info.title, _info.description, _info.locale, _info.linkKind);
+        emit LinkUpdated(maxId, _info.link, _info.title, _info.shortDescription, _info.description, _info.locale, _info.linkKind);
         return maxId;
     }
 
@@ -215,7 +220,13 @@ contract Files is BaseToken {
         require(itemOwners[_linkId] == msg.sender, "Attempt to modify other's link."); // only owned links
         require(bytes(_info.title).length != 0, "Empty title.");
         require(entries[_linkId] == EntryKind.LINK, "Link does not exist.");
-        emit LinkUpdated(_linkId, _info.link, _info.title, _info.description, _info.locale, _info.linkKind);
+        emit LinkUpdated(_linkId,
+                         _info.link,
+                         _info.title,
+                         _info.shortDescription,
+                         _info.description,
+                         _info.locale,
+                         _info.linkKind);
     }
 
     function updateItemCover(uint _itemId, uint _version, bytes calldata _cover, uint _width, uint _height) external {
@@ -263,32 +274,46 @@ contract Files is BaseToken {
 
 // Categories //
 
-    function createCategory(string calldata _title, string calldata _locale, bool _owned, address payable _affiliate) external returns (uint) {
+    function createCategory(string calldata _title, string calldata _locale, address payable _affiliate) external returns (uint) {
         require(bytes(_title).length != 0, "Empty title.");
         setAffiliate(_affiliate);
-        address payable _owner = _owned ? msg.sender : address(0);
         ++maxId;
-        if(!_owned) {
-            uint _id = categoryTitles[_locale][_title];
-            if(_id != 0)
-                return _id;
-            else
-                categoryTitles[_locale][_title] = maxId;
-        }
+        uint _id = categoryTitles[_locale][_title];
+        if(_id != 0)
+            return _id;
+        else
+            categoryTitles[_locale][_title] = maxId;
         entries[maxId] = EntryKind.CATEGORY;
-        if(_owned) // check to speed-up
-            itemOwners[maxId] = _owner;
         // Yes, issue _owner two times, for faster information retrieval
-        emit CategoryCreated(maxId, _owner);
-        emit SetItemOwner(maxId, _owner);
-        emit CategoryUpdated(maxId, _title, _locale, _owner);
+        emit CategoryCreated(maxId, address(0));
+        emit CategoryUpdated(maxId, _title, _locale);
         return maxId;
     }
 
-    function updateCategory(uint _categoryId, string calldata _title, string calldata _locale) external {
+    struct OwnedCategoryInfo {
+        string title;
+        string shortDescription;
+        string description;
+        string locale;
+    }
+
+    function createOwnedCategory(OwnedCategoryInfo calldata _info, address payable _affiliate) external returns (uint) {
+        require(bytes(_info.title).length != 0, "Empty title.");
+        setAffiliate(_affiliate);
+        ++maxId;
+        entries[maxId] = EntryKind.CATEGORY;
+        itemOwners[maxId] = msg.sender;
+        // Yes, issue _owner two times, for faster information retrieval
+        emit CategoryCreated(maxId, msg.sender);
+        emit SetItemOwner(maxId, msg.sender);
+        emit OwnedCategoryUpdated(maxId, _info.title, _info.shortDescription, _info.description, _info.locale, msg.sender);
+        return maxId;
+    }
+
+    function updateOwnedCategory(uint _categoryId, OwnedCategoryInfo calldata _info) external {
         require(itemOwners[_categoryId] == msg.sender, "Access denied.");
         require(entries[_categoryId] == EntryKind.CATEGORY, "Must be a category.");
-        emit CategoryUpdated(_categoryId, _title, _locale, msg.sender);
+        emit OwnedCategoryUpdated(_categoryId, _info.title, _info.shortDescription, _info.description, _info.locale, msg.sender);
     }
 
 // Voting //

@@ -8,10 +8,10 @@
             const checkbox = input.next().find(':checkbox');
             const my = checkbox.is(':checked');
             await defaultAccountPromise();
-            const owner = my ? defaultAccount : '0x0000000000000000000000000000000000000000';
+            const name = my ? 'ownedCategoryUpdateds' : 'categoryUpdateds';
             let query = `{
-    categoryUpdateds(first:20, orderBy:title, orderDirection:asc,
-            where:{title_starts_with:${JSON.stringify(request.term)} owner:"${owner}"}) {
+        categoryUpdateds: ${name}(first:20, orderBy:title, orderDirection:asc,
+            where:{title_starts_with:${JSON.stringify(request.term)}}) {
         title
         categoryId
     }
@@ -43,7 +43,7 @@
     }
 
     $.fn.multiVoterData = function() {
-        // const contractInstance = new web3.eth.Contract(await filesJsonInterface(), addressFiles);
+        // const contractInstance = new web3.eth.Contract(await filesJsonInterface(), await getAddress('Files'));
         // return await contractInstance.methods.upvotesOwnersShare().call()
         //     .then(async (shareResult) => {
         //         const ownersShare = shareResult / 2**64;
@@ -70,7 +70,7 @@
         } = this.multiVoterData();
 
         await defaultAccountPromise();
-        const contractInstance = new web3.eth.Contract(await filesJsonInterface(), addressFiles);
+        const contractInstance = new web3.eth.Contract(await filesJsonInterface(), await getAddress('Files'));
         for(var i in cats) {
             const parent = cats[i];
             const amount = amounts[i];
@@ -78,13 +78,15 @@
                 .then(async (owner) => {
                     if(owner == defaultAccount) {
                         await contractInstance.methods.setMyChildParent(itemId, parent, amount, 0)
-                            .send({from: defaultAccount, gas: '1000000'});
+                            .send({from: defaultAccount, gas: '1000000'})
+                            .catch(err => alert);
                     } else {
-                        console.log(itemId, parent, true, amount)
                         await contractInstance.methods.voteChildParent(itemId, parent, true, '0x0000000000000000000000000000000000000001')
-                            .send({from: defaultAccount, value: amount, gas: '1000000'});
+                            .send({from: defaultAccount, value: amount, gas: '1000000'})
+                            .catch(err => alert);
                     }
-                });
+                })
+                .catch(err => alert);
         }
     }
 

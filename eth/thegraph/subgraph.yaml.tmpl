@@ -17,24 +17,27 @@ dataSources:
         - Approval
         - CategoryCreated
         - CategoryUpdated
+        - ChildParentVote
+        - Donate
         - ItemCoverUpdated
         - ItemCreated
         - ItemFilesUpdated
-        - SetLastItemVersion
         - ItemUpdated
         - LinkUpdated
+        - OwnedCategoryUpdated
+        - Pay
         - SetARWallet
-        - SetNick
         - SetAuthorInfo
+        - SetBuyerAffiliateShare
         - SetItemOwner
+        - SetLastItemVersion
+        - SetNick
         - SetOwner
         - SetSalesOwnerShare
-        - SetUpvotesOwnerShare
+        - SetSellerAffiliateShare
         - SetUploadOwnerShare
+        - SetUpvotesOwnerShare
         - Transfer
-        - ChildParentVote
-        - Pay
-        - Donate
       abis:
         - name: Contract
           file: ./abis/Contract.json
@@ -43,46 +46,48 @@ dataSources:
           handler: handleApproval
         - event: CategoryCreated(indexed uint256,indexed address)
           handler: handleCategoryCreated
-        - event: CategoryUpdated(indexed uint256,string,string,indexed address)
+        - event: CategoryUpdated(indexed uint256,string,string)
           handler: handleCategoryUpdated
+        - event: ChildParentVote(uint256,uint256,int256,int256,bool)
+          handler: handleChildParentVote
+        - event: Donate(indexed address,indexed address,indexed uint256,uint256)
+          handler: handleDonate
         - event: ItemCoverUpdated(indexed uint256,indexed uint256,bytes,uint256,uint256)
           handler: handleItemCoverUpdated
         - event: ItemCreated(indexed uint256)
           handler: handleItemCreated
         - event: ItemFilesUpdated(indexed uint256,string,indexed uint256,bytes)
           handler: handleItemFilesUpdated
-        - event: SetLastItemVersion(indexed uint256,uint256)
-          handler: handleSetLastItemVersion
-        - event: ItemUpdated(indexed uint256,string,string,uint256,uint256,string,string)
+        - event: ItemUpdated(indexed uint256,(string,string,string,uint256,uint256,string,string))
           handler: handleItemUpdated
-        - event: LinkUpdated(indexed uint256,string,string,string,string,indexed uint256)
+        - event: LinkUpdated(indexed uint256,string,string,string,string,string,indexed uint256)
           handler: handleLinkUpdated
+        - event: OwnedCategoryUpdated(indexed uint256,string,string,string,string,indexed address)
+          handler: handleOwnedCategoryUpdated
+        - event: Pay(indexed address,indexed address,indexed uint256,uint256)
+          handler: handlePay
         - event: SetARWallet(indexed address,string)
           handler: handleSetARWallet
-        - event: SetNick(indexed address,string)
-          handler: handleSetNick
-        - event: SetAuthorInfo(indexed address,string,string,string)
+        - event: SetAuthorInfo(indexed address,string,string,string,string)
           handler: handleSetAuthorInfo
+        - event: SetBuyerAffiliateShare(int128)
+          handler: handleSetBuyerAffiliateShare
         - event: SetItemOwner(indexed uint256,indexed address)
           handler: handleSetItemOwner
+        - event: SetLastItemVersion(indexed uint256,uint256)
+          handler: handleSetLastItemVersion
+        - event: SetNick(indexed address,string)
+          handler: handleSetNick
         - event: SetOwner(address)
           handler: handleSetOwner
         - event: SetSalesOwnerShare(int128)
           handler: handleSetSalesOwnerShare
-        - event: SetUpvotesOwnerShare(int128)
-          handler: handleSetUpvotesOwnerShare
-        - event: SetUploadOwnerShare(int128)
-          handler: handleSetUploadOwnerShare
-        - event: Transfer(indexed address,indexed address,uint256)
-          handler: handleTransfer
-        - event: ChildParentVote(uint256,uint256,int256,int256,bool)
-          handler: handleChildParentVote
-        - event: Pay(indexed address,indexed address,indexed uint256,uint256)
-          handler: handlePay
-        - event: Donate(indexed address,indexed address,indexed uint256,uint256)
-          handler: handleDonate
-        - event: SetBuyerAffiliateShare(int128)
-          handler: handleSetBuyerAffiliateShare
         - event: SetSellerAffiliateShare(int128)
           handler: handleSetSellerAffiliateShare
+        - event: SetUploadOwnerShare(int128)
+          handler: handleSetUploadOwnerShare
+        - event: SetUpvotesOwnerShare(int128)
+          handler: handleSetUpvotesOwnerShare
+        - event: Transfer(indexed address,indexed address,uint256)
+          handler: handleTransfer
       file: ./src/mapping.ts

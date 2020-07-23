@@ -8,6 +8,7 @@ type _Schema_
         entity: "ItemUpdated",
         fields: [
           { name: "title" },
+          { name: "shortDescription" },
           { name: "description" },
         ]
       }
@@ -22,6 +23,7 @@ type _Schema_
         entity: "LinkUpdated",
         fields: [
           { name: "title" },
+          { name: "shortDescription" },
           { name: "description" },
         ]
       }
@@ -36,6 +38,21 @@ type _Schema_
         entity: "CategoryUpdated",
         fields: [
           { name: "title" },
+        ]
+      }
+    ]
+  )
+  @fulltext(
+    name: "categorySearch2",
+    language: en
+    algorithm: rank,
+    include: [
+      {
+        entity: "OwnedCategoryUpdated",
+        fields: [
+          { name: "title" },
+          { name: "shortDescription" },
+          { name: "description" },
         ]
       }
     ]
@@ -58,6 +75,15 @@ type CategoryUpdated @entity {
   id: ID!
   categoryId: BigInt! # uint256
   title: String! # string
+  locale: String! # string
+}
+
+type OwnedCategoryUpdated @entity {
+  id: ID!
+  categoryId: BigInt! # uint256
+  title: String! # string
+  shortDescription: String! # string
+  description: String! # string
   locale: String! # string
   owner: Bytes! # address
 }
@@ -94,6 +120,7 @@ type ItemUpdated @entity {
   id: ID!
   itemId: BigInt! # uint256
   title: String! # string
+  shortDescription: String! # string
   description: String! # string
   priceETH: BigInt! # uint256
   priceAR: BigInt! # uint256
@@ -106,6 +133,7 @@ type LinkUpdated @entity {
   linkId: BigInt! # uint256
   link: String! # string
   title: String! # string
+  shortDescription: String! # string
   description: String! # string
   locale: String! # string
   linkKind: BigInt! # uint256
@@ -127,6 +155,7 @@ type SetAuthorInfo @entity {
   id: ID!
   owner: Bytes! # address
   link: String! # string
+  shortDescription: String! # string
   description: String! # string
   locale: String! # string
 }

@@ -7,7 +7,7 @@ async function vote() {
     const yes = $('[name=dir][value=for]').is(":checked");
 
     await defaultAccountPromise();
-    const contractInstance = new web3.eth.Contract(await filesJsonInterface(), addressFiles);
+    const contractInstance = new web3.eth.Contract(await filesJsonInterface(), await getAddress('Files'));
     await contractInstance.methods.voteChildParent(child, parent, yes, '0x0000000000000000000000000000000000000001')
         .send({from: defaultAccount, value: web3.utils.toWei(amount), gas: '10000000'}, (error, result) => {
             if(error) return;
@@ -26,4 +26,4 @@ function onLoad() {
     $('.category').categoryChooser();
 }
 
-$(onLoad);
+window.addEventListener('load', onLoad);

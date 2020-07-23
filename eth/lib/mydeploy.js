@@ -29,11 +29,11 @@ function updateAddress(name, address, network) {
 
     fs.writeFileSync(filename2, JSON.stringify(data1, null, 2));
 
-    let js = "";
-    for(let key in data1)
-        js += "const address" + key + " = '" + data1[key] + "';\n";
-    fs.mkdirSync('../out/artifacts', { recursive: true });
-    fs.writeFileSync('../out/artifacts/addresses.js', js);
+    // let js = "";
+    // for(let key in data1)
+    //     js += "const address" + key + " = '" + data1[key] + "';\n";
+    // fs.mkdirSync('../out/artifacts', { recursive: true });
+    // fs.writeFileSync('../out/artifacts/addresses.js', js);
 }
 
 module.exports = { updateAddress };

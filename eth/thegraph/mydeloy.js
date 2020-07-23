@@ -7,9 +7,15 @@ function main() {
     const network = process.argv[2];
     if(!network) return;
     const data = JSON.parse(fs.readFileSync(`../data/${network}.addresses`));
+
     const tmpl = fs.readFileSync('subgraph.yaml.tmpl', 'utf8');
     const yaml = tmpl.replace('@network@', network).replace('@Files@', data.Files).replace('@FilesBlock@', data.FilesBlock);
     fs.writeFileSync('subgraph.yaml', yaml);
+
+    const tmpl2 = fs.readFileSync('package.json.tmpl', 'utf8');
+    const pjson = tmpl2.replace('@TheGraph@', data.TheGraph);
+    fs.writeFileSync('package.json', pjson);
+
 /*
     console.log("Executing `yarn deploy`...");
     exec("yarn deploy", (error, stdout, stderr) => {

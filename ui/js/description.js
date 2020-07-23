@@ -47,14 +47,15 @@ async function createOrUpdateItem() {
 }
 
 async function createItem() {
-    const contractInstance = new web3.eth.Contract(await filesJsonInterface(), addressFiles);
+    const contractInstance = new web3.eth.Contract(await filesJsonInterface(), await getAddress('Files'));
 
     const locale = document.getElementById('locale').value;
     const title = document.getElementById('title').value;
     const description = document.getElementById('description').value;
+    const shortDescription = document.getElementById('shortDescription').value;
     const license = document.getElementById('license').value;
 
-    const response = await contractInstance.methods.createItem({title, description, priceETH: getPriceETH(), priceAR: getPriceAR(), locale, license},
+    const response = await contractInstance.methods.createItem({title, shortDescription, description, priceETH: getPriceETH(), priceAR: getPriceAR(), locale, license},
                                                                '0x0000000000000000000000000000000000000001')
         .send({from: defaultAccount, gas: '1000000'});
     const itemId = response.events.ItemCreated.returnValues.itemId;
@@ -62,14 +63,15 @@ async function createItem() {
 }
 
 async function updateItem(itemId) {
-    const contractInstance = new web3.eth.Contract(await filesJsonInterface(), addressFiles);
+    const contractInstance = new web3.eth.Contract(await filesJsonInterface(), await getAddress('Files'));
 
     const locale = document.getElementById('locale').value;
     const title = document.getElementById('title').value;
     const description = document.getElementById('description').value;
+    const shortDescription = document.getElementById('shortDescription').value;
     const license = document.getElementById('license').value;
 
-    contractInstance.methods.updateItem(itemId, {title, description, priceETH: getPriceETH(), priceAR: getPriceAR(), locale, license})
+    contractInstance.methods.updateItem(itemId, {title, shortDescription, description, priceETH: getPriceETH(), priceAR: getPriceAR(), locale, license})
         .send({from: defaultAccount, gas: '1000000'})
         .on('transactionHash', async function(receiptHash) {
             alert("Item updated.");
@@ -77,6 +79,10 @@ async function updateItem(itemId) {
 }
 
 $(async function() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const id = urlParams.get('id');
+    if(id) $('head').prepend(`<meta name="robots" content="noindex" />`);
+
     $('#multiVoter').multiVoter();
 
     const itemId = numParam('id');

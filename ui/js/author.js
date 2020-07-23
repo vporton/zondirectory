@@ -26,7 +26,7 @@ async function onLoad() {
         priceETH
         priceAR
     }
-    category${itemId}: categoryUpdateds(first:1, orderBy:id, orderDirection:desc, where:{categoryId:${itemId}}) {
+    category${itemId}: ownedCategoryUpdateds(first:1, orderBy:id, orderDirection:desc, where:{categoryId:${itemId}}) {
         categoryId
         title
     }
@@ -66,7 +66,7 @@ async function onLoad() {
 }
 
 async function doSetARWallet(address) {
-    const contractInstance = new web3.eth.Contract(await filesJsonInterface(), addressFiles);
+    const contractInstance = new web3.eth.Contract(await filesJsonInterface(), await getAddress('Files'));
     contractInstance.methods.setARWallet(defaultAccount, address)
         .send({from: defaultAccount, gas: '1000000'})
         .on('transactionHash', function(transactionHash) {
@@ -91,4 +91,4 @@ function setARWalletFromkeyFile(event) {
     fileReader.readAsText(event.target.files[0]);
 }
 
-$(onLoad);
+window.addEventListener('load', onLoad);

@@ -52,7 +52,7 @@ function showFilesWithMessage() {
 async function payETH() {
     const price = askPrice(document.getElementById('priceETH').textContent);
     if(!price) return;
-    const contractInstance = new web3.eth.Contract(await filesJsonInterface(), addressFiles);
+    const contractInstance = new web3.eth.Contract(await filesJsonInterface(), await getAddress('Files'));
     await defaultAccountPromise();
     await contractInstance.methods.pay(itemId, '0x0000000000000000000000000000000000000001').send({from: defaultAccount, value: web3.utils.toWei(String(price*1.0000001)), gas: '1000000'})
         .then(showFilesWithMessage)
@@ -62,7 +62,7 @@ async function payETH() {
 async function donateETH() {
     const price = prompt("Your donation amount:", '0.1');
     if(!price) return;
-    const contractInstance = new web3.eth.Contract(await filesJsonInterface(), addressFiles);
+    const contractInstance = new web3.eth.Contract(await filesJsonInterface(), await getAddress('Files'));
     await defaultAccountPromise();
     await contractInstance.methods.donate(itemId, '0x0000000000000000000000000000000000000001').send({from: defaultAccount, value: web3.utils.toWei(String(price)), gas: '1000000'})
         .catch(err => alert("Payment failure! " + err));
@@ -97,7 +97,7 @@ async function doPayAR(price, showFiles) {
                     let authorRoyalty, shareholdersRoyalty;
                     await defaultAccountPromise();
                     // TODO: Don't call Ethereum if no author's AR wallet.
-                    const contractInstance = new web3.eth.Contract(await filesJsonInterface(), addressFiles);
+                    const contractInstance = new web3.eth.Contract(await filesJsonInterface(), await getAddress('Files'));
                     contractInstance.methods.salesOwnersShare().call(async (error, result) => {
                         if(error) {
                             alert(error);
