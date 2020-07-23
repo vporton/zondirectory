@@ -112,6 +112,7 @@ async function onLoad() {
     if(window.ethereum) window.ethereum.enable();
 
     const choosenNetwork = getCookie('web3network');
+    if(!choosenNetwork) choosenNetwork = '0x1';
     if(window.web3 && choosenNetwork != window.web3.currentProvider.chainId) {
         alert("Wrong browser/MetaMask Ethereum network choosen! Change your Ethereum network or settings.")
     }
