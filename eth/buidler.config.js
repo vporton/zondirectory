@@ -78,6 +78,10 @@ module.exports = {
       url: "https://rinkeby.infura.io/v3/1d0c278301fc40f3a8f40f25ae3bd328",
       accounts: process.env.RINKEBY_PRIVATE_KEY ? [process.env.RINKEBY_PRIVATE_KEY] : [],
     },
+    mainnet: {
+      url: "https://mainnet.infura.io/v3/1d0c278301fc40f3a8f40f25ae3bd328",
+      accounts: process.env.MAINNET_PRIVATE_KEY ? [process.env.MAINNET_PRIVATE_KEY] : [],
+    },
   },
   namedAccounts: {
     deployer: {
