@@ -26,7 +26,7 @@ async function onLoad() {
         priceETH
         priceAR
     }
-    category${itemId}: categoryUpdateds(first:1, orderBy:id, orderDirection:desc, where:{categoryId:${itemId}}) {
+    category${itemId}: ownedCategoryUpdateds(first:1, orderBy:id, orderDirection:desc, where:{categoryId:${itemId}}) {
         categoryId
         title
     }
