@@ -4,7 +4,7 @@ Warning: Currently it uses Rinkeby test network, not real money.
 It is a preliminary version, not suitable for a real usage yet.
 
 Try it at
-https://arweave.net/tqa7mAn2eeqe2PCOWSGgu3wxwjLKIj8FPP_451TfqXo
+https://arweave.net/5XrbP4Wni_HQESyDBxB08e-suVAfY-utXZ1RuLxqGoU
 
 This project Cryptozon allows you to sell e-books and other files for
 crypto (ETH and/or AR).
