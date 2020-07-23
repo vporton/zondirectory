@@ -59,7 +59,9 @@ let web3;
 // FIXME: If MetaMask is missing or locked.
 let defaultAccount;
 // web3.eth.defaultAccount = web3.eth.accounts[0];
-async function defaultAccountPromise() { return (await getWeb3()).eth.getAccounts(); }
+async function defaultAccountPromise() {
+    return web3 && web3.currentProvider ? (await getWeb3()).eth.getAccounts() : null;
+}
 
 // TODO: Load it once!
 function filesJsonInterface() {
@@ -105,15 +107,15 @@ let myWeb3 = null;
 
 async function getWeb3() {
     if(myWeb3) return myWeb3;
-    return myWeb3 = new Web3(window.web3 ? window.web3.currentProvider : await getAddress('Web3Provider'));
+    return myWeb3 = new Web3(window.web3 ? window.web3 && window.web3.currentProvider : await getAddress('Web3Provider'));
 }
 
 async function onLoad() {
     if(window.ethereum) window.ethereum.enable();
 
-    const choosenNetwork = getCookie('web3network');
+    let choosenNetwork = getCookie('web3network');
     if(!choosenNetwork) choosenNetwork = '0x1';
-    if(window.web3 && choosenNetwork != window.web3.currentProvider.chainId) {
+    if(window.web3 && window.web3.currentProvider && choosenNetwork != window.web3.currentProvider.chainId) {
         alert("Wrong browser/MetaMask Ethereum network choosen! Change your Ethereum network or settings.")
     }
 
@@ -121,7 +123,8 @@ async function onLoad() {
         $('#testModeWarnining').css('display', 'block');
 
     web3 = await getWeb3();
-    defaultAccount = (await defaultAccountPromise())[0];
+    const dap = await defaultAccountPromise();
+    defaultAccount = dap ? dap[0] : null;
 
     $('#rootLink').attr('href', "index.html?cat=" + await getAddress('Root'));
 }
