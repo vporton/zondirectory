@@ -23,10 +23,15 @@ async function onLoad() {
     }
     ownedCategoryUpdateds(first:1, orderBy:id, orderDirection:desc, where:{categoryId:${catId}}) {
         title
+        description
     }
 }`;
         queryResult0 = (await queryThegraph(query)).data;
         const isOwned = queryResult0.ownedCategoryUpdateds.length != 0;
+        if(isOwned) {
+            $('#showDescription').css('display', 'block');
+            $('#description').text(queryResult0.ownedCategoryUpdateds[0].description);
+        }
         query = `{
     childParentVotes(first:1000, where:{parent:${catId}}) {
         child
@@ -107,6 +112,7 @@ async function onLoad() {
         link${itemId}: linkUpdateds(first:1, orderBy:id, orderDirection:desc, where:{linkId:${itemId}}) {
             linkId # TODO: Superfluous
             title
+            shortDescription
             link
         }
         categoryCreate${itemId}: categoryCreateds(first:1, orderBy: id, orderDirection:asc, where:{categoryId:${itemId}}) {
@@ -119,6 +125,7 @@ async function onLoad() {
         ownedCategory${itemId}: ownedCategoryUpdateds(first:1, orderBy: id, orderDirection:asc, where:{categoryId:${itemId}}) {
             categoryId # TODO: Superfluous
             title
+            shortDescription
         }`
             if(catId) {
                 // TODO: rspam seems sometimes unnecessary.
@@ -156,9 +163,13 @@ async function onLoad() {
                 const link = "index.html?cat=" + categoryId;
                 const voteStr = `<a href='vote.html?child=${categoryId}&parent=${catId}&dir=for'>👍</a>` +
                     `<a href='vote.html?child=${categoryId}&parent=${catId}&dir=against'>👎</a>`;
-                $(items['ownedCategory' + categoryId][0] ? '#ownedSubcategories' : '#subcategories')
-                    .append(`<li><a href="${link}">${safe_tags(category.title)}</a> (spam score: ${spamScore} ${voteStr})</li>`);
-            }
+                if(items['ownedCategory' + categoryId][0])
+                    $('#ownedSubcategories')
+                        .append(`<li><a href="${link}">${safe_tags(category.title)}</a>. ${safe_tags(category.shortDescription)} (spam score: ${spamScore} ${voteStr})</li>`);
+                else
+                    $('#subcategories')
+                        .append(`<li><a href="${link}">${safe_tags(category.title)}</a> (spam score: ${spamScore} ${voteStr})</li>`);
+    }
 
             $('#supercategories > li:gt(0)').css('display', 'none');
             $('#subcategories > li:gt(9)').css('display', 'none');
@@ -195,7 +206,7 @@ async function onLoad() {
                     `<a href='vote.html?child=${i.replace(/^link/, "")}&parent=${catId}&dir=against'>👎</a>`;
             }
             const spamInfo = catId ? ` (spam score: ${spamScore} ${voteStr})` : ``;
-            const row = `<li><a href="${link}">${safe_tags(item.title)}</a>${spamInfo}</li>`;
+            const row = `<li><a href="${link}">${safe_tags(item.title)}</a>. ${safe_tags(item.shortDescription)} ${spamInfo}</li>`;
             $('#links').append(row);
         }
         if(!catId)
