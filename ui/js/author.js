@@ -44,8 +44,9 @@ async function onLoad() {
         if(!/^item/.test(i)) continue;
         const item = items[i][0];
         if(!item) continue;
-        const link = "description.html?id=" + item.itemId;
-        const row = `<tr><td><a href="${link}">${safe_tags(item.title)}</a></td><td>${formatPriceETH(item.priceETH)}</td><td>${formatPriceAR(item.priceAR)}</td></tr>`;
+        const link = "download.html?id=" + item.itemId;
+        const editLink = "description.html?id=" + item.itemId;
+        const row = `<tr><td><a href="${link}">${safe_tags(item.title)}</a></td><td>${formatPriceETH(item.priceETH)}</td><td>${formatPriceAR(item.priceAR)}</td><td><a href="${editLink}">Edit</a></td></tr>`;
         $('#theTable').append(row);
     }
     for(let i of itemKeys) {
