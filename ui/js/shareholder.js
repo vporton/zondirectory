@@ -6,6 +6,21 @@ $(async function() {
     $('#tokenETH').text(web3.utils.fromWei(tokenETH));
     const earnedETH = await contractInstance.methods.dividendsOwing(defaultAccount).call();
     $('#ETH').text(web3.utils.fromWei(earnedETH));
+
+    let query = `{
+    setARWallets(orderBy:id, orderDirection:desc, where:{owner:"${defaultAccount}"}) {
+        arWallet
+    }
+}`;
+    const queryResult = (await queryThegraph(query)).data;
+    if(queryResult.setARWallets[0]) {
+        const arWallet = queryResult.setARWallets[0].arWallet;
+        document.getElementById('arWallet').textContent = arWallet;
+        const smartweave = require('smartweave');
+        smartweave.readContract(arweave, AR_PST_CONTRACT_ADDRESS).then(contractState => {
+            $('#tokenAR').text(contractState.balances[arWallet]);
+        });
+    }
 });
 
 async function withdrawETH() {
