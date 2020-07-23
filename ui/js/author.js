@@ -17,6 +17,7 @@ async function onLoad() {
     }`;
     let itemIds = (await queryThegraph(query)).data.setItemOwners;
     itemIds = itemIds.filter((x, i, a) => a.indexOf(x) == i); // unique values
+    console.log(itemIds)
     if(!itemIds.length) return;
     const itemIdsFlat = itemIds.map(i => i.itemId);
     function subquery(itemId) {
@@ -38,7 +39,8 @@ async function onLoad() {
     }
     query = "{\n" + itemIdsFlat.map(i => subquery(i)).join("\n") + "\n}";
     let items = (await queryThegraph(query)).data;
-    for(let i in items) {
+    const itemKeys = Object.keys(items).sort((a, b) => b.replace(/[^0-9]/g, "") - a.replace(/[^0-9]/g, ""));
+    for(let i of itemKeys) {
         if(!/^item/.test(i)) continue;
         const item = items[i][0];
         if(!item) continue;
@@ -46,7 +48,7 @@ async function onLoad() {
         const row = `<tr><td><a href="${link}">${safe_tags(item.title)}</a></td><td>${formatPriceETH(item.priceETH)}</td><td>${formatPriceAR(item.priceAR)}</td></tr>`;
         $('#theTable').append(row);
     }
-    for(let i in items) {
+    for(let i of itemKeys) {
         if(!/^link/.test(i)) continue;
         const item = items[i][0];
         if(!item) continue;
@@ -54,7 +56,7 @@ async function onLoad() {
         const row = `<li><a href="${safe_tags(item.link)}">${safe_tags(item.title)}</a> (<a href="post-link.html?id=${item.linkId}">edit</a>)</li>`;
         $('#links').append(row);
     }
-    for(let i in items) {
+    for(let i of itemKeys) {
         if(!/^category/.test(i)) continue;
         const item = items[i][0];
         if(!item) continue;
