@@ -78,10 +78,10 @@ async function onLoad() {
         if(!childs.has(i) || childs.get[i].id > entry.id)
             childs.set(i, {id: entry.id, child: entry.child, value: entry.value})
     }
-    const parentIDsA = Array.from(parentsA.values()).sort((a, b) => b.value - a.value).map(e => e.parent);
-    const parentIDsB = Array.from(parentsB.values()).sort((a, b) => b.value - a.value).map(e => e.parent);
+    const parentIDsA = Array.from(parentsA.values()).sort((a, b) => a.value - b.value).map(e => e.parent);
+    const parentIDsB = Array.from(parentsB.values()).sort((a, b) => a.value - b.value).map(e => e.parent);
     const parentIDs = parentIDsA.concat(parentIDsB);
-    const childIDs = Array.from(childs.values()).sort((a, b) => b.value - a.value).map(e => e.child);
+    const childIDs = Array.from(childs.values()).sort((a, b) => a.value - b.value).map(e => e.child);
 
     if(queryResult0 && queryResult0.categoryUpdateds && queryResult0.categoryUpdateds[0]) {
         const categoryTitle = queryResult0.categoryUpdateds[0].title;
@@ -164,7 +164,7 @@ async function onLoad() {
             $('#subcategories > li:gt(9)').css('display', 'none');
         }
         // FIXME: Sort order (item2 before item10!)
-        const itemKeys = Object.keys(items).sort((a, b) => a.replace(/[^0-9]/g, "") - b.replace(/[^0-9]/g, "")).reverse();
+        const itemKeys = Object.keys(items).sort((a, b) => b.replace(/[^0-9]/g, "") - a.replace(/[^0-9]/g, ""));
         for(let i of itemKeys) {
             if(!/^item/.test(i)) continue;
             const item = items[i][0];
@@ -176,10 +176,10 @@ async function onLoad() {
                 const voteStr = `<a href='vote.html?child=${i.replace(/^item/, "")}&parent=${catId}&dir=for'>👍</a>` +
                     `<a href='vote.html?child=${i.replace(/^item/, "")}&parent=${catId}&dir=against'>👎</a>`;
                 const row = `<tr><td><a href="${link}">${safe_tags(item.title)}</a></td><td>${formatPriceETH(item.priceETH)}</td><td>${formatPriceAR(item.priceAR)}</td><td>${spamScore} ${voteStr}</tr>`;
-                $('#theTable').prepend(row);
+                $('#theTable').append(row);
             } else {
                 const row = `<tr><td><a href="${link}">${safe_tags(item.title)}</a></td><td>${formatPriceETH(item.priceETH)}</td><td>${formatPriceAR(item.priceAR)}</td>`;
-                $('#theTable').prepend(row);
+                $('#theTable').append(row);
             }
         }
         for(let i of itemKeys) {
@@ -196,7 +196,7 @@ async function onLoad() {
             }
             const spamInfo = catId ? ` (spam score: ${spamScore} ${voteStr})` : ``;
             const row = `<li><a href="${link}">${safe_tags(item.title)}</a>${spamInfo}</li>`;
-            $('#links').prepend(row);
+            $('#links').append(row);
         }
         if(!catId)
             for(let i of itemKeys) {
