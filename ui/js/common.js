@@ -62,24 +62,23 @@ async function defaultAccountPromise() {
     return web3 && web3.currentProvider ? (await getWeb3()).eth.getAccounts() : null;
 }
 
-// TODO: Load it once!
+let filesJsonInterfaceCache = null;
+
 function filesJsonInterface() {
     return new Promise((resolve) => {
-        var xhttp = new XMLHttpRequest();
-        xhttp.onreadystatechange = function() {
-            if (this.readyState == 4 && this.status == 200)
-                resolve(JSON.parse(xhttp.responseText));
-        };
-        xhttp.open("GET", "artifacts/Files.abi", true);
-        xhttp.send();
+        if(filesJsonInterfaceCache) resolve(filesJsonInterfaceCache);
+
+        fetch("artifacts/Files.abi")
+            .then(response => resolve(filesJsonInterfaceCache = response.json()));
     });
 }
 
 let addressesFile = null;
 
 function getAddressesFile() {
-    if(addressesFile) return addressesFile;
     return new Promise((resolve) => {
+        if(addressesFile) resolve(addressesFile);
+
         let networkName;
         let chainId = getCookie('web3network');
         if(!chainId) chainId = '0x1';
