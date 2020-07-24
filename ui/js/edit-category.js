@@ -17,7 +17,7 @@ async function onLoad() {
         const queryResult = (await queryThegraph(query)).data;
         const data = queryResult.ownedCategoryUpdateds[0];
         $('#title').val(data.title);
-        $('#locale').val(data.title);
+        $('#locale').val(data.locale);
         $('#shortDescription').text(data.shortDescription);
         $('#description').text(data.description);
     }
