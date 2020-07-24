@@ -1,4 +1,9 @@
 async function onLoad() {
+    if(!window.web3) {
+        alert("Install a crypto browser to be an author!");
+        return;
+    }
+
     await defaultAccountPromise();
     let query = `{
         setARWallets(orderBy:id, orderDirection:desc, where:{owner:"${defaultAccount}"}) {
