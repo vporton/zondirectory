@@ -1,6 +1,7 @@
+const urlParams = new URLSearchParams(window.location.search);
+const id = urlParams.get('id');
+
 async function onLoad() {
-    const urlParams = new URLSearchParams(window.location.search);
-    const id = urlParams.get('id');
     if(id) {
         $('head').prepend(`<meta name="robots" content="noindex" />`);
         $("#ownedPar").css('display', 'none');
@@ -37,16 +38,23 @@ async function createCategory() {
     await defaultAccountPromise();
     const contractInstance = new web3.eth.Contract(await filesJsonInterface(), await getAddress('Files'));
     let response;
-    if(owned) {
-        response = await contractInstance.methods.createOwnedCategory({title: name, locale, shortDescription, description}, '0x0000000000000000000000000000000000000001')
+    if(id) {
+        response = await contractInstance.methods.updateOwnedCategory(id, {title: name, locale, shortDescription, description})
+            .send({from: defaultAccount, gas: '1000000'}, (error, result) => {
+                if(error) return; // FIXME
+            });
+} else {
+        if(owned) {
+            response = await contractInstance.methods.createOwnedCategory({title: name, locale, shortDescription, description}, '0x0000000000000000000000000000000000000001')
                 .send({from: defaultAccount, gas: '1000000'}, (error, result) => {
-            if(error) return; // FIXME
-        });
-    } else {
-        response = await contractInstance.methods.createCategory(name, locale, '0x0000000000000000000000000000000000000001')
+                    if(error) return; // FIXME
+                });
+        } else {
+            response = await contractInstance.methods.createCategory(name, locale, '0x0000000000000000000000000000000000000001')
                 .send({from: defaultAccount, gas: '1000000'}, (error, result) => {
-            if(error) return; // FIXME
-        });
+                    if(error) return; // FIXME
+                });
+        }
     }
     const catId = response.events.CategoryCreated.returnValues.categoryId;
     await $('#multiVoter').doMultiVote(catId);
