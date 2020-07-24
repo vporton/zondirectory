@@ -5,6 +5,21 @@ async function onLoad() {
         $('head').prepend(`<meta name="robots" content="noindex" />`);
         $("#ownedPar").css('display', 'none');
         $("#ownedInfo").css('display', 'block');
+
+        const query = `{
+    ownedCategoryUpdateds(first:1, orderBy:id, orderDirection:desc, where:{categoryId:${id}}) {
+        title
+        shortDescription
+        description
+        locale
+    }
+}`;
+        const queryResult = (await queryThegraph(query)).data;
+        const data = queryResult.ownedCategoryUpdateds[0];
+        $('#title').val(data.title);
+        $('#locale').val(data.title);
+        $('#shortDescription').text(data.shortDescription);
+        $('#description').text(data.description);
     }
 
     $('#multiVoter').multiVoter();
