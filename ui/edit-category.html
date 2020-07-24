@@ -1,23 +1,23 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
     <head id="head">
-        <title>Create New Category</title>
+        <title>Create/Edit Category</title>
         <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
         <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css"/>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/web3/1.2.9/web3.min.js"></script>
         <script src="js/common.js"></script>
         <script src="js/category-chooser.js"></script>
-        <script src="js/create-category.js"></script>
+        <script src="js/edit-category.js"></script>
         <style>
             textarea { width: 100% }
             #description { height: 10ex }
         </style>
     </head>
     <body>
-        <h1 id="title">Create New Category</h1>
+        <h1 id="title">Create/Edit Category</h1>
         <div id="body">
             <p>Category name: <input type="text" id="title"/></p>
             <p>Category language: <input type="text" id="locale" value="en"/></p>
-            <p>Category is owned by you:
+            <p id="ownedPar">Category is owned by you:
                 <input type="checkbox" id="owned"
                        onclick="$('#ownedInfo').css('display', event.target.checked ? 'block' : 'none')"/>
                 (Others cannot post to a category owned by you, but owned categories receive
@@ -31,7 +31,7 @@
                 For your owned parent categories voting is free.
                 Add your new category to at least one parent category to have more traffic.</p>
             <div id="multiVoter"></div>
-            <p><input type="button" value="Create" onclick="createCategory()"/></p>
+            <p><input type="button" value="Create/Edit" onclick="createCategory()"/></p>
         </div>
     </body>
 </html>

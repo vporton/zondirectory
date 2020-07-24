@@ -1,15 +1,13 @@
 async function onLoad() {
     const urlParams = new URLSearchParams(window.location.search);
     const id = urlParams.get('id');
-    if(id) $('head').prepend(`<meta name="robots" content="noindex" />`);
+    if(id) {
+        $('head').prepend(`<meta name="robots" content="noindex" />`);
+        $("#ownedPar").css('display', 'none');
+        $("#ownedInfo").css('display', 'block');
+    }
 
     $('#multiVoter').multiVoter();
-    await defaultAccountPromise();
-    const contractInstance = new web3.eth.Contract(await filesJsonInterface(), await getAddress('Files'));
-    contractInstance.methods.balanceOf(defaultAccount).call({from: defaultAccount, gas: '10000000'}, function(error, result){
-        console.log(error)
-        $('#value').html(result == 0 ? '<strong>zero</strong>' : formatPriceETH(result));
-    });
 }
 
 async function createCategory() {
