@@ -40,24 +40,18 @@ async function createCategory() {
     let response;
     if(id) {
         response = await contractInstance.methods.updateOwnedCategory(id, {title: name, locale, shortDescription, description})
-            .send({from: defaultAccount, gas: '1000000'}, (error, result) => {
-                if(error) return; // FIXME
-            });
-} else {
+            .send({from: defaultAccount, gas: '1000000'});
+    } else {
         if(owned) {
             response = await contractInstance.methods.createOwnedCategory({title: name, locale, shortDescription, description}, '0x0000000000000000000000000000000000000001')
-                .send({from: defaultAccount, gas: '1000000'}, (error, result) => {
-                    if(error) return; // FIXME
-                });
+                .send({from: defaultAccount, gas: '1000000'});
         } else {
             response = await contractInstance.methods.createCategory(name, locale, '0x0000000000000000000000000000000000000001')
-                .send({from: defaultAccount, gas: '1000000'}, (error, result) => {
-                    if(error) return; // FIXME
-                });
+                .send({from: defaultAccount, gas: '1000000'});
         }
     }
     const catId = response.events.CategoryCreated.returnValues.categoryId;
-    await $('#multiVoter').doMultiVote(catId);
+    if(catId) await $('#multiVoter').doMultiVote(catId);
 }
 
 window.addEventListener('load', onLoad);

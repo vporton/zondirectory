@@ -174,7 +174,6 @@ async function onLoad() {
             $('#supercategories > li:gt(0)').css('display', 'none');
             $('#subcategories > li:gt(9)').css('display', 'none');
         }
-        // FIXME: Sort order (item2 before item10!)
         const itemKeys = Object.keys(items).sort((a, b) => b.replace(/[^0-9]/g, "") - a.replace(/[^0-9]/g, ""));
         for(let i of itemKeys) {
             if(!/^item/.test(i)) continue;

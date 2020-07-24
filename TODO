@@ -1,12 +1,8 @@
-* Don't use TheGraph when not necessary, use plain RPC.
-
 * PayPal, etc.
 
 * Covers.
 
 * Email marketing.
-
-* Donations.
 
 * Show user's past voting.
 
@@ -24,8 +20,6 @@
 
 * Processing `arweave:` URL scheme and blogging engine.
 
-* `orderBy` forgotten.
-
 * Not owned (= not modificable) links.
 
 * Full-text search.
@@ -35,12 +29,12 @@
 * Use <script src="https://arweave.net/wPwixxLKoF1c5EjLBViT9VjJWwE15-wmJYTyN5fz0rU"></script> for
   SmartWeave.JS
 
-* Should donation fee be different?
-
-* Don't sell zero files.
-
 * Meta descriptions.
 
 * Use Authereum to eliminate gas costs.
 
 * "strict";
+
+* Input validation.
+
+* Show recent owned categories.
