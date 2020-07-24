@@ -56,7 +56,6 @@ function getCookie(cname) {
 
 let web3;
 
-// FIXME: If MetaMask is missing or locked.
 let defaultAccount;
 // web3.eth.defaultAccount = web3.eth.accounts[0];
 async function defaultAccountPromise() {

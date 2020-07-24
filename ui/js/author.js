@@ -57,7 +57,6 @@ async function onLoad() {
         if(!/^link/.test(i)) continue;
         const item = items[i][0];
         if(!item) continue;
-        // FIXME: proper escape in attr
         const row = `<li><a href="${safe_tags(item.link)}">${safe_tags(item.title)}</a> (<a href="post-link.html?id=${item.linkId}">edit</a>)</li>`;
         $('#links').append(row);
     }
