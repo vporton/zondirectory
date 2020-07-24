@@ -66,8 +66,8 @@ async function onLoad() {
         const item = items[i][0];
         if(!item) continue;
         const link = "index.html?cat=" + item.categoryId;
-        // TODO: Edit category name.
-        const row = `<li><a href="${link}">${safe_tags(item.title)}</a></li>`;
+        const editLink = "edit-category.html?id=" + item.categoryId;
+        const row = `<li><a href="${link}">${safe_tags(item.title)}</a> (<a href="${editLink}">Edit</a>)</li>`;
         $('#categories').append(row);
     }
 }
