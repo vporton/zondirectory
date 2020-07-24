@@ -1,22 +1,22 @@
-# Cryptozon (a file uploading service)
+# Zon Directory (a directory of everything)
 
-Warning: Currently it uses Rinkeby test network, not real money.
-It is a preliminary version, not suitable for a real usage yet.
+Try it at https://zondirectory.com
 
-Try it at
-https://arweave.net/5XrbP4Wni_HQESyDBxB08e-suVAfY-utXZ1RuLxqGoU
+More information: https://help.zondirectory.com
 
-This project Cryptozon allows you to sell e-books and other files for
-crypto (ETH and/or AR).
+This is a directory of everything with integrated sales (both for ETH and AR)
+of file downloads and messaging like Twitter (+blog in the future) and voting
+for entries and subcategories by ETH cryptocurrency.
 
-It is like SmashWords e-book sales, a shareware site, Dmoz Web directory
-at once, but backed with crypto technology and community voting.
+It is like SmashWords e-book sales, a shareware site, Dmoz Web directory,
+and Twitter at once, but backed with crypto technology and community voting.
 
 You upload the file permanently and users can find it and download or
 pay for it, they also can donate to you more than your set price.
 
 The software subtracts owner's share (currently 10%) from your price
-and distributes it using a Profit Sharing Token.
+and distributes it using a Profit Sharing Token. Also upvotes of author's content
+are rewarded.
 
 In fact, the project provides two profit sharing tokens: One Arweave PST
 token and one Ethereum ERC-20 token (it is another smart contract that the
@@ -31,14 +31,12 @@ uploaded files, splitting them into a set of several file bundles versions.
 
 ### Voting
 
-You can send Ether to the main contract address. This way you obtain voting rights
-proportional to the total amount of Ether you sent.
+You vote with ETH cryptocurrency.
 
 After this you can vote for or against any particular child-parent relationship to
 be considered spam or non-spam.
 
-The UIs may retrieve voting results and show or not show an item or a subcategory
-dependently on its non-spam score being above a certain threshold.
+The UI orders items reversely to their spam score.
 
 This is a great system for crowdsourcing a category structure with voting rather than
 using a centralized category structure.
@@ -49,7 +47,7 @@ Consider top-level categories like
 
 * Binaries
 
-* Software sources
+* Software
 
 * Videos
 
@@ -65,11 +63,7 @@ in the user interface:
 
 ### Cover images
 
-### Directory of Web links
-
-### Twitter-like messages / blogs
-
-### Categories owned by a user
+### Blogs
 
 ### Non-English language
 
