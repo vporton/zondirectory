@@ -39,6 +39,10 @@ function setPriceAR(price) {
 }
 
 async function createOrUpdateItem() {
+    $('#priceETH').removeClass('error');
+    $('#priceAR').removeClass('error');
+    if(!$('#form').valid()) return;
+
     const itemId = numParam('id');
     if(itemId)
         updateItem(itemId);
@@ -106,4 +110,10 @@ $(async function() {
         setPriceAR(item.priceAR);
     }
 
+    $('#form').validate({
+        rules: {
+            priceETH: {number: true},
+            priceAR: {number: true}
+        }
+    });
 })

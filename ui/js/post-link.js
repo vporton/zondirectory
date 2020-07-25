@@ -3,6 +3,8 @@
 // let itemEvents;
 
 async function createOrUpdateItem() {
+    if(!$('#form').valid()) return;
+
     const itemId = numParam('id');
     if(itemId)
         updateItem(itemId);
@@ -70,4 +72,5 @@ $(async function() {
         $(`input[name=kind][value=${item.linkKind}]`).prop('checked', true);
     }
 
-})
+    $('#form').validate({});
+});

@@ -2,6 +2,8 @@ async function upload() {
     const itemId = numParam('id');
     if(!itemId) return; // just to be sure
 
+    if(!$('#form').valid()) return;
+
     const keyFileReader = new FileReader();
     keyFileReader.onload = async (e) => {
         const key = JSON.parse(e.target.result); // TODO: If not a key file.
@@ -65,3 +67,11 @@ async function upload() {
     }
     keyFileReader.readAsText(document.getElementById('arWalletKeyFile').files[0]);
 }
+
+$(function() {
+    $('#form').validate({
+        rules: {
+            version: {digits: true},
+        }
+    });
+});

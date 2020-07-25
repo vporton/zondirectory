@@ -27,6 +27,8 @@ async function onLoad() {
 }
 
 async function createCategory() {
+    if(!$('#form').valid()) return;
+
     const name = $("#title").val();
     if(!name) return;
     const description = $("#description").val();
@@ -52,6 +54,8 @@ async function createCategory() {
     }
     const catId = response.events.CategoryCreated.returnValues.categoryId;
     if(catId) await $('#multiVoter').doMultiVote(catId);
+
+    $('#form').validate({});
 }
 
 window.addEventListener('load', onLoad);

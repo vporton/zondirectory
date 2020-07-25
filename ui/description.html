@@ -8,6 +8,7 @@
         <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css"/>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/web3/1.2.9/web3.min.js"></script>
         <script src="https://unpkg.com/arweave/bundles/web.bundle.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.2/dist/jquery.validate.min.js"></script>
         <script src="js/common.js"></script>
         <script src="js/category-chooser.js"></script>
         <script src="js/description.js"></script>
@@ -15,19 +16,21 @@
     <body>
         <h1 id="title">Item Description</h1>
         <div id="body">
-            <p>Language: <input type="text" id="locale" value="en"/></p>
-            <p>Title: <input type="text" id="title"/></p>
-            <p>Short (meta) description: <textarea id="shortDescription"></textarea></p>
-            <p>Description: <textarea id="description"></textarea></p>
-            <p>License: <textarea id="license"></textarea></p>
-            <p>Minimal prices:</p>
-            <p>in ETH: <input type="text" id="priceETH"/>
-                <label><input type="checkbox" id="sellInETH" onclick="sellInETHToggle(event)"/> Don't sell in ETH</label></p>
-            <p>in AR: <input type="text" id="priceAR"/>
-                <label><input type="checkbox" id="sellInAR" onclick="sellInARToggle(event)"/> Don't sell in AR</label></p>
-            <h2>Categories</h2>
-            <div id="multiVoter"></div>
-            <p><input type="button" value="submit" onclick="createOrUpdateItem()"/></p>
+            <form id="form" onkeypress="return event.keyCode != 13;">
+                <p>Language: <input type="text" id="locale" name="locale" value="en" required="required"/></p>
+                <p>Title: <input type="text" id="title" name="title" required="required"/></p>
+                <p>Short (meta) description: <textarea id="shortDescription" name="shortDescription"></textarea></p>
+                <p>Description: <textarea id="description" name="description"></textarea></p>
+                <p>License: <textarea id="license" name="license"></textarea></p>
+                <p>Minimal prices:</p>
+                <p>in ETH: <input type="text" id="priceETH" name="priceETH" required="required"/>
+                    <label><input type="checkbox" id="sellInETH" onclick="sellInETHToggle(event)"/> Don't sell in ETH</label></p>
+                <p>in AR: <input type="text" id="priceAR" name="priceAR" required="required"/>
+                    <label><input type="checkbox" id="sellInAR" onclick="sellInARToggle(event)"/> Don't sell in AR</label></p>
+                <h2>Categories</h2>
+                <div id="multiVoter"></div>
+                <p><input type="button" value="submit" onclick="createOrUpdateItem()"/></p>
+            </form>
             <p id="uploadLink" style="display: none;"><a href="">Upload file</a></p>
         </div>
     </body>

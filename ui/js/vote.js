@@ -1,4 +1,6 @@
 async function vote() {
+    if(!$('#form').valid()) return;
+
     const amount = prompt("Vote amount (in ETH):", '0.1');
     if(!amount) return;
 
@@ -20,10 +22,12 @@ function onLoad() {
     const parent = numParam('parent');
     const urlParams = new URLSearchParams(window.location.search);
     const dir = urlParams.get('dir');
-    $('#child').val(child);
-    $('#parent').val(parent);
+    if(child) $('#child').val(child);
+    if(parent) $('#parent').val(parent);
     $(`[name=dir][value=${dir}]`).prop('checked', true);
     $('.category').categoryChooser();
+
+    $('#form').validate({});
 }
 
 window.addEventListener('load', onLoad);

@@ -7,6 +7,7 @@
             input[type=text], textarea { width: 100%;}
         </style>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/web3/1.2.9/web3.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.2/dist/jquery.validate.min.js"></script>
         <script src="js/common.js"></script>
         <script src="js/category-chooser.js"></script>
         <script src="js/post-link.js"></script>
@@ -14,14 +15,16 @@
     <body>
         <h1 id="title">Post Link or Message</h1>
         <div id="body">
-            <p>Language: <input type="text" id="locale" value="en"/></p>
-            <p>Title: <input type="text" id="title"/></p>
-            <p>Short (meta) description: <textarea id="shortDescription"></textarea></p>
-            <p>Description: <textarea id="description"></textarea></p>
-            <p>Link: <input type="text" id="link"/></p>
-            <p>Link type:
-                <label><input type="radio" name="kind" value="0"/> Directory entry</label>
-                <label><input type="radio" name="kind" value="1"/> Message</label></p>
+            <form id="form" onkeypress="return event.keyCode != 13;">
+                <p>Language: <input type="text" id="locale" name="locale" required="required" value="en"/></p>
+                <p>Title: <input type="text" id="title" name="title" required="required" /></p>
+                <p>Short (meta) description: <textarea id="shortDescription" name="shortDescription"></textarea></p>
+                <p>Description: <textarea id="description" name="description"></textarea></p>
+                <p>Link: <input type="url" id="link" name="link" /></p>
+                <p>Link type:
+                    <label><input type="radio" name="kind" value="0" required="true"/> Directory entry</label>
+                    <label><input type="radio" name="kind" value="1" required="true"/> Message</label></p>
+            </form>
             <h2>Categories</h2>
             <div id="multiVoter"></div>
             <p><input type="button" value="submit" onclick="createOrUpdateItem()"/></p>
