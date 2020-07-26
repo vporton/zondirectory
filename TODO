@@ -46,5 +46,3 @@
   Set 'ethereum.autoRefreshOnNetworkChange' to 'false' to silence this warning: https://metamask.github.io/metamask-docs/API_Reference/Ethereum_Provider#ethereum.autorefreshonnetworkchange'
 
 * CanonicaL URLs.
-
-* Web3 network cookie should have `Path` attribute.
