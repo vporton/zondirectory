@@ -6,9 +6,10 @@ async function upload() {
 
     const keyFileReader = new FileReader();
     keyFileReader.onload = async (e) => {
-        const key = JSON.parse(e.target.result); // TODO: If not a key file.
+        const keyString = e.target.result;
+        const key = JSON.parse(keyString); // TODO: If not a key file.
 
-        const arweave = Arweave.init();
+        const arweave = Arweave.init(); // TODO: Already initialized.
         const fileReader = new FileReader();
         fileReader.onload = async (e) => {
             const fileContent = new Uint8Array(e.target.result);
@@ -69,6 +70,7 @@ async function upload() {
 }
 
 $(function() {
+    $('#arWalletKeyFile').arKeyChooser({storeName: 'authorARPrivateKey'});
     $('#form').validate({
         rules: {
             version: {digits: true},
