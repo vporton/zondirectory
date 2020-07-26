@@ -9,7 +9,7 @@ async function uploadFile() {
     const fileReader = new FileReader();
     fileReader.onload = async (e) => {
         const fileContent = new Uint8Array(e.target.result);
-        const hash = await upload(fileContent, arKeyChooser);
+        const hash = await upload(fileContent, arKeyChooser, document.getElementById('file').files[0].type);
 
         const contractInstance = new web3.eth.Contract(await filesJsonInterface(), await getAddress('Files'));
         contractInstance.methods.uploadFile(itemId,

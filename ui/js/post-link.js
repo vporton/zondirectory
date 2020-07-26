@@ -23,9 +23,11 @@ async function createItem() {
     const owned = true;
 
     let link = document.getElementById('link').value;
-    if($('#tabs-blog').hasClass('ui-tabs-selected')) {
+    if($('#tabs-blog').css('display') != 'none') {
         const text = $('#blogPost').summernote('code');
-        link = "arweave:" + await upload(text, arKeyChooser);
+        // TODO: metatags
+        const html = `<html><head><meta charset="utf-8"/><title>${safe_tags(title)}</title></head><body>${text}</body></html>`;
+        link = "arweave:" + await upload(html, arKeyChooser, 'text/html');
     }
 
     const response = await contractInstance.methods.createLink({link, title, shortDescription, description, locale, linkKind: kind}, owned, '0x0000000000000000000000000000000000000001')

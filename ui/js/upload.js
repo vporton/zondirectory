@@ -1,4 +1,4 @@
-async function upload(content, arKeyChooser) {
+async function upload(content, arKeyChooser, contentType) {
     const key = await arKeyChooser.arKeyGet();
     if(!key) {
         alert("Choose an Arweave key file!");
@@ -38,7 +38,7 @@ async function upload(content, arKeyChooser) {
                 let transaction = await arweave.createTransaction({
                     data: content,
                 }, key);
-                transaction.addTag('Content-Type', document.getElementById('file').files[0].type);
+                transaction.addTag('Content-Type', contentType);
                 await arweave.transactions.sign(transaction, key);
                 const response = await arweave.transactions.post(transaction);
                 if(response.status != 200) {
