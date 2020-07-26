@@ -6,9 +6,6 @@
             alert("Cannot securely store data, because we are not in a server root folder!");
             event.preventDefault();
         }
-
-        // if(this.shouldStoreCheckbox.is(':checked'))
-        //     localStorage.setItem(this.options.storeName, keyString);
     }
     
     $.fn.onUpdateKey = function(keyString) {
@@ -31,7 +28,7 @@
     }
 
     function onFileChange(widget) {
-        const keyFileReader = new FileReader();
+       const keyFileReader = new FileReader();
         keyFileReader.onload = (e) => {
             const keyString = e.target.result;
             widget.onUpdateKey(keyString);
@@ -40,8 +37,9 @@
     }
 
     $.fn.arKeyChooser = function(options) {
-        this.options = options;
+        this.options = options || {};
         this.addressWidget = null;
+        this.shouldStoreCheckbox = null;
 
         this.change(event => onFileChange(this));
 
@@ -53,10 +51,40 @@
             const keyString = localStorage.getItem(options.storeName);
             this.onUpdateKey(keyString);
         }
+
+        return this; // needed?
     }
 
-    $.fn.arKeystore = function() {
+    $.fn.arKeyStore = function() {
+        if(!this.shouldStoreCheckbox || !this.shouldStoreCheckbox.is(':checked')) return;
 
+        if(this[0].files[0]) {
+            const keyFileReader = new FileReader();
+            keyFileReader.onload = (e) => {
+                const keyString = e.target.result;
+                localStorage.setItem(this.options.storeName, keyString);
+            };
+            keyFileReader.readAsText(widget[0].files[0]);
+        }
+    }
+
+    $.fn.arKeyGet = function() {
+        const widget = this;
+        return new Promise((resolve) => {
+            if(widget[0].files[0]) {
+                const keyFileReader = new FileReader();
+                keyFileReader.onload = (e) => {
+                    const keyString = e.target.result;
+                    const key = JSON.parse(keyString); // TODO: error handling
+                    resolve(key);
+                };
+                keyFileReader.readAsText(widget[0].files[0]);
+            } else {
+                const keyString = localStorage.getItem(widget.options.storeName);
+                const key = JSON.parse(keyString); // TODO: error handling
+                resolve(key);
+            }
+        });
     }
 
 }( jQuery ));
