@@ -1,11 +1,4 @@
-let arKeyChooser;
-
-async function upload() {
-    const itemId = numParam('id');
-    if(!itemId) return; // just to be sure
-
-    if(!$('#form').valid()) return;
-
+async function upload(content, arKeyChooser) {
     const key = await arKeyChooser.arKeyGet();
     if(!key) {
         alert("Choose an Arweave key file!");
@@ -13,10 +6,7 @@ async function upload() {
     }
     arKeyChooser.arKeyStore();
 
-    const fileReader = new FileReader();
-    fileReader.onload = async (e) => {
-        const fileContent = new Uint8Array(e.target.result);
-
+    return new Promise(async (resolve) => {
         const contractInstance = new web3.eth.Contract(await filesJsonInterface(), await getAddress('Files'));
         await defaultAccountPromise();
         contractInstance.methods.uploadOwnersShare().call(async (error, result) => {
@@ -26,7 +16,7 @@ async function upload() {
             }
             const ownersShare = result / 2**64;
 
-            const uploadPrice = $.get("https://arweave.net/price/" + fileContent.length, async function(priceResponse) {
+            const uploadPrice = $.get("https://arweave.net/price/" + content.length, async function(priceResponse) {
                 const shareholdersRoyalty = Math.floor(ownersShare * priceResponse);
                 console.log("shareholdersRoyalty:", shareholdersRoyalty)
                 let paymentFailure = false;
@@ -46,7 +36,7 @@ async function upload() {
                 }
 
                 let transaction = await arweave.createTransaction({
-                    data: fileContent,
+                    data: content,
                 }, key);
                 transaction.addTag('Content-Type', document.getElementById('file').files[0].type);
                 await arweave.transactions.sign(transaction, key);
@@ -56,25 +46,8 @@ async function upload() {
                     return;
                 }
 
-                const contractInstance = new web3.eth.Contract(await filesJsonInterface(), await getAddress('Files'));
-                console.log(transaction.id);
-                contractInstance.methods.uploadFile(itemId,
-                                                    document.getElementById('version').value,
-                                                    document.getElementById('format').value,
-                                                    Array.from(Arweave.utils.b64UrlToBuffer(transaction.id)))
-                    .send({from: defaultAccount, gas: '1000000'})
-                    .then(() => open('description.html?id=' + itemId));
+                resolve(transaction.id);
             });
         });
-    };
-    fileReader.readAsArrayBuffer(document.getElementById('file').files[0]);
-}
-
-$(function() {
-    arKeyChooser = $('#arWalletKeyFile').arKeyChooser({storeName: 'authorARPrivateKey'});
-    $('#form').validate({
-        rules: {
-            version: {digits: true},
-        }
     });
-});
+}

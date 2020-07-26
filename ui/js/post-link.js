@@ -1,9 +1,9 @@
 "strict";
 
-// let itemEvents;
+let arKeyChooser;
 
 async function createOrUpdateItem() {
-    if(!$('#form').valid()) return;
+    //if(!$('#form').valid()) return; // does not work with summernote
 
     const itemId = numParam('id');
     if(itemId)
@@ -19,9 +19,14 @@ async function createItem() {
     const title = document.getElementById('title').value;
     const description = document.getElementById('description').value;
     const shortDescription = document.getElementById('shortDescription').value;
-    const link = document.getElementById('link').value;
     const kind = $('input[name=kind]:checked');
     const owned = true;
+
+    let link = document.getElementById('link').value;
+    if($('#tabs-blog').hasClass('ui-tabs-selected')) {
+        const text = $('#blogPost').summernote('code');
+        link = "arweave:" + await upload(text, arKeyChooser);
+    }
 
     const response = await contractInstance.methods.createLink({link, title, shortDescription, description, locale, linkKind: kind}, owned, '0x0000000000000000000000000000000000000001')
         .send({from: defaultAccount, gas: '1000000'})
@@ -51,7 +56,20 @@ $(async function() {
     const id = urlParams.get('id');
     if(id) $('head').prepend(`<meta name="robots" content="noindex" />`);
 
+    $('#tabs').tabs();
     $('#multiVoter').multiVoter();
+    $('#blogPost').summernote({
+        toolbar: [
+            // [groupName, [list of button]]
+            ['style', ['bold', 'italic', 'underline', 'clear']],
+            ['font', ['strikethrough', 'superscript', 'subscript']],
+            ['fontsize', ['fontsize']],
+            ['color', ['color']],
+            ['para', ['style', 'paragraph', 'ol', 'ul']],
+            ['insert', ['link', 'picture', 'video', 'table', 'hr']],
+            ['view', ['fullscreen', 'undo', 'redo', 'help']],
+        ]
+    });
 
     const itemId = numParam('id');
     if(itemId) {
@@ -72,5 +90,9 @@ $(async function() {
         $(`input[name=kind][value=${item.linkKind}]`).prop('checked', true);
     }
 
-    $('#form').validate({});
+    arKeyChooser = $('#arWalletKeyFile').arKeyChooser({storeName: 'authorARPrivateKey'});
+    // FIXME: Does not work with summernote:
+    // $('#form').validate({
+    //     ignore: '[name=blogPost]', // Validation does not work with summernote.
+    // });
 });
