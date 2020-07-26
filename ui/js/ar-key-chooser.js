@@ -7,8 +7,8 @@
             event.preventDefault();
         }
 
-        if(this.shouldStoreCheckbox.is(':checked'))
-            localStorage.setItem(this.options.storeName, keyString);
+        // if(this.shouldStoreCheckbox.is(':checked'))
+        //     localStorage.setItem(this.options.storeName, keyString);
     }
     
     $.fn.onUpdateKey = function(keyString) {
@@ -53,6 +53,10 @@
             const keyString = localStorage.getItem(options.storeName);
             this.onUpdateKey(keyString);
         }
+    }
+
+    $.fn.arKeystore = function() {
+
     }
 
 }( jQuery ));
