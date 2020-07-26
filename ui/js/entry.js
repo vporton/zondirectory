@@ -78,8 +78,11 @@ $(async function() {
 
         const item = queryResult.linkUpdateds[0];
         document.getElementById('locale').textContent = item.locale;
-        document.getElementById('title').textContent = item.title;
         document.getElementById('description').textContent = item.description;
+
+        const linkText = item.link != "" ? `<a href="${safe_attrs(item.link)}">${safe_tags(item.title)}</a>`
+                                         : safe_tags(item.title);
+        $('#link').append(linkText);
         document.getElementById('link').setAttribute('href', item.link);
     }
 })
