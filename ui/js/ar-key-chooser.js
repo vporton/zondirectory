@@ -8,7 +8,7 @@
         }
 
         if(this.shouldStoreCheckbox.is(':checked'))
-            localStorage.setItem(options.storeName, keyString);
+            localStorage.setItem(this.options.storeName, keyString);
     }
     
     $.fn.onUpdateKey = function(keyString) {
@@ -17,8 +17,16 @@
         const key = JSON.parse(keyString); // TODO: error handling
         arweave.wallets.jwkToAddress(key).then(address => {
             if(this.addressWidget) this.addressWidget.remove();
-            this.before(`<code>${address}</code>`);
-            this.addressWidget = this.previous();
+            this.before(`<span><code>${address}</code> <input type="button" value="Remove"/></span> `);
+            const addressWidget = this.prev();
+            this.addressWidget = addressWidget;
+            addressWidget.find('input').click(e => {
+                if(!confirm("Remove the private key?")) return;
+                
+                localStorage.removeItem(this.options.storeName);
+                addressWidget.remove();
+                this.val('');
+            });
         });
     }
 
