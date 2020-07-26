@@ -63,8 +63,6 @@ in the user interface:
 
 ### Cover images
 
-### Blogs
-
 ### Non-English language
 
 ### Full text search
