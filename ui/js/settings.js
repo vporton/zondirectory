@@ -7,7 +7,9 @@ function networkChange() {
 }
 
 function onLoad() {
-    $('#web3network').val(getCookie('web3network'));
+    let network = getCookie('web3network');
+    if(!network) network = '0x1';
+    $('#web3network').val(network);
 }
 
 window.addEventListener('load', onLoad);
