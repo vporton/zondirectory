@@ -57,7 +57,8 @@ async function onLoad() {
         if(!/^link/.test(i)) continue;
         const item = items[i][0];
         if(!item) continue;
-        const row = `<li><a href="${safe_tags(item.link)}">${safe_tags(item.title)}</a> (<a href="post-link.html?id=${item.linkId}">edit</a>)</li>`;
+        const linkText = formatLink(item.link, item.title);
+        const row = `<li>${linkText} (<a href="post-link.html?id=${item.linkId}">edit</a>)</li>`;
         $('#links').append(row);
     }
     for(let i of itemKeys) {
