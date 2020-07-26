@@ -80,9 +80,7 @@ $(async function() {
         document.getElementById('locale').textContent = item.locale;
         document.getElementById('description').textContent = item.description;
 
-        const linkText = item.link != "" ? `<a href="${safe_attrs(item.link)}">${safe_tags(item.title)}</a>`
-                                         : safe_tags(item.title);
-        $('#link').append(linkText);
+        $('#link').append(formatLink(item.link, item.title));
         document.getElementById('link').setAttribute('href', item.link);
     }
 })
