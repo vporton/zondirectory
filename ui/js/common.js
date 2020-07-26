@@ -29,6 +29,10 @@ function safe_tags(str) {
     return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 }
 
+function safe_attrs(str) {
+    return safe_tags(str).replace(/"/g,'&quot;').replace(/'<'/g,'&apos;');
+}
+
 function queryThegraph(query) {
     query = query.replace(/\\/g, '\\').replace(/"/g, '\\"').replace(/\n/g, "\\n");
     return new Promise(async (resolve, error) => {
@@ -76,6 +80,11 @@ function filesJsonInterface() {
         fetch("artifacts/Files.abi")
             .then(response => resolve(filesJsonInterfaceCache = response.json()));
     });
+}
+
+function formatLink(href, title) {
+    href = href.replace(/^arweave:/, "https://arweave.net/");
+    return href != "" ? `<a href="${safe_attrs(href)}">${safe_tags(title)}</a>` : safe_tags(title);
 }
 
 let addressesFile = null;

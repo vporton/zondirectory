@@ -205,7 +205,8 @@ async function onLoad() {
                     `<a href='vote.html?child=${i.replace(/^link/, "")}&parent=${catId}&dir=against'>👎</a>`;
             }
             const spamInfo = catId ? ` (spam score: ${spamScore} ${voteStr})` : ``;
-            const row = `<li><a href="${link}">${safe_tags(item.title)}</a>. ${safe_tags(item.shortDescription)} ${spamInfo}</li>`;
+            const linkText = `<a href="${link}">${safe_tags(item.title)}</a>`;
+            const row = `<li><strong>${linkText}.</strong> ${safe_tags(item.shortDescription)} ${spamInfo}</li>`;
             $('#links').append(row);
         }
         if(!catId)

@@ -78,8 +78,9 @@ $(async function() {
 
         const item = queryResult.linkUpdateds[0];
         document.getElementById('locale').textContent = item.locale;
-        document.getElementById('title').textContent = item.title;
         document.getElementById('description').textContent = item.description;
+
+        $('#link').append(formatLink(item.link, item.title));
         document.getElementById('link').setAttribute('href', item.link);
     }
 })

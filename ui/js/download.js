@@ -146,7 +146,6 @@ async function doPayAR(price, showFiles) {
                 });
             });
     });
-    fileReader.readAsText(document.getElementById('arWalletKeyFile').files[0]);
 }
 
 async function payAR() {
