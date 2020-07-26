@@ -15,7 +15,6 @@ function getPriceETH() {
 }
 
 function getPriceAR() {
-    const arweave = Arweave.init();
     return document.getElementById('sellInAR').checked ? INFINITY : arweave.ar.arToWinston(document.getElementById('priceAR').value);
 }
 
@@ -33,7 +32,6 @@ function setPriceAR(price) {
         document.getElementById('sellInAR').checked = true;
         document.getElementById('priceAR').disabled = true;
     } else {
-        const arweave = Arweave.init();
         document.getElementById('priceAR').value = formatPriceAR(price);
     }
 }

@@ -2,6 +2,8 @@
 
 const itemId = numParam('id');
 
+let arKeyChooser;
+
 const fromHexString = hexString =>
   new Uint8Array(hexString.match(/.{1,2}/g).map(byte => parseInt(byte, 16)));
 
@@ -71,81 +73,86 @@ async function donateETH() {
 async function doPayAR(price, showFiles) {
     const smartweave = require('smartweave');
     const fileReader = new FileReader();
-    fileReader.onload = async (e) => {
-        const key = JSON.parse(e.target.result);
 
-        smartweave.readContract(arweave, AR_PST_CONTRACT_ADDRESS).then(async contractState => {
-            await defaultAccountPromise();
-            let query = `{
+    const key = await arKeyChooser.arKeyGet();
+    // if(!key) {
+    //     alert("Choose an Arweave key file!");
+    //     return;
+    // }
+    arKeyChooser.arKeyStore();
+
+    smartweave.readContract(arweave, AR_PST_CONTRACT_ADDRESS).then(async contractState => {
+        await defaultAccountPromise();
+        let query = `{
     setARWallets(first:1, orderBy:id, orderDirection:desc, where:{owner:"${defaultAccount}"}) {
         arWallet
     }
 }`;
-            const queryResult = (await queryThegraph(query)).data;
-            let arWallet = queryResult.setARWallets[0] ? queryResult.setARWallets[0].arWallet : null;
-            
-            arweave.wallets.jwkToAddress(key)
-                .then((userAddress) => {
-                    return arweave.wallets.getBalance(userAddress);
-                })
-                .then(async balance => {
-                    if(Number(balance) < Number(price)) {
-                        alert("Not enough money in your AR wallet!");
+        const queryResult = (await queryThegraph(query)).data;
+        let arWallet = queryResult.setARWallets[0] ? queryResult.setARWallets[0].arWallet : null;
+        
+        arweave.wallets.jwkToAddress(key)
+            .then((userAddress) => {
+                return arweave.wallets.getBalance(userAddress);
+            })
+            .then(async balance => {
+                if(Number(balance) < Number(price)) {
+                    alert("Not enough money in your AR wallet!");
+                    return;
+                }
+        
+                let authorRoyalty, shareholdersRoyalty;
+                await defaultAccountPromise();
+                // TODO: Don't call Ethereum if no author's AR wallet.
+                const contractInstance = new web3.eth.Contract(await filesJsonInterface(), await getAddress('Files'));
+                contractInstance.methods.salesOwnersShare().call(async (error, result) => {
+                    if(error) {
+                        alert(error);
                         return;
                     }
-            
-                    let authorRoyalty, shareholdersRoyalty;
-                    await defaultAccountPromise();
-                    // TODO: Don't call Ethereum if no author's AR wallet.
-                    const contractInstance = new web3.eth.Contract(await filesJsonInterface(), await getAddress('Files'));
-                    contractInstance.methods.salesOwnersShare().call(async (error, result) => {
-                        if(error) {
-                            alert(error);
-                            return;
-                        }
-                        const ownersShare = result / 2**64;
+                    const ownersShare = result / 2**64;
 
-                        if(arWallet) {
-                            authorRoyalty = Math.floor((1 - ownersShare) * price);
-                            shareholdersRoyalty = Math.floor(ownersShare * price);
-                        } else {
-                            authorRoyalty = 0;
-                            shareholdersRoyalty = Math.floor(price);
-                        }
+                    if(arWallet) {
+                        authorRoyalty = Math.floor((1 - ownersShare) * price);
+                        shareholdersRoyalty = Math.floor(ownersShare * price);
+                    } else {
+                        authorRoyalty = 0;
+                        shareholdersRoyalty = Math.floor(price);
+                    }
 
-                        // First pay to me then to the author, because in the case of a failure the buyer loses less this way.
-                        let paymentFailure = false;
-                        if(shareholdersRoyalty) {
-                            const holder = smartweave.selectWeightedPstHolder(contractState.balances);
-                            const tx = await arweave.createTransaction({ target: holder, quantity: String(shareholdersRoyalty) }, key);
-                            await arweave.transactions.sign(tx, key);
-                            const response = await arweave.transactions.post(tx);
-                            if(response.status != 200) paymentFailure = true;
-                        }
-                        if(!paymentFailure && authorRoyalty) {
-                            const holder = smartweave.selectWeightedPstHolder(contractState.balances);
-                            const tx = await arweave.createTransaction({ target: arWallet, quantity: String(authorRoyalty) }, key);
-                            await arweave.transactions.sign(tx, key);
-                            const response = await arweave.transactions.post(tx);
-                            if(response.status != 200) paymentFailure = true;
-                        }
+                    // First pay to me then to the author, because in the case of a failure the buyer loses less this way.
+                    let paymentFailure = false;
+                    if(shareholdersRoyalty) {
+                        const holder = smartweave.selectWeightedPstHolder(contractState.balances);
+                        const tx = await arweave.createTransaction({ target: holder, quantity: String(shareholdersRoyalty) }, key);
+                        await arweave.transactions.sign(tx, key);
+                        const response = await arweave.transactions.post(tx);
+                        if(response.status != 200) paymentFailure = true;
+                    }
+                    if(!paymentFailure && authorRoyalty) {
+                        const holder = smartweave.selectWeightedPstHolder(contractState.balances);
+                        const tx = await arweave.createTransaction({ target: arWallet, quantity: String(authorRoyalty) }, key);
+                        await arweave.transactions.sign(tx, key);
+                        const response = await arweave.transactions.post(tx);
+                        if(response.status != 200) paymentFailure = true;
+                    }
 
-                        if(showFiles) {
-                            if(!paymentFailure)
-                                showFilesWithMessage();
-                            else
-                                alert("You didn't pay the full sum!");
-                        }
-                    });
+                    if(showFiles) {
+                        if(!paymentFailure)
+                            showFilesWithMessage();
+                        else
+                            alert("You didn't pay the full sum!");
+                    }
                 });
-        });
-    }
+            });
+    });
     fileReader.readAsText(document.getElementById('arWalletKeyFile').files[0]);
 }
 
 async function payAR() {
-    if(!document.getElementById('arWalletKeyFile').files[0]) {
-        alert("Select your AR wallet key file to pay!");
+    const key = await arKeyChooser.arKeyGet();
+    if(!key) {
+        alert("Choose an Arweave key file!");
         return;
     }
 
@@ -157,8 +164,9 @@ async function payAR() {
 }
 
 async function donateAR() {
-    if(!document.getElementById('arWalletKeyFile').files[0]) {
-        alert("Select your AR wallet key file to pay!");
+    const key = await arKeyChooser.arKeyGet();
+    if(!key) {
+        alert("Choose an Arweave key file!");
         return;
     }
 
@@ -258,4 +266,6 @@ $(async function() {
             $('#buyAR').css('display', 'none');
         showFiles(item.priceETH == 0 || item.priceAR == 0);
     }
+
+    arKeyChooser = $('#arWalletKeyFile').arKeyChooser({storeName: 'authorARPrivateKey'});
 })
