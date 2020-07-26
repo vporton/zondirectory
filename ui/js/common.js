@@ -4,7 +4,12 @@ $(document).ajaxError(function( event, request, settings ) {
 
 const INFINITY = (BigInt(1) << BigInt(256)) - BigInt(1);
 
-const arweave = window.Arweave ? Arweave.init() : undefined;
+// See also https://github.com/ArweaveTeam/arweave-js/issues/47
+const arweave = window.Arweave ? Arweave.init({
+    host: "arweave.net",
+    port: 443,
+    protocol: "https"
+}) : undefined;
 
 function numParam(name) {
     const urlParams = new URLSearchParams(window.location.search);

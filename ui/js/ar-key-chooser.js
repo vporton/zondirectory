@@ -1,7 +1,8 @@
 (function( $ ) {
 
     function storeKeyToggle() {
-        const count = (location.pathname.match(/\/\\/g) || []).length;
+        const count = (location.pathname.match(/[\/\\]/g) || []).length;
+        // alert(location.pathname.match(/[\/\\]/g) || [])
         if(count != 1) {
             alert("Cannot securely store data, because we are not in a server root folder!");
             event.preventDefault();
@@ -46,7 +47,7 @@
         if(options.storeName) {
             const cb = `<label><input type="checkbox" id="storeARKey"/> Store the key in browser storage</label>`;
             this.after(cb);
-            this.shouldStoreCheckbox = this.next();
+            this.shouldStoreCheckbox = this.next().find(':checkbox');
             this.shouldStoreCheckbox.click(storeKeyToggle);
             const keyString = localStorage.getItem(options.storeName);
             this.onUpdateKey(keyString);
@@ -64,7 +65,7 @@
                 const keyString = e.target.result;
                 localStorage.setItem(this.options.storeName, keyString);
             };
-            keyFileReader.readAsText(widget[0].files[0]);
+            keyFileReader.readAsText(this[0].files[0]);
         }
     }
 

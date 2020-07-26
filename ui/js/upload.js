@@ -13,7 +13,6 @@ async function upload() {
     }
     arKeyChooser.arKeyStore();
 
-    const arweave = Arweave.init(); // TODO: Already initialized.
     const fileReader = new FileReader();
     fileReader.onload = async (e) => {
         const fileContent = new Uint8Array(e.target.result);
