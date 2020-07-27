@@ -44,3 +44,5 @@
 * CanonicaL URLs.
 
 * Proper error handing (.catch(), etc.)
+
+* https://github.com/dylang/shortid
