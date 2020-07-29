@@ -53,7 +53,7 @@ async function updateItem(itemId) {
         });
 }
 
-$(async function() {
+async function onLoad() {
     const urlParams = new URLSearchParams(window.location.search);
     const id = urlParams.get('id');
     if(id) $('head').prepend(`<meta name="robots" content="noindex" />`);
@@ -97,4 +97,30 @@ $(async function() {
     // $('#form').validate({
     //     ignore: '[name=blogPost]', // Validation does not work with summernote.
     // });
-});
+
+    await defaultAccountPromise();
+    query = `{
+    templateChangeOwners(orderBy:id, orderDirection:desc, where:{owner:"${defaultAccount}"}) {
+        templateId
+    }
+}`;
+    let templateIds = (await queryThegraph2(query)).data.templateChangeOwners;
+    templateIds = templateIds.filter((x, i, a) => a.indexOf(x) == i); // unique values
+    if(!templateIds.length) return;
+    const templateIdsFlat = templateIds.map(i => i.templateId);
+    function subquery(templateId) {
+        return `    templateUpdateds${templateId}: templateUpdateds(first:1, orderBy:id, orderDirection:desc, where:{templateId:${templateId}}) {
+    templateId
+    name
+}`
+    }
+    query = "{\n" + templateIdsFlat.map(i => subquery(i)).join("\n") + "\n}";
+    let items = (await queryThegraph2(query)).data;
+    for (let i in items) {
+        const item = items[i][0];
+        const html = `<option value="${item.templateId}">${safe_tags(item.name)}</option>`;
+        $('#template').append(html);
+    }
+}
+
+window.addEventListener('load', onLoad);
