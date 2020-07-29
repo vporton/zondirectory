@@ -72,13 +72,21 @@ async function defaultAccountPromise() {
 }
 
 let filesJsonInterfaceCache = null;
+let blogTemplatesJsonInterfaceCache = null;
 
 function filesJsonInterface() {
     return new Promise((resolve) => {
         if(filesJsonInterfaceCache) resolve(filesJsonInterfaceCache);
-
         fetch("artifacts/Files.abi")
             .then(response => resolve(filesJsonInterfaceCache = response.json()));
+    });
+}
+
+function blogTemplatesJsonInterface() {
+    return new Promise((resolve) => {
+        if(blogTemplatesJsonInterfaceCache) resolve(blogTemplatesJsonInterfaceCache);
+        fetch("artifacts/BlogTemplates.abi")
+            .then(response => resolve(blogTemplatesJsonInterfaceCache = response.json()));
     });
 }
 

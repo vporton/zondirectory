@@ -6,7 +6,7 @@ all: ui
 
 ui: ui-quick compile
 	make out/ui/artifacts/SmartWeave.js \
-	  out/ui/artifacts/Files.abi
+	  out/ui/artifacts/Files.abi out/ui/artifacts/BlogTemplates.abi
 	cp -f eth/data/mainnet.addresses eth/data/rinkeby.addresses out/ui/artifacts/
 
 ui-quick:
