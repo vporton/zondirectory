@@ -21,18 +21,27 @@ contract BlogTemplates {
     // post ID => template ID
     mapping (uint => uint) postTemplates;
 
-    event TemplateCreated(uint templateId, address owner);
+    event TemplateCreated(uint templateId);
+    event TemplateChangeOwner(uint templateId, address owner);
     event TemplateUpdated(uint templateId, string name, string js, string settings);
     event TemplateSetArchived(uint templateId, bool archived);
-    event PostCreated(uint postId, address owner);
+    event PostCreated(uint postId);
+    event PostChangeOwner(uint postId, address owner);
     event PostUpdated(uint postId, uint templateId);
 
     function createTemplate(string calldata _name, string calldata _js, string calldata _settings) external returns (uint) {
         templateOwners[++maxId] = msg.sender;
         templatesJavaScript[maxId] = _js;
-        emit TemplateCreated(maxId, msg.sender);
+        emit TemplateCreated(maxId);
+        emit TemplateChangeOwner(maxId, msg.sender);
         emit TemplateUpdated(maxId, _name, _js, _settings);
         return maxId;
+    }
+
+    function changeTemplateOwner(uint _templateId, address _owner) external {
+        require(templateOwners[_templateId] == msg.sender, "Access denied.");
+        templateOwners[_templateId] = _owner;
+        emit TemplateChangeOwner(_templateId, _owner);
     }
 
     function updateTemplate(uint _templateId, string calldata _name, string calldata _js, string calldata _settings) external {
@@ -49,8 +58,15 @@ contract BlogTemplates {
     function createPost(uint _templateId) external returns (uint) {
         postOwners[++maxId] = msg.sender;
         postTemplates[maxId] = _templateId;
-        emit PostCreated(maxId, msg.sender);
+        emit PostCreated(maxId);
+        emit PostChangeOwner(maxId, msg.sender);
         emit PostUpdated(maxId, _templateId);
+    }
+
+    function changePostOwner(uint _postId, address _owner) external {
+        require(postOwners[_postId] == msg.sender, "Access denied.");
+        postOwners[_postId] = _owner;
+        emit PostChangeOwner(_postId, _owner);
     }
 
     function changePostTemplate(uint _postId, uint _templateId) external {
