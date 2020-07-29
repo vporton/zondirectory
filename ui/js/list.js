@@ -83,7 +83,6 @@ async function onLoad() {
         if(!childs.has(entry.child) || childs.get(entry.child).id > entry.id)
             childs.set(entry.child, {id: entry.id, child: entry.child, value: entry.value})
     }
-    console.log(childs)
     const parentIDsA = Array.from(parentsA.values()).sort((a, b) => a.value - b.value).map(e => e.parent);
     const parentIDsB = Array.from(parentsB.values()).sort((a, b) => a.value - b.value).map(e => e.parent);
     const parentIDs = parentIDsA.concat(parentIDsB);
