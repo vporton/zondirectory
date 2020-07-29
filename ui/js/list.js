@@ -169,7 +169,7 @@ async function onLoad() {
                 else
                     $('#subcategories')
                         .append(`<li><a href="${link}">${safe_tags(category.title)}</a> (spam score: ${spamScore} ${voteStr})</li>`);
-    }
+            }
 
             $('#supercategories > li:gt(0)').css('display', 'none');
             $('#subcategories > li:gt(9)').css('display', 'none');
