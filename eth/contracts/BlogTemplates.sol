@@ -55,12 +55,16 @@ contract BlogTemplates {
         emit TemplateSetArchived(_templateId, _archived);
     }
 
-    function createPost(uint _templateId) external returns (uint) {
-        postOwners[++maxId] = msg.sender;
-        postTemplates[maxId] = _templateId;
-        emit PostCreated(maxId);
-        emit PostChangeOwner(maxId, msg.sender);
-        emit PostUpdated(maxId, _templateId);
+    // _postId should be random.
+    function createPost(uint _templateId, uint _postId, uint _itemId) external {
+        require(_itemId != 0, "Item ID zero.");
+        require(postIDs[_itemId] == 0, "ID is already taken.");
+        postOwners[_postId] = msg.sender;
+        postTemplates[_postId] = _templateId;
+        postIDs[_itemId] = _postId;
+        emit PostCreated(_postId);
+        emit PostChangeOwner(_postId, msg.sender);
+        emit PostUpdated(_postId, _templateId);
     }
 
     function changePostOwner(uint _postId, address _owner) external {
