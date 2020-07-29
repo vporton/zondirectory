@@ -1,6 +1,35 @@
-type ExampleEntity @entity {
+type TemplateCreated @entity {
   id: ID!
-  count: BigInt!
+  templateId: BigInt! # uint256
+}
+type TemplateChangeOwner @entity {
+  id: ID!
+  templateId: BigInt! # uint256
+  owner: Bytes! # address
+}
+type TemplateUpdated @entity {
+  id: ID!
+  templateId: BigInt! # uint256
+  name: String! # string
+  js: String! # string
+  settings: String! # string
+}
+type TemplateSetArchived @entity {
+  id: ID!
+  templateId: BigInt! # uint256
+  archived: Boolean! # bool
+}
+type PostCreated @entity {
+  id: ID!
+  postId: BigInt! # uint256
+}
+type PostChangeOwner @entity {
+  id: ID!
   postId: BigInt! # uint256
   owner: Bytes! # address
+}
+type PostUpdated @entity {
+  id: ID!
+  postId: BigInt! # uint256
+  templateId: BigInt! # uint256
 }

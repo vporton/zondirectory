@@ -1,58 +1,91 @@
-import { BigInt } from "@graphprotocol/graph-ts"
+import { ethereum, BigInt } from "@graphprotocol/graph-ts"
 import {
-  Contract,
+  Contract as ContractEvent,
+  PostChangeOwner as PostChangeOwnerEvent,
+  PostCreated as PostCreatedEvent,
+  PostUpdated as PostUpdatedEvent,
+  TemplateChangeOwner as TemplateChangeOwnerEvent,
+  TemplateCreated as TemplateCreatedEvent,
+  TemplateSetArchived as TemplateSetArchivedEvent,
+  TemplateUpdated as TemplateUpdatedEvent
+} from "../generated/Contract/Contract"
+import {
+  PostChangeOwner,
   PostCreated,
   PostUpdated,
+  TemplateChangeOwner,
   TemplateCreated,
+  TemplateSetArchived,
   TemplateUpdated
-} from "../generated/Contract/Contract"
-import { ExampleEntity } from "../generated/schema"
+} from "../generated/schema"
 
-export function handlePostCreated(event: PostCreated): void {
-  // Entities can be loaded from the store using a string ID; this ID
-  // needs to be unique across all entities of the same type
-  let entity = ExampleEntity.load(event.transaction.from.toHex())
-
-  // Entities only exist after they have been saved to the store;
-  // `null` checks allow to create entities on demand
-  if (entity == null) {
-    entity = new ExampleEntity(event.transaction.from.toHex())
-
-    // Entity fields can be set using simple assignments
-    entity.count = BigInt.fromI32(0)
-  }
-
-  // BigInt and BigDecimal math are supported
-  entity.count = entity.count + BigInt.fromI32(1)
-
-  // Entity fields can be set based on event parameters
-  entity.postId = event.params.postId
-  entity.owner = event.params.owner
-
-  // Entities can be written to the store with `.save()`
-  entity.save()
-
-  // Note: If a handler doesn't require existing field values, it is faster
-  // _not_ to load the entity from the store. Instead, create it fresh with
-  // `new Entity(...)`, set the fields that should be updated and save the
-  // entity back to the store. Fields that were not set or unset remain
-  // unchanged, allowing for partial updates to be applied.
-
-  // It is also possible to access smart contracts from mappings. For
-  // example, the contract that has emitted the event can be connected to
-  // with:
-  //
-  // let contract = Contract.bind(event.address)
-  //
-  // The following functions can then be called on this contract to access
-  // state variables and other data:
-  //
-  // - contract.createPost(...)
-  // - contract.createTemplate(...)
+function generateId(event: ethereum.Event): String {
+  let block = event.block.number.toHex().substring(2)
+  block = '0x' + block.padStart(64, '0');
+  let logIndex = event.logIndex.toHex().substring(2)
+  logIndex = '0x' + logIndex.padStart(64, '0');
+  return block + "-" + logIndex + "-" + event.transaction.hash.toHex();
 }
 
-export function handlePostUpdated(event: PostUpdated): void {}
+export function handlePostChangeOwner(event: PostChangeOwnerEvent): void {
+  let entity = new PostChangeOwner(
+    generateId(event)
+  )
+  entity.postId = event.params.postId
+  entity.owner = event.params.owner
+  entity.save()
+}
 
-export function handleTemplateCreated(event: TemplateCreated): void {}
+export function handlePostCreated(event: PostCreatedEvent): void {
+  let entity = new PostCreated(
+    generateId(event)
+  )
+  entity.postId = event.params.postId
+  entity.save()
+}
 
-export function handleTemplateUpdated(event: TemplateUpdated): void {}
+export function handlePostUpdated(event: PostUpdatedEvent): void {
+  let entity = new PostUpdated(
+    generateId(event)
+  )
+  entity.postId = event.params.postId
+  entity.templateId = event.params.templateId
+  entity.save()
+}
+
+export function handleTemplateChangeOwner(event: TemplateChangeOwnerEvent): void {
+  let entity = new TemplateChangeOwner(
+    generateId(event)
+  )
+  entity.templateId = event.params.templateId
+  entity.owner = event.params.owner
+  entity.save()
+}
+
+export function handleTemplateCreated(event: TemplateCreatedEvent): void {
+  let entity = new TemplateCreated(
+    generateId(event)
+  )
+  entity.templateId = event.params.templateId
+  entity.save()
+}
+
+export function handleTemplateSetArchived(event: TemplateSetArchivedEvent): void {
+  let entity = new TemplateSetArchived(
+    generateId(event)
+  )
+  entity.templateId = event.params.templateId
+  entity.archived = event.params.archived
+  entity.save()
+}
+
+export function handleTemplateUpdated(event: TemplateUpdatedEvent): void {
+  let entity = new TemplateUpdated(
+    generateId(event)
+  )
+  entity.templateId = event.params.templateId
+  entity.name = event.params.name
+  entity.js = event.params.js
+  entity.settings = event.params.settings
+  entity.save()
+}
