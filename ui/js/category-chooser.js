@@ -52,7 +52,7 @@
         let amounts = [];
         let myFlags = [];
         this.find('input[name=cat]:gt(0)').each((i, c) => cats.push(c.value.replace(/^([0-9]*).*/, '$1')));
-        this.find('input[name=amount]').each((i, c) => amounts.push(web3.utils.toWei(c.value)));
+        this.find('input[name=amount]').each((i, c) => amounts.push(c.value ? web3.utils.toWei(c.value) : ''));
         this.find('input[type=checkbox]').each((i, c) => myFlags.push(c.checked));
         return {
             cats,
@@ -72,6 +72,8 @@
         await defaultAccountPromise();
         const contractInstance = new web3.eth.Contract(await filesJsonInterface(), await getAddress('Files'));
         for(var i in cats) {
+            if(!cats[i] || !amounts[i]) continue;
+
             const parent = cats[i];
             const amount = amounts[i];
             await contractInstance.methods.itemOwners(parent).call()

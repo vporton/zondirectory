@@ -37,9 +37,11 @@ async function createCategory() {
     if(!locale) return;
     const owned = $('#owned').is(':checked');
 
+    waitStart();
     await defaultAccountPromise();
     const contractInstance = new web3.eth.Contract(await filesJsonInterface(), await getAddress('Files'));
     let response;
+    let newId = id;
     if(id) {
         response = await contractInstance.methods.updateOwnedCategory(id, {title: name, locale, shortDescription, description})
             .send({from: defaultAccount, gas: '1000000'});
@@ -51,9 +53,10 @@ async function createCategory() {
             response = await contractInstance.methods.createCategory(name, locale, '0x0000000000000000000000000000000000000001')
                 .send({from: defaultAccount, gas: '1000000'});
         }
+        newId = response.events.CategoryCreated.returnValues.categoryId;
     }
-    const catId = response.events.CategoryCreated.returnValues.categoryId;
-    if(catId) await $('#multiVoter').doMultiVote(catId);
+    await $('#multiVoter').doMultiVote(newId);
+    waitStop();
 
     $('#form').validate({});
 }
