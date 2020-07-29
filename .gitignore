@@ -18,6 +18,7 @@ deployments/
 ui/js/SmartWeave/
 subgraph.yaml
 eth/thegraphFiles/package.json
+eth/thegraphTemplates/package.json
 
 # C extensions
 *.so
