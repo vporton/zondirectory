@@ -14,7 +14,7 @@ module.exports = async ({getNamedAccounts, deployments}) => {
     }
     const mydeploy = require('../lib/mydeploy');
     mydeploy.updateAddress('BlogTemplates', deployResult.address, buidler.network.name); // or ethers.getContractAt
-    mydeploy.updateAddress('BlogPostsBlock', deployResult.receipt.blockNumber, buidler.network.name); // or ethers.getContractAt
+    mydeploy.updateAddress('BlogTemplatesBlock', deployResult.receipt.blockNumber, buidler.network.name); // or ethers.getContractAt
 }
 module.exports.tags = ['BlogTemplates'];
 module.exports.dependencies = ['Files'];

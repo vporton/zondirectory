@@ -5,6 +5,7 @@
   "FilesBlock": 6886574,
   "Web3Provider": "https://rinkeby.infura.io/v3/1d0c278301fc40f3a8f40f25ae3bd328",
   "TheGraph": "vporton/zon-directory-rinkeby-4",
+  "TheGraphTemplates": "vporton/zon-directory-templates-rinkeby",
   "BlogTemplates": "0x6a0A3885d73564E407394d42B5c528Bfa679532C",
-  "BlogPostsBlock": 6925354
+  "BlogTemplatesBlock": 6925354
 }
