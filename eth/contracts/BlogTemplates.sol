@@ -23,6 +23,7 @@ contract BlogTemplates {
 
     event TemplateCreated(uint templateId, address owner);
     event TemplateUpdated(uint templateId, string name, string js, string settings);
+    event TemplateSetArchived(uint templateId, bool archived);
     event PostCreated(uint postId, address owner);
     event PostUpdated(uint postId, uint templateId);
 
@@ -38,6 +39,11 @@ contract BlogTemplates {
         require(templateOwners[_templateId] == msg.sender, "Access denied.");
         templatesJavaScript[_templateId] = _js;
         emit TemplateUpdated(_templateId, _name, _js, _settings);
+    }
+
+    function setArchivedTemplate(uint _templateId, bool _archived) external {
+        require(templateOwners[_templateId] == msg.sender, "Access denied.");
+        emit TemplateSetArchived(_templateId, _archived);
     }
 
     function createPost(uint _templateId) external returns (uint) {

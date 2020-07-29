@@ -6,6 +6,6 @@
   "Web3Provider": "https://rinkeby.infura.io/v3/1d0c278301fc40f3a8f40f25ae3bd328",
   "TheGraph": "vporton/zon-directory-rinkeby-4",
   "TheGraphTemplates": "vporton/zon-directory-templates-rinkeby",
-  "BlogTemplates": "0x6a0A3885d73564E407394d42B5c528Bfa679532C",
-  "BlogTemplatesBlock": 6925354
+  "BlogTemplates": "0xc8FD21E8aFE80450997AFC4887E87128D795759D",
+  "BlogTemplatesBlock": 6925944
 }
