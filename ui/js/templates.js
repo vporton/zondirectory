@@ -29,4 +29,12 @@ function createTemplate() {
 
 $(function() {
     $("#dialogForm").validate({});
-})
+
+    await defaultAccountPromise();
+    const query = `{
+        templateCreateds(orderBy:id, orderDirection:desc, where:{owner:"${defaultAccount}"}) {
+            arWallet
+        }
+    }`;
+    const queryResult = (await queryThegraph(query)).data;
+});

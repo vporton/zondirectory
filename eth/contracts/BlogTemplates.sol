@@ -21,10 +21,10 @@ contract BlogTemplates {
     // post ID => template ID
     mapping (uint => uint) postTemplates;
 
-    event TemplateCreated(uint id, address owner);
-    event TemplateUpdated(uint id, string name, string js);
-    event PostCreated(uint id, address owner);
-    event PostUpdated(uint id, uint templateId);
+    event TemplateCreated(uint templateId, address owner);
+    event TemplateUpdated(uint templateId, string name, string js);
+    event PostCreated(uint postId, address owner);
+    event PostUpdated(uint postId, uint templateId);
 
     function createTemplate(string calldata _name, string calldata _js) external returns (uint) {
         templateOwners[++maxId] = msg.sender;
@@ -34,10 +34,10 @@ contract BlogTemplates {
         return maxId;
     }
 
-    function updateTemplate(uint _id, string calldata _name, string calldata _js) external {
-        require(templateOwners[_id] == msg.sender, "Access denied.");
-        templatesJavaScript[_id] = _js;
-        emit TemplateUpdated(_id, _name, _js);
+    function updateTemplate(uint _templateId, string calldata _name, string calldata _js) external {
+        require(templateOwners[_templateId] == msg.sender, "Access denied.");
+        templatesJavaScript[_templateId] = _js;
+        emit TemplateUpdated(_templateId, _name, _js);
     }
 
     function createPost(uint _templateId) external returns (uint) {
