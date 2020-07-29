@@ -33,8 +33,6 @@
 
 * Input validation for category voting.
 
-* Show recent owned categories.
-
 * JavaScript and CSS minimization.
 
 * MetaMask: MetaMask will soon stop reloading pages on network change.
