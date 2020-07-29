@@ -9,7 +9,7 @@ async function onLoad() {
         $('#allCategoriesDiv').css('display', 'none');
     } else {
         $('#categoryInfo').css('display', 'none');
-        $('#ownedSubcategoriesDiv').css('display', 'none');
+        //$('#ownedSubcategoriesDiv').css('display', 'none');
         $('#spamScoreTH').css('display', 'none');
         $('#addItem').css('display', 'none');
     }
@@ -99,7 +99,7 @@ async function onLoad() {
     const itemIds = queryResult['itemCreateds'] ? queryResult['itemCreateds'] : [];
     const entryIdsFlat = catId ? parentIDs.concat(childIDs, itemIds.map(i => i.child))
                                : queryResult['itemCreateds'].map(i => i.itemId)
-                                .concat(queryResult['categoryCreateds'].map(i => i.categoryId));
+                                 .concat(queryResult['categoryCreateds'].map(i => i.categoryId));
     if(entryIdsFlat.length) {
         // TODO: Don't request category title if not asked for category votes.
         function subquery(itemId) {
@@ -169,7 +169,7 @@ async function onLoad() {
                 else
                     $('#subcategories')
                         .append(`<li><a href="${link}">${safe_tags(category.title)}</a> (spam score: ${spamScore} ${voteStr})</li>`);
-    }
+            }
 
             $('#supercategories > li:gt(0)').css('display', 'none');
             $('#subcategories > li:gt(9)').css('display', 'none');
@@ -209,7 +209,7 @@ async function onLoad() {
             const row = `<li><strong>${linkText}.</strong> ${safe_tags(item.shortDescription)} ${spamInfo}</li>`;
             $('#links').append(row);
         }
-        if(!catId)
+        if(!catId) {
             for(let i of itemKeys) {
                 if(!/^category[0-9]+/.test(i)) continue;
                 const item = items[i][0];
@@ -217,6 +217,14 @@ async function onLoad() {
                 const link = "index.html?cat=" + item.categoryId;
                 $('#categories').append(`<li><a href="${link}">${safe_tags(item.title)}</a></li>`);
             }
+            for(let i of itemKeys) {
+                if(!/^ownedCategory[0-9]+/.test(i)) continue;
+                const item = items[i][0];
+                if(!item) continue;
+                const link = "index.html?cat=" + item.categoryId;
+                $('#ownedSubcategories').append(`<li><a href="${link}">${safe_tags(item.title)}</a></li>`);
+            }
+        }
     }
 }
 
