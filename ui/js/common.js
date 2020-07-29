@@ -122,6 +122,14 @@ async function getWeb3() {
     return myWeb3 = new Web3(window.web3 ? window.web3 && window.web3.currentProvider : await getAddress('Web3Provider'));
 }
 
+function waitStart() {
+    $('#wait').css('display', 'block');
+}
+
+function waitStop() {
+    $('#wait').css('display', 'none');
+}
+
 async function onLoad() {
     if(window.ethereum) window.ethereum.enable();
 

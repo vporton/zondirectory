@@ -49,6 +49,7 @@ async function createOrUpdateItem() {
 }
 
 async function createItem() {
+    waitStart();
     const contractInstance = new web3.eth.Contract(await filesJsonInterface(), await getAddress('Files'));
 
     const locale = document.getElementById('locale').value;
@@ -57,14 +58,17 @@ async function createItem() {
     const shortDescription = document.getElementById('shortDescription').value;
     const license = document.getElementById('license').value;
 
+    await defaultAccountPromise();
     const response = await contractInstance.methods.createItem({title, shortDescription, description, priceETH: getPriceETH(), priceAR: getPriceAR(), locale, license},
                                                                '0x0000000000000000000000000000000000000001')
         .send({from: defaultAccount, gas: '1000000'});
     const itemId = response.events.ItemCreated.returnValues.itemId;
     await $('#multiVoter').doMultiVote(itemId);
+    waitStop();
 }
 
 async function updateItem(itemId) {
+    waitStart();
     const contractInstance = new web3.eth.Contract(await filesJsonInterface(), await getAddress('Files'));
 
     const locale = document.getElementById('locale').value;
@@ -73,11 +77,13 @@ async function updateItem(itemId) {
     const shortDescription = document.getElementById('shortDescription').value;
     const license = document.getElementById('license').value;
 
-    contractInstance.methods.updateItem(itemId, {title, shortDescription, description, priceETH: getPriceETH(), priceAR: getPriceAR(), locale, license})
+    await defaultAccountPromise();
+    await contractInstance.methods.updateItem(itemId, {title, shortDescription, description, priceETH: getPriceETH(), priceAR: getPriceAR(), locale, license})
         .send({from: defaultAccount, gas: '1000000'})
         .on('transactionHash', async function(receiptHash) {
             alert("Item updated.");
         });
+    waitStop();
 }
 
 $(async function() {
