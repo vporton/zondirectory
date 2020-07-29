@@ -69,20 +69,21 @@ async function onLoad() {
     let parentsB = new Map();
     for(let i in queryResult.parentsA) {
         const entry = queryResult.parentsA[i];
-        if(!parentsA.has(i) || parentsA.get[i].id > entry.id)
-            parentsA.set(i, {id: entry.id, parent: entry.parent, value: entry.value})
+        if(!parentsA.has(entry.parent) || parentsA.get(entry.parent).id > entry.id)
+            parentsA.set(entry.parent, {id: entry.id, parent: entry.parent, value: entry.value})
     }
     for(let i in queryResult.parentsB) {
         const entry = queryResult.parentsB[i];
-        if(!parentsB.has(i) || parentsB.get[i].id > entry.id)
-            parentsB.set(i, {id: entry.id, parent: entry.parent, value: entry.value})
+        if(!parentsB.has(entry.parent) || parentsB.get(entry.parent).id > entry.id)
+            parentsB.set(entry.parent, {id: entry.id, parent: entry.parent, value: entry.value})
     }
     let childs = new Map();
     for(let i in queryResult.childs) {
         const entry = queryResult.childs[i];
-        if(!childs.has(i) || childs.get[i].id > entry.id)
-            childs.set(i, {id: entry.id, child: entry.child, value: entry.value})
+        if(!childs.has(entry.child) || childs.get(entry.child).id > entry.id)
+            childs.set(entry.child, {id: entry.id, child: entry.child, value: entry.value})
     }
+    console.log(childs)
     const parentIDsA = Array.from(parentsA.values()).sort((a, b) => a.value - b.value).map(e => e.parent);
     const parentIDsB = Array.from(parentsB.values()).sort((a, b) => a.value - b.value).map(e => e.parent);
     const parentIDs = parentIDsA.concat(parentIDsB);
