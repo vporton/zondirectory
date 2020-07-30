@@ -155,7 +155,7 @@ function waitStop() {
 
 function mySend(contract, method, args, sendArgs, handler) {
     sendArgs = sendArgs || {}
-    return method.bind(contract)(...args).estimateGas({gas: '1000000', from: defaultAccount}).
+    return method.bind(contract)(...args).estimateGas({gas: '1000000', from: defaultAccount, ...sendArgs}).
         then((estimatedGas) => {
             const gas = String(Math.floor(estimatedGas * 1.15) + 24000);
             if(handler !== undefined)
