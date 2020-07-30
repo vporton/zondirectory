@@ -79,12 +79,10 @@
             await contractInstance.methods.itemOwners(parent).call()
                 .then(async (owner) => {
                     if(owner == defaultAccount) {
-                        await contractInstance.methods.setMyChildParent(itemId, parent, amount, 0)
-                            .send({from: defaultAccount, gas: '1000000'})
+                        await mySend(contractInstance, contractInstance.methods.setMyChildParent, [itemId, parent, amount, 0])
                             .catch(err => alert);
                     } else {
-                        await contractInstance.methods.voteChildParent(itemId, parent, true, '0x0000000000000000000000000000000000000001')
-                            .send({from: defaultAccount, value: amount, gas: '1000000'})
+                        await mySend(contractInstance, contractInstance.methods.voteChildParent, [itemId, parent, true, '0x0000000000000000000000000000000000000001'])
                             .catch(err => alert);
                     }
                 })

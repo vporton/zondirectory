@@ -26,7 +26,7 @@ async function onLoad() {
 async function withdrawETH() {
     await defaultAccountPromise();
     const contractInstance = new web3.eth.Contract(await filesJsonInterface(), await getAddress('Files'));
-    await contractInstance.methods.withdrawProfit().send({gas: '100000', from: defaultAccount});
+    await mySend(contractInstance, contractInstance.methods.withdrawProfit, []);
 }
 
 window.addEventListener('load', onLoad);

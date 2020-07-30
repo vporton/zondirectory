@@ -43,15 +43,12 @@ async function createCategory() {
     let response;
     let newId = id;
     if(id) {
-        response = await contractInstance.methods.updateOwnedCategory(id, {title: name, locale, shortDescription, description})
-            .send({from: defaultAccount, gas: '1000000'});
+        response = await mySend(contractInstance, contractInstance.methods.updateOwnedCategory, [id, {title: name, locale, shortDescription, description}])
     } else {
         if(owned) {
-            response = await contractInstance.methods.createOwnedCategory({title: name, locale, shortDescription, description}, '0x0000000000000000000000000000000000000001')
-                .send({from: defaultAccount, gas: '1000000'});
+            response = await mySend(contractInstance, contractInstance.methods.createOwnedCategory, [{title: name, locale, shortDescription, description}, '0x0000000000000000000000000000000000000001']);
         } else {
-            response = await contractInstance.methods.createCategory(name, locale, '0x0000000000000000000000000000000000000001')
-                .send({from: defaultAccount, gas: '1000000'});
+            response = await mySend(contractInstance, contractInstance.methods.createCategory, [name, locale, '0x0000000000000000000000000000000000000001']);
         }
         newId = response.events.CategoryCreated.returnValues.categoryId;
     }

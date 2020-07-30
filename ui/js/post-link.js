@@ -58,13 +58,11 @@ async function createItem() {
         console.log(`Uploaded https://arweave.net/${arHash}`);
     }
 
-    const response = await contractInstance.methods.createLink({link, title, shortDescription, description, locale, linkKind: kind}, owned, '0x0000000000000000000000000000000000000001')
-        .send({from: defaultAccount, gas: '1000000'})
+    const response = await mySend(contractInstance, contractInstance.methods.createLink, [{link, title, shortDescription, description, locale, linkKind: kind}, owned, '0x0000000000000000000000000000000000000001']);
     const linkId = response.events.ItemCreated.returnValues.itemId;
 
     if(templateId) {
-        await contractInstance2.methods.createPost(templateId, linkId, linkId)
-            .send({from: defaultAccount, gas: '1000000'});            
+        await mySend(contractInstance2, contractInstance2.methods.createPost, [templateId, linkId, linkId]);
     }
 
     await $('#multiVoter').doMultiVote(linkId);
@@ -83,8 +81,7 @@ async function updateItem(itemId) {
     const kind = $('input[name=kind]:checked').val();
 
     waitStart();
-    await contractInstance.methods.updateLink(itemId, {link, title, shortDescription, description, locale, linkKind: kind})
-        .send({from: defaultAccount, gas: '1000000'})
+    await mySend(contractInstance, contractInstance.methods.updateLink, [itemId, {link, title, shortDescription, description, locale, linkKind: kind}])
         .on('transactionHash', async function(receiptHash) {
             $('#ready').dialog();
         });

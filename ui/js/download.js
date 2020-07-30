@@ -56,7 +56,7 @@ async function payETH() {
     if(!price) return;
     const contractInstance = new web3.eth.Contract(await filesJsonInterface(), await getAddress('Files'));
     await defaultAccountPromise();
-    await contractInstance.methods.pay(itemId, '0x0000000000000000000000000000000000000001').send({from: defaultAccount, value: web3.utils.toWei(String(price*1.0000001)), gas: '1000000'})
+    await mySend(contractInstance, contractInstance.methods.pay, [itemId, '0x0000000000000000000000000000000000000001'], {value: web3.utils.toWei(String(price*1.0000001))})
         .then(showFilesWithMessage)
         .catch(err => alert("You tried to pay below the price or payment failure! " + err));
 }
@@ -66,7 +66,7 @@ async function donateETH() {
     if(!price) return;
     const contractInstance = new web3.eth.Contract(await filesJsonInterface(), await getAddress('Files'));
     await defaultAccountPromise();
-    await contractInstance.methods.donate(itemId, '0x0000000000000000000000000000000000000001').send({from: defaultAccount, value: web3.utils.toWei(String(price)), gas: '1000000'})
+    await mySend(contractInstance, contractInstance.methods.donate, [itemId, '0x0000000000000000000000000000000000000001'], {value: web3.utils.toWei(String(price))})
         .catch(err => alert("Payment failure! " + err));
 }
 

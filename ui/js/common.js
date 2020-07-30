@@ -153,6 +153,18 @@ function waitStop() {
     $('#wait').css('display', 'none');
 }
 
+function mySend(contract, method, args, sendArgs, handler) {
+    sendArgs = sendArgs || {}
+    return method.bind(contract)(...args).estimateGas({gas: '1000000', from: defaultAccount}).
+        then((estimatedGas) => {
+            const gas = String(Math.floor(estimatedGas * 1.15) + 24000);
+            if(handler !== undefined)
+                return method.bind(contract)(...args).send({gas, from: defaultAccount, ...sendArgs}, handler);
+            else
+                return method.bind(contract)(...args).send({gas, from: defaultAccount, ...sendArgs});
+        });
+}
+
 async function onLoad() {
     if(window.ethereum) window.ethereum.enable();
 

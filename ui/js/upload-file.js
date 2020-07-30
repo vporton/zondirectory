@@ -13,11 +13,10 @@ async function uploadFile() {
         const hash = await upload(fileContent, arKeyChooser, document.getElementById('file').files[0].type);
 
         const contractInstance = new web3.eth.Contract(await filesJsonInterface(), await getAddress('Files'));
-        contractInstance.methods.uploadFile(itemId,
+        mySend(contractInstance, contractInstance.methods.uploadFile, [itemId,
                                             document.getElementById('version').value,
                                             document.getElementById('format').value,
-                                            Array.from(Arweave.utils.b64UrlToBuffer(hash)))
-            .send({from: defaultAccount, gas: '1000000'})
+                                            Array.from(Arweave.utils.b64UrlToBuffer(hash))])
             .then(() => { waitStop(); open('description.html?id=' + itemId); });
     };
     fileReader.readAsArrayBuffer(document.getElementById('file').files[0]);

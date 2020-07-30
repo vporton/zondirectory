@@ -14,8 +14,7 @@ function createTemplate() {
                     const settings = $(this).find('[name=settings]').val();
                     const contractInstance = new web3.eth.Contract(await blogTemplatesJsonInterface(), await getAddress('BlogTemplates'));
                     await defaultAccountPromise();
-                    await contractInstance.methods.createTemplate(name, js, settings)
-                        .send({from: defaultAccount, gas: '1000000'});
+                    await mySend(contractInstance, contractInstance.methods.createTemplate, [name, js, settings]);
                 },
             },
             {
@@ -49,8 +48,7 @@ function editTemplate(event) {
                     const settings = $(this).find('[name=settings]').val();
                     const contractInstance = new web3.eth.Contract(await blogTemplatesJsonInterface(), await getAddress('BlogTemplates'));
                     await defaultAccountPromise();
-                    await contractInstance.methods.updateTemplate(id, name, js, settings)
-                        .send({from: defaultAccount, gas: '1000000'});
+                    await mySend(contractInstance, contractInstance.methods.updateTemplate, [id, name, js, settings]);
                 },
             },
             {
