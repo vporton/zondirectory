@@ -23,7 +23,7 @@ async function createItem() {
     const title = document.getElementById('title').value;
     const description = document.getElementById('description').value;
     const shortDescription = document.getElementById('shortDescription').value;
-    const kind = $('input[name=kind]:checked');
+    const kind = $('input[name=kind]:checked').val();
     const owned = true;
 
     let link = document.getElementById('link').value;
@@ -58,13 +58,14 @@ async function createItem() {
         console.log(`Uploaded https://arweave.net/${arHash}`);
     }
 
+    alert(kind)
     const response = await contractInstance.methods.createLink({link, title, shortDescription, description, locale, linkKind: kind}, owned, '0x0000000000000000000000000000000000000001')
         .send({from: defaultAccount, gas: '1000000'})
     const linkId = response.events.ItemCreated.returnValues.itemId;
 
     if(templateId) {
         await contractInstance2.methods.createPost(templateId, linkId, linkId)
-            .send({from: defaultAccount, gas: '100000'});            
+            .send({from: defaultAccount, gas: '1000000'});            
     }
 
     await $('#multiVoter').doMultiVote(linkId);
@@ -80,7 +81,7 @@ async function updateItem(itemId) {
     const description = document.getElementById('description').value;
     const shortDescription = document.getElementById('shortDescription').value;
     const link = document.getElementById('link').value;
-    const kind = $('input[name=kind]:checked');
+    const kind = $('input[name=kind]:checked').val();
 
     waitStart();
     await contractInstance.methods.updateLink(itemId, {link, title, shortDescription, description, locale, linkKind: kind})
