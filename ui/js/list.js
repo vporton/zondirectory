@@ -115,14 +115,14 @@ async function onLoad() {
             shortDescription
             link
         }
-        categoryCreate${itemId}: categoryCreateds(first:1, orderBy: id, orderDirection:asc, where:{categoryId:${itemId}}) {
+        categoryCreate${itemId}: categoryCreateds(first:1, orderBy:id, orderDirection:desc, where:{categoryId:${itemId}}) {
             owner
         }
-        category${itemId}: categoryUpdateds(first:1, orderBy: id, orderDirection:asc, where:{categoryId:${itemId}}) {
+        category${itemId}: categoryUpdateds(first:1, orderBy:id, orderDirection:desc, where:{categoryId:${itemId}}) {
             categoryId # TODO: Superfluous
             title
         }
-        ownedCategory${itemId}: ownedCategoryUpdateds(first:1, orderBy: id, orderDirection:asc, where:{categoryId:${itemId}}) {
+        ownedCategory${itemId}: ownedCategoryUpdateds(first:1, orderBy:id, orderDirection:desc, where:{categoryId:${itemId}}) {
             categoryId # TODO: Superfluous
             title
             shortDescription
