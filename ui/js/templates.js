@@ -97,7 +97,8 @@ async function onLoad() {
 <li data-id="${item.templateId}"
     data-js="${safe_attrs(item.js)}"
     data-settings="${safe_attrs(item.settings)}">
-    <a href="#" onclick="editTemplate(event); return false">${safe_tags(item.name)}</a></li>`;
+    <a href="#" onclick="editTemplate(event); return false">${safe_tags(item.name)}</a>
+    (<a target="_blank" href="${safe_attrs(item.settings)}">settings</a>)</li>`;
         $('#templates').append(html);
     }
 }
