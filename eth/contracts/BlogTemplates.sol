@@ -16,6 +16,9 @@ contract BlogTemplates {
     // itemId => post ID
     mapping (uint => uint) public postIDs;
 
+    // post ID => item ID
+    mapping (uint => uint) public itemIDs;
+
     mapping (uint => address) public postOwners;
 
     // post ID => template ID
@@ -62,6 +65,7 @@ contract BlogTemplates {
         postOwners[_postId] = msg.sender;
         postTemplates[_postId] = _templateId;
         postIDs[_itemId] = _postId;
+        itemIDs[_postId] = _itemId;
         emit PostCreated(_postId);
         emit PostChangeOwner(_postId, msg.sender);
         emit PostUpdated(_postId, _templateId);
