@@ -44,7 +44,14 @@ async function createItem() {
             const postId = randomUint256();
             jsCode = `<script src="${jsLink}"></script><script>zonDirectory_template(${web3.utils.toHex(postId)});</script>`;
         }
-        const html = `<html><head><meta charset="utf-8"/><title>${safe_tags(title)}</title>${jsCode}</head><body>${text}</body></html>`;
+        const html = `<html lang="${locale}">
+    <head>
+        <meta charset="utf-8"/>
+        ${jsCode}
+        <title>${safe_tags(title)}</title>
+        <meta name="description" content="${safe_attrs(shortDescription)}"/>
+    </head>
+    <body>${text}</body></html>`;
         link = "arweave:" + await upload(html, arKeyChooser, 'text/html');
     }
 
