@@ -58,7 +58,6 @@ async function createItem() {
         console.log(`Uploaded https://arweave.net/${arHash}`);
     }
 
-    alert(kind)
     const response = await contractInstance.methods.createLink({link, title, shortDescription, description, locale, linkKind: kind}, owned, '0x0000000000000000000000000000000000000001')
         .send({from: defaultAccount, gas: '1000000'})
     const linkId = response.events.ItemCreated.returnValues.itemId;
