@@ -42,7 +42,7 @@ async function createItem() {
         if(templateId) {
             const jsLink = await contractInstance2.methods.templatesJavaScript(templateId).call();
             const postId = randomUint256();
-            jsCode = `<script src="${jsLink}"></script><script>zonDirectory_template(${web3.utils.toHex(postId)});</script>`;
+            jsCode = `<script src="${jsLink}"></script><script>zonDirectory_template("${web3.utils.toHex(postId)}");</script>`;
         }
         const html = `<html lang="${locale}">
     <head>
