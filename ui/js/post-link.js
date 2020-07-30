@@ -41,8 +41,9 @@ async function createItem() {
         let jsCode = "";
         if(templateId) {
             const jsLink = await contractInstance2.methods.templatesJavaScript(templateId).call();
+            const jsBase = jsLink.replace(/[^\/\\]*$/, "");
             const postId = randomUint256();
-            jsCode = `<script src="${jsLink}"></script><script>zonDirectory_template("${web3.utils.toHex(postId)}");</script>`;
+            jsCode = `<script src="${jsLink}"></script><script>zonDirectory_template(${JSON.stringify(jsBase)}, "${web3.utils.toHex(postId)}");</script>`;
         }
         const html = `<html lang="${locale}">
     <head>
@@ -62,7 +63,7 @@ async function createItem() {
     const linkId = response.events.ItemCreated.returnValues.itemId;
 
     if(templateId) {
-        await contractInstance2.methods.createPost(templateId, postId, linkId)
+        await contractInstance2.methods.createPost(templateId, linkId, linkId)
             .send({from: defaultAccount, gas: '100000'});            
     }
 

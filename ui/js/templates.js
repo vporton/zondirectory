@@ -15,7 +15,7 @@ function createTemplate() {
                     const contractInstance = new web3.eth.Contract(await blogTemplatesJsonInterface(), await getAddress('BlogTemplates'));
                     await defaultAccountPromise();
                     await contractInstance.methods.createTemplate(name, js, settings)
-                        .send({from: defaultAccount, gas: '100000'});            
+                        .send({from: defaultAccount, gas: '1000000'});
                 },
             },
             {
@@ -50,7 +50,7 @@ function editTemplate(event) {
                     const contractInstance = new web3.eth.Contract(await blogTemplatesJsonInterface(), await getAddress('BlogTemplates'));
                     await defaultAccountPromise();
                     await contractInstance.methods.updateTemplate(id, name, js, settings)
-                        .send({from: defaultAccount, gas: '100000'});            
+                        .send({from: defaultAccount, gas: '1000000'});
                 },
             },
             {
