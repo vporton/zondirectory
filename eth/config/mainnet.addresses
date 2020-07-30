@@ -3,5 +3,7 @@
   "FilesBlock": 10551204,
   "Root": "1",
   "Spam": "2",
-  "TheGraph": "vporton/zon-directory-2"
+  "TheGraph": "vporton/zon-directory-2",
+  "BlogTemplates": "0xfbE7a92317e98a016bd571fF7751f5677380f469",
+  "BlogTemplatesBlock": 10561578
 }
