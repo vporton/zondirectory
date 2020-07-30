@@ -1,4 +1,4 @@
-$(async function() {
+async function onLoad() {
     $('#filesAddressElt').text(await getAddress('Files'));
     await defaultAccountPromise();
     const contractInstance = new web3.eth.Contract(await filesJsonInterface(), await getAddress('Files'));
@@ -21,10 +21,12 @@ $(async function() {
             $('#tokenAR').text(contractState.balances[arWallet]);
         });
     }
-});
+}
 
 async function withdrawETH() {
     await defaultAccountPromise();
     const contractInstance = new web3.eth.Contract(await filesJsonInterface(), await getAddress('Files'));
     await contractInstance.methods.withdrawProfit().send({gas: '100000', from: defaultAccount});
 }
+
+window.addEventListener('load', onLoad);
