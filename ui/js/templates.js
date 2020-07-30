@@ -93,12 +93,15 @@ async function onLoad() {
     let items = (await queryThegraph2(query)).data;
     for (let i in items) {
         const item = items[i][0];
+        const settingsHtml = item.settings != "" ? `(<a target="_blank" href="${safe_attrs(item.settings)}">settings</a>)`
+                                                 : "";
         const html = `
 <li data-id="${item.templateId}"
     data-js="${safe_attrs(item.js)}"
     data-settings="${safe_attrs(item.settings)}">
     <a href="#" onclick="editTemplate(event); return false">${safe_tags(item.name)}</a>
-    (<a target="_blank" href="${safe_attrs(item.settings)}">settings</a>)</li>`;
+    ${settingsHtml}
+</li>`;
         $('#templates').append(html);
     }
 }
