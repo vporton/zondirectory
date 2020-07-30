@@ -47,6 +47,21 @@ function queryThegraph(query) {
     });
 }
 
+// TODO: Renames, eliminate duplicate code.
+function queryThegraph2(query) {
+    query = query.replace(/\\/g, '\\').replace(/"/g, '\\"').replace(/\n/g, "\\n");
+    return new Promise(async (resolve, error) => {
+        const THEGRAPH_URL = "https://api.thegraph.com/subgraphs/name/" + await getAddress('TheGraphTemplates');
+        $.post(THEGRAPH_URL, `{ "query": "${query}" }`, function(data) {
+            // TODO: Correct error handling.
+            if(data.errors) {
+                alert(data.errors.map(e => e.message).join("\n"));
+            } else
+                resolve(data);
+        });
+    });
+}
+
 function getCookie(cname) {
     var name = cname + "=";
     var decodedCookie = decodeURIComponent(document.cookie);
@@ -72,13 +87,21 @@ async function defaultAccountPromise() {
 }
 
 let filesJsonInterfaceCache = null;
+let blogTemplatesJsonInterfaceCache = null;
 
 function filesJsonInterface() {
     return new Promise((resolve) => {
         if(filesJsonInterfaceCache) resolve(filesJsonInterfaceCache);
-
         fetch("artifacts/Files.abi")
             .then(response => resolve(filesJsonInterfaceCache = response.json()));
+    });
+}
+
+function blogTemplatesJsonInterface() {
+    return new Promise((resolve) => {
+        if(blogTemplatesJsonInterfaceCache) resolve(blogTemplatesJsonInterfaceCache);
+        fetch("artifacts/BlogTemplates.abi")
+            .then(response => resolve(blogTemplatesJsonInterfaceCache = response.json()));
     });
 }
 

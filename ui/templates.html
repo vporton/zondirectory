@@ -1,0 +1,28 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head id="head">
+        <meta name="robots" content="noindex" />
+        <title>My Blog Templates</title>
+        <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+        <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css"/>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/web3/1.2.9/web3.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.2/dist/jquery.validate.min.js"></script>
+        <script src="js/addresses2.js"></script>
+        <script src="js/common.js"></script>
+        <script src="js/templates.js"></script>
+    </head>
+    <body>
+        <h1 id="title">My Blog Templates</h1>
+        <div id="body">
+            <p><input type="button" value="Add new" onclick="createTemplate()"/></p>
+            <ul id="templates"></ul>
+            <div id="dialog" style="display: none">
+                <form id="dialogForm">
+                    <input type="hidden" name="id"/>
+                    <p>Template name*: <input type="text" name="name" required="required"/></p>
+                    <p>JavaScript URL*: <input type="url" name="js" required="required"/></p>
+                    <p>Settings URL: <input type="url" name="settings"/></p>
+                </form>
+            </div>
+        </div>
+    </body>
+</html>

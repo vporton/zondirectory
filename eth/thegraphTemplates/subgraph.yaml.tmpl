@@ -1,0 +1,42 @@
+specVersion: 0.0.2
+schema:
+  file: ./schema.graphql
+dataSources:
+  - kind: ethereum/contract
+    name: Contract
+    network: @network@
+    source:
+      address: "@BlogTemplates@"
+      startBlock: @BlogTemplatesBlock@
+      abi: Contract
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      entities:
+        - PostChangeOwner
+        - PostCreated
+        - PostUpdated
+        - TemplateChangeOwner
+        - TemplateCreated
+        - TemplateSetArchived
+        - TemplateUpdated
+      abis:
+        - name: Contract
+          file: ./abis/Contract.json
+      eventHandlers:
+        - event: PostChangeOwner(uint256,address)
+          handler: handlePostChangeOwner
+        - event: PostCreated(uint256)
+          handler: handlePostCreated
+        - event: PostUpdated(uint256,uint256)
+          handler: handlePostUpdated
+        - event: TemplateChangeOwner(uint256,address)
+          handler: handleTemplateChangeOwner
+        - event: TemplateCreated(uint256)
+          handler: handleTemplateCreated
+        - event: TemplateSetArchived(uint256,bool)
+          handler: handleTemplateSetArchived
+        - event: TemplateUpdated(uint256,string,string,string)
+          handler: handleTemplateUpdated
+      file: ./src/mapping.ts
