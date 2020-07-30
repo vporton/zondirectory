@@ -9,17 +9,17 @@ contract BlogTemplates {
     uint maxId = 0;
 
     // Mapping from a template ID to JavaScript URL
-    mapping (uint => string) templatesJavaScript;
+    mapping (uint => string) public templatesJavaScript;
 
-    mapping (uint => address) templateOwners;
+    mapping (uint => address) public templateOwners;
 
     // itemId => post ID
-    mapping (uint => uint) postIDs;
+    mapping (uint => uint) public postIDs;
 
-    mapping (uint => address) postOwners;
+    mapping (uint => address) public postOwners;
 
     // post ID => template ID
-    mapping (uint => uint) postTemplates;
+    mapping (uint => uint) public postTemplates;
 
     event TemplateCreated(uint templateId);
     event TemplateChangeOwner(uint templateId, address owner);

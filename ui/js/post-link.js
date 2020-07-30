@@ -2,6 +2,10 @@
 
 let arKeyChooser;
 
+function randomUint256() {
+    return new web3.utils.BN(web3.utils.randomHex(32));
+}
+
 async function createOrUpdateItem() {
     //if(!$('#form').valid()) return; // does not work with summernote
 
@@ -23,18 +27,38 @@ async function createItem() {
     const owned = true;
 
     let link = document.getElementById('link').value;
+
+    waitStart();
+    
+    await defaultAccountPromise();
+    
+    const contractInstance2 = new web3.eth.Contract(await blogTemplatesJsonInterface(), await getAddress('BlogTemplates'));
+
+    let templateId = null;
     if($('#tabs-blog').css('display') != 'none') {
         const text = $('#blogPost').summernote('code');
-        // TODO: metatags
-        const html = `<html><head><meta charset="utf-8"/><title>${safe_tags(title)}</title></head><body>${text}</body></html>`;
+        templateId = $('#template').val();
+        let jsCode = "";
+        if(templateId) {
+            const jsLink = await contractInstance2.methods.templatesJavaScript(templateId).call();
+            const postId = randomUint256();
+            jsCode = `<script src="${jsLink}"></script><script>zonDirectory_template(${web3.utils.toHex(postId)});</script>`;
+        }
+        const html = `<html><head><meta charset="utf-8"/><title>${safe_tags(title)}</title>${jsCode}</head><body>${text}</body></html>`;
         link = "arweave:" + await upload(html, arKeyChooser, 'text/html');
     }
 
-    waitStart();
     const response = await contractInstance.methods.createLink({link, title, shortDescription, description, locale, linkKind: kind}, owned, '0x0000000000000000000000000000000000000001')
         .send({from: defaultAccount, gas: '1000000'})
     const linkId = response.events.ItemCreated.returnValues.itemId;
+
+    if(templateId) {
+        await contractInstance2.methods.createPost(templateId, postId, linkId)
+            .send({from: defaultAccount, gas: '100000'});            
+    }
+
     await $('#multiVoter').doMultiVote(linkId);
+
     waitStop();
 }
 
@@ -56,7 +80,7 @@ async function updateItem(itemId) {
         });
     await $('#multiVoter').doMultiVote(itemId);
     waitStop();
-    }
+}
 
 async function onLoad() {
     const urlParams = new URLSearchParams(window.location.search);

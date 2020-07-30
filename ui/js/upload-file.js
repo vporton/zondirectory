@@ -6,6 +6,7 @@ async function uploadFile() {
 
     if(!$('#form').valid()) return;
 
+    waitStart();
     const fileReader = new FileReader();
     fileReader.onload = async (e) => {
         const fileContent = new Uint8Array(e.target.result);
@@ -17,8 +18,8 @@ async function uploadFile() {
                                             document.getElementById('format').value,
                                             Array.from(Arweave.utils.b64UrlToBuffer(hash)))
             .send({from: defaultAccount, gas: '1000000'})
-            .then(() => open('description.html?id=' + itemId));
-};
+            .then(() => { waitStop(); open('description.html?id=' + itemId); });
+    };
     fileReader.readAsArrayBuffer(document.getElementById('file').files[0]);
 }
 

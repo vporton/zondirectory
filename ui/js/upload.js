@@ -9,7 +9,6 @@ async function upload(content, arKeyChooser, contentType) {
     return new Promise(async (resolve) => {
         const contractInstance = new web3.eth.Contract(await filesJsonInterface(), await getAddress('Files'));
         await defaultAccountPromise();
-        waitStart();
         contractInstance.methods.uploadOwnersShare().call(async (error, result) => {
             if(error) {
                 alert(error);
@@ -48,7 +47,6 @@ async function upload(content, arKeyChooser, contentType) {
                 }
 
                 resolve(transaction.id);
-                waitStop();
             });
         });
     });
