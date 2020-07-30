@@ -52,7 +52,9 @@ async function createItem() {
         <meta name="description" content="${safe_attrs(shortDescription)}"/>
     </head>
     <body>${text}</body></html>`;
-        link = "arweave:" + await upload(html, arKeyChooser, 'text/html');
+        const arHash = await upload(html, arKeyChooser, 'text/html');
+        link = "arweave:" + arHash;
+        console.log(`Uploaded https://arweave.net/${arHash}`);
     }
 
     const response = await contractInstance.methods.createLink({link, title, shortDescription, description, locale, linkKind: kind}, owned, '0x0000000000000000000000000000000000000001')
