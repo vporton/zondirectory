@@ -110,6 +110,7 @@ async function onLoad() {
     });
 
     const itemId = numParam('id');
+    let item;
     if(itemId) {
         const query = `{
     linkUpdateds(first:1, orderBy:id, orderDirection:desc, where:{linkId:${itemId}}) {
@@ -121,7 +122,7 @@ async function onLoad() {
         linkKind
     }
 }`;
-        let item = (await queryThegraph(query)).data.linkUpdateds[0];
+        item = (await queryThegraph(query)).data.linkUpdateds[0];
         document.getElementById('link').value = item.link;
         document.getElementById('title').value = item.title;
         document.getElementById('description').textContent = item.description;
@@ -141,9 +142,13 @@ async function onLoad() {
     templateChangeOwners(orderBy:id, orderDirection:desc, where:{owner:"${defaultAccount}"}) {
         templateId
     }
-    
+    postCreateds(where:{itemId:${itemId}}) {
+        postId
+    }
 }`;
-    let templateIds = (await queryThegraph2(query)).data.templateChangeOwners;
+    const data1 = (await queryThegraph2(query)).data;
+    const postId = data1.postCreateds.length ? data1.postCreateds[0].postId : null;
+    let templateIds = data1.templateChangeOwners;
     templateIds = templateIds.filter((x, i, a) => a.indexOf(x) == i); // unique values
     if(!templateIds.length) return;
     const templateIdsFlat = templateIds.map(i => i.templateId);
@@ -153,12 +158,24 @@ async function onLoad() {
     name
 }`
     }
-    query = "{\n" + templateIdsFlat.map(i => subquery(i)).join("\n") + "\n}";
+    query = `{ postUpdateds(where:{postId:${postId}}) { templateId }` +
+        templateIdsFlat.map(i => subquery(i)).join("\n") + "\n}";
     let items = (await queryThegraph2(query)).data;
+    const templateId = items.postUpdateds[0].templateId;
     for (let i in items) {
-        const item = items[i][0];
-        const html = `<option value="${item.templateId}">${safe_tags(item.name)}</option>`;
+        if(!/^templateUpdateds[0-9]+/.test(i)) continue;
+        const itemx = items[i][0];
+        const html = `<option value="${itemx.templateId}">${safe_tags(itemx.name)}</option>`;
         $('#template').append(html);
+    }
+    if(data1.postCreateds.length) { // It is a blog post.
+        $("#tabs").tabs({ active: 1 });
+        $('#template').val(templateId);
+        const url = item.link.replace(/^arweave:/, "https://arweave.net/");
+        const html = await (await fetch(url)).text();
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(html, 'text/html');
+        $("#blogPost").summernote("code", doc.body.innerHTML);        
     }
 }
 
