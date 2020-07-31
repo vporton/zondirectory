@@ -77,10 +77,7 @@ async function updateItem(itemId) {
     const license = document.getElementById('license').value;
 
     await defaultAccountPromise();
-    await mySend(contractInstance, contractInstance.methods.updateItem, [itemId, {title, shortDescription, description, priceETH: getPriceETH(), priceAR: getPriceAR(), locale, license}])
-        .on('transactionHash', async function(receiptHash) {
-            alert("Item updated.");
-        });
+    await mySend(contractInstance, contractInstance.methods.updateItem, [itemId, {title, shortDescription, description, priceETH: getPriceETH(), priceAR: getPriceAR(), locale, license}]);
     waitStop();
 }
 

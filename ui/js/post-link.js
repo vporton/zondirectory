@@ -3,17 +3,51 @@
 let arKeyChooser;
 
 function randomUint256() {
-    return new web3.utils.BN(web3.utils.randomHex(32));
+    return web3.utils.toHex(new web3.utils.BN(web3.utils.randomHex(32)));
 }
+
+const itemId = numParam('id');
 
 async function createOrUpdateItem() {
     //if(!$('#form').valid()) return; // does not work with summernote
 
-    const itemId = numParam('id');
     if(itemId)
         updateItem(itemId);
     else
         createItem();
+}
+
+// TODO: Avoid global variables.
+let templateIdCreated = null;
+let postIdCreated = null;
+
+async function uploadBlog(link, title, shortDescription) {
+    const contractInstance2 = new web3.eth.Contract(await blogTemplatesJsonInterface(), await getAddress('BlogTemplates'));
+
+    if($('#tabs-blog').css('display') != 'none') {
+        const text = $('#blogPost').summernote('code');
+        templateIdCreated = $('#template').val();
+        let jsCode = "";
+        if(templateIdCreated) {
+            const jsLink = await contractInstance2.methods.templatesJavaScript(templateIdCreated).call();
+            const jsBase = jsLink.replace(/[^\/\\]*$/, "");
+            if(!postIdCreated) postIdCreated = randomUint256();
+            jsCode = `<script src="${jsLink}"></script><script>zonDirectory_template(${JSON.stringify(jsBase)}, "${web3.utils.toHex(postIdCreated)}");</script>`;
+        }
+        const html = `<html lang="${locale}">
+    <head>
+        <meta charset="utf-8"/>
+        ${jsCode}
+        <title>${safe_tags(title)}</title>
+        <meta name="description" content="${safe_attrs(shortDescription)}"/>
+    </head>
+    <body>${text}</body></html>`;
+        const arHash = await upload(html, arKeyChooser, 'text/html');
+        link = "arweave:" + arHash;
+        console.log(`Uploaded https://arweave.net/${arHash}`);
+    }
+
+    return link;
 }
 
 async function createItem() {
@@ -31,38 +65,15 @@ async function createItem() {
     waitStart();
     
     await defaultAccountPromise();
-    
-    const contractInstance2 = new web3.eth.Contract(await blogTemplatesJsonInterface(), await getAddress('BlogTemplates'));
 
-    let templateId = null;
-    if($('#tabs-blog').css('display') != 'none') {
-        const text = $('#blogPost').summernote('code');
-        templateId = $('#template').val();
-        let jsCode = "";
-        if(templateId) {
-            const jsLink = await contractInstance2.methods.templatesJavaScript(templateId).call();
-            const jsBase = jsLink.replace(/[^\/\\]*$/, "");
-            const postId = randomUint256();
-            jsCode = `<script src="${jsLink}"></script><script>zonDirectory_template(${JSON.stringify(jsBase)}, "${web3.utils.toHex(postId)}");</script>`;
-        }
-        const html = `<html lang="${locale}">
-    <head>
-        <meta charset="utf-8"/>
-        ${jsCode}
-        <title>${safe_tags(title)}</title>
-        <meta name="description" content="${safe_attrs(shortDescription)}"/>
-    </head>
-    <body>${text}</body></html>`;
-        const arHash = await upload(html, arKeyChooser, 'text/html');
-        link = "arweave:" + arHash;
-        console.log(`Uploaded https://arweave.net/${arHash}`);
-    }
+    link = await uploadBlog(link, title, shortDescription);
 
     const response = await mySend(contractInstance, contractInstance.methods.createLink, [{link, title, shortDescription, description, locale, linkKind: kind}, owned, '0x0000000000000000000000000000000000000001']);
     const linkId = response.events.ItemCreated.returnValues.itemId;
 
-    if(templateId) {
-        await mySend(contractInstance2, contractInstance2.methods.createPost, [templateId, linkId, linkId]);
+    if(templateIdCreated) {
+        const contractInstance2 = new web3.eth.Contract(await blogTemplatesJsonInterface(), await getAddress('BlogTemplates'));
+        await mySend(contractInstance2, contractInstance2.methods.createPost, [templateIdCreated, postIdCreated, linkId]);
     }
 
     await $('#multiVoter').doMultiVote(linkId);
@@ -77,14 +88,16 @@ async function updateItem(itemId) {
     const title = document.getElementById('title').value;
     const description = document.getElementById('description').value;
     const shortDescription = document.getElementById('shortDescription').value;
-    const link = document.getElementById('link').value;
+    let link = document.getElementById('link').value;
     const kind = $('input[name=kind]:checked').val();
 
     waitStart();
-    await mySend(contractInstance, contractInstance.methods.updateLink, [itemId, {link, title, shortDescription, description, locale, linkKind: kind}])
-        .on('transactionHash', async function(receiptHash) {
-            $('#ready').dialog();
-        });
+    link = await uploadBlog(link, title, shortDescription);
+    await mySend(contractInstance, contractInstance.methods.updateLink, [itemId, {link, title, shortDescription, description, locale, linkKind: kind}]);
+    if(templateIdCreated) {
+        const contractInstance2 = new web3.eth.Contract(await blogTemplatesJsonInterface(), await getAddress('BlogTemplates'));
+        await mySend(contractInstance2, contractInstance2.methods.changePostTemplate, [postIdCreated, templateIdCreated]);
+    }
     await $('#multiVoter').doMultiVote(itemId);
     waitStop();
 }
@@ -148,6 +161,7 @@ async function onLoad() {
 }`;
     const data1 = (await queryThegraph2(query)).data;
     const postId = data1.postCreateds.length ? data1.postCreateds[0].postId : null;
+    if(postId) postIdCreated = postId;
     let templateIds = data1.templateChangeOwners;
     templateIds = templateIds.filter((x, i, a) => a.indexOf(x) == i); // unique values
     if(!templateIds.length) return;
@@ -158,10 +172,13 @@ async function onLoad() {
     name
 }`
     }
-    query = `{ postUpdateds(where:{postId:${postId}}) { templateId }` +
-        templateIdsFlat.map(i => subquery(i)).join("\n") + "\n}";
+    if(postId)
+        query = `{ postUpdateds(where:{postId:"${postId}"}) { templateId }` +
+            templateIdsFlat.map(i => subquery(i)).join("\n") + "\n}";
+    else
+        query = "{\n" + templateIdsFlat.map(i => subquery(i)).join("\n") + "\n}";
     let items = (await queryThegraph2(query)).data;
-    const templateId = items.postUpdateds[0].templateId;
+    const templateId = items.postUpdateds && items.postUpdateds.length ? items.postUpdateds[0].templateId : null;
     for (let i in items) {
         if(!/^templateUpdateds[0-9]+/.test(i)) continue;
         const itemx = items[i][0];
