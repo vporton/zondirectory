@@ -28,7 +28,7 @@ contract BlogTemplates {
     event TemplateChangeOwner(uint templateId, address owner);
     event TemplateUpdated(uint templateId, string name, string js, string settings);
     event TemplateSetArchived(uint templateId, bool archived);
-    event PostCreated(uint postId);
+    event PostCreated(uint postId, uint itemId);
     event PostChangeOwner(uint postId, address owner);
     event PostUpdated(uint postId, uint templateId);
 
@@ -66,7 +66,7 @@ contract BlogTemplates {
         postTemplates[_postId] = _templateId;
         postIDs[_itemId] = _postId;
         itemIDs[_postId] = _itemId;
-        emit PostCreated(_postId);
+        emit PostCreated(_postId, _itemId);
         emit PostChangeOwner(_postId, msg.sender);
         emit PostUpdated(_postId, _templateId);
     }

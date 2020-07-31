@@ -141,6 +141,7 @@ async function onLoad() {
     templateChangeOwners(orderBy:id, orderDirection:desc, where:{owner:"${defaultAccount}"}) {
         templateId
     }
+    
 }`;
     let templateIds = (await queryThegraph2(query)).data.templateChangeOwners;
     templateIds = templateIds.filter((x, i, a) => a.indexOf(x) == i); // unique values

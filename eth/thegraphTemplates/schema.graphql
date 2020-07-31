@@ -22,6 +22,7 @@ type TemplateSetArchived @entity {
 type PostCreated @entity {
   id: ID!
   postId: BigInt! # uint256
+  itemId: BigInt! # uint256
 }
 type PostChangeOwner @entity {
   id: ID!

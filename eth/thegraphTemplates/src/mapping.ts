@@ -41,6 +41,7 @@ export function handlePostCreated(event: PostCreatedEvent): void {
     generateId(event)
   )
   entity.postId = event.params.postId
+  entity.itemId = event.params.itemId
   entity.save()
 }
 
