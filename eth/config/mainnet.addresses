@@ -4,7 +4,7 @@
   "Root": "1",
   "Spam": "2",
   "TheGraph": "vporton/zon-directory-2",
-  "TheGraphTemplates": "vporton/zon-directory-templates-2",
+  "TheGraphTemplates": "vporton/zon-directory-templates2",
   "BlogTemplates": "0x3852fd1c086e37f9daaa9061b2f218d3dfba0f42",
   "BlogTemplatesBlock": "0xa140a5"
 }
