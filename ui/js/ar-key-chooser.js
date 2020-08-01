@@ -1,3 +1,5 @@
+"strict";
+
 (function( $ ) {
 
     function storeKeyToggle() {

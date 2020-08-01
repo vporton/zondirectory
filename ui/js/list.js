@@ -1,3 +1,5 @@
+"strict";
+
 const catId = numParam('cat');
 
 async function onLoad() {

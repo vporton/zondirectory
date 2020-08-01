@@ -1,3 +1,5 @@
+"strict";
+
 (function( $ ) {
 
     $.fn.categoryChooser = function() {

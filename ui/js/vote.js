@@ -1,3 +1,5 @@
+"strict";
+
 async function vote() {
     if(!$('#form').valid()) return;
 

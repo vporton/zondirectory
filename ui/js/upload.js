@@ -1,3 +1,5 @@
+"strict";
+
 async function upload(content, arKeyChooser, contentType) {
     const key = await arKeyChooser.arKeyGet();
     if(!key) {

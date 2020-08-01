@@ -1,3 +1,5 @@
+"strict";
+
 let arKeyChooser;
 
 async function uploadFile() {

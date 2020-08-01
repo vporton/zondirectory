@@ -29,8 +29,6 @@
 
 * Use Authereum to eliminate gas costs.
 
-* "strict";
-
 * Input validation for category voting.
 
 * JavaScript and CSS minimization.

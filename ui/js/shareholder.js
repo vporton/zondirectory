@@ -1,3 +1,5 @@
+"strict";
+
 async function onLoad() {
     $('#filesAddressElt').text(await getAddress('Files'));
     await defaultAccountPromise();

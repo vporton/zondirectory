@@ -1,3 +1,5 @@
+"strict";
+
 $(document).ajaxError(function( event, request, settings ) {
     alert("Error: " + request.status);
 });

@@ -1,3 +1,5 @@
+"strict";
+
 async function onLoad() {
     if(!window.web3) {
         alert("Install a crypto browser to be an author!");
