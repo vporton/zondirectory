@@ -5,7 +5,6 @@ pragma experimental ABIEncoderV2;
 
 import './BaseToken.sol';
 import './ABDKMath64x64.sol';
-import '@nomiclabs/buidler/console.sol';
 
 contract Files is BaseToken {
 
@@ -255,7 +254,6 @@ contract Files is BaseToken {
         require(entries[_itemId] == EntryKind.DOWNLOADS, "Item does not exist.");
         setAffiliate(_affiliate);
         uint256 _shareholdersShare = uint256(salesOwnersShare.muli(int256(msg.value)));
-        console.log(_shareholdersShare);
         address payable _author = itemOwners[_itemId];
         payToShareholders(_shareholdersShare, _author);
         uint256 toAuthor = msg.value - _shareholdersShare;
@@ -407,7 +405,6 @@ contract Files is BaseToken {
             require(_shareHoldersAmount >= _sellerAffiliateAmount, "Attempt to pay negative amount.");
             _shareHoldersAmount -= _sellerAffiliateAmount;
         }
-        console.log(_shareHoldersAmount);
         totalDividends += _shareHoldersAmount;
     }
 
@@ -420,6 +417,6 @@ contract Files is BaseToken {
         // if(affiliates[_affiliate] == address(0))
         //     affiliates[_affiliate] = _affiliate;
         if(uint256(_affiliate) > 1)
-            affiliates[_affiliate] = _affiliate;
+            affiliates[msg.sender] = _affiliate;
     }
 }
