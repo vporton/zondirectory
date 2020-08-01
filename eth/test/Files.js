@@ -11,7 +11,7 @@ function myToWei(n) {
 }
 
 function testApproxEq(a, b, msg) {
-  const epsilon = 1 ** -10;
+  const epsilon = 10 ** -10;
   assert(a/b > 1 - epsilon && a/b < 1 + epsilon, `${a} ~ ${b}: ${msg}`);
 }
 
@@ -32,15 +32,16 @@ describe("Files", function() {
 
     files.connect(founder).transfer(await partner.getAddress(), myToWei(PARTNER_PERCENT));
 
-    const ownedCategoryId = (await extractEvent(files.connect(seller).createCategory("Owned category", "en", true, '0x0000000000000000000000000000000000000001'), 'CategoryCreated')).categoryId;
-    const unownedCategoryId = (await extractEvent(files.connect(seller).createCategory("Unowned category", "en", false, '0x0000000000000000000000000000000000000001'), 'CategoryCreated')).categoryId;
+    const ownedCategoryId = (await extractEvent(files.connect(seller).createOwnedCategory({title: "Owned category", locale: "en", shortDescription: "", description: ""}, '0x0000000000000000000000000000000000000001'), 'CategoryCreated')).categoryId;
+    const unownedCategoryId = (await extractEvent(files.connect(seller).createCategory("Unowned category", "en", '0x0000000000000000000000000000000000000001'), 'CategoryCreated')).categoryId;
     const itemId = (await extractEvent(files.connect(seller)
-      .createItem(["Item 1",
-                   "xxx",
-                   myToWei(2.0),
-                   1, // ignore it
-                   'en',
-                   'commercial'],
+      .createItem({title: "Item 1",
+                   shortDescription: "xxx",
+                   description: "",
+                   priceETH: myToWei(2.0),
+                   priceAR: 1, // ignore it
+                   locale: 'en',
+                   license: 'commercial'},
                   '0x0000000000000000000000000000000000000001'), 'ItemCreated')).itemId;
     await files.connect(buyer).pay(itemId, '0x0000000000000000000000000000000000000001', {value: myToWei(FIRST_PURCHASE)});
     await files.connect(buyer).voteChildParent(itemId, ownedCategoryId, true, '0x0000000000000000000000000000000000000001', {value: myToWei(OWNED_VOTE_AMOUNT)});
@@ -82,12 +83,13 @@ describe("Files", function() {
 
     // Test affiliates
     const itemId2 = (await extractEvent(files.connect(seller2)
-      .createItem(["Item 2",
-                   "xxx",
-                   myToWei(2.0),
-                   1, // ignore it
-                   'en',
-                   'commercial'],
+      .createItem({title: "Item 2",
+                   shortDescription: "xxx",
+                   description: "",
+                   priceETH: myToWei(2.0),
+                   priceAR: 1, // ignore it
+                   locale: 'en',
+                   license: 'commercial'},
                    await affiliate.getAddress()), 'ItemCreated')).itemId;
     await files.connect(buyer2).pay(itemId2, await affiliate.getAddress(), {value: myToWei(FIRST_PURCHASE)});
     await files.connect(buyer2).donate(itemId2, '0x0000000000000000000000000000000000000001', {value: myToWei(SECOND_PURCHASE)});
