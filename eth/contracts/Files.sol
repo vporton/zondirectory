@@ -5,6 +5,7 @@ pragma experimental ABIEncoderV2;
 
 import './BaseToken.sol';
 import './ABDKMath64x64.sol';
+import '@nomiclabs/buidler/console.sol';
 
 contract Files is BaseToken {
 
@@ -254,6 +255,7 @@ contract Files is BaseToken {
         require(entries[_itemId] == EntryKind.DOWNLOADS, "Item does not exist.");
         setAffiliate(_affiliate);
         uint256 _shareholdersShare = uint256(salesOwnersShare.muli(int256(msg.value)));
+        console.log(_shareholdersShare);
         address payable _author = itemOwners[_itemId];
         payToShareholders(_shareholdersShare, _author);
         uint256 toAuthor = msg.value - _shareholdersShare;
@@ -390,20 +392,22 @@ contract Files is BaseToken {
     }
 
     function payToShareholders(uint256 _amount, address _author) internal {
-        address payable _affiliate = affiliates[msg.sender];
+        address payable _buyerAffiliate = affiliates[msg.sender];
+        address payable _sellerAffiliate = affiliates[_author];
         uint256 _shareHoldersAmount = _amount;
-        if(uint(_affiliate) > 1) {
+        if(uint(_buyerAffiliate) > 1) {
             uint256 _buyerAffiliateAmount = uint256(buyerAffiliateShare.muli(int256(_amount)));
-            _affiliate.transfer(_buyerAffiliateAmount);
+            _buyerAffiliate.transfer(_buyerAffiliateAmount);
             require(_shareHoldersAmount >= _buyerAffiliateAmount, "Attempt to pay negative amount.");
             _shareHoldersAmount -= _buyerAffiliateAmount;
         }
-        if(uint(_author) > 1) {
+        if(uint(_sellerAffiliate) > 1) {
             uint256 _sellerAffiliateAmount = uint256(sellerAffiliateShare.muli(int256(_amount)));
-            payable(_author).transfer(_sellerAffiliateAmount);
+            payable(_sellerAffiliate).transfer(_sellerAffiliateAmount);
             require(_shareHoldersAmount >= _sellerAffiliateAmount, "Attempt to pay negative amount.");
             _shareHoldersAmount -= _sellerAffiliateAmount;
         }
+        console.log(_shareHoldersAmount);
         totalDividends += _shareHoldersAmount;
     }
 
