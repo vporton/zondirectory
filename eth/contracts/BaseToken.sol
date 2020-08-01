@@ -9,7 +9,7 @@ import "./Token.sol";
 contract BaseToken is Token {
 
     function transfer(address _to, uint256 _value) override virtual external returns (bool success) {
-        require(balances[msg.sender] >= _value && balances[_to] + _value > balances[_to]);
+        require(balances[msg.sender] >= _value && balances[_to] + _value >= balances[_to]);
         balances[msg.sender] -= _value;
         balances[_to] += _value;
         emit Transfer(msg.sender, _to, _value);
@@ -17,7 +17,7 @@ contract BaseToken is Token {
     }
 
     function transferFrom(address _from, address _to, uint256 _value) override virtual external returns (bool success) {
-        require(balances[_from] >= _value && allowed[_from][msg.sender] >= _value && balances[_to] + _value > balances[_to]);
+        require(balances[_from] >= _value && allowed[_from][msg.sender] >= _value && balances[_to] + _value >= balances[_to]);
         balances[_to] += _value;
         balances[_from] -= _value;
         allowed[_from][msg.sender] -= _value;
