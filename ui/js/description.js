@@ -96,6 +96,7 @@ $(async function() {
     itemUpdateds(first:1, orderBy:itemId, orderDirection:desc, where:{itemId:${itemId}}) {
         title
         description
+        shortDescription
         license
         priceETH
         priceAR
@@ -104,6 +105,7 @@ $(async function() {
         let item = (await queryThegraph(query)).data.itemUpdateds[0];
         document.getElementById('title').value = item.title;
         document.getElementById('description').textContent = item.description;
+        document.getElementById('shortDescription').textContent = item.shortDescription;
         document.getElementById('license').textContent = item.license;
         setPriceETH(item.priceETH);
         setPriceAR(item.priceAR);
