@@ -41,8 +41,6 @@
 
 * Proper error handing (.catch(), etc.)
 
-* Blog editing.
-
 * TheGraph groupBy.
 
 * RSS.
