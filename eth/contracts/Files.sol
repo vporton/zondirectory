@@ -97,6 +97,12 @@ contract Files is BaseToken {
         emit SetOwner(_founder);
     }
 
+    function removeOwner() external {
+        require(msg.sender == founder, "Access denied.");
+        founder = address(0);
+        emit SetOwner(address(0));
+    }
+
     // _share is 64.64 fixed point number
     function setSalesOwnersShare(int128 _share) external {
         require(msg.sender == founder, "Access denied.");
@@ -130,8 +136,15 @@ contract Files is BaseToken {
 
     function setItemOwner(uint _itemId, address payable _owner) external {
         require(itemOwners[_itemId] == msg.sender, "Access denied.");
+        require(_owner != address(0), "Zero address.");
         itemOwners[_itemId] = _owner;
         emit SetItemOwner(_itemId, _owner);
+    }
+
+    function removeItemOwner(uint _itemId) external {
+        require(itemOwners[_itemId] == msg.sender, "Access denied.");
+        itemOwners[_itemId] = address(0);
+        emit SetItemOwner(_itemId, address(0));
     }
 
 // Wallets //
