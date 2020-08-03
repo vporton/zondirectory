@@ -90,14 +90,14 @@ contract Files is BaseToken {
 
 // Owners //
 
-    function setOwner(address payable _founder) external {
+    function setMainOwner(address payable _founder) external {
         require(msg.sender == founder, "Access denied.");
         require(_founder != address(0), "Zero address."); // also prevents makeing owned categories unowned (spam)
         founder = _founder;
         emit SetOwner(_founder);
     }
 
-    function removeOwner() external {
+    function removeMainOwner() external {
         require(msg.sender == founder, "Access denied.");
         founder = address(0);
         emit SetOwner(address(0));
