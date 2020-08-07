@@ -54,3 +54,5 @@
 * Test: Try to set affiliate commission to zero.
 
 * Reordering owned categories.
+
+* Add "composite" contract methods to do several operations at once?
