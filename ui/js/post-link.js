@@ -100,7 +100,7 @@ async function updateItem(itemId) {
         const contractInstance2 = new web3.eth.Contract(await blogTemplatesJsonInterface(), await getAddress('BlogTemplates'));
         await mySend(contractInstance2, contractInstance2.methods.changePostTemplate, [postIdCreated, templateIdCreated]);
     }
-    await $('#multiVoter').doMultiVote(itemId);
+    // await $('#multiVoter').doMultiVote(itemId);
     waitStop();
 }
 
