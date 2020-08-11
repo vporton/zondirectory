@@ -183,6 +183,11 @@ abstract contract BaseFiles is BaseToken {
 
     function createItem(ItemInfo calldata _info, address payable _affiliate) external returns (uint)
     {
+        return _createItem(_info, _affiliate);
+    }
+
+    function _createItem(ItemInfo calldata _info, address payable _affiliate) public returns (uint)
+    {
         require(bytes(_info.title).length != 0, "Empty title.");
         setAffiliate(_affiliate);
         itemOwners[++maxId] = msg.sender;
@@ -215,6 +220,11 @@ abstract contract BaseFiles is BaseToken {
     }
 
     function createLink(LinkInfo calldata _info, bool _owned, address payable _affiliate) external returns (uint)
+    {
+        return _createLink(_info, _owned, _affiliate);
+    }
+
+    function _createLink(LinkInfo calldata _info, bool _owned, address payable _affiliate) public returns (uint)
     {
         require(bytes(_info.title).length != 0, "Empty title.");
         setAffiliate(_affiliate);
@@ -288,6 +298,10 @@ abstract contract BaseFiles is BaseToken {
 // Categories //
 
     function createCategory(string calldata _title, string calldata _locale, address payable _affiliate) external returns (uint) {
+        return _createCategory(_title, _locale, _affiliate);
+    }
+
+    function _createCategory(string calldata _title, string calldata _locale, address payable _affiliate) public returns (uint) {
         require(bytes(_title).length != 0, "Empty title.");
         setAffiliate(_affiliate);
         ++maxId;
@@ -311,6 +325,10 @@ abstract contract BaseFiles is BaseToken {
     }
 
     function createOwnedCategory(OwnedCategoryInfo calldata _info, address payable _affiliate) external returns (uint) {
+        return _createOwnedCategory(_info, _affiliate);
+    }
+
+    function _createOwnedCategory(OwnedCategoryInfo calldata _info, address payable _affiliate) public returns (uint) {
         require(bytes(_info.title).length != 0, "Empty title.");
         setAffiliate(_affiliate);
         ++maxId;
@@ -332,20 +350,24 @@ abstract contract BaseFiles is BaseToken {
 // Voting //
 
     function voteChildParent(uint _child, uint _parent, bool _yes, address payable _affiliate) external payable {
+        _voteChildParent(_child, _parent, _yes, _affiliate, msg.value);
+    }
+
+    function _voteChildParent(uint _child, uint _parent, bool _yes, address payable _affiliate, uint256 _amount) public {
         require(entries[_child] != EntryKind.NONE, "Child does not exist.");
         require(entries[_parent] == EntryKind.CATEGORY, "Must be a category.");
         setAffiliate(_affiliate);
-        int256 _value = _yes ? int256(msg.value) : -int256(msg.value);
+        int256 _value = _yes ? int256(_amount) : -int256(_amount);
         if(_value == 0) return; // We don't want to pollute the events with zero votes.
         int256 _newValue = childParentVotes[_child][_parent] + _value;
         childParentVotes[_child][_parent] = _newValue;
         address payable _owner = itemOwners[_child];
         if(_yes && _owner != address(0)) {
-            uint256 _shareholdersShare = uint256(upvotesOwnersShare.muli(int256(msg.value)));
+            uint256 _shareholdersShare = uint256(upvotesOwnersShare.muli(int256(_amount)));
             payToShareholders(_shareholdersShare, _owner);
-            _owner.transfer(msg.value - _shareholdersShare);
+            _owner.transfer(_amount - _shareholdersShare);
         } else
-            payToShareholders(msg.value, address(0));
+            payToShareholders(_amount, address(0));
         emit ChildParentVote(_child, _parent, _newValue, 0, false);
     }
 
@@ -362,8 +384,12 @@ abstract contract BaseFiles is BaseToken {
         emit ChildParentVote(_child, _parent, _newValue, 0, false);
     }
 
-    // _value > 0 - present
     function setMyChildParent(uint _child, uint _parent, int256 _value, int256 _featureLevel) external {
+        _setMyChildParent(_child, _parent, _value, _featureLevel);
+    }
+
+    // _value > 0 - present
+    function _setMyChildParent(uint _child, uint _parent, int256 _value, int256 _featureLevel) public {
         require(entries[_child] != EntryKind.NONE, "Child does not exist.");
         require(entries[_parent] == EntryKind.CATEGORY, "Must be a category.");
         require(itemOwners[_parent] == msg.sender, "Access denied.");
