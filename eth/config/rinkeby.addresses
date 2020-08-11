@@ -4,8 +4,8 @@
   "Spam": "2",
   "FilesBlock": 7001351,
   "Web3Provider": "https://rinkeby.infura.io/v3/1d0c278301fc40f3a8f40f25ae3bd328",
-  "TheGraph": "vporton/zon-directory-rinkeby5",
-  "TheGraphTemplates": "vporton/zon-directory-templates-rinkeby8",
+  "TheGraph": "vporton/zon-directory-rinkeby6",
+  "TheGraphTemplates": "vporton/zon-directory-templates-rinkeby9",
   "BlogTemplates": "0xC8E2E1b12ad266e23273FcB7242b434B96bEa2A2",
   "BlogTemplatesBlock": 7001377
 }
