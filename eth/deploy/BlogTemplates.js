@@ -7,8 +7,9 @@ module.exports = async ({getNamedAccounts, deployments}) => {
     const namedAccounts = await getNamedAccounts();
     const {deploy} = deployments;
     const {deployer} = namedAccounts;
+    const Files = await deployments.get("Files");
     log(`Deploying BlogTemplates...`);
-    const deployResult = await deploy('BlogTemplates', {from: deployer, args: []});
+    const deployResult = await deploy('BlogTemplates', {from: deployer, args: [Files.address]});
     if (deployResult.newlyDeployed) {
         log(`contract BlogTemplates deployed at ${deployResult.address} in block ${deployResult.receipt.blockNumber} using ${deployResult.receipt.gasUsed} gas`);
     }
