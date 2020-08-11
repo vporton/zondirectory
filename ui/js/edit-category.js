@@ -48,14 +48,15 @@ async function createCategory() {
     const {
         cats,
         amounts,
-    } = this.multiVoterData();
+        sum,
+    } = $('#multiVoter').multiVoterData();
     if(id) {
         response = await mySend(contractInstance, contractInstance.methods.updateOwnedCategory, [id, {title: name, locale, shortDescription, description}])
     } else {
         if(owned) {
-            response = await mySend(contractInstance, contractInstance.methods.createOwnedCategoryAndVote, [{title: name, locale, shortDescription, description}, '0x0000000000000000000000000000000000000001', cats, amounts]);
+            response = await mySend(contractInstance, contractInstance.methods.createOwnedCategoryAndVote, [{title: name, locale, shortDescription, description}, '0x0000000000000000000000000000000000000001', cats, amounts], {value: sum});
         } else {
-            response = await mySend(contractInstance, contractInstance.methods.createCategoryAndVote, [name, locale, '0x0000000000000000000000000000000000000001', cats, amounts]);
+            response = await mySend(contractInstance, contractInstance.methods.createCategoryAndVote, [name, locale, '0x0000000000000000000000000000000000000001', cats, amounts], {value: sum});
         }
         newId = response.events.CategoryCreated.returnValues.categoryId;
     }

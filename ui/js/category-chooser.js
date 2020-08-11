@@ -50,16 +50,22 @@
         //     .then(async (shareResult) => {
         //         const ownersShare = shareResult / 2**64;
 
+        let sum = new web3.utils.BN('0');
         let cats = [];
         let amounts = [];
         let myFlags = [];
         this.find('input[name=cat]:gt(0)').each((i, c) => cats.push(c.value.replace(/^([0-9]*).*/, '$1')));
         this.find('input[name=amount]').each((i, c) => amounts.push(c.value ? web3.utils.toWei(c.value) : ''));
         this.find('input[type=checkbox]').each((i, c) => myFlags.push(c.checked));
+        for(let i = 0; i < this.find('input[name=amount]').length; ++i) {
+            if(cats[i] && amounts[i]) // FIXME: Don't pay for my own cats
+                sum = sum.add(new web3.utils.BN(amounts[i]));
+        }
         return {
             cats,
             amounts,
             myFlags,
+            sum,
         };
         // })
         // .catch(alert);
@@ -69,7 +75,8 @@
         const {
             cats,
             amounts,
-        } = this.multiVoterData();
+            sum,
+        } = $('#multiVoter').multiVoterData();
 
         await defaultAccountPromise();
         const contractInstance = new web3.eth.Contract(await filesJsonInterface(), await getAddress('Files'));
@@ -84,7 +91,7 @@
                         await mySend(contractInstance, contractInstance.methods.setMyChildParent, [itemId, parent, amount, 0])
                             .catch(err => alert);
                     } else {
-                        await mySend(contractInstance, contractInstance.methods.voteChildParent, [itemId, parent, true, '0x0000000000000000000000000000000000000001'])
+                        await mySend(contractInstance, contractInstance.methods.voteChildParent, [itemId, parent, true, '0x0000000000000000000000000000000000000001'], {value: sum})
                             .catch(err => alert);
                     }
                 })

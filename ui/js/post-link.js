@@ -71,13 +71,14 @@ async function createItem() {
     const {
         cats,
         amounts,
-    } = this.multiVoterData();
+        sum,
+    } = $('#multiVoter').multiVoterData();
 
     if(templateIdCreated) {
         const contractInstance2 = new web3.eth.Contract(await blogTemplatesJsonInterface(), await getAddress('BlogTemplates'));
-        const response = await mySend(contractInstance, contractInstance.methods.createPostFull, [{link, title, shortDescription, description, locale, linkKind: kind}, owned, '0x0000000000000000000000000000000000000001', cats, amounts, templateIdCreated, postIdCreated]);
+        const response = await mySend(contractInstance, contractInstance.methods.createPostFull, [{link, title, shortDescription, description, locale, linkKind: kind}, owned, '0x0000000000000000000000000000000000000001', cats, amounts, templateIdCreated, postIdCreated], {value: sum});
     } else {
-        const response = await mySend(contractInstance, contractInstance.methods.createLinkAndVote, [{link, title, shortDescription, description, locale, linkKind: kind}, owned, '0x0000000000000000000000000000000000000001', cats, amounts]);
+        const response = await mySend(contractInstance, contractInstance.methods.createLinkAndVote, [{link, title, shortDescription, description, locale, linkKind: kind}, owned, '0x0000000000000000000000000000000000000001', cats, amounts], {value: sum});
         const linkId = response.events.ItemCreated.returnValues.itemId;
    }
 
