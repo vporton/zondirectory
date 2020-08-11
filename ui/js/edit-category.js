@@ -40,23 +40,26 @@ async function createCategory() {
     if(!locale) return;
     const owned = $('#owned').is(':checked');
 
-    waitStart();
+    // waitStart();
     await defaultAccountPromise();
     const contractInstance = new web3.eth.Contract(await filesJsonInterface(), await getAddress('Files'));
     let response;
     let newId = id;
+    const {
+        cats,
+        amounts,
+    } = this.multiVoterData();
     if(id) {
         response = await mySend(contractInstance, contractInstance.methods.updateOwnedCategory, [id, {title: name, locale, shortDescription, description}])
     } else {
         if(owned) {
-            response = await mySend(contractInstance, contractInstance.methods.createOwnedCategory, [{title: name, locale, shortDescription, description}, '0x0000000000000000000000000000000000000001']);
+            response = await mySend(contractInstance, contractInstance.methods.createOwnedCategoryAndVote, [{title: name, locale, shortDescription, description}, '0x0000000000000000000000000000000000000001', cats, amounts]);
         } else {
-            response = await mySend(contractInstance, contractInstance.methods.createCategory, [name, locale, '0x0000000000000000000000000000000000000001']);
+            response = await mySend(contractInstance, contractInstance.methods.createCategoryAndVote, [name, locale, '0x0000000000000000000000000000000000000001', cats, amounts]);
         }
         newId = response.events.CategoryCreated.returnValues.categoryId;
     }
-    await $('#multiVoter').doMultiVote(newId);
-    waitStop();
+    // waitStop();
 
     $('#form').validate({});
 }
