@@ -32,7 +32,7 @@ contract Files is BaseFiles {
     function createItemAndVote(ItemInfo calldata _info,
                                address payable _affiliate,
                                uint[] calldata _parents,
-                               uint256[] calldata _voteAmounts) external returns (uint itemId)
+                               uint256[] calldata _voteAmounts) external payable returns (uint itemId)
     {
         itemId = _createItem(_info, _affiliate);
         _voteMultiple(itemId, _parents, _voteAmounts);
@@ -42,7 +42,7 @@ contract Files is BaseFiles {
                                bool _owned,
                                address payable _affiliate,
                                uint[] calldata _parents,
-                               uint256[] calldata _voteAmounts) external returns (uint itemId)
+                               uint256[] calldata _voteAmounts) external payable returns (uint itemId)
     {
         itemId = _createLink(_info, _owned, _affiliate);
         _voteMultiple(itemId, _parents, _voteAmounts);
@@ -52,7 +52,7 @@ contract Files is BaseFiles {
                                    string calldata _locale,
                                    address payable _affiliate,
                                    uint[] calldata _parents,
-                                   uint256[] calldata _voteAmounts) external returns (uint itemId)
+                                   uint256[] calldata _voteAmounts) external payable returns (uint itemId)
     {
         itemId = _createCategory(_title, _locale, _affiliate);
         _voteMultiple(itemId, _parents, _voteAmounts);
@@ -61,7 +61,7 @@ contract Files is BaseFiles {
     function createOwnedCategoryAndVote(OwnedCategoryInfo calldata _info,
                                         address payable _affiliate,
                                         uint[] calldata _parents,
-                                        uint256[] calldata _voteAmounts) external returns (uint itemId)
+                                        uint256[] calldata _voteAmounts) external payable returns (uint itemId)
     {
         itemId = _createOwnedCategory(_info, _affiliate);
         _voteMultiple(itemId, _parents, _voteAmounts);

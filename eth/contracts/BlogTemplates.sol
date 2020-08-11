@@ -104,7 +104,7 @@ contract BlogTemplates {
                             uint[] calldata _parents,
                             uint256[] calldata _voteAmounts,
                             uint _templateId,
-                            uint _postId) external returns (uint itemId)
+                            uint _postId) external payable returns (uint itemId)
     {
         itemId = filesContract.createLinkAndVote(_info,
                                                  _owned,
