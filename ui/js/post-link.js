@@ -125,6 +125,7 @@ async function onLoad() {
     const itemId = numParam('id');
     let item;
     if(itemId) {
+        $('#multiVoterDiv').css('display', 'none');
         const query = `{
     linkUpdateds(first:1, orderBy:id, orderDirection:desc, where:{linkId:${itemId}}) {
         link

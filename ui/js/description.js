@@ -90,6 +90,7 @@ $(async function() {
 
     const itemId = numParam('id');
     if(itemId) {
+        $('#multiVoterDiv').css('display', 'none');
         $('#uploadLink > a').attr('href', "upload.html?id="+itemId);
         $('#uploadLink').css('display', 'block');
         const query = `{

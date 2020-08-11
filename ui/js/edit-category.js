@@ -6,6 +6,7 @@ const id = urlParams.get('id');
 async function onLoad() {
     if(id) {
         $('head').prepend(`<meta name="robots" content="noindex" />`);
+        $('#multiVoterDiv').css('display', 'none');
         $("#ownedPar").css('display', 'none');
         $("#ownedInfo").css('display', 'block');
 
