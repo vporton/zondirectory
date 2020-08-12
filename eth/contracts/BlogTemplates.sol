@@ -98,23 +98,6 @@ contract BlogTemplates {
         emit PostUpdated(_postId, _templateId);
     }
 
-    function createPostFull(Files.LinkInfo calldata _info,
-                            bool _owned,
-                            address payable _affiliate,
-                            uint[] calldata _parents,
-                            uint256[] calldata _voteAmounts,
-                            uint _templateId,
-                            uint _postId) external payable returns (uint itemId)
-    {
-        // FIXME: Wrong msg.sender
-        itemId = filesContract.createLinkAndVote(_info,
-                                                 _owned,
-                                                 _affiliate,
-                                                 _parents,
-                                                 _voteAmounts);
-        _createPost(_templateId, _postId, itemId);
-    }
-
     function updatePostFull(uint _linkId, Files.LinkInfo calldata _info, uint _templateId) external
     {
         filesContract.updateLink(_linkId, _info);
