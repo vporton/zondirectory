@@ -75,9 +75,9 @@ async function createItem() {
     if(templateIdCreated) {
         const contractInstance = new web3.eth.Contract(await filesJsonInterface(), await getAddress('Files'));
         const contractInstance2 = new web3.eth.Contract(await blogTemplatesJsonInterface(), await getAddress('BlogTemplates'));
-        const response = await mySend(contractInstance2, contractInstance2.methods.createLinkAndVote, [{link, title, shortDescription, description, locale, linkKind: kind}, owned, '0x0000000000000000000000000000000000000001', cats, amounts], {value: sum});
+        const response = await mySend(contractInstance, contractInstance.methods.createLinkAndVote, [{link, title, shortDescription, description, locale, linkKind: kind}, owned, '0x0000000000000000000000000000000000000001', cats, amounts], {value: sum});
         const linkId = response.events.ItemCreated.returnValues.itemId;
-        mySend(contractInstance, contractInstance.methods.createPost, [templateIdCreated, postIdCreated, linkId])
+        mySend(contractInstance2, contractInstance2.methods.createPost, [templateIdCreated, postIdCreated, linkId])
             .then(() => {});
     } else {
         const contractInstance = new web3.eth.Contract(await filesJsonInterface(), await getAddress('Files'));
