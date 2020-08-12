@@ -106,6 +106,7 @@ contract BlogTemplates {
                             uint _templateId,
                             uint _postId) external payable returns (uint itemId)
     {
+        // FIXME: Wrong msg.sender
         itemId = filesContract.createLinkAndVote(_info,
                                                  _owned,
                                                  _affiliate,
