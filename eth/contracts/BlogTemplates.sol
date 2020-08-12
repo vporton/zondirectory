@@ -1,10 +1,13 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 pragma solidity ^0.6.0;
+pragma experimental ABIEncoderV2;
 
 import './Files.sol';
 
 contract BlogTemplates {
+
+    Files public filesContract;
 
     uint maxId = 0;
 
@@ -31,6 +34,10 @@ contract BlogTemplates {
     event PostCreated(uint postId, uint itemId);
     event PostChangeOwner(uint postId, address owner);
     event PostUpdated(uint postId, uint templateId);
+
+    constructor(Files _filesContract) public {
+        filesContract = _filesContract;
+    }
 
     function createTemplate(string calldata _name, string calldata _js, string calldata _settings) external returns (uint) {
         templateOwners[++maxId] = msg.sender;
@@ -60,6 +67,10 @@ contract BlogTemplates {
 
     // _postId should be random.
     function createPost(uint _templateId, uint _postId, uint _itemId) external {
+        _createPost(_templateId, _postId, _itemId);
+    }
+
+    function _createPost(uint _templateId, uint _postId, uint _itemId) public {
         require(_itemId != 0, "Item ID zero.");
         require(postIDs[_itemId] == 0, "ID is already taken.");
         postOwners[_postId] = msg.sender;
@@ -78,8 +89,18 @@ contract BlogTemplates {
     }
 
     function changePostTemplate(uint _postId, uint _templateId) external {
+        _changePostTemplate(_postId, _templateId);
+    }
+
+    function _changePostTemplate(uint _postId, uint _templateId) public {
         require(postOwners[_postId] == msg.sender, "Access denied.");
         postTemplates[maxId] = _templateId;
         emit PostUpdated(_postId, _templateId);
+    }
+
+    function updatePostFull(uint _linkId, Files.LinkInfo calldata _info, uint _templateId) external
+    {
+        filesContract.updateLink(_linkId, _info);
+        _changePostTemplate(postIDs[_linkId], _templateId);
     }
 }

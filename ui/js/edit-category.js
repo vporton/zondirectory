@@ -6,6 +6,7 @@ const id = urlParams.get('id');
 async function onLoad() {
     if(id) {
         $('head').prepend(`<meta name="robots" content="noindex" />`);
+        $('#multiVoterDiv').css('display', 'none');
         $("#ownedPar").css('display', 'none');
         $("#ownedInfo").css('display', 'block');
 
@@ -39,23 +40,27 @@ async function createCategory() {
     if(!locale) return;
     const owned = $('#owned').is(':checked');
 
-    waitStart();
+    // waitStart();
     await defaultAccountPromise();
     const contractInstance = new web3.eth.Contract(await filesJsonInterface(), await getAddress('Files'));
     let response;
     let newId = id;
+    const {
+        cats,
+        amounts,
+        sum,
+    } = await $('#multiVoter').multiVoterData();
     if(id) {
         response = await mySend(contractInstance, contractInstance.methods.updateOwnedCategory, [id, {title: name, locale, shortDescription, description}])
     } else {
         if(owned) {
-            response = await mySend(contractInstance, contractInstance.methods.createOwnedCategory, [{title: name, locale, shortDescription, description}, '0x0000000000000000000000000000000000000001']);
+            response = await mySend(contractInstance, contractInstance.methods.createOwnedCategoryAndVote, [{title: name, locale, shortDescription, description}, '0x0000000000000000000000000000000000000001', cats, amounts], {value: sum});
         } else {
-            response = await mySend(contractInstance, contractInstance.methods.createCategory, [name, locale, '0x0000000000000000000000000000000000000001']);
+            response = await mySend(contractInstance, contractInstance.methods.createCategoryAndVote, [name, locale, '0x0000000000000000000000000000000000000001', cats, amounts], {value: sum});
         }
         newId = response.events.CategoryCreated.returnValues.categoryId;
     }
-    await $('#multiVoter').doMultiVote(newId);
-    waitStop();
+    // waitStop();
 
     $('#form').validate({});
 }

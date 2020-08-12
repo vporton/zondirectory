@@ -49,7 +49,7 @@ async function createOrUpdateItem() {
 }
 
 async function createItem() {
-    waitStart();
+    // waitStart();
     const contractInstance = new web3.eth.Contract(await filesJsonInterface(), await getAddress('Files'));
 
     const locale = document.getElementById('locale').value;
@@ -59,11 +59,17 @@ async function createItem() {
     const license = document.getElementById('license').value;
 
     await defaultAccountPromise();
-    const response = await mySend(contractInstance, contractInstance.methods.createItem, [{title, shortDescription, description, priceETH: getPriceETH(), priceAR: getPriceAR(), locale, license},
-                                                                        '0x0000000000000000000000000000000000000001']);
-    const itemId = response.events.ItemCreated.returnValues.itemId;
-    await $('#multiVoter').doMultiVote(itemId);
-    waitStop();
+    const {
+        cats,
+        amounts,
+        sum,
+    } = await $('#multiVoter').multiVoterData();
+    const response = await mySend(contractInstance, contractInstance.methods.createItemAndVote,
+                                  [{title, shortDescription, description, priceETH: getPriceETH(), priceAR: getPriceAR(), locale, license},
+                                   '0x0000000000000000000000000000000000000001', cats, amounts], {value: sum});
+    // const itemId = response.events.ItemCreated.returnValues.itemId;
+    // await $('#multiVoter').doMultiVote(itemId);
+    // waitStop();
 }
 
 async function updateItem(itemId) {
@@ -90,6 +96,7 @@ $(async function() {
 
     const itemId = numParam('id');
     if(itemId) {
+        $('#multiVoterDiv').css('display', 'none');
         $('#uploadLink > a').attr('href', "upload.html?id="+itemId);
         $('#uploadLink').css('display', 'block');
         const query = `{

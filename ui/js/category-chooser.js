@@ -44,32 +44,53 @@
         _multiVoterAdd();
     }
 
-    $.fn.multiVoterData = function() {
-        // const contractInstance = new web3.eth.Contract(await filesJsonInterface(), await getAddress('Files'));
-        // return await contractInstance.methods.upvotesOwnersShare().call()
-        //     .then(async (shareResult) => {
-        //         const ownersShare = shareResult / 2**64;
+    $.fn.multiVoterData = async function() {
+        let sum = new web3.utils.BN('0');
+        let cats0 = [];
+        let amounts0 = [];
+        let myFlags0 = [];
+        this.find('input[name=cat]:gt(0)').each((i, c) => cats0.push(c.value.replace(/^([0-9]*).*/, '$1')));
+        this.find('input[name=amount]').each((i, c) => amounts0.push(c.value ? web3.utils.toWei(c.value) : ''));
+        this.find('input[type=checkbox]').each((i, c) => myFlags0.push(c.checked));
 
         let cats = [];
         let amounts = [];
         let myFlags = [];
-        this.find('input[name=cat]:gt(0)').each((i, c) => cats.push(c.value.replace(/^([0-9]*).*/, '$1')));
-        this.find('input[name=amount]').each((i, c) => amounts.push(c.value ? web3.utils.toWei(c.value) : ''));
-        this.find('input[type=checkbox]').each((i, c) => myFlags.push(c.checked));
+        for(let i in cats0) {
+            if(cats0[i] && amounts0[i]) {
+                cats.push(cats0[i]);
+                amounts.push(amounts0[i]);
+                myFlags.push(myFlags0[i]);
+            }
+        }
+
+        const contractInstance = new web3.eth.Contract(await filesJsonInterface(), await getAddress('Files'));
+        // TODO: Do processing in parallel.
+        for(let i in cats) {
+            const parent = cats[i];
+            const amount = amounts[i];
+            await contractInstance.methods.itemOwners(parent).call()
+                .then(async (owner) => {
+                    if(owner != defaultAccount)
+                        sum = sum.add(new web3.utils.BN(amount));
+                });
+        }
+
         return {
             cats,
             amounts,
             myFlags,
+            sum,
         };
-        // })
-        // .catch(alert);
     }
 
+    // TODO: This function is wrong (but never called)
     $.fn.doMultiVote = async function(itemId) {
         const {
             cats,
             amounts,
-        } = this.multiVoterData();
+            sum,
+        } = await $('#multiVoter').multiVoterData();
 
         await defaultAccountPromise();
         const contractInstance = new web3.eth.Contract(await filesJsonInterface(), await getAddress('Files'));
@@ -84,7 +105,7 @@
                         await mySend(contractInstance, contractInstance.methods.setMyChildParent, [itemId, parent, amount, 0])
                             .catch(err => alert);
                     } else {
-                        await mySend(contractInstance, contractInstance.methods.voteChildParent, [itemId, parent, true, '0x0000000000000000000000000000000000000001'])
+                        await mySend(contractInstance, contractInstance.methods.voteChildParent, [itemId, parent, true, '0x0000000000000000000000000000000000000001'], {value: sum})
                             .catch(err => alert);
                     }
                 })
