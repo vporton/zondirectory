@@ -49,7 +49,7 @@ async function createCategory() {
         cats,
         amounts,
         sum,
-    } = $('#multiVoter').multiVoterData();
+    } = await $('#multiVoter').multiVoterData();
     if(id) {
         response = await mySend(contractInstance, contractInstance.methods.updateOwnedCategory, [id, {title: name, locale, shortDescription, description}])
     } else {

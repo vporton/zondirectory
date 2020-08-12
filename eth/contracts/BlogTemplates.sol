@@ -7,7 +7,7 @@ import './Files.sol';
 
 contract BlogTemplates {
 
-    Files filesContract;
+    Files public filesContract;
 
     uint maxId = 0;
 

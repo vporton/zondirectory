@@ -51,8 +51,6 @@ async function uploadBlog(link, title, shortDescription) {
 }
 
 async function createItem() {
-    const contractInstance = new web3.eth.Contract(await filesJsonInterface(), await getAddress('Files'));
-
     const locale = document.getElementById('locale').value;
     const title = document.getElementById('title').value;
     const description = document.getElementById('description').value;
@@ -62,7 +60,7 @@ async function createItem() {
 
     let link = document.getElementById('link').value;
 
-    // waitStart();
+    waitStart();
     
     await defaultAccountPromise();
 
@@ -72,17 +70,20 @@ async function createItem() {
         cats,
         amounts,
         sum,
-    } = $('#multiVoter').multiVoterData();
+    } = await $('#multiVoter').multiVoterData();
 
     if(templateIdCreated) {
         const contractInstance2 = new web3.eth.Contract(await blogTemplatesJsonInterface(), await getAddress('BlogTemplates'));
-        const response = await mySend(contractInstance, contractInstance.methods.createPostFull, [{link, title, shortDescription, description, locale, linkKind: kind}, owned, '0x0000000000000000000000000000000000000001', cats, amounts, templateIdCreated, postIdCreated], {value: sum});
+        mySend(contractInstance2, contractInstance2.methods.createPostFull, [{link, title, shortDescription, description, locale, linkKind: kind}, owned, '0x0000000000000000000000000000000000000001', cats, amounts, templateIdCreated, postIdCreated], {value: sum})
+            .then(() => {});
     } else {
-        const response = await mySend(contractInstance, contractInstance.methods.createLinkAndVote, [{link, title, shortDescription, description, locale, linkKind: kind}, owned, '0x0000000000000000000000000000000000000001', cats, amounts], {value: sum});
-        const linkId = response.events.ItemCreated.returnValues.itemId;
+        const contractInstance = new web3.eth.Contract(await filesJsonInterface(), await getAddress('Files'));
+        mySend(contractInstance, contractInstance.methods.createLinkAndVote, [{link, title, shortDescription, description, locale, linkKind: kind}, owned, '0x0000000000000000000000000000000000000001', cats, amounts], {value: sum})
+            .then(() => {});
+        // const linkId = response.events.ItemCreated.returnValues.itemId;
    }
 
-    // waitStop();
+    waitStop();
 }
 
 async function updateItem(itemId) {
@@ -95,7 +96,7 @@ async function updateItem(itemId) {
     let link = document.getElementById('link').value;
     const kind = $('input[name=kind]:checked').val();
 
-    // waitStart();
+    waitStart();
     link = await uploadBlog(link, title, shortDescription);
     if(templateIdCreated) {
         const contractInstance2 = new web3.eth.Contract(await blogTemplatesJsonInterface(), await getAddress('BlogTemplates'));
@@ -104,7 +105,7 @@ async function updateItem(itemId) {
         await mySend(contractInstance, contractInstance.methods.updateLink, [itemId, {link, title, shortDescription, description, locale, linkKind: kind}]);
     }
     // await $('#multiVoter').doMultiVote(itemId);
-    // waitStop();
+    waitStop();
 }
 
 async function onLoad() {
