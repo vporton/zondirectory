@@ -61,6 +61,7 @@
             if(cats[i] && amounts[i]) // FIXME: Don't pay for my own cats
                 sum = sum.add(new web3.utils.BN(amounts[i]));
         }
+        // FIXME: May return empty values:
         return {
             cats,
             amounts,
@@ -71,6 +72,7 @@
         // .catch(alert);
     }
 
+    // TODO: This function is wrong (but never called)
     $.fn.doMultiVote = async function(itemId) {
         const {
             cats,
