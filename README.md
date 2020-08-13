@@ -1,5 +1,7 @@
 # Zon Directory (a directory of everything)
 
+Video presentation: https://www.youtube.com/watch?v=JWNIaF3eAUg
+
 Try it at https://zondirectory.com
 
 More information: https://help.zondirectory.com
