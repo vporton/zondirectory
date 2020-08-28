@@ -82,5 +82,7 @@ $(async function() {
 
         $('#link').append(formatLink(item.link, item.title));
         document.getElementById('link').setAttribute('href', item.link);
+
+        displayVideo('my-', item.link);
     }
 })
