@@ -188,7 +188,7 @@ async function onLoad() {
 }`
     }
     if(postId)
-        query = `{ postUpdateds(where:{postId:"${postId}"}) { templateId }` +
+        query = `{ postUpdateds(first:1, orderBy:id, orderDirection:desc, where:{postId:"${postId}"}) { templateId }` +
             templateIdsFlat.map(i => subquery(i)).join("\n") + "\n}";
     else
         query = "{\n" + templateIdsFlat.map(i => subquery(i)).join("\n") + "\n}";
