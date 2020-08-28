@@ -94,7 +94,7 @@ contract BlogTemplates {
 
     function _changePostTemplate(uint _postId, uint _templateId) public {
         require(postOwners[_postId] == msg.sender, "Access denied.");
-        postTemplates[maxId] = _templateId;
+        postTemplates[_postId] = _templateId;
         emit PostUpdated(_postId, _templateId);
     }
 
