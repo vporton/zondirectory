@@ -91,8 +91,6 @@ async function createItem() {
 }
 
 async function updateItem(itemId) {
-    const contractInstance = new web3.eth.Contract(await filesJsonInterface(), await getAddress('Files'));
-
     const locale = document.getElementById('locale').value;
     const title = document.getElementById('title').value;
     const description = document.getElementById('description').value;
@@ -106,14 +104,16 @@ async function updateItem(itemId) {
     } else if($('#tabs-upload').css('display') != 'none') {
         link = await uploadFile(true);
     }
-    if(templateIdCreated) {
-        const contractInstance2 = new web3.eth.Contract(await blogTemplatesJsonInterface(), await getAddress('BlogTemplates'));
-        await mySend(contractInstance2, contractInstance2.methods.updatePostFull, [itemId, {link, title, shortDescription, description, locale, linkKind: kind}, templateIdCreated]);
-    } else {
-        await mySend(contractInstance, contractInstance.methods.updateLink, [itemId, {link, title, shortDescription, description, locale, linkKind: kind}]);
-    }
-    // await $('#multiVoter').doMultiVote(itemId);
+    const contractInstance = new web3.eth.Contract(await filesJsonInterface(), await getAddress('Files'));
+    await mySend(contractInstance, contractInstance.methods.updateLink, [itemId, {link, title, shortDescription, description, locale, linkKind: kind}]);
     waitStop();
+}
+
+// FIXME: Cannot change template if was (none).
+async function changePostTemplate() {
+    const contractInstance2 = new web3.eth.Contract(await blogTemplatesJsonInterface(), await getAddress('BlogTemplates'));
+    const templateId = $('#template').val();
+    await mySend(contractInstance2, contractInstance2.methods.changePostTemplate, [postIdCreated, templateId]);
 }
 
 async function onLoad() {

@@ -89,18 +89,8 @@ contract BlogTemplates {
     }
 
     function changePostTemplate(uint _postId, uint _templateId) external {
-        _changePostTemplate(_postId, _templateId);
-    }
-
-    function _changePostTemplate(uint _postId, uint _templateId) public {
         require(postOwners[_postId] == msg.sender, "Access denied.");
         postTemplates[_postId] = _templateId;
         emit PostUpdated(_postId, _templateId);
-    }
-
-    function updatePostFull(uint _linkId, Files.LinkInfo calldata _info, uint _templateId) external
-    {
-        filesContract.updateLink(_linkId, _info);
-        _changePostTemplate(postIDs[_linkId], _templateId);
     }
 }
