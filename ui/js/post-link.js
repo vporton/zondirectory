@@ -108,7 +108,7 @@ async function updateItem(itemId) {
     }
     if(templateIdCreated) {
         const contractInstance2 = new web3.eth.Contract(await blogTemplatesJsonInterface(), await getAddress('BlogTemplates'));
-        await mySend(contractInstance2, contractInstance.methods.updatePostFull, [itemId, {link, title, shortDescription, description, locale, linkKind: kind}, templateIdCreated]);
+        await mySend(contractInstance2, contractInstance2.methods.updatePostFull, [itemId, {link, title, shortDescription, description, locale, linkKind: kind}, templateIdCreated]);
     } else {
         await mySend(contractInstance, contractInstance.methods.updateLink, [itemId, {link, title, shortDescription, description, locale, linkKind: kind}]);
     }
