@@ -13,6 +13,7 @@ async function uploadFile() {
     fileReader.onload = async (e) => {
         const fileContent = new Uint8Array(e.target.result);
         const hash = await upload(fileContent, arKeyChooser, document.getElementById('file').files[0].type);
+        console.log(`https://arweave.net/${hash}`);
 
         const contractInstance = new web3.eth.Contract(await filesJsonInterface(), await getAddress('Files'));
         mySend(contractInstance, contractInstance.methods.uploadFile, [itemId,
