@@ -210,6 +210,11 @@ async function onLoad() {
             const linkText = `<a href="${link}">${safe_tags(item.title)}</a>`;
             const row = `<li><strong>${linkText}.</strong> ${safe_tags(item.shortDescription)} ${spamInfo}</li>`;
             $('#links').append(row);
+            const li = $('#links>*').last();
+            li.append($('#audio-video>*').clone());
+            li.find('video').attr('id', `item-${item.linkId}-video`);
+            li.find('audio').attr('id', `item-${item.linkId}-audio`);
+            displayVideo(`item-${item.linkId}-`, item.link);
         }
         if(!catId) {
             for(let i of itemKeys) {

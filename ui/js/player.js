@@ -1,6 +1,7 @@
 function displayVideo(id, link) {
     link = link.replace(/^arweave:/, "https://arweave.net/");
-    $.ajax(link, {method: 'HEAD'})
+    console.log(link)
+    $.ajax(link, {method: 'HEAD', global: false})
         .then(function(data, textStatus, xhr) {
             const type = xhr.getResponseHeader("content-type") || "";
             if(type.startsWith('video/')) {
@@ -17,4 +18,5 @@ function displayVideo(id, link) {
                 $(`#${id}audio`).css('display', 'block');
             }
         })
+        .catch(() => {}); // ignore network errors
 }

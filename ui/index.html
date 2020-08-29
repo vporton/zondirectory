@@ -4,6 +4,7 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/web3/1.2.9/web3.min.js"></script>
         <script src="https://unpkg.com/arweave/bundles/web.bundle.min.js"></script>
         <script src="js/common.js"></script>
+        <script src="js/player.js"></script>
         <script src="js/list.js"></script>
         <style>
             table { border-collapse: collapse; }
@@ -46,6 +47,40 @@
             </div>
             <h2>Links and messages</h2>
             <ul id="links"></ul>
+            <div id="audio-video" style="display: none">
+                <video
+                    style="display: none"
+                    class="video-js"
+                    controls="controls"
+                    preload="auto"
+                    width="200"
+                    height="150"
+                    data-setup="{}"
+                >
+                    <source/>
+                    <p class="vjs-no-js">
+                    To view this video please enable JavaScript, and consider upgrading to a
+                    web browser that
+                    <a href="https://videojs.com/html5-video-support/" target="_blank"
+                        >supports HTML5 video</a>
+                    </p>
+                </video>
+                <audio
+                    style="display: none"
+                    class="video-js"
+                    controls="controls"
+                    preload="auto"
+                    data-setup="{}"
+                >
+                    <source/>
+                    <p class="vjs-no-js">
+                    To hear this audio please enable JavaScript, and consider upgrading to a
+                    web browser that
+                    <a href="https://videojs.com/html5-video-support/" target="_blank"
+                        >supports HTML5 audio</a>
+                    </p>
+                </audio>
+            </div>
         </div>
     </body>
 </html>
