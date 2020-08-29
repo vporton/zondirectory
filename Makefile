@@ -12,7 +12,7 @@ ui: ui-quick compile
 ui-quick:
 	-rm -rf out/ui
 	mkdir -p out/ui
-	find ui -name "*.js" -o -name "*.css" -o -name "*.json" -o -name "*.abi" -o -name "*.png" | \
+	find ui -name "*.js" -o -name "*.css" -o -name "*.json" -o -name "*.abi" -o -name "*.png" -o -name .htaccess | \
 	  xargs cp --parents -t out/
 	find ui \( -name "*.html" -a \! -name template.html \) | \
 	  while read REPLY; do \
