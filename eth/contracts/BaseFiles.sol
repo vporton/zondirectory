@@ -25,6 +25,7 @@ abstract contract BaseFiles is BaseToken {
     int128 public uploadOwnersShare = int128(15).divi(int128(100)); // 15%
     int128 public buyerAffiliateShare = int128(1).divi(int128(10)); // 10%
     int128 public sellerAffiliateShare = int128(15).divi(int128(100)); // 15%
+    int128 public arToETHCoefficient = int128(8).divi(int128(10)); // 80%
 
     uint maxId = 0;
 
@@ -176,7 +177,6 @@ abstract contract BaseFiles is BaseToken {
         string shortDescription;
         string description;
         uint256 priceETH;
-        uint256 priceAR;
         string locale;
         string license;
     }
@@ -192,7 +192,6 @@ abstract contract BaseFiles is BaseToken {
         setAffiliate(_affiliate);
         itemOwners[++maxId] = msg.sender;
         pricesETH[maxId] = _info.priceETH;
-        pricesAR[maxId] = _info.priceAR;
         entries[maxId] = EntryKind.DOWNLOADS;
         emit ItemCreated(maxId);
         emit SetItemOwner(maxId, msg.sender);
@@ -206,7 +205,6 @@ abstract contract BaseFiles is BaseToken {
         require(entries[_itemId] == EntryKind.DOWNLOADS, "Item does not exist.");
         require(bytes(_info.title).length != 0, "Empty title.");
         pricesETH[_itemId] = _info.priceETH;
-        pricesAR[_itemId] = _info.priceAR;
         emit ItemUpdated(_itemId, _info);
     }
 

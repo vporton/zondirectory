@@ -159,7 +159,7 @@ async function payAR() {
         return;
     }
 
-    let price = askPrice(document.getElementById('priceAR').textContent);
+    let price = askPrice(TODO);
     if(!price) return;
 
     price = arweave.ar.arToWinston(price);
@@ -206,7 +206,6 @@ $(async function() {
         description
         license
         priceETH
-        priceAR
     }
 }`;
         const queryResult = (await queryThegraph(query)).data;
@@ -262,12 +261,9 @@ $(async function() {
         document.getElementById('description').textContent = item.description;
         document.getElementById('license').textContent = item.license;
         document.getElementById('priceETH').textContent = formatPriceETH(item.priceETH);
-        document.getElementById('priceAR').textContent = formatPriceAR(item.priceAR);
         if(item.priceETH == INFINITY)
             $('#buyETH').css('display', 'none');
-        if(item.priceAR == INFINITY)
-            $('#buyAR').css('display', 'none');
-        showFiles(item.priceETH == 0 || item.priceAR == 0);
+        showFiles(item.priceETH == 0);
     }
 
     arKeyChooser = $('#arWalletKeyFile').arKeyChooser({storeName: 'authorARPrivateKey'});
