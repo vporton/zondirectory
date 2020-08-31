@@ -65,7 +65,7 @@ async function payETH() {
 }
 
 async function donateETH() {
-    const price = prompt("Your donation amount:", '0.1');
+    const price = prompt("Your donation amount in ETH:", '0.1');
     if(!price) return;
     const contractInstance = new web3.eth.Contract(await filesJsonInterface(), await getAddress('Files'));
     await defaultAccountPromise();
@@ -174,7 +174,7 @@ async function donateAR() {
         return;
     }
 
-    let price = prompt("Your donation amount:", '10.0');
+    let price = prompt("Your donation amount in AR:", '10.0');
     if(!price) return;
 
     price = arweave.ar.arToWinston(price);
