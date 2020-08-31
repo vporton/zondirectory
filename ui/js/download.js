@@ -283,9 +283,6 @@ async function fetchARCoefficient() {
 
 async function calculateARRate() {
     return fetch('https://api.coingecko.com/api/v3/simple/price?ids=arweave%2Cethereum&vs_currencies=usd')
-        .then(response => {
-            return response.json().then(data => {
-                return data.arweave.usd / data.ethereum.usd;
-            });
-        });
+        .then(response => response.json()) // FIXME: need await here?
+        .then(data => data.arweave.usd / data.ethereum.usd);
 }
