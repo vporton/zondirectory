@@ -261,10 +261,12 @@ async function onLoad() {
         document.getElementById('title').textContent = item.title;
         document.getElementById('description').textContent = item.description;
         document.getElementById('license').textContent = item.license;
-        document.getElementById('priceETH').textContent = formatPriceETH(item.priceETH);
-        const [arRate, arCoefficient] = await Promise.all([calculateARRate(), fetchARCoefficient()]);
-        priceAR = item.priceETH * arRate * arCoefficient;
+        const [[arInUSD, ethInUSD], arCoefficient] = await Promise.all([calculateARRate(), fetchARCoefficient()]);
+        priceAR = arweave.ar.arToWinston(formatPriceETH(item.priceETH) * ethInUSD / arInUSD * arCoefficient);
         const arDiscount = ((1 - arCoefficient) * 100).toPrecision(2);
+        document.getElementById('priceUSD').textContent = formatPriceETH(item.priceETH) * ethInUSD;
+        document.getElementById('priceUSDAR').textContent = formatPriceAR(priceAR) * arInUSD;
+        document.getElementById('priceETH').textContent = formatPriceETH(item.priceETH);
         document.getElementById('priceAR').textContent = formatPriceAR(priceAR);
         document.getElementById('arDiscount').textContent = arDiscount;
         if(item.priceETH == INFINITY) {
@@ -285,7 +287,7 @@ async function fetchARCoefficient() {
 async function calculateARRate() {
     return await fetch('https://api.coingecko.com/api/v3/simple/price?ids=arweave%2Cethereum&vs_currencies=usd')
         .then(response => response.json())
-        .then(data => data.arweave.usd / data.ethereum.usd);
+        .then(data => [data.arweave.usd, data.ethereum.usd]);
 }
 
 window.addEventListener('load', onLoad);

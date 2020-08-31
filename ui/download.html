@@ -29,10 +29,10 @@
             <p>License: <span id="license"></span></p>
             <p>Prices:</p>
             <ul>
-                <li>in ETH: <span id="priceETH"></span>
+                <li>in ETH: <span id="priceETH"></span> ($<span id="priceUSD"></span>)
                     <input id="buyETH" class="buy" type="button" value="Buy" onclick="payETH()"/>
                     <input type="button" value="Donate" onclick="donateETH()"/></li>
-                <li>in AR: <span id="priceAR"></span> (<span id="arDiscount"></span>% discount) |
+                <li>in AR: <span id="priceAR"></span> ($<span id="priceUSDAR"></span> - <span id="arDiscount"></span>% discount) |
                     AR wallet key file: <input type="file" id="arWalletKeyFile"/>
                     <input id="buyAR" class="buy" type="button" value="Buy" onclick="payAR()"/>
                     <input type="button" value="Donate" onclick="donateAR()"/></li>
