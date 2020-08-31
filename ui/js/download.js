@@ -1,6 +1,7 @@
 "strict";
 
 const itemId = numParam('id');
+let priceAR;
 
 let arKeyChooser;
 
@@ -159,7 +160,7 @@ async function payAR() {
         return;
     }
 
-    let price = askPrice(TODO);
+    let price = askPrice(priceAR);
     if(!price) return;
 
     price = arweave.ar.arToWinston(price);
@@ -261,10 +262,30 @@ $(async function() {
         document.getElementById('description').textContent = item.description;
         document.getElementById('license').textContent = item.license;
         document.getElementById('priceETH').textContent = formatPriceETH(item.priceETH);
-        if(item.priceETH == INFINITY)
+        const basePriceAR = await Promise.all([calculateARRate, fetchARCoefficient])
+            .then(([arRate, arCoefficient]) => arRate * arCoefficient);
+        priceAR = item.priceETH * basePriceAR;
+        document.getElementById('priceAR').textContent = formatPriceAR(priceAR);
+        if(item.priceETH == INFINITY) {
             $('#buyETH').css('display', 'none');
+            $('#buyAR').css('display', 'none');
+        }
         showFiles(item.priceETH == 0);
     }
 
     arKeyChooser = $('#arWalletKeyFile').arKeyChooser({storeName: 'authorARPrivateKey'});
-})
+});
+
+async function fetchARCoefficient() {
+    const contractInstance = new web3.eth.Contract(await filesJsonInterface(), await getAddress('Files'));
+    return (await contractInstance.methods.arToETHCoefficient.call()) / 2**64;
+}
+
+async function calculateARRate() {
+    return fetch('https://api.coingecko.com/api/v3/simple/price?ids=arweave%2Cethereum&vs_currencies=usd')
+        .then(response => {
+            return response.json().then(data => {
+                return data.arweave.usd / data.ethereum.usd;
+            });
+        });
+}
