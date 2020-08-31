@@ -185,7 +185,7 @@ function moreParents() {
     $('#categories > li:hidden:lt(10)').css('display', 'list-item');
 }
 
-$(async function() {
+async function onLoad() {
     if(itemId) {
         $('#addParent').attr('href', `vote.html?child=${itemId}&dir=for`);
 
@@ -262,10 +262,11 @@ $(async function() {
         document.getElementById('description').textContent = item.description;
         document.getElementById('license').textContent = item.license;
         document.getElementById('priceETH').textContent = formatPriceETH(item.priceETH);
-        const basePriceAR = await Promise.all([calculateARRate, fetchARCoefficient])
-            .then(([arRate, arCoefficient]) => arRate * arCoefficient);
-        priceAR = item.priceETH * basePriceAR;
+        const [arRate, arCoefficient] = await Promise.all([calculateARRate(), fetchARCoefficient()]);
+        priceAR = item.priceETH * arRate * arCoefficient;
+        const arDiscount = ((1 - arCoefficient) * 100).toPrecision(2);
         document.getElementById('priceAR').textContent = formatPriceAR(priceAR);
+        document.getElementById('arDiscount').textContent = arDiscount;
         if(item.priceETH == INFINITY) {
             $('#buyETH').css('display', 'none');
             $('#buyAR').css('display', 'none');
@@ -274,15 +275,17 @@ $(async function() {
     }
 
     arKeyChooser = $('#arWalletKeyFile').arKeyChooser({storeName: 'authorARPrivateKey'});
-});
+}
 
 async function fetchARCoefficient() {
     const contractInstance = new web3.eth.Contract(await filesJsonInterface(), await getAddress('Files'));
-    return (await contractInstance.methods.arToETHCoefficient.call()) / 2**64;
+    return (await contractInstance.methods.arToETHCoefficient().call()) / 2**64;
 }
 
 async function calculateARRate() {
-    return fetch('https://api.coingecko.com/api/v3/simple/price?ids=arweave%2Cethereum&vs_currencies=usd')
-        .then(response => response.json()) // FIXME: need await here?
+    return await fetch('https://api.coingecko.com/api/v3/simple/price?ids=arweave%2Cethereum&vs_currencies=usd')
+        .then(response => response.json())
         .then(data => data.arweave.usd / data.ethereum.usd);
 }
+
+window.addEventListener('load', onLoad);
