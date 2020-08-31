@@ -26,6 +26,7 @@ dataSources:
         - LinkUpdated
         - OwnedCategoryUpdated
         - Pay
+        - SetARToETHCoefficient
         - SetARWallet
         - SetAuthorInfo
         - SetBuyerAffiliateShare
@@ -83,6 +84,8 @@ dataSources:
         - event: SetSalesOwnerShare(int128)
           handler: handleSetSalesOwnerShare
         - event: SetSellerAffiliateShare(int128)
+          handler: handleSetSellerAffiliateShare
+        - event: SetARToETHCoefficient(int128)
           handler: handleSetSellerAffiliateShare
         - event: SetUploadOwnerShare(int128)
           handler: handleSetUploadOwnerShare

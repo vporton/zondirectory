@@ -123,7 +123,6 @@ type ItemUpdated @entity {
   shortDescription: String! # string
   description: String! # string
   priceETH: BigInt! # uint256
-  priceAR: BigInt! # uint256
   locale: String! # string
   license: String! # string
 }
@@ -174,6 +173,21 @@ type SetOwner @entity {
 type SetSalesOwnerShare @entity {
   id: ID!
   share: BigInt! # int128
+}
+
+type SetBuyerAffiliateShare @entity {
+  id: ID!
+  share: BigInt! # int128
+}
+
+type SetSellerAffiliateShare @entity {
+  id: ID!
+  share: BigInt! # int128
+}
+
+type SetARToETHCoefficient @entity {
+  id: ID!
+  coeff: BigInt! # int128
 }
 
 type SetUpvotesOwnerShare @entity {

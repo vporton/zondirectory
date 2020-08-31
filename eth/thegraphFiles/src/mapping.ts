@@ -18,6 +18,9 @@ import {
   SetSalesOwnerShare as SetSalesOwnerShareEvent,
   SetUpvotesOwnerShare as SetUpvotesOwnerShareEvent,
   SetUploadOwnerShare as SetUploadOwnerShareEvent,
+  SetBuyerAffiliateShare as SetBuyerAffiliateShareEvent,
+  SetSellerAffiliateShare as SetSellerAffiliateShareEvent,
+  SetARToETHCoefficient as SetARToETHCoefficientEvent,
   Transfer as TransferEvent,
   ChildParentVote as ChildParentVoteEvent,
   Pay as PayEvent,
@@ -42,6 +45,9 @@ import {
   SetSalesOwnerShare,
   SetUpvotesOwnerShare,
   SetUploadOwnerShare,
+  SetBuyerAffiliateShare,
+  SetSellerAffiliateShare,
+  SetARToETHCoefficient,
   Transfer,
   ChildParentVote,
   Pay,
@@ -146,7 +152,6 @@ export function handleItemUpdated(event: ItemUpdatedEvent): void {
   entity.shortDescription = event.params.info.shortDescription
   entity.description = event.params.info.description
   entity.priceETH = event.params.info.priceETH
-  entity.priceAR = event.params.info.priceAR
   entity.locale = event.params.info.locale
   entity.license = event.params.info.license
   entity.save()
@@ -234,6 +239,30 @@ export function handleSetUploadOwnerShare(event: SetUploadOwnerShareEvent): void
     generateId(event)
   )
   entity.share = event.params.share
+  entity.save()
+}
+
+export function handleSetBuyerAffiliateShare(event: SetBuyerAffiliateShareEvent): void {
+  let entity = new SetBuyerAffiliateShare(
+    generateId(event)
+  )
+  entity.share = event.params.share
+  entity.save()
+}
+
+export function handleSetSellerAffiliateShare(event: SetSellerAffiliateShareEvent): void {
+  let entity = new SetSellerAffiliateShare(
+    generateId(event)
+  )
+  entity.share = event.params.share
+  entity.save()
+}
+
+export function handleSetARToETHCoefficient(event: SetARToETHCoefficientEvent): void {
+  let entity = new SetARToETHCoefficient(
+    generateId(event)
+  )
+  entity.coeff = event.params.coeff
   entity.save()
 }
 
