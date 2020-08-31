@@ -43,6 +43,7 @@ abstract contract BaseFiles is BaseToken {
     event SetUploadOwnerShare(int128 share); // share is 64.64 fixed point number
     event SetBuyerAffiliateShare(int128 share); // share is 64.64 fixed point number
     event SetSellerAffiliateShare(int128 share); // share is 64.64 fixed point number
+    event SetARToETHCoefficient(int128 share); // share is 64.64 fixed point number
     event SetNick(address payable indexed owner, string nick);
     event SetARWallet(address payable indexed owner, string arWallet);
     event SetAuthorInfo(address payable indexed owner, string link, string shortDescription, string description, string locale);
@@ -133,6 +134,12 @@ abstract contract BaseFiles is BaseToken {
         require(msg.sender == founder, "Access denied.");
         sellerAffiliateShare = _share;
         emit SetSellerAffiliateShare(_share);
+    }
+
+    function setARToETHCoefficient(int128 _coeff) external {
+        require(msg.sender == founder, "Access denied.");
+        arToETHCoefficient = _coeff;
+        emit SetARToETHCoefficient(_coeff);
     }
 
     function setItemOwner(uint _itemId, address payable _owner) external {
