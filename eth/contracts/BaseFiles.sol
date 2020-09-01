@@ -31,6 +31,8 @@ abstract contract BaseFiles is BaseToken {
 
     mapping (uint => EntryKind) entries;
 
+    mapping (uint => address) authorAccounts; // FIXME: be able to transfer accounts
+
     // to avoid categories with duplicate titles:
     mapping (string => mapping (string => uint)) categoryTitles; // locale => (title => id)
 
@@ -44,11 +46,11 @@ abstract contract BaseFiles is BaseToken {
     event SetBuyerAffiliateShare(int128 share); // share is 64.64 fixed point number
     event SetSellerAffiliateShare(int128 share); // share is 64.64 fixed point number
     event SetARToETHCoefficient(int128 coeff); // share is 64.64 fixed point number
-    event SetNick(address payable indexed owner, string nick);
-    event SetARWallet(address payable indexed owner, string arWallet);
-    event SetAuthorInfo(address payable indexed owner, string link, string shortDescription, string description, string locale);
+    event SetNick(address payable indexed author, string nick);
+    event SetARWallet(address payable indexed authro, string arWallet);
+    event SetAuthorInfo(address payable indexed author, string link, string shortDescription, string description, string locale);
     event ItemCreated(uint indexed itemId);
-    event SetItemOwner(uint indexed itemId, address payable indexed owner);
+    event SetItemOwner(uint indexed itemId, address payable indexed author);
     event ItemUpdated(uint indexed itemId, ItemInfo info);
     event LinkUpdated(uint indexed linkId,
                       string link,
@@ -60,18 +62,18 @@ abstract contract BaseFiles is BaseToken {
     event ItemCoverUpdated(uint indexed itemId, uint indexed version, bytes cover, uint width, uint height);
     event ItemFilesUpdated(uint indexed itemId, string format, uint indexed version, bytes hash);
     event SetLastItemVersion(uint indexed itemId, uint version);
-    event CategoryCreated(uint256 indexed categoryId, address indexed owner); // zero owner - no owner
+    event CategoryCreated(uint256 indexed categoryId, address indexed author); // zero author - no owner
     event CategoryUpdated(uint256 indexed categoryId, string title, string locale);
     event OwnedCategoryUpdated(uint256 indexed categoryId,
                                string title, string shortDescription,
                                string description,
                                string locale,
-                               address indexed owner);
+                               address indexed author);
     event ChildParentVote(uint child,
                           uint parent,
                           int256 value,
                           int256 featureLevel,
-                          bool primary); // Vote is primary if it's an owner's vote.
+                          bool primary); // Vote is primary if it's an author's vote. // FIXME: if split ownership?
     event Pay(address indexed payer, address indexed payee, uint indexed itemId, uint256 value);
     event Donate(address indexed payer, address indexed payee, uint indexed itemId, uint256 value);
 
@@ -142,11 +144,11 @@ abstract contract BaseFiles is BaseToken {
         emit SetARToETHCoefficient(_coeff);
     }
 
-    function setItemOwner(uint _itemId, address payable _owner) external {
+    function setItemOwner(uint _itemId, address payable _author) external {
         require(itemOwners[_itemId] == msg.sender, "Access denied.");
-        require(_owner != address(0), "Zero address.");
-        itemOwners[_itemId] = _owner;
-        emit SetItemOwner(_itemId, _owner);
+        require(_author != address(0), "Zero address.");
+        itemOwners[_itemId] = _author;
+        emit SetItemOwner(_itemId, _author);
     }
 
     function removeItemOwner(uint _itemId) external {
@@ -233,11 +235,11 @@ abstract contract BaseFiles is BaseToken {
     {
         require(bytes(_info.title).length != 0, "Empty title.");
         setAffiliate(_affiliate);
-        address payable _owner = _owned ? msg.sender : address(0);
-        itemOwners[++maxId] = _owner;
+        address payable _author = _owned ? msg.sender : address(0);
+        itemOwners[++maxId] = _author;
         entries[maxId] = EntryKind.LINK;
         emit ItemCreated(maxId);
-        if (_owned) emit SetItemOwner(maxId, _owner);
+        if (_owned) emit SetItemOwner(maxId, _author);
         emit LinkUpdated(maxId, _info.link, _info.title, _info.shortDescription, _info.description, _info.locale, _info.linkKind);
         return maxId;
     }
@@ -316,7 +318,7 @@ abstract contract BaseFiles is BaseToken {
         else
             categoryTitles[_locale][_title] = maxId;
         entries[maxId] = EntryKind.CATEGORY;
-        // Yes, issue _owner two times, for faster information retrieval
+        // Yes, issue ID two times, for faster information retrieval
         emit CategoryCreated(maxId, address(0));
         emit CategoryUpdated(maxId, _title, _locale);
         return maxId;
@@ -339,7 +341,7 @@ abstract contract BaseFiles is BaseToken {
         ++maxId;
         entries[maxId] = EntryKind.CATEGORY;
         itemOwners[maxId] = msg.sender;
-        // Yes, issue _owner two times, for faster information retrieval
+        // Yes, issue ID two times, for faster information retrieval
         emit CategoryCreated(maxId, msg.sender);
         emit SetItemOwner(maxId, msg.sender);
         emit OwnedCategoryUpdated(maxId, _info.title, _info.shortDescription, _info.description, _info.locale, msg.sender);
@@ -366,11 +368,11 @@ abstract contract BaseFiles is BaseToken {
         if(_value == 0) return; // We don't want to pollute the events with zero votes.
         int256 _newValue = childParentVotes[_child][_parent] + _value;
         childParentVotes[_child][_parent] = _newValue;
-        address payable _owner = itemOwners[_child];
-        if(_yes && _owner != address(0)) {
+        address payable _author = itemOwners[_child];
+        if(_yes && _author != address(0)) {
             uint256 _shareholdersShare = uint256(upvotesOwnersShare.muli(int256(_amount)));
-            payToShareholders(_shareholdersShare, _owner);
-            _owner.transfer(_amount - _shareholdersShare);
+            payToShareholders(_shareholdersShare, _author);
+            _author.transfer(_amount - _shareholdersShare);
         } else
             payToShareholders(_amount, address(0));
         emit ChildParentVote(_child, _parent, _newValue, 0, false);
@@ -379,8 +381,8 @@ abstract contract BaseFiles is BaseToken {
     function voteForOwnChild(uint _child, uint _parent) external payable {
         require(entries[_child] != EntryKind.NONE, "Child does not exist.");
         require(entries[_parent] == EntryKind.CATEGORY, "Must be a category.");
-        address _owner = itemOwners[_child];
-        require(_owner == msg.sender, "Must be owner.");
+        address _author = itemOwners[_child];
+        require(_author == msg.sender, "Must be owner.");
         if(msg.value == 0) return; // We don't want to pollute the events with zero votes.
         int256 _value = upvotesOwnersShare.inv().muli(int256(msg.value));
         int256 _newValue = childParentVotes[_child][_parent] + _value;
