@@ -47,6 +47,7 @@ abstract contract BaseFiles is BaseToken {
     event SetBuyerAffiliateShare(int128 share); // share is 64.64 fixed point number
     event SetSellerAffiliateShare(int128 share); // share is 64.64 fixed point number
     event SetARToETHCoefficient(int128 coeff); // share is 64.64 fixed point number
+    event TransferAuthorship(address payable _orig, address payable _new);
     event SetNick(address payable indexed author, string nick);
     event SetARWallet(address payable indexed authro, string arWallet);
     event SetAuthorInfo(address payable indexed author, string link, string shortDescription, string description, string locale);
@@ -474,6 +475,7 @@ abstract contract BaseFiles is BaseToken {
         address payable _orig = _originalAccount(_newAuthor);
         accountsMapping[_orig] = _newAuthor;
         reverseAccountsMapping[_newAuthor] = _orig;
+        emit TransferAuthorship(_orig, _newAuthor);
     }
 
     function _effectiveAccount(address payable _orig) internal view returns (address payable) {
