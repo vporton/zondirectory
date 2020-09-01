@@ -29,15 +29,16 @@ abstract contract BaseFiles is BaseToken {
 
     uint maxId = 0;
 
-    mapping (uint => EntryKind) entries;
+    mapping (uint => EntryKind) public entries;
 
-    mapping (uint => address) authorAccounts; // FIXME: be able to transfer accounts
+    mapping (address => address payable) public accountsMapping;
+    mapping (address => address payable) public reverseAccountsMapping;
 
     // to avoid categories with duplicate titles:
-    mapping (string => mapping (string => uint)) categoryTitles; // locale => (title => id)
+    mapping (string => mapping (string => uint)) public categoryTitles; // locale => (title => id)
 
-    mapping (string => address payable) nickAddresses;
-    mapping (address => string) addressNicks;
+    mapping (string => address payable) public nickAddresses;
+    mapping (address => string) public addressNicks;
 
     event SetOwner(address payable owner); // share is 64.64 fixed point number
     event SetSalesOwnerShare(int128 share); // share is 64.64 fixed point number
@@ -145,14 +146,14 @@ abstract contract BaseFiles is BaseToken {
     }
 
     function setItemOwner(uint _itemId, address payable _author) external {
-        require(itemOwners[_itemId] == msg.sender, "Access denied.");
+        require(_effectiveAccount(itemOwners[_itemId]) == msg.sender, "Access denied.");
         require(_author != address(0), "Zero address.");
         itemOwners[_itemId] = _author;
         emit SetItemOwner(_itemId, _author);
     }
 
     function removeItemOwner(uint _itemId) external {
-        require(itemOwners[_itemId] == msg.sender, "Access denied.");
+        require(_effectiveAccount(itemOwners[_itemId]) == msg.sender, "Access denied.");
         itemOwners[_itemId] = address(0);
         emit SetItemOwner(_itemId, address(0));
     }
@@ -210,7 +211,7 @@ abstract contract BaseFiles is BaseToken {
 
     function updateItem(uint _itemId, ItemInfo calldata _info) external
     {
-        require(itemOwners[_itemId] == msg.sender, "Attempt to modify other's item.");
+        require(_effectiveAccount(itemOwners[_itemId]) == msg.sender, "Attempt to modify other's item.");
         require(entries[_itemId] == EntryKind.DOWNLOADS, "Item does not exist.");
         require(bytes(_info.title).length != 0, "Empty title.");
         pricesETH[_itemId] = _info.priceETH;
@@ -260,7 +261,7 @@ abstract contract BaseFiles is BaseToken {
     }
 
     function updateItemCover(uint _itemId, uint _version, bytes calldata _cover, uint _width, uint _height) external {
-        require(itemOwners[_itemId] == msg.sender, "Access denied."); // only owned entries
+        require(_effectiveAccount(itemOwners[_itemId]) == msg.sender, "Access denied."); // only owned entries
         EntryKind kind = entries[_itemId];
         require(kind != EntryKind.NONE, "Entry does not exist.");
         emit ItemCoverUpdated(_itemId, _version, _cover, _width, _height);
@@ -268,13 +269,13 @@ abstract contract BaseFiles is BaseToken {
 
     function uploadFile(uint _itemId, uint _version, string calldata _format, bytes calldata _hash) external {
         require(_hash.length == 32, "Wrong hash length.");
-        require(itemOwners[_itemId] == msg.sender, "Attempt to modify other's item.");
+        require(_effectiveAccount(itemOwners[_itemId]) == msg.sender, "Attempt to modify other's item.");
         require(entries[_itemId] == EntryKind.DOWNLOADS, "Item does not exist.");
         emit ItemFilesUpdated(_itemId, _format, _version, _hash);
     }
 
     function setLastItemVersion(uint _itemId, uint _version) external {
-        require(itemOwners[_itemId] == msg.sender, "Attempt to modify other's item.");
+        require(_effectiveAccount(itemOwners[_itemId]) == msg.sender, "Attempt to modify other's item.");
         require(entries[_itemId] == EntryKind.DOWNLOADS, "Item does not exist.");
         emit SetLastItemVersion(_itemId, _version);
     }
@@ -464,5 +465,24 @@ abstract contract BaseFiles is BaseToken {
         //     affiliates[_affiliate] = _affiliate;
         if(uint256(_affiliate) > 1)
             affiliates[msg.sender] = _affiliate;
+    }
+
+// Authorship //
+
+    function transferAuthorship(address payable _newAuthor) external {
+        require(_newAuthor != address(0), "Zero address.");
+        address payable _orig = _originalAccount(_newAuthor);
+        accountsMapping[_orig] = _newAuthor;
+        reverseAccountsMapping[_newAuthor] = _orig;
+    }
+
+    function _effectiveAccount(address payable _orig) internal view returns (address payable) {
+        address payable _result = accountsMapping[_orig];
+        return _result != address(0) ? _result : _orig;
+    }
+
+    function _originalAccount(address payable _effective) internal view returns (address payable) {
+        address payable _result = reverseAccountsMapping[_effective];
+        return _result != address(0) ? _result : _effective;
     }
 }
