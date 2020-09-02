@@ -24,9 +24,6 @@ module.exports = async ({getNamedAccounts, deployments}) => {
             .catch((error) => log(`Error initializing: ` + error));
         log(`...initialized`);
     }
-    const mydeploy = require('../lib/mydeploy');
-    mydeploy.updateAddress('BlogTemplates', deployResult.address, buidler.network.name); // or ethers.getContractAt
-    mydeploy.updateAddress('BlogTemplatesBlock', deployResult.receipt.blockNumber, buidler.network.name); // or ethers.getContractAt
 }
 module.exports.tags = ['BlogTemplates'];
 module.exports.dependencies = ['Files'];

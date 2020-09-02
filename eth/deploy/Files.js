@@ -85,8 +85,6 @@ module.exports = async ({getNamedAccounts, deployments}) => {
         log(`created base category structure`);
     }
     const mydeploy = require('../lib/mydeploy');
-    mydeploy.updateAddress('Files', deployResult.address, buidler.network.name); // or ethers.getContractAt
-    mydeploy.updateAddress('FilesBlock', deployResult.receipt.blockNumber, buidler.network.name); // or ethers.getContractAt
     if(await categories["Root"])
         mydeploy.updateAddress('Root', await categories["Root"], buidler.network.name);
     if(await categories["Spam"])

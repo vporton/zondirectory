@@ -23,8 +23,5 @@ module.exports = async ({getNamedAccounts, deployments}) => {
             .catch((error) => log(`Error initializing: ` + error));
         log(`...initialized`);
     }
-    const mydeploy = require('../lib/mydeploy');
-    mydeploy.updateAddress('MainPST', deployResult.address, buidler.network.name); // or ethers.getContractAt
-    mydeploy.updateAddress('MainPSTBlock', deployResult.receipt.blockNumber, buidler.network.name); // or ethers.getContractAt
 }
 module.exports.tags = ['MainPST'];
