@@ -1,11 +1,13 @@
 {
-  "Files": "0x5e39B304A24aEa4F913a20FED9c4da7fb5E4A20e",
+  "Files": "0xB29f0BE09092d1574f2eF4921cD2d80d47ae9a1e",
   "Root": "1",
   "Spam": "2",
-  "FilesBlock": 7113207,
+  "FilesBlock": 7125920,
   "Web3Provider": "https://rinkeby.infura.io/v3/1d0c278301fc40f3a8f40f25ae3bd328",
-  "TheGraph": "vporton/zon-directory-rinkeby9",
-  "TheGraphTemplates": "vporton/zd-templates-rinkeby14",
-  "BlogTemplates": "0x270cfE04527B8969D792579FD5E000E959de260f",
-  "BlogTemplatesBlock": 7113220
+  "TheGraph": "vporton/zon-directory-rinkeby10",
+  "TheGraphTemplates": "vporton/zd-templates-rinkeby15",
+  "BlogTemplates": "0xC5F1E3a008C6af7c8671F4ace437F78b084af220",
+  "BlogTemplatesBlock": 7125933,
+  "MainPST": "0xE9ce90CC85088107bbeF6676ececd957e9A0af3F",
+  "MainPSTBlock": 7125919
 }
