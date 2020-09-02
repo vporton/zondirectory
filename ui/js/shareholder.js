@@ -1,12 +1,13 @@
 "strict";
 
 async function onLoad() {
-    $('#filesAddressElt').text(await getAddress('Files'));
+    $('#pstAddressElt').text(await getAddress('MainPST'));
     await defaultAccountPromise();
+    const contractInstance0 = new web3.eth.Contract(await filesJsonInterface(), await getAddress('Files'));
     const contractInstance = new web3.eth.Contract(await pstJsonInterface(), await getAddress('MainPST'));
     const tokenETH = await contractInstance.methods.balanceOf(defaultAccount).call();
     $('#tokenETH').text(web3.utils.fromWei(tokenETH));
-    const earnedETH = await contractInstance.methods.dividendsOwing(defaultAccount).call();
+    const earnedETH = await contractInstance0.methods.dividendsOwing(defaultAccount).call();
     $('#ETH').text(web3.utils.fromWei(earnedETH));
 
     let query = `{

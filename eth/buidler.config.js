@@ -20,6 +20,8 @@ task("compile", "Compiles the entire project, building all artifacts", async fun
   fs.mkdir('../out/artifacts', ()=>{});
   const abi = JSON.parse(fs.readFileSync('artifacts/Files.json')).abi;
   fs.writeFileSync('../out/artifacts/Files.abi', JSON.stringify(abi));
+  const abi1 = JSON.parse(fs.readFileSync('artifacts/MainPST.json')).abi;
+  fs.writeFileSync('../out/artifacts/MainPST.abi', JSON.stringify(abi1));
   const abi2 = JSON.parse(fs.readFileSync('artifacts/BlogTemplates.json')).abi;
   fs.writeFileSync('../out/artifacts/BlogTemplates.abi', JSON.stringify(abi2));
 });
