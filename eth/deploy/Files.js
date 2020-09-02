@@ -52,9 +52,15 @@ module.exports = async ({getNamedAccounts, deployments}) => {
     const {deployer} = namedAccounts;
     const MainPST = await deployments.get("MainPST");
     log(`Deploying Files...`);
-    const deployResult = await deploy('Files', {from: deployer, args: [process.env.PROGRAMMER_ADDRESS, MainPST.address]});
+    const deployResult = await deploy('Files', {from: deployer});
     if (deployResult.newlyDeployed) {
         log(`contract Files deployed at ${deployResult.address} in block ${deployResult.receipt.blockNumber} using ${deployResult.receipt.gasUsed} gas`);
+        const contractInstance = new web3.eth.Contract(filesJsonInterface(), deployResult.address);
+        contractInstance.methods.initialize(process.env.PROGRAMMER_ADDRESS, MainPST.address)
+            .send({from: deployer, gas: '1000000'})
+            .on('error', (error) => log(`Error initializing: ` + error))
+            .catch((error) => log(`Error initializing: ` + error));
+        log(`...initialized`);
 
         log(`Creating categories...`);
         await createCategory(deployResult.address, deployResult.receipt.blockNumber, "Root");
