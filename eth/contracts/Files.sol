@@ -6,12 +6,6 @@ pragma experimental ABIEncoderV2;
 import './BaseFiles.sol';
 
 contract Files is BaseFiles {
-    constructor(address payable _founder, MainPST _pst)
-        BaseFiles(_founder, _pst)
-        public
-    {
-    }
-
     function voteMultiple(uint _child, uint[] calldata _parents, uint256[] calldata _voteAmounts) external {
         _voteMultiple(_child, _parents, _voteAmounts);
     }

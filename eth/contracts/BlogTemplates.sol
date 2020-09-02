@@ -9,7 +9,7 @@ contract BlogTemplates {
 
     Files public filesContract;
 
-    uint maxId = 0;
+    uint maxId; // = 0;
 
     // Mapping from a template ID to JavaScript URL
     mapping (uint => string) public templatesJavaScript;
@@ -27,15 +27,11 @@ contract BlogTemplates {
     // post ID => template ID
     mapping (uint => uint) public postTemplates;
 
-    event TemplateCreated(uint templateId);
-    event TemplateChangeOwner(uint templateId, address owner);
-    event TemplateUpdated(uint templateId, string name, string js, string settings);
-    event TemplateSetArchived(uint templateId, bool archived);
-    event PostCreated(uint postId, uint itemId);
-    event PostChangeOwner(uint postId, address owner);
-    event PostUpdated(uint postId, uint templateId);
+    bool initialized;
 
-    constructor(Files _filesContract) public {
+    function initialize(Files _filesContract) external {
+        require(!initialized);
+        initialized = true;
         filesContract = _filesContract;
     }
 
@@ -93,4 +89,12 @@ contract BlogTemplates {
         postTemplates[_postId] = _templateId;
         emit PostUpdated(_postId, _templateId);
     }
+
+    event TemplateCreated(uint templateId);
+    event TemplateChangeOwner(uint templateId, address owner);
+    event TemplateUpdated(uint templateId, string name, string js, string settings);
+    event TemplateSetArchived(uint templateId, bool archived);
+    event PostCreated(uint postId, uint itemId);
+    event PostChangeOwner(uint postId, address owner);
+    event PostUpdated(uint postId, uint templateId);
 }

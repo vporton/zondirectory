@@ -10,7 +10,12 @@ contract MainPST is BaseToken {
     uint8 public decimals;
     string public symbol;
 
-    constructor(address payable _founder, uint256 _initialBalance) public {
+    bool initialized;
+
+    function initialize(address payable _founder, uint256 _initialBalance) external {
+        require(!initialized);
+        initialized = true;
+
         name = "Zon Directory PST Token (ETH)";
         decimals = 18;
         symbol = "ZDPSTE";

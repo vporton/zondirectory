@@ -23,14 +23,14 @@ abstract contract BaseFiles is IERC1155, ERC165, CommonConstants {
     uint256 constant LINK_KIND_MESSAGE = 1;
 
     // 64.64 fixed point number
-    int128 public salesOwnersShare = int128(1).divi(int128(10)); // 10%
-    int128 public upvotesOwnersShare = int128(1).divi(int128(2)); // 50%
-    int128 public uploadOwnersShare = int128(15).divi(int128(100)); // 15%
-    int128 public buyerAffiliateShare = int128(1).divi(int128(10)); // 10%
-    int128 public sellerAffiliateShare = int128(15).divi(int128(100)); // 15%
-    int128 public arToETHCoefficient = int128(8).divi(int128(10)); // 80%
+    int128 public salesOwnersShare;
+    int128 public upvotesOwnersShare;
+    int128 public uploadOwnersShare;
+    int128 public buyerAffiliateShare;
+    int128 public sellerAffiliateShare;
+    int128 public arToETHCoefficient;
 
-    uint maxId = 0;
+    uint maxId; // = 0;
 
     mapping (uint => EntryKind) public entries;
 
@@ -43,44 +43,9 @@ abstract contract BaseFiles is IERC1155, ERC165, CommonConstants {
     mapping (string => address payable) public nickAddresses;
     mapping (address => string) public addressNicks;
 
-    event SetOwner(address payable owner); // share is 64.64 fixed point number
-    event SetSalesOwnerShare(int128 share); // share is 64.64 fixed point number
-    event SetUpvotesOwnerShare(int128 share); // share is 64.64 fixed point number
-    event SetUploadOwnerShare(int128 share); // share is 64.64 fixed point number
-    event SetBuyerAffiliateShare(int128 share); // share is 64.64 fixed point number
-    event SetSellerAffiliateShare(int128 share); // share is 64.64 fixed point number
-    event SetARToETHCoefficient(int128 coeff); // share is 64.64 fixed point number
-    event TransferAuthorship(address payable _orig, address payable _new);
-    event SetNick(address payable indexed author, string nick);
-    event SetARWallet(address payable indexed authro, string arWallet);
-    event SetAuthorInfo(address payable indexed author, string link, string shortDescription, string description, string locale);
-    event ItemCreated(uint indexed itemId);
-    event SetItemOwner(uint indexed itemId, address payable indexed author);
-    event ItemUpdated(uint indexed itemId, ItemInfo info);
-    event LinkUpdated(uint indexed linkId,
-                      string link,
-                      string title,
-                      string shortDescription,
-                      string description,
-                      string locale,
-                      uint256 indexed linkKind);
-    event ItemCoverUpdated(uint indexed itemId, uint indexed version, bytes cover, uint width, uint height);
-    event ItemFilesUpdated(uint indexed itemId, string format, uint indexed version, bytes hash);
-    event SetLastItemVersion(uint indexed itemId, uint version);
-    event CategoryCreated(uint256 indexed categoryId, address indexed author); // zero author - no owner
-    event CategoryUpdated(uint256 indexed categoryId, string title, string locale);
-    event OwnedCategoryUpdated(uint256 indexed categoryId,
-                               string title, string shortDescription,
-                               string description,
-                               string locale,
-                               address indexed author);
-    event ChildParentVote(uint child,
-                          uint parent,
-                          int256 value,
-                          int256 featureLevel,
-                          bool primary); // Vote is primary if it's an author's vote.
-    event Pay(address indexed payer, address indexed payee, uint indexed itemId, uint256 value);
-    event Donate(address indexed payer, address indexed payee, uint indexed itemId, uint256 value);
+    mapping (uint256 => uint256) public totalSupply; // IERC1155Views
+
+    mapping (address => address payable) affiliates;
 
     address payable public founder;
     MainPST pst;
@@ -89,9 +54,36 @@ abstract contract BaseFiles is IERC1155, ERC165, CommonConstants {
     mapping (uint => uint256) public pricesETH;
     mapping (uint => uint256) public pricesAR;
 
-    constructor(address payable _founder, MainPST _pst) public {
+    uint256 totalDividends = 0;
+    mapping(address => uint256) lastTotalDivedends; // the value of totalDividends after the last payment to an address
+    mapping(address => uint256) authorTotalDividends;
+    mapping(address => mapping(address => uint256)) lastAuthorTotalDivedends; // the value of totalDividends after the last payment to an address
+
+    uint8 constant decimalsConstant = 50;
+
+    // id => (owner => balance)
+    mapping (uint256 => mapping(address => uint256)) internal balances;
+
+    // owner => (operator => approved)
+    mapping (address => mapping(address => bool)) internal operatorApproval;
+
+    mapping (address => bool) public sellerInitialized; // public for Files.sol
+
+    bool initialized;
+
+    function initialize(address payable _founder, MainPST _pst) external {
+        require(!initialized);
+        initialized = true;
+
         founder = _founder;
         pst = _pst;
+
+        salesOwnersShare = int128(1).divi(int128(10)); // 10%
+        upvotesOwnersShare = int128(1).divi(int128(2)); // 50%
+        uploadOwnersShare = int128(15).divi(int128(100)); // 15%
+        buyerAffiliateShare = int128(1).divi(int128(10)); // 10%
+        sellerAffiliateShare = int128(15).divi(int128(100)); // 15%
+        arToETHCoefficient = int128(8).divi(int128(10)); // 80%
     }
 
 // Owners //
@@ -414,11 +406,6 @@ abstract contract BaseFiles is IERC1155, ERC165, CommonConstants {
 
 // PST //
 
-    uint256 totalDividends = 0;
-    mapping(address => uint256) lastTotalDivedends; // the value of totalDividends after the last payment to an address
-    mapping(address => uint256) authorTotalDividends;
-    mapping(address => mapping(address => uint256)) lastAuthorTotalDivedends; // the value of totalDividends after the last payment to an address
-
     function _dividendsOwing(address _account) internal view returns(uint256) {
         uint256 _newDividends = totalDividends - lastTotalDivedends[_account];
         return (pst.balanceOf(_account) * _newDividends) / pst.totalSupply(); // rounding down
@@ -493,8 +480,6 @@ abstract contract BaseFiles is IERC1155, ERC165, CommonConstants {
 
 // Affiliates //
 
-    mapping (address => address payable) affiliates;
-
     // Last affiliate wins.
     function setAffiliate(address payable _affiliate) internal {
         // if(affiliates[_affiliate] == address(0))
@@ -524,16 +509,6 @@ abstract contract BaseFiles is IERC1155, ERC165, CommonConstants {
     }
 
 // Author's PSTs follow //
-
-    uint8 constant decimalsConstant = 50;
-
-    // id => (owner => balance)
-    mapping (uint256 => mapping(address => uint256)) internal balances;
-
-    // owner => (operator => approved)
-    mapping (address => mapping(address => bool)) internal operatorApproval;
-
-    mapping (address => bool) public sellerInitialized; // public for Files.sol
 
 /////////////////////////////////////////// ERC165 //////////////////////////////////////////////
 
@@ -705,8 +680,6 @@ abstract contract BaseFiles is IERC1155, ERC165, CommonConstants {
 
 /////////////////////////////////////////// IERC1155Views //////////////////////////////////////////////
 
-    mapping (uint256 => uint256) public totalSupply;
-
     function name(uint256 /*_id*/) external pure returns (string memory) {
         return "SEL";
     }
@@ -766,4 +739,43 @@ abstract contract BaseFiles is IERC1155, ERC165, CommonConstants {
     function _sellerToToken(address payable _seller) internal pure returns (uint256) {
         return uint256(_seller);
     }
+
+    event SetOwner(address payable owner); // share is 64.64 fixed point number
+    event SetSalesOwnerShare(int128 share); // share is 64.64 fixed point number
+    event SetUpvotesOwnerShare(int128 share); // share is 64.64 fixed point number
+    event SetUploadOwnerShare(int128 share); // share is 64.64 fixed point number
+    event SetBuyerAffiliateShare(int128 share); // share is 64.64 fixed point number
+    event SetSellerAffiliateShare(int128 share); // share is 64.64 fixed point number
+    event SetARToETHCoefficient(int128 coeff); // share is 64.64 fixed point number
+    event TransferAuthorship(address payable _orig, address payable _new);
+    event SetNick(address payable indexed author, string nick);
+    event SetARWallet(address payable indexed authro, string arWallet);
+    event SetAuthorInfo(address payable indexed author, string link, string shortDescription, string description, string locale);
+    event ItemCreated(uint indexed itemId);
+    event SetItemOwner(uint indexed itemId, address payable indexed author);
+    event ItemUpdated(uint indexed itemId, ItemInfo info);
+    event LinkUpdated(uint indexed linkId,
+                      string link,
+                      string title,
+                      string shortDescription,
+                      string description,
+                      string locale,
+                      uint256 indexed linkKind);
+    event ItemCoverUpdated(uint indexed itemId, uint indexed version, bytes cover, uint width, uint height);
+    event ItemFilesUpdated(uint indexed itemId, string format, uint indexed version, bytes hash);
+    event SetLastItemVersion(uint indexed itemId, uint version);
+    event CategoryCreated(uint256 indexed categoryId, address indexed author); // zero author - no owner
+    event CategoryUpdated(uint256 indexed categoryId, string title, string locale);
+    event OwnedCategoryUpdated(uint256 indexed categoryId,
+                               string title, string shortDescription,
+                               string description,
+                               string locale,
+                               address indexed author);
+    event ChildParentVote(uint child,
+                          uint parent,
+                          int256 value,
+                          int256 featureLevel,
+                          bool primary); // Vote is primary if it's an author's vote.
+    event Pay(address indexed payer, address indexed payee, uint indexed itemId, uint256 value);
+    event Donate(address indexed payer, address indexed payee, uint indexed itemId, uint256 value);
 }

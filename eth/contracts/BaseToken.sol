@@ -8,6 +8,9 @@ import "./Token.sol";
 
 contract BaseToken is Token {
 
+    mapping (address => uint256) public balances;
+    mapping (address => mapping (address => uint256)) public allowed;
+
     function transfer(address _to, uint256 _value) override virtual external returns (bool success) {
         require(balances[msg.sender] >= _value && balances[_to] + _value >= balances[_to]);
         balances[msg.sender] -= _value;
@@ -38,7 +41,4 @@ contract BaseToken is Token {
     function allowance(address _owner, address _spender) override virtual external view returns (uint256 remaining) {
       return allowed[_owner][_spender];
     }
-
-    mapping (address => uint256) public balances;
-    mapping (address => mapping (address => uint256)) public allowed;
 }
