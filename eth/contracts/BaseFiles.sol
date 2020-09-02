@@ -719,6 +719,7 @@ abstract contract BaseFiles is IERC1155, ERC165, CommonConstants {
         return decimalsConstant;
     }
 
+    // FIXME: The other URI method.
     function uri(uint256 /*_id*/) external pure returns (string memory) {
         return "FIXME";
     }
