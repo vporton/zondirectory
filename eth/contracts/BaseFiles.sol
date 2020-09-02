@@ -294,7 +294,7 @@ abstract contract BaseFiles is IERC1155, ERC165, CommonConstants {
         address payable _author = itemOwners[_itemId];
         payToShareholders(_shareholdersShare, _author);
         uint256 toAuthor = msg.value - _shareholdersShare;
-        _author.transfer(toAuthor);
+        payToAuthor(_author, toAuthor);
         emit Pay(msg.sender, itemOwners[_itemId], _itemId, toAuthor);
     }
 
@@ -305,7 +305,7 @@ abstract contract BaseFiles is IERC1155, ERC165, CommonConstants {
         address payable _author = itemOwners[_itemId];
         payToShareholders(_shareholdersShare, _author);
         uint256 toAuthor = msg.value - _shareholdersShare;
-        _author.transfer(toAuthor);
+        payToAuthor(_author, toAuthor);
         emit Donate(msg.sender, itemOwners[_itemId], _itemId, toAuthor);
     }
 
@@ -379,7 +379,7 @@ abstract contract BaseFiles is IERC1155, ERC165, CommonConstants {
         if(_yes && _author != address(0)) {
             uint256 _shareholdersShare = uint256(upvotesOwnersShare.muli(int256(_amount)));
             payToShareholders(_shareholdersShare, _author);
-            _author.transfer(_amount - _shareholdersShare);
+            payToAuthor(_author, _amount - _shareholdersShare);
         } else
             payToShareholders(_amount, address(0));
         emit ChildParentVote(_child, _parent, _newValue, 0, false);
@@ -417,8 +417,9 @@ abstract contract BaseFiles is IERC1155, ERC165, CommonConstants {
 // PST //
 
     uint256 totalDividends = 0;
-    uint256 totalDividendsPaid = 0; // actually paid sum
     mapping(address => uint256) lastTotalDivedends; // the value of totalDividends after the last payment to an address
+    mapping(address => uint256) authorTotalDividends;
+    mapping(address => mapping(address => uint256)) lastAuthorTotalDivedends; // the value of totalDividends after the last payment to an address
 
     function _dividendsOwing(address _account) internal view returns(uint256) {
         uint256 _newDividends = totalDividends - lastTotalDivedends[_account];
@@ -437,8 +438,33 @@ abstract contract BaseFiles is IERC1155, ERC165, CommonConstants {
 
         if(_owing > 0) {
             msg.sender.transfer(_owing);
-            totalDividendsPaid += _owing;
             lastTotalDivedends[msg.sender] = totalDividends;
+        }
+    }
+
+    function _authorDividendsOwing(address payable _author, address _account) internal view returns(uint256) {
+        uint256 _newDividends = authorTotalDividends[_author] - lastAuthorTotalDivedends[_author][_account];
+        return (balances[_sellerToToken(_author)][_account] * _newDividends) / 10**uint256(decimalsConstant); // rounding down
+    }
+
+    function authorDividendsOwing(address payable _author, address _account) external view returns(uint256) {
+        return _authorDividendsOwing(_author, _account);
+    }
+
+    function withdrawAuthorsProfit(address payable[] calldata _authors) external {
+        uint256 _owing = 0;
+        for(uint i = 0; i < _authors.length; ++i)
+            _owing += _authorDividendsOwing(_authors[i], msg.sender);
+
+        // Against rounding errors. Not necessary because of rounding down.
+        // if(_owing > address(this).balance) _owing = address(this).balance;
+
+        if(_owing > 0) {
+            msg.sender.transfer(_owing);
+            for(uint i = 0; i < _authors.length; ++i) {
+                address _author = _authors[i];
+                lastAuthorTotalDivedends[_author][msg.sender] = authorTotalDividends[_author];
+            }
         }
     }
 
@@ -459,6 +485,11 @@ abstract contract BaseFiles is IERC1155, ERC165, CommonConstants {
             _shareHoldersAmount -= _sellerAffiliateAmount;
         }
         totalDividends += _shareHoldersAmount;
+    }
+
+    function payToAuthor(address payable _author, uint256 _amount) internal {
+        _author.transfer(_amount);
+        authorTotalDividends[_author] += _amount;
     }
 
 // Affiliates //
@@ -495,7 +526,7 @@ abstract contract BaseFiles is IERC1155, ERC165, CommonConstants {
 
 // Author's PSTs follow //
 
-    uint8 constant digitsConstant = 50;
+    uint8 constant decimalsConstant = 50;
 
     // id => (owner => balance)
     mapping (uint256 => mapping(address => uint256)) internal balances;
@@ -686,7 +717,7 @@ abstract contract BaseFiles is IERC1155, ERC165, CommonConstants {
     }
 
     function decimals(uint256 /*_id*/) external pure returns (uint8) {
-        return digitsConstant;
+        return decimalsConstant;
     }
 
     function uri(uint256 /*_id*/) external pure returns (string memory) {
@@ -700,9 +731,9 @@ abstract contract BaseFiles is IERC1155, ERC165, CommonConstants {
         sellerInitialized[msg.sender] = true;
         itemOwners[_itemId] = msg.sender;
         uint256 _id = _sellerToToken(msg.sender);
-        balances[_id][msg.sender] = 10**uint256(digitsConstant);
-        totalSupply[_id] = 10**uint256(digitsConstant);
-        TransferSingle(msg.sender, address(0), msg.sender, _id, 10**uint256(digitsConstant));
+        balances[_id][msg.sender] = 10**uint256(decimalsConstant);
+        totalSupply[_id] = 10**uint256(decimalsConstant);
+        TransferSingle(msg.sender, address(0), msg.sender, _id, 10**uint256(decimalsConstant));
     }
 
 /////////////////////////////////////////// Internal //////////////////////////////////////////////
