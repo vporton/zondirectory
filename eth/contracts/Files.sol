@@ -6,8 +6,8 @@ pragma experimental ABIEncoderV2;
 import './BaseFiles.sol';
 
 contract Files is BaseFiles {
-    constructor(address payable _founder, uint256 _initialBalance)
-        BaseFiles(_founder, _initialBalance)
+    constructor(address payable _founder, MainPST _pst)
+        BaseFiles(_founder, _pst)
         public
     {
     }

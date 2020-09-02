@@ -6,9 +6,10 @@ pragma solidity ^0.6.0;
 pragma experimental ABIEncoderV2;
 
 import './BaseToken.sol';
+import './MainPST.sol';
 import './ABDKMath64x64.sol';
 
-abstract contract BaseFiles is BaseToken {
+abstract contract BaseFiles {
 
     using ABDKMath64x64 for int128;
 
@@ -16,10 +17,6 @@ abstract contract BaseFiles is BaseToken {
 
     uint256 constant LINK_KIND_LINK = 0;
     uint256 constant LINK_KIND_MESSAGE = 1;
-
-    string public name;
-    uint8 public decimals;
-    string public symbol;
 
     // 64.64 fixed point number
     int128 public salesOwnersShare = int128(1).divi(int128(10)); // 10%
@@ -82,18 +79,15 @@ abstract contract BaseFiles is BaseToken {
     event Donate(address indexed payer, address indexed payee, uint indexed itemId, uint256 value);
 
     address payable public founder;
+    MainPST pst;
     mapping (uint => address payable) public itemOwners;
     mapping (uint => mapping (uint => int256)) private childParentVotes;
     mapping (uint => uint256) public pricesETH;
     mapping (uint => uint256) public pricesAR;
 
-    constructor(address payable _founder, uint256 _initialBalance) public {
+    constructor(address payable _founder, MainPST _pst) public {
         founder = _founder;
-        name = "Zon Directory PST Token (ETH)";
-        decimals = 18;
-        symbol = "ZDPSTE";
-        balances[_founder] = _initialBalance;
-        totalSupply = _initialBalance;
+        pst = _pst;
     }
 
 // Owners //
@@ -419,7 +413,7 @@ abstract contract BaseFiles is BaseToken {
 
     function _dividendsOwing(address _account) internal view returns(uint256) {
         uint256 _newDividends = totalDividends - lastTotalDivedends[_account];
-        return (balances[_account] * _newDividends) / totalSupply; // rounding down
+        return (pst.balanceOf(_account) * _newDividends) / pst.totalSupply(); // rounding down
     }
 
     function dividendsOwing(address _account) external view returns(uint256) {

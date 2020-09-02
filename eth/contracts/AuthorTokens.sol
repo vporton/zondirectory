@@ -15,8 +15,6 @@ contract AuthorTokens is IERC1155, ERC165, CommonConstants
 
     uint8 constant digitsConstant = 50;
 
-    enum TokenKind { SELLER, MERCHANDISE }
-
     Files files;
 
     // id => (owner => balance)
@@ -203,19 +201,19 @@ contract AuthorTokens is IERC1155, ERC165, CommonConstants
 
     mapping (uint256 => uint256) public totalSupply;
 
-    function name(uint256 _id) external view returns (string memory) {
-        return _getTokenKind(_id) == TokenKind.SELLER ? "SEL" : "MER";
+    function name(uint256 /*_id*/) external pure returns (string memory) {
+        return "SEL";
     }
 
-    function symbol(uint256 _id) external view returns (string memory) {
-        return _getTokenKind(_id) == TokenKind.SELLER ? "A seller" : "A merchandise";
+    function symbol(uint256 /*_id*/) external pure returns (string memory) {
+        return "A seller";
     }
 
-    function decimals(uint256 _id) external view returns (uint8) {
+    function decimals(uint256 /*_id*/) external pure returns (uint8) {
         return digitsConstant;
     }
 
-    function uri(uint256 _id) external view returns (string memory) {
+    function uri(uint256 /*_id*/) external pure returns (string memory) {
         return "FIXME";
     }
 
@@ -230,11 +228,6 @@ contract AuthorTokens is IERC1155, ERC165, CommonConstants
         totalSupply[_id] = 10**uint256(digitsConstant);
         TransferSingle(msg.sender, address(0), _owner, _id, 10**uint256(digitsConstant));
     }
-
-/////////////////////////////////////////// Conversion //////////////////////////////////////////////
-
-    // TODO
-    // FIXME: possible out of gas when convert for N merchandise items, because N may be big
 
 /////////////////////////////////////////// Internal //////////////////////////////////////////////
 
@@ -259,18 +252,8 @@ contract AuthorTokens is IERC1155, ERC165, CommonConstants
         require(ERC1155TokenReceiver(_to).onERC1155BatchReceived(_operator, _from, _ids, _values, _data) == ERC1155_BATCH_ACCEPTED, "contract returned an unknown value from onERC1155BatchReceived");
     }
 
-    function _getTokenKind(uint256 _id) internal pure returns (TokenKind) {
-        return _id & (1<<255) == 0 ? TokenKind.SELLER : TokenKind.MERCHANDISE;
-    }
-
     function _getSeller(uint256 _id) internal pure returns (address payable) {
-        assert(_getTokenKind(_id) == TokenKind.SELLER);
         return address(_id);
-    }
-
-    function _getMerchandise(uint256 _id) internal pure returns (uint256) {
-        assert(_getTokenKind(_id) == TokenKind.MERCHANDISE);
-        return _id & ~uint256(1<<255);
     }
 
     function _sellerToToken(address payable _seller) internal pure returns (uint256) {
