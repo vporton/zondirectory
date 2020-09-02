@@ -6,17 +6,30 @@ import "./Address.sol";
 import "./Common.sol";
 import "./IERC1155TokenReceiver.sol";
 import "./IERC1155.sol";
+import "./Files.sol";
 
 contract AuthorTokens is IERC1155, ERC165, CommonConstants
 {
     using SafeMath for uint256;
     using Address for address;
 
+    uint8 constant digitsConstant = 50;
+
+    enum TokenKind { SELLER, MERCHANDISE }
+
+    Files files;
+
     // id => (owner => balance)
     mapping (uint256 => mapping(address => uint256)) internal balances;
 
     // owner => (operator => approved)
     mapping (address => mapping(address => bool)) internal operatorApproval;
+
+    mapping (address => bool) public sellerInitialized; // public for Files.sol
+
+    constructor(Files _files) public {
+        files = _files;
+    }
 
 /////////////////////////////////////////// ERC165 //////////////////////////////////////////////
 
@@ -186,6 +199,42 @@ contract AuthorTokens is IERC1155, ERC165, CommonConstants
         return operatorApproval[_owner][_operator];
     }
 
+/////////////////////////////////////////// IERC1155Views //////////////////////////////////////////////
+
+    mapping (uint256 => uint256) public totalSupply;
+
+    function name(uint256 _id) external view returns (string memory) {
+        return _getTokenKind(_id) == TokenKind.SELLER ? "SEL" : "MER";
+    }
+
+    function symbol(uint256 _id) external view returns (string memory) {
+        return _getTokenKind(_id) == TokenKind.SELLER ? "A seller" : "A merchandise";
+    }
+
+    function decimals(uint256 _id) external view returns (uint8) {
+        return digitsConstant;
+    }
+
+    function uri(uint256 _id) external view returns (string memory) {
+        return "FIXME";
+    }
+
+/////////////////////////////////////////// Minting //////////////////////////////////////////////
+
+    function initializeAuthor(address payable _owner) external {
+        require(msg.sender == address(files), "System function");
+        if(sellerInitialized[_owner]) return;
+        sellerInitialized[_owner] = true;
+        uint256 _id = _sellerToToken(_owner);
+        balances[_id][_owner] = 10**uint256(digitsConstant);
+        totalSupply[_id] = 10**uint256(digitsConstant);
+        TransferSingle(msg.sender, 0, _owner, _id, 10**uint256(digitsConstant));
+    }
+
+/////////////////////////////////////////// Conversion //////////////////////////////////////////////
+
+    // TODO
+
 /////////////////////////////////////////// Internal //////////////////////////////////////////////
 
     function _doSafeTransferAcceptanceCheck(address _operator, address _from, address _to, uint256 _id, uint256 _value, bytes memory _data) internal {
@@ -207,5 +256,23 @@ contract AuthorTokens is IERC1155, ERC165, CommonConstants
         // Note: if the below reverts in the onERC1155BatchReceived function of the _to address you will have an undefined revert reason returned rather than the one in the require test.
         // If you want predictable revert reasons consider using low level _to.call() style instead so the revert does not bubble up and you can revert yourself on the ERC1155_BATCH_ACCEPTED test.
         require(ERC1155TokenReceiver(_to).onERC1155BatchReceived(_operator, _from, _ids, _values, _data) == ERC1155_BATCH_ACCEPTED, "contract returned an unknown value from onERC1155BatchReceived");
+    }
+
+    function _getTokenKind(uint256 _id) internal pure returns (TokenKind) {
+        return _id & (1<<255) == 0 ? TokenKind.SELLER : TokenKind.MERCHANDISE;
+    }
+
+    function _getSeller(uint256 _id) internal pure returns (address payable) {
+        assert(_getTokenKind(_id) == TokenKind.SELLER);
+        return address(_id);
+    }
+
+    function _getMerchandise(uint256 _id) internal pure returns (uint256) {
+        assert(_getTokenKind(_id) == TokenKind.MERCHANDISE);
+        return _id & ~uint256(1<<255);
+    }
+
+    function _sellerToToken(address payable _seller) internal pure returns (uint256) {
+        return uint256(_seller);
     }
 }
