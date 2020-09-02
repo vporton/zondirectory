@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-pragma solidity ^0.6.0;
+pragma solidity ^0.7.0;
 pragma experimental ABIEncoderV2;
 
 import './Common.sol';
@@ -530,7 +530,7 @@ abstract contract BaseFiles is IERC1155, ERC165, CommonConstants {
     function supportsInterface(bytes4 _interfaceId)
     override
     public
-    view
+    pure
     returns (bool) {
          if (_interfaceId == INTERFACE_SIGNATURE_ERC165 ||
              _interfaceId == INTERFACE_SIGNATURE_ERC1155) {

@@ -34,7 +34,7 @@ task("compile", "Compiles the entire project, building all artifacts", async fun
 module.exports = {
   // This is a sample solc configuration that specifies which version of solc to use
   solc: {
-    version: "0.6.12",
+    version: "0.7.1",
     optimizer: {
       enabled: true,
       runs: 200

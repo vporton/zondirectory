@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: Apache-2.0
-pragma solidity ^0.6.0;
+pragma solidity ^0.7.0;
 
 /**
     Note: Simple contract to use as base for const vals

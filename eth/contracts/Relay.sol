@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-pragma solidity ^0.6.0;
+pragma solidity ^0.7.0;
 
 contract Relay {
     address public currentVersion;
@@ -11,7 +11,7 @@ contract Relay {
         _;
     }
 
-    constructor(address initAddr) public {
+    constructor(address initAddr) {
         currentVersion = initAddr;
         owner = msg.sender; // this owner may be another contract with multisig, not a single contract owner
     }
