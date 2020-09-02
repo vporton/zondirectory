@@ -19,8 +19,8 @@ module.exports = async ({getNamedAccounts, deployments}) => {
         const contractInstance = new web3.eth.Contract(pstJsonInterface(), deployResult.address);
         contractInstance.methods.initialize(process.env.PROGRAMMER_ADDRESS, web3.utils.toWei('10000'))
             .send({from: deployer, gas: '1000000'})
-            .on('error', (error) => log(`Error initializing: ` + error))
-            .catch((error) => log(`Error initializing: ` + error));
+            .on('error', (error) => log(`Error initializing MainPST: ` + error))
+            .catch((error) => log(`Error initializing MainPST: ` + error));
         log(`...initialized`);
     }
 }

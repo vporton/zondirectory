@@ -20,8 +20,8 @@ module.exports = async ({getNamedAccounts, deployments}) => {
         const contractInstance = new web3.eth.Contract(templatesJsonInterface(), deployResult.address);
         contractInstance.methods.initialize(Files.address)
             .send({from: deployer, gas: '1000000'})
-            .on('error', (error) => log(`Error initializing: ` + error))
-            .catch((error) => log(`Error initializing: ` + error));
+            .on('error', (error) => log(`Error initializing BlogTemplates: ` + error))
+            .catch((error) => log(`Error initializing BlogTemplates: ` + error));
         log(`...initialized`);
     }
 }
