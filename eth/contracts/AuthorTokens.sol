@@ -228,7 +228,7 @@ contract AuthorTokens is IERC1155, ERC165, CommonConstants
         uint256 _id = _sellerToToken(_owner);
         balances[_id][_owner] = 10**uint256(digitsConstant);
         totalSupply[_id] = 10**uint256(digitsConstant);
-        TransferSingle(msg.sender, 0, _owner, _id, 10**uint256(digitsConstant));
+        TransferSingle(msg.sender, address(0), _owner, _id, 10**uint256(digitsConstant));
     }
 
 /////////////////////////////////////////// Conversion //////////////////////////////////////////////
