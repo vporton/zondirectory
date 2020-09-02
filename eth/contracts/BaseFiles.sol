@@ -203,7 +203,7 @@ abstract contract BaseFiles is IERC1155, ERC165, CommonConstants {
     {
         require(bytes(_info.title).length != 0, "Empty title.");
         setAffiliate(_affiliate);
-        itemOwners[++maxId] = msg.sender;
+        _initializeAuthor(++maxId);
         pricesETH[maxId] = _info.priceETH;
         entries[maxId] = EntryKind.DOWNLOADS;
         emit ItemCreated(maxId);
@@ -240,10 +240,13 @@ abstract contract BaseFiles is IERC1155, ERC165, CommonConstants {
         require(bytes(_info.title).length != 0, "Empty title.");
         setAffiliate(_affiliate);
         address payable _author = _owned ? msg.sender : address(0);
-        itemOwners[++maxId] = _author;
+        ++maxId;
         entries[maxId] = EntryKind.LINK;
         emit ItemCreated(maxId);
-        if (_owned) emit SetItemOwner(maxId, _author);
+        if (_owned) {
+            _initializeAuthor(maxId);
+            emit SetItemOwner(maxId, _author);
+        }
         emit LinkUpdated(maxId, _info.link, _info.title, _info.shortDescription, _info.description, _info.locale, _info.linkKind);
         return maxId;
     }
@@ -344,7 +347,7 @@ abstract contract BaseFiles is IERC1155, ERC165, CommonConstants {
         setAffiliate(_affiliate);
         ++maxId;
         entries[maxId] = EntryKind.CATEGORY;
-        itemOwners[maxId] = msg.sender;
+        _initializeAuthor(maxId);
         // Yes, issue ID two times, for faster information retrieval
         emit CategoryCreated(maxId, msg.sender);
         emit SetItemOwner(maxId, msg.sender);
@@ -692,13 +695,14 @@ abstract contract BaseFiles is IERC1155, ERC165, CommonConstants {
 
 /////////////////////////////////////////// Minting //////////////////////////////////////////////
 
-    function _initializeAuthor(address payable _owner) internal {
-        if(sellerInitialized[_owner]) return;
-        sellerInitialized[_owner] = true;
-        uint256 _id = _sellerToToken(_owner);
-        balances[_id][_owner] = 10**uint256(digitsConstant);
+    function _initializeAuthor(uint _itemId) internal {
+        if(sellerInitialized[msg.sender]) return;
+        sellerInitialized[msg.sender] = true;
+        itemOwners[_itemId] = msg.sender;
+        uint256 _id = _sellerToToken(msg.sender);
+        balances[_id][msg.sender] = 10**uint256(digitsConstant);
         totalSupply[_id] = 10**uint256(digitsConstant);
-        TransferSingle(msg.sender, address(0), _owner, _id, 10**uint256(digitsConstant));
+        TransferSingle(msg.sender, address(0), msg.sender, _id, 10**uint256(digitsConstant));
     }
 
 /////////////////////////////////////////// Internal //////////////////////////////////////////////
