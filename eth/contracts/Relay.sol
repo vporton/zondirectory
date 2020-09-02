@@ -16,10 +16,16 @@ contract Relay {
         owner = msg.sender; // this owner may be another contract with multisig, not a single contract owner
     }
 
-    function changeContract(address newVersion) public
-    onlyOwner()
+    function changeContract(address newVersion) external
+        onlyOwner()
     {
         currentVersion = newVersion;
+    }
+
+    function changeRelayer(address _owner) external
+        onlyOwner()
+    {
+        owner = _owner;
     }
 
     fallback() external {
@@ -29,6 +35,6 @@ contract Relay {
         require(size > 0);
 
         (bool success, /*bytes memory result*/) = addr.delegatecall(msg.data);
-        require(!success);
+        require(success);
     }
 }
