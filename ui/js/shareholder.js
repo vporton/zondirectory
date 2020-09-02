@@ -3,7 +3,7 @@
 async function onLoad() {
     $('#filesAddressElt').text(await getAddress('Files'));
     await defaultAccountPromise();
-    const contractInstance = new web3.eth.Contract(await filesJsonInterface(), await getAddress('Files'));
+    const contractInstance = new web3.eth.Contract(await pstJsonInterface(), await getAddress('MainPST'));
     const tokenETH = await contractInstance.methods.balanceOf(defaultAccount).call();
     $('#tokenETH').text(web3.utils.fromWei(tokenETH));
     const earnedETH = await contractInstance.methods.dividendsOwing(defaultAccount).call();

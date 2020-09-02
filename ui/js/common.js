@@ -88,8 +88,17 @@ async function defaultAccountPromise() {
     return web3 && web3.currentProvider ? (await getWeb3()).eth.getAccounts() : null;
 }
 
+let pstJsonInterfaceCache = null;
 let filesJsonInterfaceCache = null;
 let blogTemplatesJsonInterfaceCache = null;
+
+function pstJsonInterface() {
+    return new Promise((resolve) => {
+        if(pstJsonInterfaceCache) resolve(pstJsonInterfaceCache);
+        fetch("artifacts/MainPST.abi")
+            .then(response => resolve(pstJsonInterfaceCache = response.json()));
+    });
+}
 
 function filesJsonInterface() {
     return new Promise((resolve) => {

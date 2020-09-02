@@ -50,8 +50,9 @@ module.exports = async ({getNamedAccounts, deployments}) => {
     const namedAccounts = await getNamedAccounts();
     const {deploy} = deployments;
     const {deployer} = namedAccounts;
+    const MainPST = await deployments.get("MainPST");
     log(`Deploying Files...`);
-    const deployResult = await deploy('Files', {from: deployer, args: [process.env.PROGRAMMER_ADDRESS, web3.utils.toWei('10000000')]});
+    const deployResult = await deploy('Files', {from: deployer, args: [process.env.PROGRAMMER_ADDRESS, MainPST.address]});
     if (deployResult.newlyDeployed) {
         log(`contract Files deployed at ${deployResult.address} in block ${deployResult.receipt.blockNumber} using ${deployResult.receipt.gasUsed} gas`);
 
@@ -88,3 +89,4 @@ module.exports = async ({getNamedAccounts, deployments}) => {
     // mydeploy.updateAddress('Spam', 2, buidler.network.name);
 }
 module.exports.tags = ['Files'];
+module.exports.dependencies = ['MainPST'];
