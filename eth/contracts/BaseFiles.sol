@@ -1,7 +1,5 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-// FIXME: Pay shares dependently on the ORIGINAL author
-
 pragma solidity ^0.6.0;
 pragma experimental ABIEncoderV2;
 
@@ -80,7 +78,7 @@ abstract contract BaseFiles is IERC1155, ERC165, CommonConstants {
                           uint parent,
                           int256 value,
                           int256 featureLevel,
-                          bool primary); // Vote is primary if it's an author's vote. // FIXME: if split ownership?
+                          bool primary); // Vote is primary if it's an author's vote.
     event Pay(address indexed payer, address indexed payee, uint indexed itemId, uint256 value);
     event Donate(address indexed payer, address indexed payee, uint indexed itemId, uint256 value);
 
@@ -451,6 +449,7 @@ abstract contract BaseFiles is IERC1155, ERC165, CommonConstants {
         return _authorDividendsOwing(_author, _account);
     }
 
+    // Pay shares dependently on the ORIGINAL author.
     function withdrawAuthorsProfit(address payable[] calldata _authors) external {
         uint256 _owing = 0;
         for(uint i = 0; i < _authors.length; ++i)
