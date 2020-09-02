@@ -1,16 +1,34 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
     <head id="head">
+        <title>For shareholders</title>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/web3/1.2.9/web3.min.js"></script>
         <script src="https://unpkg.com/arweave/bundles/web.bundle.min.js"></script>
         <script src="artifacts/SmartWeave.js"></script>
         <script src="js/addresses2.js"></script>
         <script src="js/common.js"></script>
         <script src="js/shareholder.js"></script>
-        <title>For shareholders</title>
+        <style>
+            table { border-collapse: collapse; }
+            td, th { border: 1px solid gray }
+        </style>
     </head>
     <body>
         <h1 id="title">For shareholders</h1>
         <div id="body">
+            <h2>For author's account shareholders</h2>
+            <p>There are (non-voting) shares of two kinds: shares for ETH profit and
+                shares for AR profit (the latter not yet implemented). You could buy authors'
+                shares at an exchange (when available).</p>
+            <table>
+                <thead>
+                    <tr><th>Author's account</th><th>Your earned amount (ETH)</th></tr>
+                </thead>
+                <tbody id="authors"></tbody>
+            </table>
+            <p><input type="button" value="Withdraw all" onclick="withdrawETHAuthor()"/></p>
+            <p>TBD: Add other author accounts you have share in.</p>
+
+            <h2>For project shareholders</h2>
             <p>There are (non-voting) shares of two kinds: shares for ETH profit and
                 shares for AR profit. Investment is not solicited, but you could buy
                 shares at an exchange (when available).</p>

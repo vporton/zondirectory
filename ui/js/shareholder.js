@@ -24,12 +24,22 @@ async function onLoad() {
             $('#tokenAR').text(contractState.balances[arWallet]);
         });
     }
+
+    const earnedETHAuthor = await contractInstance0.methods.authorDividendsOwing(defaultAccount, defaultAccount).call();
+    const row = `<tr><td>${defaultAccount}</td><td>${earnedETHAuthor}</td></tr>`;
+    $('#authors').append(row);
 }
 
 async function withdrawETH() {
     await defaultAccountPromise();
     const contractInstance = new web3.eth.Contract(await filesJsonInterface(), await getAddress('Files'));
     await mySend(contractInstance, contractInstance.methods.withdrawProfit, []);
+}
+
+async function withdrawETHAuthor() {
+    await defaultAccountPromise();
+    const contractInstance = new web3.eth.Contract(await filesJsonInterface(), await getAddress('Files'));
+    await mySend(contractInstance, contractInstance.methods.withdrawAuthorsProfit, [[defaultAccount]]);
 }
 
 window.addEventListener('load', onLoad);

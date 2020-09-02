@@ -1,4 +1,6 @@
-* https://api.coingecko.com/api/v3/simple/price?ids=arweave%2Cethereum&vs_currencies=usd
+* Arweave author PSTs.
+
+* Interface to withdraw author's profits.
 
 * Upgradeable contracts.
 
