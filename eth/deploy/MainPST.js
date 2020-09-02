@@ -7,7 +7,6 @@ module.exports = async ({getNamedAccounts, deployments}) => {
     const namedAccounts = await getNamedAccounts();
     const {deploy} = deployments;
     const {deployer} = namedAccounts;
-    const MainPST = await deployments.get("MainPST");
     log(`Deploying MainPST...`);
     const deployResult = await deploy('MainPST', {from: deployer, args: [process.env.PROGRAMMER_ADDRESS, web3.utils.toWei('10000')]});
     if (deployResult.newlyDeployed) {
