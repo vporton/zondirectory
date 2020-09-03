@@ -1,5 +1,7 @@
 * Use ethers to initialize contracts because of possible nonce incompat with web3.js.
 
+* Sales of non-downloads (services, real things, etc.)
+
 * solc version.
 
 * Arweave author PSTs.
