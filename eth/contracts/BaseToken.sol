@@ -2,7 +2,7 @@
 
 // This is modified StandardToken contract from https://github.com/ConsenSys/Tokens
 // Implements ERC 20 Token standard: https://github.com/ethereum/EIPs/issues/20
-pragma solidity ^0.6.6;
+pragma solidity ^0.7.1;
 
 import "./Token.sol";
 

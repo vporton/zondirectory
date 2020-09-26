@@ -2,6 +2,7 @@
   "dependencies": {
     "arweave": "^1.7.1",
     "arweave-deploy": "^1.9.1",
+    "browserify": "^16.5.2",
     "promises-tho": "^1.1.0",
     "smartweave": "https://arweave.net/AM-u4X2po-3Tx7fma3lRonCfLwrjI42IALwDL_YFXBs",
     "solc": "0.6.12",
