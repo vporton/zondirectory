@@ -2,7 +2,7 @@
 
 // This is modified StandardToken contract from https://github.com/ConsenSys/Tokens
 // Implements ERC 20 Token standard: https://github.com/ethereum/EIPs/issues/20
-pragma solidity ^0.7.0;
+pragma solidity ^0.6.6;
 
 import "./Token.sol";
 
@@ -20,7 +20,10 @@ contract BaseToken is Token {
     }
 
     function transferFrom(address _from, address _to, uint256 _value) override virtual external returns (bool success) {
-        require(balances[_from] >= _value && allowed[_from][msg.sender] >= _value && balances[_to] + _value >= balances[_to]);
+        require(balances[_from] >= _value, "Not enough balance");
+        if(_from != msg.sender)
+            require(allowed[_from][msg.sender] >= _value, "Not enough approval");
+        require(balances[_to] + _value >= balances[_to], "Oveflow");
         balances[_to] += _value;
         balances[_from] -= _value;
         allowed[_from][msg.sender] -= _value;
