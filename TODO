@@ -1,4 +1,4 @@
-* Fuse with MEW. MonPay or Transak to buy Fuse.
+* Fuse with MEW. MoonPay or Transak to buy Fuse.
 
 * Use ethers to initialize contracts because of possible nonce incompat with web3.js.
 
@@ -9,8 +9,6 @@
 * Arweave author PSTs.
 
 * Interface to withdraw other authors' profits.
-
-* Upgradeable contracts.
 
 * Arweave chunk upload.
 
