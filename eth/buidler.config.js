@@ -90,6 +90,14 @@ module.exports = {
       url: "https://mainnet.infura.io/v3/1d0c278301fc40f3a8f40f25ae3bd328",
       accounts: process.env.MAINNET_PRIVATE_KEY ? [process.env.MAINNET_PRIVATE_KEY] : [],
     },
+    mumbai: {
+      url: "https://rpc-mumbai.matic.today",
+      accounts: process.env.RINKEBY_PRIVATE_KEY ? [process.env.RINKEBY_PRIVATE_KEY] : [],
+    },
+    matic: {
+      url: "https://rpc-mainnet.matic.network",
+      accounts: process.env.MAINNET_PRIVATE_KEY ? [process.env.MAINNET_PRIVATE_KEY] : [],
+    },
   },
   namedAccounts: {
     deployer: {
