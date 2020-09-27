@@ -2,8 +2,9 @@
 
 async function onLoad() {
     if(!window.web3) return;
-
     await defaultAccountPromise();
+    if(!defaultAccount) return;
+
     let query = `{
         setARWallets(orderBy:id, orderDirection:desc, where:{owner:"${defaultAccount}"}) {
             arWallet
