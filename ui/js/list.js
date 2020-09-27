@@ -242,4 +242,4 @@ function moreChilds() {
     $('#subcategories > li:hidden:lt(10)').css('display', 'list-item');
 }
 
-// window.addEventListener('load', onLoad); // FIXME
+window.addEventListener('load', onLoad); // FIXME

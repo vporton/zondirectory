@@ -226,7 +226,7 @@ async function onLoad() {
     let choosenNetwork = getCookie('web3network');
     if(!choosenNetwork) choosenNetwork = 'poa-core';
     if(window.web3 && window.web3.currentProvider && choosenNetwork != window.web3.currentProvider.chainId) {
-        alert("Wrong browser/MetaMask Ethereum network choosen! Change your Ethereum network or settings.")
+        $("#wrongNetWarning").css('display', 'block');
     }
 
     if(choosenNetwork != '0x63')
