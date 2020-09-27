@@ -8,10 +8,11 @@ import './Address.sol';
 import './SafeMath.sol';
 import './IERC1155.sol';
 import './IERC1155TokenReceiver.sol';
+import './IERC1155Metadata.sol';
 import './MainPST.sol';
 import './ABDKMath64x64.sol';
 
-abstract contract BaseFiles is IERC1155, ERC165, CommonConstants {
+abstract contract BaseFiles is IERC1155, ERC165, ERC1155Metadata_URI, CommonConstants {
 
     using SafeMath for uint256;
     using ABDKMath64x64 for int128;
@@ -68,6 +69,8 @@ abstract contract BaseFiles is IERC1155, ERC165, CommonConstants {
     mapping (address => mapping(address => bool)) internal operatorApproval;
 
     mapping (address => bool) public sellerInitialized; // public for Files.sol
+
+    string tokenUri = "https://zondirectory.com/seller-token.json";
 
     bool initialized;
 
@@ -149,6 +152,10 @@ abstract contract BaseFiles is IERC1155, ERC165, CommonConstants {
         require(_effectiveAccount(itemOwners[_itemId]) == msg.sender, "Access denied.");
         itemOwners[_itemId] = address(0);
         emit SetItemOwner(_itemId, address(0));
+    }
+
+    function setTokenUri(string calldata _tokenUri) external {
+        tokenUri = _tokenUri;
     }
 
 // Wallets //
@@ -693,8 +700,8 @@ abstract contract BaseFiles is IERC1155, ERC165, CommonConstants {
     }
 
     // FIXME: The other URI method.
-    function uri(uint256 /*_id*/) external pure returns (string memory) {
-        return "FIXME";
+    function uri(uint256 /*_id*/) external view override returns (string memory) {
+        return tokenUri;
     }
 
 /////////////////////////////////////////// Minting //////////////////////////////////////////////
