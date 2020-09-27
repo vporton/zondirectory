@@ -519,28 +519,15 @@ abstract contract BaseFiles is IERC1155, ERC165, ERC1155Metadata_URI, CommonCons
 
 /////////////////////////////////////////// ERC165 //////////////////////////////////////////////
 
-    /*
-        bytes4(keccak256('supportsInterface(bytes4)'));
-    */
     bytes4 constant private INTERFACE_SIGNATURE_ERC165 = 0x01ffc9a7;
-
-    /*
-        bytes4(keccak256("safeTransferFrom(address,address,uint256,uint256,bytes)")) ^
-        bytes4(keccak256("safeBatchTransferFrom(address,address,uint256[],uint256[],bytes)")) ^
-        bytes4(keccak256("balanceOf(address,uint256)")) ^
-        bytes4(keccak256("balanceOfBatch(address[],uint256[])")) ^
-        bytes4(keccak256("setApprovalForAll(address,bool)")) ^
-        bytes4(keccak256("isApprovedForAll(address,address)"));
-    */
     bytes4 constant private INTERFACE_SIGNATURE_ERC1155 = 0xd9b67a26;
+    bytes4 constant private INTERFACE_SIGNATURE_ERC1155_Metadata = 0x0e89341c;
 
-    function supportsInterface(bytes4 _interfaceId)
-    override
-    public
-    pure
+    function supportsInterface(bytes4 _interfaceId) public pure override
     returns (bool) {
          if (_interfaceId == INTERFACE_SIGNATURE_ERC165 ||
-             _interfaceId == INTERFACE_SIGNATURE_ERC1155) {
+             _interfaceId == INTERFACE_SIGNATURE_ERC1155 ||
+             _interfaceId == INTERFACE_SIGNATURE_ERC1155_Metadata) {
             return true;
          }
 
