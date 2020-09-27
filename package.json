@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "@myetherwallet/mewconnect-web-client": "^2.1.5-beta.1",
     "arweave": "^1.7.1",
     "arweave-deploy": "^1.9.1",
     "promises-tho": "^1.1.0",

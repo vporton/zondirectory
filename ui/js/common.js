@@ -151,8 +151,8 @@ async function getAddress(name) {
 
 let myWeb3 = null;
 
-async function getWeb3() {
-    if(myWeb3) return myWeb3;
+function myWeb3Modal() {
+    const MewConnect = require('mewconnect');
 
     const Web3Modal = window.Web3Modal.default;
     const providerOptions = {
@@ -163,16 +163,22 @@ async function getWeb3() {
             }
           }
     };
-    alert(111)
         
-    const web3Modal = new Web3Modal({
-      network: "poa-core", // optional
+    return new Web3Modal({
+      network: "mainnet", // optional
       cacheProvider: true, // optional
       providerOptions // required
     });
-    
-    const provider = await web3Modal.connect();
-    return myWeb3 = new Web3(provider);
+}
+
+let myWeb3Provider;
+
+async function getWeb3() {
+    if(myWeb3) return myWeb3;
+
+    const web3Modal = myWeb3Modal();
+    myWeb3Provider = await web3Modal.connect();
+    return myWeb3 = new Web3(myWeb3Provider);
 }
 
 function waitStart() {
@@ -195,6 +201,21 @@ function mySend(contract, method, args, sendArgs, handler) {
         });
 }
 
+async function connectWeb3() {
+    web3 = await getWeb3();
+    const dap = await defaultAccountPromise();
+    defaultAccount = dap ? dap[0] : null;
+}
+
+async function reconnectWeb3() {
+    if(myWeb3Provider.close)
+        await myWeb3Provider.close();
+    const web3Modal = myWeb3Modal();
+    await web3Modal.clearCachedProvider();
+    myWeb3 = null;
+    await connectWeb3();
+}
+
 async function onLoad() {
     if(window.ethereum) window.ethereum.enable();
 
@@ -207,9 +228,7 @@ async function onLoad() {
     // if(choosenNetwork != '0x63')
     //     $('#testModeWarnining').css('display', 'block');
 
-    web3 = await getWeb3();
-    const dap = await defaultAccountPromise();
-    defaultAccount = dap ? dap[0] : null;
+    await connectWeb3();
 
     $('#rootLink').attr('href', "index.html?cat=" + await getAddress('Root'));
 }

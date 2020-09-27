@@ -5,7 +5,7 @@
 all: ui
 
 ui: ui-quick compile
-	make out/ui/artifacts/SmartWeave.js \
+	make out/ui/artifacts/SmartWeave.js out/ui/artifacts/mewconnect.js \
 	  out/ui/artifacts/Files.abi out/ui/artifacts/MainPST.abi out/ui/artifacts/BlogTemplates.abi
 	cp -f eth/data/mainnet.addresses eth/data/rinkeby.addresses out/ui/artifacts/
 
@@ -28,7 +28,10 @@ out/js/SmartWeave/index.js:
 
 out/artifacts/SmartWeave.js: out/js/SmartWeave/index.js
 	# npx browserify -o ui/artifacts/SmartWeave.js out/js/SmartWeave/index.js
-	npx browserify -o $@ -r ./out/js/SmartWeave/index.js:smartweave
+	npx browserify -o $@ -r ./$<:smartweave
+
+out/artifacts/mewconnect.js: node_modules/@myetherwallet/mewconnect-web-client/dist/index.js
+	npx browserify -o $@ -r ./$<:mewconnect
 
 out/ui/artifacts/%: out/artifacts/%
 	mkdir -p out/ui/artifacts
