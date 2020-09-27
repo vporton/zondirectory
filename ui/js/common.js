@@ -123,23 +123,27 @@ function formatLink(href, title) {
 
 let addressesFile = null;
 
+function getEthereumNetworkName() {
+    let networkName;
+    let chainId = getCookie('web3network');
+    if(!chainId) chainId = '0x1';
+    switch(chainId.toLowerCase()) {
+        case '0x63':
+            networkName = 'poa-core';
+            break;
+        case '0x4d':
+            networkName = 'poa-sokol';
+            break;
+        default:
+            alert("Unsupported Ethereum network!");
+    }
+    return networkName;
+}
+
 function getAddressesFile() {
     return new Promise((resolve) => {
         if(addressesFile) resolve(addressesFile);
-
-        let networkName;
-        let chainId = getCookie('web3network');
-        if(!chainId) chainId = '0x1';
-        switch(chainId) {
-            case '0x1':
-                networkName = 'mainnet';
-                break;
-            case '0x4':
-                networkName = 'rinkeby';
-                break;
-            default:
-                alert("Unsupported Ethereum network!");
-        }
+        const networkName = getEthereumNetworkName();
         fetch(`artifacts/${networkName}.addresses`)
             .then(response => resolve(addressesFile = response.json()));
     });
@@ -165,9 +169,9 @@ function myWeb3Modal() {
     };
         
     return new Web3Modal({
-      network: "mainnet", // optional
-      cacheProvider: true, // optional
-      providerOptions // required
+      network: getEthereumNetworkName(),
+      cacheProvider: true,
+      providerOptions
     });
 }
 
@@ -221,12 +225,12 @@ async function onLoad() {
 
     let choosenNetwork = getCookie('web3network');
     if(!choosenNetwork) choosenNetwork = 'poa-core';
-    // if(window.web3 && window.web3.currentProvider && choosenNetwork != window.web3.currentProvider.chainId) {
-    //     alert("Wrong browser/MetaMask Ethereum network choosen! Change your Ethereum network or settings.")
-    // }
+    if(window.web3 && window.web3.currentProvider && choosenNetwork != window.web3.currentProvider.chainId) {
+        alert("Wrong browser/MetaMask Ethereum network choosen! Change your Ethereum network or settings.")
+    }
 
-    // if(choosenNetwork != '0x63')
-    //     $('#testModeWarnining').css('display', 'block');
+    if(choosenNetwork != '0x63')
+        $('#testModeWarnining').css('display', 'block');
 
     await connectWeb3();
 
