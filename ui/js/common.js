@@ -135,7 +135,8 @@ function getEthereumNetworkName() {
             networkName = 'poa-sokol';
             break;
         default:
-            alert("Unsupported Ethereum network!");
+            networkName = 'poa-sokol'; // TODO: Use poa-core
+            break;
     }
     return networkName;
 }
@@ -175,14 +176,16 @@ function myWeb3Modal() {
     });
 }
 
-let myWeb3Provider;
+let myWeb3Provider = null;
 
 async function getWeb3() {
     if(myWeb3) return myWeb3;
 
-    const web3Modal = myWeb3Modal();
-    myWeb3Provider = await web3Modal.connect();
-    return myWeb3 = new Web3(myWeb3Provider);
+    if(window.ethereum) {
+        const web3Modal = myWeb3Modal();
+        myWeb3Provider = await web3Modal.connect();
+    }
+    return myWeb3 = myWeb3Provider ? new Web3(myWeb3Provider) : null;
 }
 
 function waitStart() {
@@ -225,7 +228,7 @@ async function onLoad() {
 
     let choosenNetwork = getCookie('web3network');
     if(!choosenNetwork) choosenNetwork = 'poa-core';
-    if(window.web3 && window.web3.currentProvider && choosenNetwork != window.web3.currentProvider.chainId) {
+    if(!window.web3 || !window.web3.currentProvider || choosenNetwork != window.web3.currentProvider.chainId) {
         $("#wrongNetWarning").css('display', 'block');
     }
 
