@@ -153,7 +153,26 @@ let myWeb3 = null;
 
 async function getWeb3() {
     if(myWeb3) return myWeb3;
-    return myWeb3 = new Web3(window.web3 ? window.web3 && window.web3.currentProvider : await getAddress('Web3Provider'));
+
+    const Web3Modal = window.Web3Modal.default;
+    const providerOptions = {
+        mewconnect: {
+            package: MewConnect, // required
+            options: {
+                infuraId: "1d0c278301fc40f3a8f40f25ae3bd328" // required
+            }
+          }
+    };
+    alert(111)
+        
+    const web3Modal = new Web3Modal({
+      network: "poa-core", // optional
+      cacheProvider: true, // optional
+      providerOptions // required
+    });
+    
+    const provider = await web3Modal.connect();
+    return myWeb3 = new Web3(provider);
 }
 
 function waitStart() {
@@ -180,13 +199,13 @@ async function onLoad() {
     if(window.ethereum) window.ethereum.enable();
 
     let choosenNetwork = getCookie('web3network');
-    if(!choosenNetwork) choosenNetwork = '0x1';
-    if(window.web3 && window.web3.currentProvider && choosenNetwork != window.web3.currentProvider.chainId) {
-        alert("Wrong browser/MetaMask Ethereum network choosen! Change your Ethereum network or settings.")
-    }
+    if(!choosenNetwork) choosenNetwork = 'poa-core';
+    // if(window.web3 && window.web3.currentProvider && choosenNetwork != window.web3.currentProvider.chainId) {
+    //     alert("Wrong browser/MetaMask Ethereum network choosen! Change your Ethereum network or settings.")
+    // }
 
-    if(choosenNetwork != '0x63')
-        $('#testModeWarnining').css('display', 'block');
+    // if(choosenNetwork != '0x63')
+    //     $('#testModeWarnining').css('display', 'block');
 
     web3 = await getWeb3();
     const dap = await defaultAccountPromise();
