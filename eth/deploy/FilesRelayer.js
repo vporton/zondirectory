@@ -9,7 +9,7 @@ module.exports = async ({getNamedAccounts, deployments}) => {
     const {deployer} = namedAccounts;
     const Actual = await deployments.get("Files");
     log(`Deploying FilesRelayer...`);
-    const deployResult = await deploy('FilesRelayer', {from: deployer, args: [Actual.address]});
+    const deployResult = await deploy('FilesRelayer', {from: deployer, args: [Actual.address, process.env.PROGRAMMER_ADDRESS]});
     if (deployResult.newlyDeployed) {
         log(`contract FilesRelayer deployed at ${deployResult.address} in block ${deployResult.receipt.blockNumber} using ${deployResult.receipt.gasUsed} gas`);
     }

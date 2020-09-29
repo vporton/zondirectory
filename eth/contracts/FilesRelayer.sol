@@ -5,5 +5,5 @@ pragma solidity ^0.7.0;
 import './Relay.sol';
 
 contract FilesRelayer is Relay {
-    constructor(address initAddr) Relay(initAddr) { }
+    constructor(address _contract, address _owner) Relay(_contract, _owner) { }
 }

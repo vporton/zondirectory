@@ -36,6 +36,9 @@ async function showFiles(withLinks) {
                                : `<li>${safe_tags(file.format)}</li>`;
         $(formats).append(link);
     }
+    if(!files) {
+        $('#noFiles').css('display', 'block');
+    }
 }
 
 function askPrice(defaultPrice) {
@@ -280,7 +283,7 @@ async function onLoad() {
 }
 
 async function fetchARCoefficient() {
-    const contractInstance = new web3.eth.Contract(await filesJsonInterface(), await getAddress('Files'));
+        const contractInstance = new web3.eth.Contract(await filesJsonInterface(), await getAddress('Files'));
     return (await contractInstance.methods.arToETHCoefficient().call()) / 2**64;
 }
 
