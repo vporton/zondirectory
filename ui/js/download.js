@@ -16,7 +16,7 @@ async function showFiles(withLinks) {
 }`;
     const itemFilesUpdated = (await queryThegraph(query)).data.itemFilesUpdateds[0];
     if(!itemFilesUpdated) {
-        $('.buy').css('display', 'none');
+    //     $('.buy').css('display', 'none');
         return;
     }
     let version = itemFilesUpdated.version;
@@ -52,7 +52,7 @@ function askPrice(defaultPrice) {
 
 function showFilesWithMessage() {
     showFiles(true);
-    alert("Download the files from this page.");
+    alert("Download the files from this page or contract the seller requesting delivery.");
 }
 
 async function payETH() {
