@@ -1,8 +1,10 @@
 {
-  "BlogTemplates": "0x2c20cFFd9A2de542C7b7E17D048C11593888f0e1",
-  "BlogTemplatesBlock": 16993418,
-  "Files": "0xcD9Fd48364c1D5d706860666259Fb3c83360492c",
-  "FilesBlock": 16993419,
-  "MainPST": "0x9A909fA79Da347E204D203C8F59d30Ba98dCA6cb",
-  "MainPSTBlock": 16993421
+  "BlogTemplates": "0xCe7dF8F753Ee43587C4eA7984fECE9e5BFcc252F",
+  "BlogTemplatesBlock": 17045852,
+  "Files": "0x4014eB9083ABDB3Ef9e05638eE1F798a1c03C25a",
+  "FilesBlock": 17045853,
+  "MainPST": "0x545Fd5f7AB1b99915222FFED0639E836Dc9A95e7",
+  "MainPSTBlock": 17045854,
+  "TheGraph": "vporton/zd-sokol2",
+  "TheGraphTemplates": "vporton/zd-templates-sokol2"
 }
