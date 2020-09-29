@@ -19,7 +19,7 @@ module.exports = async ({getNamedAccounts, deployments}) => {
         log(`contract FilesRelayer deployed at ${deployResult.address} in block ${deployResult.receipt.blockNumber} using ${deployResult.receipt.gasUsed} gas`);
         const MainPSTRelayer = await deployments.get('MainPSTRelayer');
         const contractInstance = new web3.eth.Contract(filesJsonInterface(), deployResult.address);
-        contractInstance.methods.initialize(process.env.PROGRAMMER_ADDRESS, MainPSTRelayer.address)
+        await contractInstance.methods.initialize(process.env.PROGRAMMER_ADDRESS, MainPSTRelayer.address)
             .send({from: deployer, gas: '1000000'})
             .on('error', (error) => log(`Error initializing Files: ` + error))
             .catch((error) => log(`Error initializing Files: ` + error));

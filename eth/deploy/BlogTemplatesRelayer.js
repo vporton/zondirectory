@@ -19,7 +19,7 @@ module.exports = async ({getNamedAccounts, deployments}) => {
         log(`contract BlogTemplatesRelayer deployed at ${deployResult.address} in block ${deployResult.receipt.blockNumber} using ${deployResult.receipt.gasUsed} gas`);
         const FilesRelayer = await deployments.get('FilesRelayer');
         const contractInstance = new web3.eth.Contract(templatesJsonInterface(), deployResult.address);
-        contractInstance.methods.initialize(FilesRelayer.address)
+        await contractInstance.methods.initialize(FilesRelayer.address)
             .send({from: deployer, gas: '1000000'})
             .on('error', (error) => log(`Error initializing BlogTemplates: ` + error))
             .catch((error) => log(`Error initializing BlogTemplates: ` + error));
