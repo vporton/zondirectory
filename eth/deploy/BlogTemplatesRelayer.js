@@ -12,6 +12,12 @@ module.exports = async ({getNamedAccounts, deployments}) => {
     const deployResult = await deploy('BlogTemplatesRelayer', {from: deployer, args: [Actual.address, process.env.PROGRAMMER_ADDRESS]});
     if (deployResult.newlyDeployed) {
         log(`contract BlogTemplatesRelayer deployed at ${deployResult.address} in block ${deployResult.receipt.blockNumber} using ${deployResult.receipt.gasUsed} gas`);
+        const contractInstance = new web3.eth.Contract(templatesJsonInterface(), deployResult.address);
+        contractInstance.methods.initialize(Files.address)
+            .send({from: deployer, gas: '1000000'})
+            .on('error', (error) => log(`Error initializing BlogTemplates: ` + error))
+            .catch((error) => log(`Error initializing BlogTemplates: ` + error));
+        log(`...initialized`);
     }
     const mydeploy = require('../lib/mydeploy');
     mydeploy.updateAddress('BlogTemplates', deployResult.address, buidler.network.name); // or ethers.getContractAt

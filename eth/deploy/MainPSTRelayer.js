@@ -12,6 +12,12 @@ module.exports = async ({getNamedAccounts, deployments}) => {
     const deployResult = await deploy('MainPSTRelayer', {from: deployer, args: [Actual.address, process.env.PROGRAMMER_ADDRESS]});
     if (deployResult.newlyDeployed) {
         log(`contract MainPSTRelayer deployed at ${deployResult.address} in block ${deployResult.receipt.blockNumber} using ${deployResult.receipt.gasUsed} gas`);
+        const contractInstance = new web3.eth.Contract(pstJsonInterface(), deployResult.address);
+        contractInstance.methods.initialize(process.env.PROGRAMMER_ADDRESS, web3.utils.toWei('10000'))
+            .send({from: deployer, gas: '1000000'})
+            .on('error', (error) => log(`Error initializing MainPST: ` + error))
+            .catch((error) => log(`Error initializing MainPST: ` + error));
+        log(`...initialized`);
     }
     const mydeploy = require('../lib/mydeploy');
     mydeploy.updateAddress('MainPST', deployResult.address, buidler.network.name); // or ethers.getContractAt
