@@ -1,4 +1,4 @@
-* test-web3-read-int128 bug.
+* Repeated initialize() on re-deploying logic contracts!
 
 * Use ethers to initialize contracts because of possible nonce incompat with web3.js.
 

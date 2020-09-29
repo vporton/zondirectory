@@ -283,7 +283,7 @@ async function onLoad() {
 }
 
 async function fetchARCoefficient() {
-        const contractInstance = new web3.eth.Contract(await filesJsonInterface(), await getAddress('Files'));
+    const contractInstance = new web3.eth.Contract(await filesJsonInterface(), await getAddress('Files'));
     return (await contractInstance.methods.arToETHCoefficient().call()) / 2**64;
 }
 
