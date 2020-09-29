@@ -3,11 +3,6 @@ const fs = require('fs');
 
 const {deployIfDifferent, log} = deployments;
 
-function filesJsonInterface() {
-    const text = fs.readFileSync("artifacts/Files.json");
-    return JSON.parse(text).abi;
-}
-
 let categories = {};
 
 async function createCategory(address, blockNumber, name) {

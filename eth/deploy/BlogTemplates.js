@@ -3,11 +3,6 @@ const fs = require('fs');
 
 const {deployIfDifferent, log} = deployments;
 
-function templatesJsonInterface() {
-    const text = fs.readFileSync("artifacts/BlogTemplates.json");
-    return JSON.parse(text).abi;
-}
-
 module.exports = async ({getNamedAccounts, deployments}) => {
     const namedAccounts = await getNamedAccounts();
     const {deploy} = deployments;

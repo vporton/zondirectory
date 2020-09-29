@@ -3,6 +3,11 @@ const fs = require('fs');
 
 const {deployIfDifferent, log} = deployments;
 
+function filesJsonInterface() {
+    const text = fs.readFileSync("artifacts/Files.json");
+    return JSON.parse(text).abi;
+}
+
 module.exports = async ({getNamedAccounts, deployments}) => {
     const namedAccounts = await getNamedAccounts();
     const {deploy} = deployments;
@@ -12,8 +17,9 @@ module.exports = async ({getNamedAccounts, deployments}) => {
     const deployResult = await deploy('FilesRelayer', {from: deployer, args: [Actual.address, process.env.PROGRAMMER_ADDRESS]});
     if (deployResult.newlyDeployed) {
         log(`contract FilesRelayer deployed at ${deployResult.address} in block ${deployResult.receipt.blockNumber} using ${deployResult.receipt.gasUsed} gas`);
+        const MainPSTRelayer = await deployments.get('MainPSTRelayer');
         const contractInstance = new web3.eth.Contract(filesJsonInterface(), deployResult.address);
-        contractInstance.methods.initialize(process.env.PROGRAMMER_ADDRESS, MainPST.address)
+        contractInstance.methods.initialize(process.env.PROGRAMMER_ADDRESS, MainPSTRelayer.address)
             .send({from: deployer, gas: '1000000'})
             .on('error', (error) => log(`Error initializing Files: ` + error))
             .catch((error) => log(`Error initializing Files: ` + error));
@@ -47,4 +53,4 @@ module.exports = async ({getNamedAccounts, deployments}) => {
     mydeploy.updateAddress('FilesBlock', deployResult.receipt.blockNumber, buidler.network.name); // or ethers.getContractAt
 }
 module.exports.tags = ['FilesRelayer'];
-module.exports.dependencies = ['Files'];
+module.exports.dependencies = ['Files', 'MainPSTRelayer'];
