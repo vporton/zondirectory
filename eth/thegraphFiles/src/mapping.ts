@@ -298,7 +298,7 @@ export function handleTransferSingle(event: TransferSingleEvent): void {
   entity.operator = event.params._operator
   entity.from = event.params._from
   entity.to = event.params._to
-  entity._id = event.params._id
+  entity.token = event.params._id
   entity.value = event.params._value
   entity.save()
 }
