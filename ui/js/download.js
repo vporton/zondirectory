@@ -78,7 +78,7 @@ async function payETH() {
     const contractInstance = new web3.eth.Contract(await filesJsonInterface(), await getAddress('Files'));
     await defaultAccountPromise();
     await mySend(contractInstance, contractInstance.methods.pay,
-                 [itemId, '0x0000000000000000000000000000000000000001', shippingInfo],
+                 [itemId, affiliateAddress(), shippingInfo],
                  {value: web3.utils.toWei(String(price))}) // https://ethereum.stackexchange.com/q/85407/36438
         .then(() => {
             ga('send', 'event', 'Items', 'purchase for ETH', `/item.html?id=${itemId}`, price);
@@ -93,7 +93,7 @@ async function donateETH() {
     const contractInstance = new web3.eth.Contract(await filesJsonInterface(), await getAddress('Files'));
     await defaultAccountPromise();
     await mySend(contractInstance, contractInstance.methods.donate,
-                 [itemId, '0x0000000000000000000000000000000000000001'],
+                 [itemId, affiliateAddress()],
                  {value: web3.utils.toWei(String(price))})
         .then(() => {
             ga('send', 'event', 'Items', 'donation for ETH', `/item.html?id=${itemId}`, price);

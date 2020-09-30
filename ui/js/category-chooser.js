@@ -105,7 +105,7 @@
                         await mySend(contractInstance, contractInstance.methods.setMyChildParent, [itemId, parent, amount, 0])
                             .catch(err => alert);
                     } else {
-                        await mySend(contractInstance, contractInstance.methods.voteChildParent, [itemId, parent, true, '0x0000000000000000000000000000000000000001'], {value: sum})
+                        await mySend(contractInstance, contractInstance.methods.voteChildParent, [itemId, parent, true, affiliateAddress()], {value: sum})
                             .catch(err => alert);
                     }
                 })

@@ -12,7 +12,7 @@ async function vote() {
 
     await defaultAccountPromise();
     const contractInstance = new web3.eth.Contract(await filesJsonInterface(), await getAddress('Files'));
-    await mySend(contractInstance, contractInstance.methods.voteChildParent, [child, parent, yes, '0x0000000000000000000000000000000000000001'],
+    await mySend(contractInstance, contractInstance.methods.voteChildParent, [child, parent, yes, affiliateAddress()],
         {value: web3.utils.toWei(amount)}, (error, result) => {
             if(error) return;
             ga('send', 'event', 'Votes', 'voted', yes ? 'for' : 'against', web3.utils.toWei(amount));

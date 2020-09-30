@@ -19,6 +19,18 @@ function numParam(name) {
     return /^[0-9]+$/.test(val) ? val : 0;
 }
 
+function affiliateAddress() {
+    const urlParams = new URLSearchParams(window.location.search);
+    let val = urlParams.get('affiliate');
+    if(!web3.utils.isAddress(val))
+        val = null;
+    if(val)
+        document.cookie = `affiliate=${val}; SameSite=Strict; Expires=Fri, 31 Dec 9999 23:59:59 GMT`;
+    else
+        val = getCookie('affiliate')
+    return val ? val : '0x0000000000000000000000000000000000000001';
+}
+
 function formatPriceETH(price) {
     return price == INFINITY ? '-' : web3.utils.fromWei(price);
 }

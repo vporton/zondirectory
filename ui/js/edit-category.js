@@ -54,12 +54,12 @@ async function createCategory() {
         response = await mySend(contractInstance, contractInstance.methods.updateOwnedCategory, [id, {title: name, locale, shortDescription, description}])
     } else {
         if(owned) {
-            response = await mySend(contractInstance, contractInstance.methods.createOwnedCategoryAndVote, [{title: name, locale, shortDescription, description}, '0x0000000000000000000000000000000000000001', cats, amounts], {value: sum})
+            response = await mySend(contractInstance, contractInstance.methods.createOwnedCategoryAndVote, [{title: name, locale, shortDescription, description}, affiliateAddress(), cats, amounts], {value: sum})
                 .then(() => {
                     ga('send', 'event', 'Categories', 'created', 'owned');
                 });
         } else {
-            response = await mySend(contractInstance, contractInstance.methods.createCategoryAndVote, [name, locale, '0x0000000000000000000000000000000000000001', cats, amounts], {value: sum})
+            response = await mySend(contractInstance, contractInstance.methods.createCategoryAndVote, [name, locale, affiliateAddress(), cats, amounts], {value: sum})
                 .then(() => {
                     ga('send', 'event', 'Categories', 'created', 'unowned');
                 });
