@@ -58,10 +58,12 @@ function showFilesWithMessage() {
 async function payETH() {
     const price = askPrice(document.getElementById('priceETH').textContent);
     if(!price) return;
+    const shippingAddress = $('#shippingAddress').val();
     const contractInstance = new web3.eth.Contract(await filesJsonInterface(), await getAddress('Files'));
     await defaultAccountPromise();
     await mySend(contractInstance, contractInstance.methods.pay,
                  [itemId, '0x0000000000000000000000000000000000000001'],
+                 shippingAddress,
                  {value: web3.utils.toWei(String(price))}) // https://ethereum.stackexchange.com/q/85407/36438
         .then(showFilesWithMessage)
         .catch(err => alert("You tried to pay below the price or payment failure! " + err));

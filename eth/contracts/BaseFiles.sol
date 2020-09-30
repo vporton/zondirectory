@@ -283,7 +283,7 @@ abstract contract BaseFiles is IERC1155, ERC165, ERC1155Metadata_URI, CommonCons
         emit SetLastItemVersion(_itemId, _version);
     }
 
-    function pay(uint _itemId, address payable _affiliate) external payable returns (bytes memory) {
+    function pay(uint _itemId, address payable _affiliate, string calldata shippingAddress) external payable returns (bytes memory) {
         require(pricesETH[_itemId] <= msg.value, "Paid too little.");
         require(entries[_itemId] == EntryKind.DOWNLOADS, "Item does not exist.");
         setAffiliate(_affiliate);
@@ -292,7 +292,7 @@ abstract contract BaseFiles is IERC1155, ERC165, ERC1155Metadata_URI, CommonCons
         payToShareholders(_shareholdersShare, _author);
         uint256 toAuthor = msg.value - _shareholdersShare;
         payToAuthor(_author, toAuthor);
-        emit Pay(msg.sender, itemOwners[_itemId], _itemId, toAuthor);
+        emit Pay(msg.sender, itemOwners[_itemId], _itemId, toAuthor, shippingAddress);
     }
 
     function donate(uint _itemId, address payable _affiliate) external payable returns (bytes memory) {
@@ -769,6 +769,6 @@ abstract contract BaseFiles is IERC1155, ERC165, ERC1155Metadata_URI, CommonCons
                           int256 value,
                           int256 featureLevel,
                           bool primary); // Vote is primary if it's an author's vote.
-    event Pay(address indexed payer, address indexed payee, uint indexed itemId, uint256 value);
+    event Pay(address indexed payer, address indexed payee, uint indexed itemId, uint256 value, string shippingAddress);
     event Donate(address indexed payer, address indexed payee, uint indexed itemId, uint256 value);
 }
