@@ -11,7 +11,7 @@ async function onLoad() {
     $('#ETH').text(web3.utils.fromWei(earnedETH));
 
     let query = `{
-    setARWallets(orderBy:id, orderDirection:desc, where:{owner:"${defaultAccount}"}) {
+    setARWallets(orderBy:id, orderDirection:desc, where:{author:"${defaultAccount}"}) {
         arWallet
     }
 }`;

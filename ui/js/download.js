@@ -94,7 +94,7 @@ async function doPayAR(price, showFiles) {
     smartweave.readContract(arweave, AR_PST_CONTRACT_ADDRESS).then(async contractState => {
         await defaultAccountPromise();
         let query = `{
-    setARWallets(first:1, orderBy:id, orderDirection:desc, where:{owner:"${defaultAccount}"}) {
+    setARWallets(first:1, orderBy:id, orderDirection:desc, where:{author:"${defaultAccount}"}) {
         arWallet
     }
 }`;
