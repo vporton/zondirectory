@@ -117,7 +117,7 @@ async function onLoad() {
             link
         }
         categoryCreate${itemId}: categoryCreateds(first:1, orderBy:id, orderDirection:desc, where:{categoryId:${itemId}}) {
-            owner
+            author
         }
         category${itemId}: categoryUpdateds(first:1, orderBy:id, orderDirection:desc, where:{categoryId:${itemId}}) {
             categoryId # TODO: Superfluous
