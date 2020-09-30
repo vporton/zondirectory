@@ -26,7 +26,7 @@
             <p style="color: red">When buying physical items, we are not responsible for sellers to work in a good manner.
                 We never give any refunds!
                 We cannot even remove fake sellers. To have your item delivered, you must notify the seller about your
-                purchase pointing your shipping address youself! If you cannot contact a seller, it is not our failure.</p>
+                purchase! If you cannot contact a seller, it is not our failure.</p>
             <p>Language: <span id="locale"></span></p>
             <p>Title: <span id="title"></span></p>
             <p>Description: <span id="description"></span></p>
@@ -41,7 +41,9 @@
                 <li>in AR: <span id="priceAR"></span> ($<span id="priceUSDAR"></span> - <span id="arDiscount"></span>% discount) |
                     AR wallet key file: <input type="file" id="arWalletKeyFile"/>
                     <input id="buyAR" class="buy" type="button" value="Buy" onclick="payAR()"/>
-                    <input type="button" value="Donate" onclick="donateAR()"/></li>
+                    <input type="button" value="Donate" onclick="donateAR()"/>
+                    <span style="color: red">Selling physical items (anything except digital downloads)
+                        for AR is currently unsupported! We don't refund AR paid for physical items.</span></li>
             </ul>
             <p>File formats:</p>
             <ul id="formats"></ul>
