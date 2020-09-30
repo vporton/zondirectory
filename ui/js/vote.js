@@ -15,7 +15,8 @@ async function vote() {
     await mySend(contractInstance, contractInstance.methods.voteChildParent, [child, parent, yes, '0x0000000000000000000000000000000000000001'],
         {value: web3.utils.toWei(amount)}, (error, result) => {
             if(error) return;
-            alert("You voted " + $('[name=dir][value=for]').val());
+            ga('send', 'event', 'Votes', 'voted', yes ? 'for' : 'against', web3.utils.toWei(amount));
+        alert("You voted " + $('[name=dir][value=for]').val());
         });
 }
 

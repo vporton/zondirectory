@@ -40,7 +40,10 @@ async function createItem() {
     console.log(defaultAccount);
     const response = await mySend(contractInstance, contractInstance.methods.createItemAndVote,
                                   [{title, shortDescription, description, priceETH: getPriceETH(), locale, license},
-                                   '0x0000000000000000000000000000000000000001', cats, amounts], {value: sum});
+                                   '0x0000000000000000000000000000000000000001', cats, amounts], {value: sum})
+        .then(() => {
+            ga('send', 'event', 'Items', 'create item');
+        });
     // const itemId = response.events.ItemCreated.returnValues.itemId;
     // await $('#multiVoter').doMultiVote(itemId);
     // waitStop();

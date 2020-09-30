@@ -80,11 +80,16 @@ async function createItem() {
         const response = await mySend(contractInstance, contractInstance.methods.createLinkAndVote, [{link, title, shortDescription, description, locale, linkKind: kind}, owned, '0x0000000000000000000000000000000000000001', cats, amounts], {value: sum});
         const linkId = response.events.ItemCreated.returnValues.itemId;
         mySend(contractInstance2, contractInstance2.methods.createPost, [templateIdCreated, postIdCreated, linkId])
-            .then(() => {});
+            .then(() => {
+                ga('send', 'event', 'Links',
+                   $('#tabs-blog').css('display') != 'none' ? 'blog post' : 'link post');
+            });
     } else {
         const contractInstance = new web3.eth.Contract(await filesJsonInterface(), await getAddress('Files'));
         mySend(contractInstance, contractInstance.methods.createLinkAndVote, [{link, title, shortDescription, description, locale, linkKind: kind}, owned, '0x0000000000000000000000000000000000000001', cats, amounts], {value: sum})
-            .then(() => {});
+            .then(() => {
+                ga('send', 'event', 'Links', 'link post', $('#tabs-blog').css('display') != 'none' ? 'blog' : 'link');
+            });
    }
 
     waitStop();

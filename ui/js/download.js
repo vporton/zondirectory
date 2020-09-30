@@ -64,7 +64,10 @@ async function payETH() {
     await mySend(contractInstance, contractInstance.methods.pay,
                  [itemId, '0x0000000000000000000000000000000000000001', shippingInfo],
                  {value: web3.utils.toWei(String(price))}) // https://ethereum.stackexchange.com/q/85407/36438
-        .then(showFilesWithMessage)
+        .then(() => {
+            ga('send', 'event', 'Items', 'purchase for ETH', `/item.html?id=${itemId}`, price);
+            showFilesWithMessage();
+        })
         .catch(err => alert("You tried to pay below the price or payment failure! " + err));
 }
 
@@ -76,6 +79,10 @@ async function donateETH() {
     await mySend(contractInstance, contractInstance.methods.donate,
                  [itemId, '0x0000000000000000000000000000000000000001'],
                  {value: web3.utils.toWei(String(price))})
+        .then(() => {
+            ga('send', 'event', 'Items', 'donation for ETH', `/item.html?id=${itemId}`, price);
+            showFilesWithMessage();
+        })
         .catch(err => alert("Payment failure! " + err));
 }
 
@@ -149,9 +156,12 @@ async function doPayAR(price, showFiles) {
                     }
 
                     if(showFiles) {
-                        if(!paymentFailure)
+                        if(!paymentFailure) {
+                            ga('send', 'event', 'Items',
+                               showFiles ? 'purchase for AR' : 'donation for AR',
+                               `/item.html?id=${itemId}`, price);
                             showFilesWithMessage();
-                        else
+                        } else
                             alert("You didn't pay the full sum!");
                     }
                 });
