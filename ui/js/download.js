@@ -58,12 +58,12 @@ function showFilesWithMessage() {
 async function payETH() {
     const price = askPrice(document.getElementById('priceETH').textContent);
     if(!price) return;
-    const shippingAddress = $('#shippingAddress').val();
+    const shippingInfo = $('#shippingInfo').val();
     const contractInstance = new web3.eth.Contract(await filesJsonInterface(), await getAddress('Files'));
     await defaultAccountPromise();
     await mySend(contractInstance, contractInstance.methods.pay,
                  [itemId, '0x0000000000000000000000000000000000000001'],
-                 shippingAddress,
+                 shippingInfo,
                  {value: web3.utils.toWei(String(price))}) // https://ethereum.stackexchange.com/q/85407/36438
         .then(showFilesWithMessage)
         .catch(err => alert("You tried to pay below the price or payment failure! " + err));
@@ -130,20 +130,20 @@ async function doPayAR(price, showFiles) {
                         shareholdersRoyalty = Math.floor(price);
                     }
 
-                    const shippingAddress = $('#shippingAddress').val();
+                    const shippingInfo = $('#shippingInfo').val();
 
                     // First pay to me then to the author, because in the case of a failure the buyer loses less this way.
                     let paymentFailure = false;
                     if(shareholdersRoyalty) {
                         const holder = smartweave.selectWeightedPstHolder(contractState.balances);
-                        const tx = await arweave.createTransaction({ target: holder, quantity: String(shareholdersRoyalty), data: shippingAddress }, key);
+                        const tx = await arweave.createTransaction({ target: holder, quantity: String(shareholdersRoyalty), data: shippingInfo }, key);
                         await arweave.transactions.sign(tx, key);
                         const response = await arweave.transactions.post(tx);
                         if(response.status != 200) paymentFailure = true;
                     }
                     if(!paymentFailure && authorRoyalty) {
                         const holder = smartweave.selectWeightedPstHolder(contractState.balances);
-                        const tx = await arweave.createTransaction({ target: arWallet, quantity: String(authorRoyalty), data: shippingAddress }, key);
+                        const tx = await arweave.createTransaction({ target: arWallet, quantity: String(authorRoyalty), data: shippingInfo }, key);
                         await arweave.transactions.sign(tx, key);
                         const response = await arweave.transactions.post(tx);
                         if(response.status != 200) paymentFailure = true;

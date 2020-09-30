@@ -222,7 +222,7 @@ type Pay @entity {
   payee: Bytes! # address
   itemId: BigInt! # uint256
   value: BigInt! # int256
-  shippingAddress: String! # string
+  shippingInfo: String! # string
 }
 
 type Donate @entity {
