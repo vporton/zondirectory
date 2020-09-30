@@ -57,7 +57,7 @@ function showFilesWithMessage() {
 
 function checkMultiplier() {
     const textValue = $('#multiplier').val();
-    if(!/^-?[0-9]+(\.[0-9]+)?/.test(textValue)) {
+    if(!/^-?[0-9]+(\.[0-9]+)?$/.test(textValue)) {
         alert("Multiplier must be a number.");
         return null;
     }
