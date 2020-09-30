@@ -322,7 +322,9 @@ export function handlePay(event: PayEvent): void {
   entity.payer = event.params.payer
   entity.payee = event.params.payee
   entity.itemId = event.params.itemId
-  entity.value = event.params.value
+  entity.paid = event.params.paid
+  entity.price = event.params.price
+  entity.toAuthor = event.params.toAuthor
   entity.shippingInfo = event.params.shippingInfo
   entity.save()
 }

@@ -8,7 +8,9 @@ async function onLoad() {
     const query = `{
         pays(orderBy:id, orderDirection:desc, where:{payee:"${defaultAccount}"}) {
             itemId
-            value
+            paid
+            price
+            toAuthor
             shippingInfo
         }
     }`;
@@ -17,7 +19,9 @@ async function onLoad() {
     for(payment of pays) {
         const row = `<tr>
             <td><a href="download.html?id=${payment.itemId}">${payment.itemId}</a></td>
-            <td>${web3.utils.fromWei(payment.value)}</td>
+            <td>${web3.utils.fromWei(payment.paid)}</td>
+            <td>${web3.utils.fromWei(payment.toAuthor)}</td>
+            <td>${web3.utils.fromWei(payment.paid) / web3.utils.fromWei(payment.price)}</td>
             <td>${safe_tags(payment.shippingInfo)}</td></tr>`;
         $('#theTable').append(row);
     }

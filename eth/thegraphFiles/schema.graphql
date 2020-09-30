@@ -221,7 +221,9 @@ type Pay @entity {
   payer: Bytes! # address
   payee: Bytes! # address
   itemId: BigInt! # uint256
-  value: BigInt! # int256
+  paid: BigInt! # int256
+  price: BigInt! # int256
+  toAuthor: BigInt! # int256
   shippingInfo: String! # string
 }
 
