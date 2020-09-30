@@ -37,6 +37,7 @@ async function createItem() {
         amounts,
         sum,
     } = await $('#multiVoter').multiVoterData();
+    console.log(defaultAccount);
     const response = await mySend(contractInstance, contractInstance.methods.createItemAndVote,
                                   [{title, shortDescription, description, priceETH: getPriceETH(), locale, license},
                                    '0x0000000000000000000000000000000000000001', cats, amounts], {value: sum});

@@ -1,10 +1,10 @@
 {
-  "BlogTemplates": "0xCe7dF8F753Ee43587C4eA7984fECE9e5BFcc252F",
-  "BlogTemplatesBlock": 17045852,
-  "Files": "0x4014eB9083ABDB3Ef9e05638eE1F798a1c03C25a",
-  "FilesBlock": 17045853,
+  "BlogTemplates": "0x95C7a04b3717f3D36546c39127F1a4C5aDdFF449",
+  "BlogTemplatesBlock": 17047426,
+  "Files": "0x353Ee8E41Becc186e2Ab65141Ec47Fad1328BADF",
+  "FilesBlock": 17047424,
   "MainPST": "0x545Fd5f7AB1b99915222FFED0639E836Dc9A95e7",
   "MainPSTBlock": 17045854,
-  "TheGraph": "vporton/zd-sokol2",
+  "TheGraph": "vporton/zd-sokol3",
   "TheGraphTemplates": "vporton/zd-templates-sokol2"
 }

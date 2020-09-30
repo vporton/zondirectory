@@ -6,7 +6,7 @@ async function onLoad() {
     if(!defaultAccount) return;
 
     let query = `{
-        setARWallets(orderBy:id, orderDirection:desc, where:{owner:"${defaultAccount}"}) {
+        setARWallets(orderBy:id, orderDirection:desc, where:{author:"${defaultAccount}"}) {
             arWallet
         }
     }`;
@@ -16,7 +16,7 @@ async function onLoad() {
         document.getElementById('arWallet').textContent = arWallet;
     }
     query = `{
-        setItemOwners(orderBy:id, orderDirection:desc, where:{owner:"${defaultAccount}"}) {
+        setItemOwners(orderBy:id, orderDirection:desc, where:{author:"${defaultAccount}"}) {
             itemId    
         }
     }`;
