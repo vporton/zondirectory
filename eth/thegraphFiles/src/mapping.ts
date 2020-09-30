@@ -1,6 +1,6 @@
 import { ethereum, BigInt } from "@graphprotocol/graph-ts";
 import {
-  Approval as ApprovalEvent,
+  ApprovalForAll as ApprovalForAllEvent,
   CategoryCreated as CategoryCreatedEvent,
   CategoryUpdated as CategoryUpdatedEvent,
   OwnedCategoryUpdated as OwnedCategoryUpdatedEvent,
@@ -18,13 +18,17 @@ import {
   SetSalesOwnerShare as SetSalesOwnerShareEvent,
   SetUpvotesOwnerShare as SetUpvotesOwnerShareEvent,
   SetUploadOwnerShare as SetUploadOwnerShareEvent,
-  Transfer as TransferEvent,
+  SetBuyerAffiliateShare as SetBuyerAffiliateShareEvent,
+  SetSellerAffiliateShare as SetSellerAffiliateShareEvent,
+  SetARToETHCoefficient as SetARToETHCoefficientEvent,
+  TransferAuthorship as TransferAuthorshipEvent,
+  TransferSingle as TransferSingleEvent,
   ChildParentVote as ChildParentVoteEvent,
   Pay as PayEvent,
   Donate as DonateEvent,
 } from "../generated/Contract/Contract"
 import {
-  Approval,
+  ApprovalForAll,
   CategoryCreated,
   CategoryUpdated,
   OwnedCategoryUpdated,
@@ -42,7 +46,11 @@ import {
   SetSalesOwnerShare,
   SetUpvotesOwnerShare,
   SetUploadOwnerShare,
-  Transfer,
+  SetBuyerAffiliateShare,
+  SetSellerAffiliateShare,
+  SetARToETHCoefficient,
+  TransferAuthorship,
+  TransferSingle,
   ChildParentVote,
   Pay,
   Donate,
@@ -56,12 +64,13 @@ function generateId(event: ethereum.Event): String {
   return block + "-" + logIndex + "-" + event.transaction.hash.toHex();
 }
 
-export function handleApproval(event: ApprovalEvent): void {
-  let entity = new Approval(
+export function handleApprovalForAll(event: ApprovalForAllEvent): void {
+  let entity = new ApprovalForAll(
     generateId(event)
   )
-  entity._spender = event.params._spender
-  entity._value = event.params._value
+  entity._owner = event.params._owner
+  entity._operator = event.params._operator
+  entity._approved = event.params._approved
   entity.save()
 }
 
@@ -70,7 +79,7 @@ export function handleCategoryCreated(event: CategoryCreatedEvent): void {
     generateId(event)
   )
   entity.categoryId = event.params.categoryId
-  entity.owner = event.params.owner
+  entity.author = event.params.author
   entity.save()
 }
 
@@ -93,7 +102,7 @@ export function handleOwnedCategoryUpdated(event: OwnedCategoryUpdatedEvent): vo
   entity.shortDescription = event.params.shortDescription
   entity.description = event.params.description
   entity.locale = event.params.locale
-  entity.owner = event.params.owner
+  entity.author = event.params.author
   entity.save()
 }
 
@@ -146,7 +155,6 @@ export function handleItemUpdated(event: ItemUpdatedEvent): void {
   entity.shortDescription = event.params.info.shortDescription
   entity.description = event.params.info.description
   entity.priceETH = event.params.info.priceETH
-  entity.priceAR = event.params.info.priceAR
   entity.locale = event.params.info.locale
   entity.license = event.params.info.license
   entity.save()
@@ -170,7 +178,7 @@ export function handleSetARWallet(event: SetARWalletEvent): void {
   let entity = new SetARWallet(
     generateId(event)
   )
-  entity.owner = event.params.owner
+  entity.author = event.params.author
   entity.arWallet = event.params.arWallet
   entity.save()
 }
@@ -179,7 +187,7 @@ export function handleSetNick(event: SetNickEvent): void {
   let entity = new SetNick(
     generateId(event)
   )
-  entity.owner = event.params.owner
+  entity.author = event.params.author
   entity.nick = event.params.nick
   entity.save()
 }
@@ -188,7 +196,7 @@ export function handleSetAuthorInfo(event: SetAuthorInfoEvent): void {
   let entity = new SetAuthorInfo(
     generateId(event)
   )
-  entity.owner = event.params.owner
+  entity.author = event.params.author
   entity.link = event.params.link
   entity.shortDescription = event.params.shortDescription
   entity.description = event.params.description
@@ -201,7 +209,7 @@ export function handleSetItemOwner(event: SetItemOwnerEvent): void {
     generateId(event)
   )
   entity.itemId = event.params.itemId
-  entity.owner = event.params.owner
+  entity.author = event.params.author
   entity.save()
 }
 
@@ -237,13 +245,61 @@ export function handleSetUploadOwnerShare(event: SetUploadOwnerShareEvent): void
   entity.save()
 }
 
-export function handleTransfer(event: TransferEvent): void {
-  let entity = new Transfer(
+export function handleSetBuyerAffiliateShare(event: SetBuyerAffiliateShareEvent): void {
+  let entity = new SetBuyerAffiliateShare(
     generateId(event)
   )
-  entity._from = event.params._from
-  entity._to = event.params._to
-  entity._value = event.params._value
+  entity.share = event.params.share
+  entity.save()
+}
+
+export function handleSetSellerAffiliateShare(event: SetSellerAffiliateShareEvent): void {
+  let entity = new SetSellerAffiliateShare(
+    generateId(event)
+  )
+  entity.share = event.params.share
+  entity.save()
+}
+
+export function handleSetARToETHCoefficient(event: SetARToETHCoefficientEvent): void {
+  let entity = new SetARToETHCoefficient(
+    generateId(event)
+  )
+  entity.coeff = event.params.coeff
+  entity.save()
+}
+
+export function handleTransferAuthorship(event: TransferAuthorshipEvent): void {
+  let entity = new TransferAuthorship(
+    generateId(event)
+  )
+  entity._orig = event.params._orig
+  entity._new = event.params._new
+  entity.save()
+}
+
+// TODO:
+// export function handleTransferBatch(event: TransferBatchEvent): void {
+//   let entity = new TransferBatch(
+//     generateId(event)
+//   )
+//   entity.operator = event.params._operator
+//   entity.from = event.params._from
+//   entity.to = event.params._to
+//   entity.ids = event.params._ids
+//   entity.values = event.params._values
+//   entity.save()
+// }
+
+export function handleTransferSingle(event: TransferSingleEvent): void {
+  let entity = new TransferSingle(
+    generateId(event)
+  )
+  entity.operator = event.params._operator
+  entity.from = event.params._from
+  entity.to = event.params._to
+  entity.token = event.params._id
+  entity.value = event.params._value
   entity.save()
 }
 
@@ -266,7 +322,10 @@ export function handlePay(event: PayEvent): void {
   entity.payer = event.params.payer
   entity.payee = event.params.payee
   entity.itemId = event.params.itemId
-  entity.value = event.params.value
+  entity.paid = event.params.paid
+  entity.price = event.params.price
+  entity.toAuthor = event.params.toAuthor
+  entity.shippingInfo = event.params.shippingInfo
   entity.save()
 }
 

@@ -58,17 +58,17 @@ type _Schema_
     ]
   )
 
-type Approval @entity {
+type ApprovalForAll @entity {
   id: ID!
   _owner: Bytes! # address
-  _spender: Bytes! # address
-  _value: BigInt! # uint256
+  _operator: Bytes! # address
+  _approved: Boolean! # bool
 }
 
 type CategoryCreated @entity {
   id: ID!
   categoryId: BigInt! # uint256
-  owner: Bytes! # address
+  author: Bytes! # address
 }
 
 type CategoryUpdated @entity {
@@ -85,7 +85,7 @@ type OwnedCategoryUpdated @entity {
   shortDescription: String! # string
   description: String! # string
   locale: String! # string
-  owner: Bytes! # address
+  author: Bytes! # address
 }
 
 type ItemCoverUpdated @entity {
@@ -123,7 +123,6 @@ type ItemUpdated @entity {
   shortDescription: String! # string
   description: String! # string
   priceETH: BigInt! # uint256
-  priceAR: BigInt! # uint256
   locale: String! # string
   license: String! # string
 }
@@ -141,19 +140,19 @@ type LinkUpdated @entity {
 
 type SetARWallet @entity {
   id: ID!
-  owner: Bytes! # address
+  author: Bytes! # address
   arWallet: String! # string
 }
 
 type SetNick @entity {
   id: ID!
-  owner: Bytes! # address
+  author: Bytes! # address
   nick: String! # string
 }
 
 type SetAuthorInfo @entity {
   id: ID!
-  owner: Bytes! # address
+  author: Bytes! # address
   link: String! # string
   shortDescription: String! # string
   description: String! # string
@@ -163,7 +162,7 @@ type SetAuthorInfo @entity {
 type SetItemOwner @entity {
   id: ID!
   itemId: BigInt! # uint256
-  owner: Bytes! # address
+  author: Bytes! # address
 }
 
 type SetOwner @entity {
@@ -174,6 +173,21 @@ type SetOwner @entity {
 type SetSalesOwnerShare @entity {
   id: ID!
   share: BigInt! # int128
+}
+
+type SetBuyerAffiliateShare @entity {
+  id: ID!
+  share: BigInt! # int128
+}
+
+type SetSellerAffiliateShare @entity {
+  id: ID!
+  share: BigInt! # int128
+}
+
+type SetARToETHCoefficient @entity {
+  id: ID!
+  coeff: BigInt! # int128
 }
 
 type SetUpvotesOwnerShare @entity {
@@ -207,7 +221,10 @@ type Pay @entity {
   payer: Bytes! # address
   payee: Bytes! # address
   itemId: BigInt! # uint256
-  value: BigInt! # int256
+  paid: BigInt! # int256
+  price: BigInt! # int256
+  toAuthor: BigInt! # int256
+  shippingInfo: String! # string
 }
 
 type Donate @entity {
@@ -216,4 +233,29 @@ type Donate @entity {
   payee: Bytes! # address
   itemId: BigInt! # uint256
   value: BigInt! # int256
+}
+
+type TransferAuthorship @entity {
+  id: ID!
+  _orig: Bytes! # address
+  _new: Bytes! # address
+}
+
+# TODO
+#type TransferBatch @entity {
+#  id: ID!
+#  operator: Bytes! # address
+#  from: Bytes! # address
+#  to: Bytes! # address
+#  ids: Bytes! # uint256[]
+#  values: Bytes! # uint256[]
+#}
+
+type TransferSingle @entity {
+  id: ID!
+  operator: Bytes! # address
+  from: Bytes! # address
+  to: Bytes! # address
+  token: BigInt! # uint256
+  value: BigInt! # uint256
 }

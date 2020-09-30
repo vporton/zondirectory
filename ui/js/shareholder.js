@@ -1,16 +1,17 @@
 "strict";
 
 async function onLoad() {
-    $('#filesAddressElt').text(await getAddress('Files'));
+    $('#pstAddressElt').text(await getAddress('MainPST'));
     await defaultAccountPromise();
-    const contractInstance = new web3.eth.Contract(await filesJsonInterface(), await getAddress('Files'));
+    const contractInstance0 = new web3.eth.Contract(await filesJsonInterface(), await getAddress('Files'));
+    const contractInstance = new web3.eth.Contract(await pstJsonInterface(), await getAddress('MainPST'));
     const tokenETH = await contractInstance.methods.balanceOf(defaultAccount).call();
     $('#tokenETH').text(web3.utils.fromWei(tokenETH));
-    const earnedETH = await contractInstance.methods.dividendsOwing(defaultAccount).call();
+    const earnedETH = await contractInstance0.methods.dividendsOwing(defaultAccount).call();
     $('#ETH').text(web3.utils.fromWei(earnedETH));
 
     let query = `{
-    setARWallets(orderBy:id, orderDirection:desc, where:{owner:"${defaultAccount}"}) {
+    setARWallets(orderBy:id, orderDirection:desc, where:{author:"${defaultAccount}"}) {
         arWallet
     }
 }`;
@@ -23,12 +24,22 @@ async function onLoad() {
             $('#tokenAR').text(contractState.balances[arWallet]);
         });
     }
+
+    const earnedETHAuthor = await contractInstance0.methods.authorDividendsOwing(defaultAccount, defaultAccount).call();
+    const row = `<tr><td>${defaultAccount}</td><td>${web3.utils.fromWei(earnedETHAuthor)}</td></tr>`;
+    $('#authors').append(row);
 }
 
 async function withdrawETH() {
     await defaultAccountPromise();
     const contractInstance = new web3.eth.Contract(await filesJsonInterface(), await getAddress('Files'));
     await mySend(contractInstance, contractInstance.methods.withdrawProfit, []);
+}
+
+async function withdrawETHAuthor() {
+    await defaultAccountPromise();
+    const contractInstance = new web3.eth.Contract(await filesJsonInterface(), await getAddress('Files'));
+    await mySend(contractInstance, contractInstance.methods.withdrawAuthorsProfit, [[defaultAccount]]);
 }
 
 window.addEventListener('load', onLoad);

@@ -80,16 +80,23 @@ function getCookie(cname) {
     return "";
 }
 
-let web3;
-
 let defaultAccount;
 // web3.eth.defaultAccount = web3.eth.accounts[0];
 async function defaultAccountPromise() {
     return web3 && web3.currentProvider ? (await getWeb3()).eth.getAccounts() : null;
 }
 
+let pstJsonInterfaceCache = null;
 let filesJsonInterfaceCache = null;
 let blogTemplatesJsonInterfaceCache = null;
+
+function pstJsonInterface() {
+    return new Promise((resolve) => {
+        if(pstJsonInterfaceCache) resolve(pstJsonInterfaceCache);
+        fetch("artifacts/MainPST.abi")
+            .then(response => resolve(pstJsonInterfaceCache = response.json()));
+    });
+}
 
 function filesJsonInterface() {
     return new Promise((resolve) => {
@@ -114,23 +121,28 @@ function formatLink(href, title) {
 
 let addressesFile = null;
 
+function getEthereumNetworkName() {
+    let networkName;
+    let chainId = getCookie('web3network');
+    if(!chainId) chainId = '0x1';
+    switch(chainId.toLowerCase()) {
+        case '0x63':
+            networkName = 'poa-core';
+            break;
+        case '0x4d':
+            networkName = 'poa-sokol';
+            break;
+        default:
+            networkName = 'poa-sokol'; // TODO: Use poa-core
+            break;
+    }
+    return networkName;
+}
+
 function getAddressesFile() {
     return new Promise((resolve) => {
         if(addressesFile) resolve(addressesFile);
-
-        let networkName;
-        let chainId = getCookie('web3network');
-        if(!chainId) chainId = '0x1';
-        switch(chainId) {
-            case '0x1':
-                networkName = 'mainnet';
-                break;
-            case '0x4':
-                networkName = 'rinkeby';
-                break;
-            default:
-                alert("Unsupported Ethereum network!");
-        }
+        const networkName = getEthereumNetworkName();
         fetch(`artifacts/${networkName}.addresses`)
             .then(response => resolve(addressesFile = response.json()));
     });
@@ -142,9 +154,36 @@ async function getAddress(name) {
 
 let myWeb3 = null;
 
+function myWeb3Modal() {
+    const MewConnect = require('mewconnect');
+
+    const Web3Modal = window.Web3Modal.default;
+    const providerOptions = {
+        mewconnect: {
+            package: MewConnect, // required
+            options: {
+                infuraId: "1d0c278301fc40f3a8f40f25ae3bd328" // required
+            }
+          }
+    };
+        
+    return new Web3Modal({
+      network: getEthereumNetworkName(),
+      cacheProvider: true,
+      providerOptions
+    });
+}
+
+let myWeb3Provider = null;
+
 async function getWeb3() {
     if(myWeb3) return myWeb3;
-    return myWeb3 = new Web3(window.web3 ? window.web3 && window.web3.currentProvider : await getAddress('Web3Provider'));
+
+    if(window.ethereum) {
+        const web3Modal = myWeb3Modal();
+        myWeb3Provider = await web3Modal.connect();
+    }
+    return myWeb3 = myWeb3Provider ? new Web3(myWeb3Provider) : null;
 }
 
 function waitStart() {
@@ -167,21 +206,34 @@ function mySend(contract, method, args, sendArgs, handler) {
         });
 }
 
+async function connectWeb3() {
+    web3 = await getWeb3();
+    const dap = await defaultAccountPromise();
+    defaultAccount = dap ? dap[0] : null;
+}
+
+async function reconnectWeb3() {
+    if(myWeb3Provider.close)
+        await myWeb3Provider.close();
+    const web3Modal = myWeb3Modal();
+    await web3Modal.clearCachedProvider();
+    myWeb3 = null;
+    await connectWeb3();
+}
+
 async function onLoad() {
     if(window.ethereum) window.ethereum.enable();
 
     let choosenNetwork = getCookie('web3network');
-    if(!choosenNetwork) choosenNetwork = '0x1';
-    if(window.web3 && window.web3.currentProvider && choosenNetwork != window.web3.currentProvider.chainId) {
-        alert("Wrong browser/MetaMask Ethereum network choosen! Change your Ethereum network or settings.")
+    if(!choosenNetwork) choosenNetwork = 'poa-core';
+    if(!window.web3 || !window.web3.currentProvider || choosenNetwork != window.web3.currentProvider.chainId) {
+        $("#wrongNetWarning").css('display', 'block');
     }
 
-    if(choosenNetwork != '0x1')
+    if(choosenNetwork != '0x63')
         $('#testModeWarnining').css('display', 'block');
 
-    web3 = await getWeb3();
-    const dap = await defaultAccountPromise();
-    defaultAccount = dap ? dap[0] : null;
+    await connectWeb3();
 
     $('#rootLink').attr('href', "index.html?cat=" + await getAddress('Root'));
 }

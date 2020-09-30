@@ -25,6 +25,7 @@ async function onLoad() {
     }
     ownedCategoryUpdateds(first:1, orderBy:id, orderDirection:desc, where:{categoryId:${catId}}) {
         title
+        shortDescription
         description
     }
 }`;
@@ -33,6 +34,9 @@ async function onLoad() {
         if(isOwned) {
             $('#showDescription').css('display', 'block');
             $('#description').text(queryResult0.ownedCategoryUpdateds[0].description);
+            $('head').append(`<meta name="description" content="Category: ${safe_attrs(queryResult0.ownedCategoryUpdateds[0].shortDescription)}"/>`);
+        } else {
+            $('head').append(`<meta name="description" content="Category of news, files, items for sale - earn money at this site"/>`);
         }
         query = `{
     childParentVotes(first:1000, where:{parent:${catId}}) {
@@ -109,7 +113,6 @@ async function onLoad() {
             itemId # TODO: Superfluous
             title
             priceETH
-            priceAR
         }
         link${itemId}: linkUpdateds(first:1, orderBy:id, orderDirection:desc, where:{linkId:${itemId}}) {
             linkId # TODO: Superfluous
@@ -118,7 +121,7 @@ async function onLoad() {
             link
         }
         categoryCreate${itemId}: categoryCreateds(first:1, orderBy:id, orderDirection:desc, where:{categoryId:${itemId}}) {
-            owner
+            author
         }
         category${itemId}: categoryUpdateds(first:1, orderBy:id, orderDirection:desc, where:{categoryId:${itemId}}) {
             categoryId # TODO: Superfluous
@@ -187,10 +190,10 @@ async function onLoad() {
                 const spamScore = spamInfo ? formatPriceETH(new web3.utils.BN(spamInfo.value).neg()) : 0;
                 const voteStr = `<a href='vote.html?child=${i.replace(/^item/, "")}&parent=${catId}&dir=for'>👍</a>` +
                     `<a href='vote.html?child=${i.replace(/^item/, "")}&parent=${catId}&dir=against'>👎</a>`;
-                const row = `<tr><td><a href="${link}">${safe_tags(item.title)}</a></td><td>${formatPriceETH(item.priceETH)}</td><td>${formatPriceAR(item.priceAR)}</td><td>${spamScore} ${voteStr}</tr>`;
+                const row = `<tr><td><a href="${link}">${safe_tags(item.title)}</a></td><td>${formatPriceETH(item.priceETH)}</td><td>${spamScore} ${voteStr}</tr>`;
                 $('#theTable').append(row);
             } else {
-                const row = `<tr><td><a href="${link}">${safe_tags(item.title)}</a></td><td>${formatPriceETH(item.priceETH)}</td><td>${formatPriceAR(item.priceAR)}</td>`;
+                const row = `<tr><td><a href="${link}">${safe_tags(item.title)}</a></td><td>${formatPriceETH(item.priceETH)}</td></tr>`;
                 $('#theTable').append(row);
             }
         }
@@ -210,6 +213,11 @@ async function onLoad() {
             const linkText = `<a href="${link}">${safe_tags(item.title)}</a>`;
             const row = `<li><strong>${linkText}.</strong> ${safe_tags(item.shortDescription)} ${spamInfo}</li>`;
             $('#links').append(row);
+            const li = $('#links>*').last();
+            li.append($('#audio-video>*').clone());
+            li.find('video').attr('id', `item-${item.linkId}-video`);
+            li.find('audio').attr('id', `item-${item.linkId}-audio`);
+            displayVideo(`item-${item.linkId}-`, item.link);
         }
         if(!catId) {
             for(let i of itemKeys) {
@@ -238,4 +246,4 @@ function moreChilds() {
     $('#subcategories > li:hidden:lt(10)').css('display', 'list-item');
 }
 
-window.addEventListener('load', onLoad);
+window.addEventListener('load', onLoad); // FIXME

@@ -1,6 +1,6 @@
 "strict";
 
-let arKeyChooser;
+//let arKeyChooser; // defined in upload-file.js
 
 function randomUint256() {
     return web3.utils.toHex(new web3.utils.BN(web3.utils.randomHex(32)));
@@ -21,31 +21,28 @@ async function createOrUpdateItem() {
 let templateIdCreated = null;
 let postIdCreated = null;
 
-async function uploadBlog(link, title, shortDescription) {
-    const contractInstance2 = new web3.eth.Contract(await blogTemplatesJsonInterface(), await getAddress('BlogTemplates'));
-
-    if($('#tabs-blog').css('display') != 'none') {
-        const text = $('#blogPost').summernote('code');
-        templateIdCreated = $('#template').val();
-        let jsCode = "";
-        if(templateIdCreated) {
-            const jsLink = await contractInstance2.methods.templatesJavaScript(templateIdCreated).call();
-            const jsBase = jsLink.replace(/[^\/\\]*$/, "");
-            if(!postIdCreated) postIdCreated = randomUint256();
-            jsCode = `<script src="${jsLink}"></script><script>zonDirectory_template(${JSON.stringify(jsBase)}, "${web3.utils.toHex(postIdCreated)}");</script>`;
-        }
-        const html = `<html lang="${locale}">
-    <head>
-        <meta charset="utf-8"/>
-        ${jsCode}
-        <title>${safe_tags(title)}</title>
-        <meta name="description" content="${safe_attrs(shortDescription)}"/>
-    </head>
-    <body>${text}</body></html>`;
-        const arHash = await upload(html, arKeyChooser, 'text/html');
-        link = "arweave:" + arHash;
-        console.log(`Uploaded https://arweave.net/${arHash}`);
+async function uploadBlog(title, shortDescription) {
+    const text = $('#blogPost').summernote('code');
+    templateIdCreated = $('#template').val();
+    let jsCode = "";
+    if(templateIdCreated) {
+        const contractInstance2 = new web3.eth.Contract(await blogTemplatesJsonInterface(), await getAddress('BlogTemplates'));
+        const jsLink = await contractInstance2.methods.templatesJavaScript(templateIdCreated).call();
+        const jsBase = jsLink.replace(/[^\/\\]*$/, "");
+        if(!postIdCreated) postIdCreated = randomUint256();
+        jsCode = `<script src="${jsLink}"></script><script>zonDirectory_template(${JSON.stringify(jsBase)}, "${web3.utils.toHex(postIdCreated)}");</script>`;
     }
+    const html = `<html lang="${locale}">
+<head>
+    <meta charset="utf-8"/>
+    ${jsCode}
+    <title>${safe_tags(title)}</title>
+    <meta name="description" content="${safe_attrs(shortDescription)}"/>
+</head>
+<body>${text}</body></html>`;
+    const arHash = await upload(html, arKeyChooser, 'text/html');
+    link = "arweave:" + arHash;
+    console.log(`Uploaded https://arweave.net/${arHash}`);
 
     return link;
 }
@@ -64,7 +61,11 @@ async function createItem() {
     
     await defaultAccountPromise();
 
-    link = await uploadBlog(link, title, shortDescription);
+    if($('#tabs-blog').css('display') != 'none') {
+        link = await uploadBlog(title, shortDescription);
+    } else if($('#tabs-upload').css('display') != 'none') {
+        link = await uploadFile(true);
+    }
 
     const {
         cats,
@@ -72,25 +73,29 @@ async function createItem() {
         sum,
     } = await $('#multiVoter').multiVoterData();
 
+    // FIXME: Here and in other places old templateIdCreated remains if page is not reloaded!
     if(templateIdCreated) {
         const contractInstance = new web3.eth.Contract(await filesJsonInterface(), await getAddress('Files'));
         const contractInstance2 = new web3.eth.Contract(await blogTemplatesJsonInterface(), await getAddress('BlogTemplates'));
         const response = await mySend(contractInstance, contractInstance.methods.createLinkAndVote, [{link, title, shortDescription, description, locale, linkKind: kind}, owned, '0x0000000000000000000000000000000000000001', cats, amounts], {value: sum});
         const linkId = response.events.ItemCreated.returnValues.itemId;
         mySend(contractInstance2, contractInstance2.methods.createPost, [templateIdCreated, postIdCreated, linkId])
-            .then(() => {});
+            .then(() => {
+                ga('send', 'event', 'Links',
+                   $('#tabs-blog').css('display') != 'none' ? 'blog post' : 'link post');
+            });
     } else {
         const contractInstance = new web3.eth.Contract(await filesJsonInterface(), await getAddress('Files'));
         mySend(contractInstance, contractInstance.methods.createLinkAndVote, [{link, title, shortDescription, description, locale, linkKind: kind}, owned, '0x0000000000000000000000000000000000000001', cats, amounts], {value: sum})
-            .then(() => {});
+            .then(() => {
+                ga('send', 'event', 'Links', 'link post', $('#tabs-blog').css('display') != 'none' ? 'blog' : 'link');
+            });
    }
 
     waitStop();
 }
 
 async function updateItem(itemId) {
-    const contractInstance = new web3.eth.Contract(await filesJsonInterface(), await getAddress('Files'));
-
     const locale = document.getElementById('locale').value;
     const title = document.getElementById('title').value;
     const description = document.getElementById('description').value;
@@ -99,15 +104,21 @@ async function updateItem(itemId) {
     const kind = $('input[name=kind]:checked').val();
 
     waitStart();
-    link = await uploadBlog(link, title, shortDescription);
-    if(templateIdCreated) {
-        const contractInstance2 = new web3.eth.Contract(await blogTemplatesJsonInterface(), await getAddress('BlogTemplates'));
-        await mySend(contractInstance2, contractInstance.methods.updatePostFull, [itemId, {link, title, shortDescription, description, locale, linkKind: kind}, templateIdCreated]);
-    } else {
-        await mySend(contractInstance, contractInstance.methods.updateLink, [itemId, {link, title, shortDescription, description, locale, linkKind: kind}]);
+    if($('#tabs-blog').css('display') != 'none') {
+        link = await uploadBlog(title, shortDescription);
+    } else if($('#tabs-upload').css('display') != 'none') {
+        link = await uploadFile(true);
     }
-    // await $('#multiVoter').doMultiVote(itemId);
+    const contractInstance = new web3.eth.Contract(await filesJsonInterface(), await getAddress('Files'));
+    await mySend(contractInstance, contractInstance.methods.updateLink, [itemId, {link, title, shortDescription, description, locale, linkKind: kind}]);
     waitStop();
+}
+
+// FIXME: Cannot change template if was (none).
+async function changePostTemplate() {
+    const contractInstance2 = new web3.eth.Contract(await blogTemplatesJsonInterface(), await getAddress('BlogTemplates'));
+    const templateId = $('#template').val();
+    await mySend(contractInstance2, contractInstance2.methods.changePostTemplate, [postIdCreated, templateId]);
 }
 
 async function onLoad() {
@@ -153,7 +164,7 @@ async function onLoad() {
         $(`input[name=kind][value=${item.linkKind}]`).prop('checked', true);
     }
 
-    arKeyChooser = $('#arWalletKeyFile').arKeyChooser({storeName: 'authorARPrivateKey'});
+    // arKeyChooser = $('#arWalletKeyFile').arKeyChooser({storeName: 'authorARPrivateKey'});
     // FIXME: Does not work with summernote:
     // $('#form').validate({
     //     ignore: '[name=blogPost]', // Validation does not work with summernote.
@@ -182,7 +193,7 @@ async function onLoad() {
 }`
     }
     if(postId)
-        query = `{ postUpdateds(where:{postId:"${postId}"}) { templateId }` +
+        query = `{ postUpdateds(first:1, orderBy:id, orderDirection:desc, where:{postId:"${postId}"}) { templateId }` +
             templateIdsFlat.map(i => subquery(i)).join("\n") + "\n}";
     else
         query = "{\n" + templateIdsFlat.map(i => subquery(i)).join("\n") + "\n}";

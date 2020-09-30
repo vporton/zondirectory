@@ -2,43 +2,16 @@
 
 // let itemEvents;
 
-function sellInETHToggle(event) {
-    document.getElementById('priceETH').disabled = event.target.checked;
-}
-
-function sellInARToggle(event) {
-    document.getElementById('priceAR').disabled = event.target.checked;
-}
-
 function getPriceETH() {
-    return document.getElementById('sellInETH').checked ? INFINITY : web3.utils.toWei(document.getElementById('priceETH').value);
-}
-
-function getPriceAR() {
-    return document.getElementById('sellInAR').checked ? INFINITY : arweave.ar.arToWinston(document.getElementById('priceAR').value);
+    return web3.utils.toWei(document.getElementById('priceETH').value);
 }
 
 function setPriceETH(price) {
-    if(price == INFINITY) {
-        document.getElementById('sellInETH').checked = true;
-        document.getElementById('priceETH').disabled = true;
-    } else {
-        document.getElementById('priceETH').value = formatPriceETH(price);
-    }
-}
-
-function setPriceAR(price) {
-    if(price == INFINITY) {
-        document.getElementById('sellInAR').checked = true;
-        document.getElementById('priceAR').disabled = true;
-    } else {
-        document.getElementById('priceAR').value = formatPriceAR(price);
-    }
+    document.getElementById('priceETH').value = formatPriceETH(price);
 }
 
 async function createOrUpdateItem() {
     $('#priceETH').removeClass('error');
-    $('#priceAR').removeClass('error');
     if(!$('#form').valid()) return;
 
     const itemId = numParam('id');
@@ -64,9 +37,13 @@ async function createItem() {
         amounts,
         sum,
     } = await $('#multiVoter').multiVoterData();
+    console.log(defaultAccount);
     const response = await mySend(contractInstance, contractInstance.methods.createItemAndVote,
-                                  [{title, shortDescription, description, priceETH: getPriceETH(), priceAR: getPriceAR(), locale, license},
-                                   '0x0000000000000000000000000000000000000001', cats, amounts], {value: sum});
+                                  [{title, shortDescription, description, priceETH: getPriceETH(), locale, license},
+                                   '0x0000000000000000000000000000000000000001', cats, amounts], {value: sum})
+        .then(() => {
+            ga('send', 'event', 'Items', 'create item');
+        });
     // const itemId = response.events.ItemCreated.returnValues.itemId;
     // await $('#multiVoter').doMultiVote(itemId);
     // waitStop();
@@ -83,7 +60,7 @@ async function updateItem(itemId) {
     const license = document.getElementById('license').value;
 
     await defaultAccountPromise();
-    await mySend(contractInstance, contractInstance.methods.updateItem, [itemId, {title, shortDescription, description, priceETH: getPriceETH(), priceAR: getPriceAR(), locale, license}]);
+    await mySend(contractInstance, contractInstance.methods.updateItem, [itemId, {title, shortDescription, description, priceETH: getPriceETH(), locale, license}]);
     waitStop();
 }
 
@@ -106,7 +83,6 @@ $(async function() {
         shortDescription
         license
         priceETH
-        priceAR
     }
 }`;
         let item = (await queryThegraph(query)).data.itemUpdateds[0];
@@ -115,13 +91,11 @@ $(async function() {
         document.getElementById('shortDescription').textContent = item.shortDescription;
         document.getElementById('license').textContent = item.license;
         setPriceETH(item.priceETH);
-        setPriceAR(item.priceAR);
     }
 
     $('#form').validate({
         rules: {
             priceETH: {number: true},
-            priceAR: {number: true}
         }
     });
 })

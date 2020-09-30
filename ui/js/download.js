@@ -1,6 +1,7 @@
 "strict";
 
 const itemId = numParam('id');
+let priceAR;
 
 let arKeyChooser;
 
@@ -15,7 +16,7 @@ async function showFiles(withLinks) {
 }`;
     const itemFilesUpdated = (await queryThegraph(query)).data.itemFilesUpdateds[0];
     if(!itemFilesUpdated) {
-        $('.buy').css('display', 'none');
+    //     $('.buy').css('display', 'none');
         return;
     }
     let version = itemFilesUpdated.version;
@@ -35,6 +36,9 @@ async function showFiles(withLinks) {
                                : `<li>${safe_tags(file.format)}</li>`;
         $(formats).append(link);
     }
+    if(!files) {
+        $('#noFiles').css('display', 'block');
+    }
 }
 
 function askPrice(defaultPrice) {
@@ -48,29 +52,37 @@ function askPrice(defaultPrice) {
 
 function showFilesWithMessage() {
     showFiles(true);
-    alert("Download the files from this page.");
+    alert("Download the files from this page or contract the seller requesting delivery.");
 }
 
 async function payETH() {
     const price = askPrice(document.getElementById('priceETH').textContent);
     if(!price) return;
+    const shippingInfo = $('#shippingInfo').val();
     const contractInstance = new web3.eth.Contract(await filesJsonInterface(), await getAddress('Files'));
     await defaultAccountPromise();
     await mySend(contractInstance, contractInstance.methods.pay,
-                 [itemId, '0x0000000000000000000000000000000000000001'],
+                 [itemId, '0x0000000000000000000000000000000000000001', shippingInfo],
                  {value: web3.utils.toWei(String(price))}) // https://ethereum.stackexchange.com/q/85407/36438
-        .then(showFilesWithMessage)
+        .then(() => {
+            ga('send', 'event', 'Items', 'purchase for ETH', `/item.html?id=${itemId}`, price);
+            showFilesWithMessage();
+        })
         .catch(err => alert("You tried to pay below the price or payment failure! " + err));
 }
 
 async function donateETH() {
-    const price = prompt("Your donation amount:", '0.1');
+    const price = prompt("Your donation amount in ETH:", '0.1');
     if(!price) return;
     const contractInstance = new web3.eth.Contract(await filesJsonInterface(), await getAddress('Files'));
     await defaultAccountPromise();
     await mySend(contractInstance, contractInstance.methods.donate,
                  [itemId, '0x0000000000000000000000000000000000000001'],
                  {value: web3.utils.toWei(String(price))})
+        .then(() => {
+            ga('send', 'event', 'Items', 'donation for ETH', `/item.html?id=${itemId}`, price);
+            showFilesWithMessage();
+        })
         .catch(err => alert("Payment failure! " + err));
 }
 
@@ -88,7 +100,7 @@ async function doPayAR(price, showFiles) {
     smartweave.readContract(arweave, AR_PST_CONTRACT_ADDRESS).then(async contractState => {
         await defaultAccountPromise();
         let query = `{
-    setARWallets(first:1, orderBy:id, orderDirection:desc, where:{owner:"${defaultAccount}"}) {
+    setARWallets(first:1, orderBy:id, orderDirection:desc, where:{author:"${defaultAccount}"}) {
         arWallet
     }
 }`;
@@ -124,27 +136,32 @@ async function doPayAR(price, showFiles) {
                         shareholdersRoyalty = Math.floor(price);
                     }
 
+                    const shippingInfo = $('#shippingInfo').val();
+
                     // First pay to me then to the author, because in the case of a failure the buyer loses less this way.
                     let paymentFailure = false;
                     if(shareholdersRoyalty) {
                         const holder = smartweave.selectWeightedPstHolder(contractState.balances);
-                        const tx = await arweave.createTransaction({ target: holder, quantity: String(shareholdersRoyalty) }, key);
+                        const tx = await arweave.createTransaction({ target: holder, quantity: String(shareholdersRoyalty), data: shippingInfo }, key);
                         await arweave.transactions.sign(tx, key);
                         const response = await arweave.transactions.post(tx);
                         if(response.status != 200) paymentFailure = true;
                     }
                     if(!paymentFailure && authorRoyalty) {
                         const holder = smartweave.selectWeightedPstHolder(contractState.balances);
-                        const tx = await arweave.createTransaction({ target: arWallet, quantity: String(authorRoyalty) }, key);
+                        const tx = await arweave.createTransaction({ target: arWallet, quantity: String(authorRoyalty), data: shippingInfo }, key);
                         await arweave.transactions.sign(tx, key);
                         const response = await arweave.transactions.post(tx);
                         if(response.status != 200) paymentFailure = true;
                     }
 
                     if(showFiles) {
-                        if(!paymentFailure)
+                        if(!paymentFailure) {
+                            ga('send', 'event', 'Items',
+                               showFiles ? 'purchase for AR' : 'donation for AR',
+                               `/item.html?id=${itemId}`, price);
                             showFilesWithMessage();
-                        else
+                        } else
                             alert("You didn't pay the full sum!");
                     }
                 });
@@ -159,7 +176,7 @@ async function payAR() {
         return;
     }
 
-    let price = askPrice(document.getElementById('priceAR').textContent);
+    let price = askPrice(priceAR);
     if(!price) return;
 
     price = arweave.ar.arToWinston(price);
@@ -173,7 +190,7 @@ async function donateAR() {
         return;
     }
 
-    let price = prompt("Your donation amount:", '10.0');
+    let price = prompt("Your donation amount in AR:", '10.0');
     if(!price) return;
 
     price = arweave.ar.arToWinston(price);
@@ -184,7 +201,7 @@ function moreParents() {
     $('#categories > li:hidden:lt(10)').css('display', 'list-item');
 }
 
-$(async function() {
+async function onLoad() {
     if(itemId) {
         $('#addParent').attr('href', `vote.html?child=${itemId}&dir=for`);
 
@@ -206,7 +223,6 @@ $(async function() {
         description
         license
         priceETH
-        priceAR
     }
 }`;
         const queryResult = (await queryThegraph(query)).data;
@@ -260,15 +276,35 @@ $(async function() {
         document.getElementById('locale').textContent = item.locale;
         document.getElementById('title').textContent = item.title;
         document.getElementById('description').textContent = item.description;
+        $('head').append(`<meta name="description" content="${safe_attrs(item.shortDescription)}"/>`);
         document.getElementById('license').textContent = item.license;
+        const [[arInUSD, ethInUSD], arCoefficient] = await Promise.all([calculateARRate(), fetchARCoefficient()]);
+        priceAR = arweave.ar.arToWinston(formatPriceETH(item.priceETH) * ethInUSD / arInUSD * arCoefficient);
+        const arDiscount = ((1 - arCoefficient) * 100).toPrecision(2);
+        document.getElementById('priceUSD').textContent = formatPriceETH(item.priceETH) * ethInUSD;
+        document.getElementById('priceUSDAR').textContent = formatPriceAR(priceAR) * arInUSD;
         document.getElementById('priceETH').textContent = formatPriceETH(item.priceETH);
-        document.getElementById('priceAR').textContent = formatPriceAR(item.priceAR);
-        if(item.priceETH == INFINITY)
+        document.getElementById('priceAR').textContent = formatPriceAR(priceAR);
+        document.getElementById('arDiscount').textContent = arDiscount;
+        if(item.priceETH == INFINITY) {
             $('#buyETH').css('display', 'none');
-        if(item.priceAR == INFINITY)
             $('#buyAR').css('display', 'none');
-        showFiles(item.priceETH == 0 || item.priceAR == 0);
+        }
+        showFiles(item.priceETH == 0);
     }
 
     arKeyChooser = $('#arWalletKeyFile').arKeyChooser({storeName: 'authorARPrivateKey'});
-})
+}
+
+async function fetchARCoefficient() {
+    const contractInstance = new web3.eth.Contract(await filesJsonInterface(), await getAddress('Files'));
+    return (await contractInstance.methods.arToETHCoefficient().call()) / 2**64;
+}
+
+async function calculateARRate() {
+    return await fetch('https://api.coingecko.com/api/v3/simple/price?ids=arweave%2Cethereum&vs_currencies=usd')
+        .then(response => response.json())
+        .then(data => [data.arweave.usd, data.ethereum.usd]);
+}
+
+window.addEventListener('load', onLoad);

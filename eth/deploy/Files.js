@@ -3,11 +3,6 @@ const fs = require('fs');
 
 const {deployIfDifferent, log} = deployments;
 
-function filesJsonInterface() {
-    const text = fs.readFileSync("artifacts/Files.json");
-    return JSON.parse(text).abi;
-}
-
 let categories = {};
 
 async function createCategory(address, blockNumber, name) {
@@ -50,41 +45,19 @@ module.exports = async ({getNamedAccounts, deployments}) => {
     const namedAccounts = await getNamedAccounts();
     const {deploy} = deployments;
     const {deployer} = namedAccounts;
+    const MainPST = await deployments.get("MainPST");
     log(`Deploying Files...`);
-    const deployResult = await deploy('Files', {from: deployer, args: [process.env.PROGRAMMER_ADDRESS, web3.utils.toWei('10000000')]});
+    const deployResult = await deploy('Files', {from: deployer});
     if (deployResult.newlyDeployed) {
         log(`contract Files deployed at ${deployResult.address} in block ${deployResult.receipt.blockNumber} using ${deployResult.receipt.gasUsed} gas`);
-
-        log(`Creating categories...`);
-        await createCategory(deployResult.address, deployResult.receipt.blockNumber, "Root");
-        await createCategory(deployResult.address, deployResult.receipt.blockNumber, "Spam");
-        await createCategory(deployResult.address, deployResult.receipt.blockNumber, "E-books");
-        await createCategory(deployResult.address, deployResult.receipt.blockNumber, "Videos");
-        await createCategory(deployResult.address, deployResult.receipt.blockNumber, "Software");
-        await createCategory(deployResult.address, deployResult.receipt.blockNumber, "Binaries");
-        await createCategory(deployResult.address, deployResult.receipt.blockNumber, "Sources");
-        var categoryNames = Object.keys(categories);
-        var allCategories = categoryNames.map(v => categories[v]);
-        Promise.all(allCategories);
-        //console.log(await Promise.all(categoryNames.map(async v => await categories[v])));
-        log(`created ${allCategories.length} categories`);
-
-        log(`Creating category relations...`)
-        await addItemToCategory(deployResult.address, await categories["Root"], await categories["E-books"]);
-        await addItemToCategory(deployResult.address, await categories["Root"], await categories["Videos"]);
-        await addItemToCategory(deployResult.address, await categories["Root"], await categories["Software"]);
-        await addItemToCategory(deployResult.address, await categories["Software"], await categories["Binaries"]);
-        await addItemToCategory(deployResult.address, await categories["Software"], await categories["Sources"]);
-        log(`created base category structure`);
     }
-    const mydeploy = require('../lib/mydeploy');
-    mydeploy.updateAddress('Files', deployResult.address, buidler.network.name); // or ethers.getContractAt
-    mydeploy.updateAddress('FilesBlock', deployResult.receipt.blockNumber, buidler.network.name); // or ethers.getContractAt
-    if(await categories["Root"])
-        mydeploy.updateAddress('Root', await categories["Root"], buidler.network.name);
-    if(await categories["Spam"])
-        mydeploy.updateAddress('Spam', await categories["Spam"], buidler.network.name);
+    // const mydeploy = require('../lib/mydeploy');
+    // if(await categories["Root"])
+    //     mydeploy.updateAddress('Root', 1/*await categories["Root"]*/, buidler.network.name);
+    // if(await categories["Spam"])
+    //     mydeploy.updateAddress('Spam', 2/*await categories["Spam"]*/, buidler.network.name);
     // mydeploy.updateAddress('Root', 1, buidler.network.name);
     // mydeploy.updateAddress('Spam', 2, buidler.network.name);
 }
 module.exports.tags = ['Files'];
+module.exports.dependencies = ['MainPST'];

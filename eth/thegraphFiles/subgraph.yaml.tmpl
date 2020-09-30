@@ -14,7 +14,7 @@ dataSources:
       apiVersion: 0.0.4
       language: wasm/assemblyscript
       entities:
-        - Approval
+        - ApprovalForAll
         - CategoryCreated
         - CategoryUpdated
         - ChildParentVote
@@ -26,6 +26,7 @@ dataSources:
         - LinkUpdated
         - OwnedCategoryUpdated
         - Pay
+        - SetARToETHCoefficient
         - SetARWallet
         - SetAuthorInfo
         - SetBuyerAffiliateShare
@@ -37,13 +38,14 @@ dataSources:
         - SetSellerAffiliateShare
         - SetUploadOwnerShare
         - SetUpvotesOwnerShare
-        - Transfer
+        - TransferBatch
+        - TransferSingle
       abis:
         - name: Contract
           file: ./abis/Contract.json
       eventHandlers:
-        - event: Approval(indexed address,indexed address,uint256)
-          handler: handleApproval
+        - event: ApprovalForAll(indexed address,indexed address,bool)
+          handler: handleApprovalForAll
         - event: CategoryCreated(indexed uint256,indexed address)
           handler: handleCategoryCreated
         - event: CategoryUpdated(indexed uint256,string,string)
@@ -58,13 +60,13 @@ dataSources:
           handler: handleItemCreated
         - event: ItemFilesUpdated(indexed uint256,string,indexed uint256,bytes)
           handler: handleItemFilesUpdated
-        - event: ItemUpdated(indexed uint256,(string,string,string,uint256,uint256,string,string))
+        - event: ItemUpdated(indexed uint256,(string,string,string,uint256,string,string))
           handler: handleItemUpdated
         - event: LinkUpdated(indexed uint256,string,string,string,string,string,indexed uint256)
           handler: handleLinkUpdated
         - event: OwnedCategoryUpdated(indexed uint256,string,string,string,string,indexed address)
           handler: handleOwnedCategoryUpdated
-        - event: Pay(indexed address,indexed address,indexed uint256,uint256)
+        - event: Pay(indexed address,indexed address,indexed uint256,uint256,uint256,uint256,string)
           handler: handlePay
         - event: SetARWallet(indexed address,string)
           handler: handleSetARWallet
@@ -84,10 +86,14 @@ dataSources:
           handler: handleSetSalesOwnerShare
         - event: SetSellerAffiliateShare(int128)
           handler: handleSetSellerAffiliateShare
+        - event: SetARToETHCoefficient(int128)
+          handler: handleSetSellerAffiliateShare
         - event: SetUploadOwnerShare(int128)
           handler: handleSetUploadOwnerShare
         - event: SetUpvotesOwnerShare(int128)
           handler: handleSetUpvotesOwnerShare
-        - event: Transfer(indexed address,indexed address,uint256)
-          handler: handleTransfer
+        - event: TransferBatch(indexed address,indexed address,indexed address,uint256[],uint256[])
+          handler: handleTransferBatch
+        - event: TransferSingle(indexed address,indexed address,indexed address,uint256,uint256)
+          handler: handleTransferSingle
       file: ./src/mapping.ts

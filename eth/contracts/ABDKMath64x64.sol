@@ -4,7 +4,7 @@
  * ABDK Math 64.64 Smart Contract Library.  Copyright © 2019 by ABDK Consulting.
  * Author: Mikhail Vladimirov <mikhail.vladimirov@gmail.com>
  */
-pragma solidity ^0.5.0 || ^0.6.0;
+pragma solidity ^0.7.0;
 
 /**
  * Smart contract library of mathematical functions operating with signed
@@ -16,12 +16,12 @@ pragma solidity ^0.5.0 || ^0.6.0;
  */
 library ABDKMath64x64 {
   /**
-   * Minimum value signed 64.64-bit fixed point number may have. 
+   * @dev Minimum value signed 64.64-bit fixed point number may have. 
    */
   int128 private constant MIN_64x64 = -0x80000000000000000000000000000000;
 
   /**
-   * Maximum value signed 64.64-bit fixed point number may have. 
+   * @dev Maximum value signed 64.64-bit fixed point number may have. 
    */
   int128 private constant MAX_64x64 = 0x7FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF;
 
@@ -379,7 +379,7 @@ library ABDKMath64x64 {
     if (xc >= 0x2) msb += 1;  // No need to shift xc anymore
 
     int256 result = msb - 64 << 64;
-    uint256 ux = uint256 (x) << 127 - msb;
+    uint256 ux = uint256 (x) << uint256 (127 - msb);
     for (int256 bit = 0x8000000000000000; bit > 0; bit >>= 1) {
       ux *= ux;
       uint256 b = ux >> 255;
@@ -545,7 +545,7 @@ library ABDKMath64x64 {
     if (x & 0x1 > 0)
       result = result * 0x10000000000000000B17217F7D1CF79AB >> 128;
 
-    result >>= 63 - (x >> 64);
+    result >>= uint256 (63 - (x >> 64));
     require (result <= uint256 (MAX_64x64));
 
     return int128 (result);
@@ -639,8 +639,8 @@ library ABDKMath64x64 {
       if (xc >= 0x2) msb += 1;  // No need to shift xc anymore
 
       int256 xe = msb - 127;
-      if (xe > 0) x >>= xe;
-      else x <<= -xe;
+      if (xe > 0) x >>= uint256 (xe);
+      else x <<= uint256 (-xe);
 
       uint256 result = 0x80000000000000000000000000000000;
       int256 re = 0;
@@ -671,8 +671,8 @@ library ABDKMath64x64 {
         }
       }
 
-      if (re > 0) result <<= re;
-      else if (re < 0) result >>= -re;
+      if (re > 0) result <<= uint256 (re);
+      else if (re < 0) result >>= uint256 (-re);
 
       return result;
     }

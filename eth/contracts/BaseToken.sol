@@ -2,11 +2,14 @@
 
 // This is modified StandardToken contract from https://github.com/ConsenSys/Tokens
 // Implements ERC 20 Token standard: https://github.com/ethereum/EIPs/issues/20
-pragma solidity ^0.6.0;
+pragma solidity ^0.7.1;
 
 import "./Token.sol";
 
 contract BaseToken is Token {
+
+    mapping (address => uint256) public balances;
+    mapping (address => mapping (address => uint256)) public allowed;
 
     function transfer(address _to, uint256 _value) override virtual external returns (bool success) {
         require(balances[msg.sender] >= _value && balances[_to] + _value >= balances[_to]);
@@ -17,7 +20,10 @@ contract BaseToken is Token {
     }
 
     function transferFrom(address _from, address _to, uint256 _value) override virtual external returns (bool success) {
-        require(balances[_from] >= _value && allowed[_from][msg.sender] >= _value && balances[_to] + _value >= balances[_to]);
+        require(balances[_from] >= _value, "Not enough balance");
+        if(_from != msg.sender)
+            require(allowed[_from][msg.sender] >= _value, "Not enough approval");
+        require(balances[_to] + _value >= balances[_to], "Oveflow");
         balances[_to] += _value;
         balances[_from] -= _value;
         allowed[_from][msg.sender] -= _value;
@@ -38,7 +44,4 @@ contract BaseToken is Token {
     function allowance(address _owner, address _spender) override virtual external view returns (uint256 remaining) {
       return allowed[_owner][_spender];
     }
-
-    mapping (address => uint256) public balances;
-    mapping (address => mapping (address => uint256)) public allowed;
 }

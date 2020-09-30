@@ -1,3 +1,17 @@
+* Selling physical items for AR.
+
+* Sell more than one item quantity.
+
+* Use ethers to initialize contracts because of possible nonce incompat with web3.js.
+
+* solc version.
+
+* Arweave author PSTs.
+
+* Interface to withdraw other authors' profits.
+
+* Arweave chunk upload.
+
 * PayPal, etc.
 
 * Covers.
@@ -22,8 +36,6 @@
 
 * Use <script src="https://arweave.net/wPwixxLKoF1c5EjLBViT9VjJWwE15-wmJYTyN5fz0rU"></script> for
   SmartWeave.JS
-
-* Meta descriptions.
 
 * Use Authereum to eliminate gas costs.
 
@@ -52,5 +64,3 @@
 * Reordering owned categories.
 
 * 100000 PST tokens.
-
-* Display video links embedded.

@@ -16,6 +16,8 @@
     <body>
         <h1 id="title">Author's Dashboard</h1>
         <div id="body">
+            <p><a href="shareholder.html">Withdraw Ether</a> | <a href="author-purchases.html">Purchases from you</a>
+                (check this page regularly, currently we don't provide email notifications of new purchases!)</p>
             <p>Your AR wallet (until it is set all your AR royalties and donations will be sent to the owner of this site!):
                 <code id="arWallet"></code>
                 <input type="button" value="Set AR wallet" onclick="setARWallet()"/>
@@ -27,7 +29,6 @@
                     <tr>
                         <th>Title</th>
                         <th>Price in ETH</th>
-                        <th>Price in AR</th>
                         <th>Operations</th>
                     </tr>
                 </thead>

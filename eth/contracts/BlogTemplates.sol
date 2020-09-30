@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-pragma solidity ^0.6.0;
+pragma solidity ^0.7.0;
 pragma experimental ABIEncoderV2;
 
 import './Files.sol';
@@ -9,7 +9,7 @@ contract BlogTemplates {
 
     Files public filesContract;
 
-    uint maxId = 0;
+    uint maxId; // = 0;
 
     // Mapping from a template ID to JavaScript URL
     mapping (uint => string) public templatesJavaScript;
@@ -27,15 +27,11 @@ contract BlogTemplates {
     // post ID => template ID
     mapping (uint => uint) public postTemplates;
 
-    event TemplateCreated(uint templateId);
-    event TemplateChangeOwner(uint templateId, address owner);
-    event TemplateUpdated(uint templateId, string name, string js, string settings);
-    event TemplateSetArchived(uint templateId, bool archived);
-    event PostCreated(uint postId, uint itemId);
-    event PostChangeOwner(uint postId, address owner);
-    event PostUpdated(uint postId, uint templateId);
+    bool initialized;
 
-    constructor(Files _filesContract) public {
+    function initialize(Files _filesContract) external {
+        require(!initialized);
+        initialized = true;
         filesContract = _filesContract;
     }
 
@@ -89,18 +85,16 @@ contract BlogTemplates {
     }
 
     function changePostTemplate(uint _postId, uint _templateId) external {
-        _changePostTemplate(_postId, _templateId);
-    }
-
-    function _changePostTemplate(uint _postId, uint _templateId) public {
         require(postOwners[_postId] == msg.sender, "Access denied.");
-        postTemplates[maxId] = _templateId;
+        postTemplates[_postId] = _templateId;
         emit PostUpdated(_postId, _templateId);
     }
 
-    function updatePostFull(uint _linkId, Files.LinkInfo calldata _info, uint _templateId) external
-    {
-        filesContract.updateLink(_linkId, _info);
-        _changePostTemplate(postIDs[_linkId], _templateId);
-    }
+    event TemplateCreated(uint templateId);
+    event TemplateChangeOwner(uint templateId, address owner);
+    event TemplateUpdated(uint templateId, string name, string js, string settings);
+    event TemplateSetArchived(uint templateId, bool archived);
+    event PostCreated(uint postId, uint itemId);
+    event PostChangeOwner(uint postId, address owner);
+    event PostUpdated(uint postId, uint templateId);
 }

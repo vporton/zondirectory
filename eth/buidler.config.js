@@ -20,6 +20,8 @@ task("compile", "Compiles the entire project, building all artifacts", async fun
   fs.mkdir('../out/artifacts', ()=>{});
   const abi = JSON.parse(fs.readFileSync('artifacts/Files.json')).abi;
   fs.writeFileSync('../out/artifacts/Files.abi', JSON.stringify(abi));
+  const abi1 = JSON.parse(fs.readFileSync('artifacts/MainPST.json')).abi;
+  fs.writeFileSync('../out/artifacts/MainPST.abi', JSON.stringify(abi1));
   const abi2 = JSON.parse(fs.readFileSync('artifacts/BlogTemplates.json')).abi;
   fs.writeFileSync('../out/artifacts/BlogTemplates.abi', JSON.stringify(abi2));
 });
@@ -32,7 +34,7 @@ task("compile", "Compiles the entire project, building all artifacts", async fun
 module.exports = {
   // This is a sample solc configuration that specifies which version of solc to use
   solc: {
-    version: "0.6.12",
+    version: "0.7.1",
     optimizer: {
       enabled: true,
       runs: 200
@@ -86,6 +88,14 @@ module.exports = {
     },
     mainnet: {
       url: "https://mainnet.infura.io/v3/1d0c278301fc40f3a8f40f25ae3bd328",
+      accounts: process.env.MAINNET_PRIVATE_KEY ? [process.env.MAINNET_PRIVATE_KEY] : [],
+    },
+    'poa-sokol': {
+      url: "https://sokol.poa.network",
+      accounts: process.env.RINKEBY_PRIVATE_KEY ? [process.env.RINKEBY_PRIVATE_KEY] : [],
+    },
+    'poa-core': {
+      url: "​https://core.poanetwork.dev/",
       accounts: process.env.MAINNET_PRIVATE_KEY ? [process.env.MAINNET_PRIVATE_KEY] : [],
     },
   },
