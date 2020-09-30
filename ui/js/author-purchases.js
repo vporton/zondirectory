@@ -6,14 +6,13 @@ async function onLoad() {
     if(!defaultAccount) return;
 
     const query = `{
-        pays(orderBy:id, orderDirection:desc, where:{owner:"${defaultAccount}"}) {
+        pays(orderBy:id, orderDirection:desc, where:{payee:"${defaultAccount}"}) {
             itemId
             value
             shippingInfo
         }
     }`;
     let pays = (await queryThegraph(query)).data.pays;
-    console.log(pays)
     if(!pays.length) return;
     for(payment of pays) {
         const row = `<tr>
