@@ -25,6 +25,7 @@ $(async function() {
     linkUpdateds(first:1, orderBy:id, orderDirection:desc, where:{linkId:${itemId}}) {
         locale
         title
+        shortDescription
         description
         link
     }
@@ -79,6 +80,7 @@ $(async function() {
         const item = queryResult.linkUpdateds[0];
         document.getElementById('locale').textContent = item.locale;
         document.getElementById('description').textContent = item.description;
+        $('head').append(`<meta name="description" content="${safe_attrs(item.shortDescription)}"/>`);
 
         $('#link').append(formatLink(item.link, item.title));
         document.getElementById('link').setAttribute('href', item.link);

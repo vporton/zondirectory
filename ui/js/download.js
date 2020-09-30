@@ -276,6 +276,7 @@ async function onLoad() {
         document.getElementById('locale').textContent = item.locale;
         document.getElementById('title').textContent = item.title;
         document.getElementById('description').textContent = item.description;
+        $('head').append(`<meta name="description" content="${safe_attrs(item.shortDescription)}"/>`);
         document.getElementById('license').textContent = item.license;
         const [[arInUSD, ethInUSD], arCoefficient] = await Promise.all([calculateARRate(), fetchARCoefficient()]);
         priceAR = arweave.ar.arToWinston(formatPriceETH(item.priceETH) * ethInUSD / arInUSD * arCoefficient);

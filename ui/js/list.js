@@ -25,6 +25,7 @@ async function onLoad() {
     }
     ownedCategoryUpdateds(first:1, orderBy:id, orderDirection:desc, where:{categoryId:${catId}}) {
         title
+        shortDescription
         description
     }
 }`;
@@ -33,6 +34,9 @@ async function onLoad() {
         if(isOwned) {
             $('#showDescription').css('display', 'block');
             $('#description').text(queryResult0.ownedCategoryUpdateds[0].description);
+            $('head').append(`<meta name="description" content="Category: ${safe_attrs(queryResult0.ownedCategoryUpdateds[0].shortDescription)}"/>`);
+        } else {
+            $('head').append(`<meta name="description" content="Category of news, files, items for sale - earn money at this site"/>`);
         }
         query = `{
     childParentVotes(first:1000, where:{parent:${catId}}) {
