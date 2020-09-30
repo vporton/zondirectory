@@ -1,7 +1,5 @@
 * Selling physical items for AR.
 
-* Sell more than one item quantity.
-
 * Use ethers to initialize contracts because of possible nonce incompat with web3.js.
 
 * solc version.

@@ -55,8 +55,24 @@ function showFilesWithMessage() {
     alert("Download the files from this page or contract the seller requesting delivery.");
 }
 
+function checkMultiplier() {
+    const textValue = $('#multiplier').val();
+    if(!/^-?[0-9]+(\.[0-9]+)?/.test(textValue)) {
+        alert("Multiplier must be a number.");
+        return null;
+    }
+    const value = Number(textValue);
+    if(value < 1) {
+        alert("Multiplier must be not less than 1.");
+        return null;
+    }
+    return value;
+}
+
 async function payETH() {
-    const price = askPrice(document.getElementById('priceETH').textContent);
+    const multiplier = checkMultiplier();
+    if(multiplier === null) return;
+    const price = askPrice(multiplier * document.getElementById('priceETH').textContent);
     if(!price) return;
     const shippingInfo = $('#shippingInfo').val();
     const contractInstance = new web3.eth.Contract(await filesJsonInterface(), await getAddress('Files'));
@@ -176,11 +192,13 @@ async function payAR() {
         return;
     }
 
-    let price = askPrice(priceAR);
+    const multiplier = checkMultiplier();
+    if(multiplier === null) return;
+    const priceARHuman = arweave.ar.winstonToAr(priceAR);
+    let price = askPrice(multiplier * priceARHuman);
     if(!price) return;
 
-    price = arweave.ar.arToWinston(price);
-    await doPayAR(price, true);
+    await doPayAR(arweave.ar.arToWinston(price), true);
 }
 
 async function donateAR() {
@@ -220,6 +238,7 @@ async function onLoad() {
     itemUpdateds(first:1, orderBy:id, orderDirection:desc, where:{itemId:${itemId}}) {
         locale
         title
+        shortDescription
         description
         license
         priceETH
