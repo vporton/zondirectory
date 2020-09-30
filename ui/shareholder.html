@@ -16,13 +16,13 @@
         <h1 id="title">Your profit</h1>
         <div id="body">
             <h2>Shareholders profit + direct author profit</h2>
+            <p>Your earned amount in ETH: <span id="ETH"></span>
+                <input type="button" value="Withdraw" onclick="withdrawETH()"/></p>
             <p>There are (non-voting) shares of two kinds: shares for ETH profit and
                 shares for AR profit. Investment is not solicited, but you could buy
                 shares at an exchange (when available).</p>
             <p>Your ETH profit sharing tokens: <span id="tokenETH"></span>
                 (<code id="pstAddressElt"></code> token in MetaMask)</p>
-            <p>Your earned amount in ETH: <span id="ETH"></span>
-                <input type="button" value="Withdraw" onclick="withdrawETH()"/></p>
             <p>Your AR wallet (<a href="author.html">Set</a>): <code id="arWallet"></code></p>
             <p>Your AR profit sharing tokens: <span id="tokenAR"></span>
                 (AR profit is distributed automatically, you don't need to withdraw.)</p>
