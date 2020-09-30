@@ -23,6 +23,8 @@ abstract contract BaseFiles is IERC1155, ERC165, ERC1155Metadata_URI, CommonCons
     uint256 constant LINK_KIND_LINK = 0;
     uint256 constant LINK_KIND_MESSAGE = 1;
 
+    uint8 constant decimalsConstant = 50;
+
     // 64.64 fixed point number
     int128 public salesOwnersShare;
     int128 public upvotesOwnersShare;
@@ -55,12 +57,12 @@ abstract contract BaseFiles is IERC1155, ERC165, ERC1155Metadata_URI, CommonCons
     mapping (uint => uint256) public pricesETH;
     mapping (uint => uint256) public pricesAR;
 
-    uint256 totalDividends = 0;
+    mapping(address => uint256) authorDirectEarnings;
+
+    uint256 totalDividends;
     mapping(address => uint256) lastTotalDivedends; // the value of totalDividends after the last payment to an address
     mapping(address => uint256) authorTotalDividends;
     mapping(address => mapping(address => uint256)) lastAuthorTotalDivedends; // the value of totalDividends after the last payment to an address
-
-    uint8 constant decimalsConstant = 50;
 
     // id => (owner => balance)
     mapping (uint256 => mapping(address => uint256)) internal balances;
@@ -415,7 +417,7 @@ abstract contract BaseFiles is IERC1155, ERC165, ERC1155Metadata_URI, CommonCons
 
     function _dividendsOwing(address _account) internal view returns(uint256) {
         uint256 _newDividends = totalDividends - lastTotalDivedends[_account];
-        return (pst.balanceOf(_account) * _newDividends) / pst.totalSupply(); // rounding down
+        return (pst.balanceOf(_account) * _newDividends) / pst.totalSupply() + authorDirectEarnings[_account]; // rounding down
     }
 
     function dividendsOwing(address _account) external view returns(uint256) {
@@ -434,6 +436,7 @@ abstract contract BaseFiles is IERC1155, ERC165, ERC1155Metadata_URI, CommonCons
         }
     }
 
+    // FIXME
     function _authorDividendsOwing(address payable _author, address _account) internal view returns(uint256) {
         uint256 _newDividends = authorTotalDividends[_author] - lastAuthorTotalDivedends[_author][_account];
         return (balances[_sellerToToken(_author)][_account] * _newDividends) / 10**uint256(decimalsConstant); // rounding down
@@ -481,7 +484,7 @@ abstract contract BaseFiles is IERC1155, ERC165, ERC1155Metadata_URI, CommonCons
     }
 
     function payToAuthor(address payable _author, uint256 _amount) internal {
-        authorTotalDividends[_author] += _amount;
+        authorDirectEarnings[_author] += _amount;
     }
 
 // Affiliates //
@@ -513,8 +516,6 @@ abstract contract BaseFiles is IERC1155, ERC165, ERC1155Metadata_URI, CommonCons
         address payable _result = reverseAccountsMapping[_effective];
         return _result != address(0) ? _result : _effective;
     }
-
-// Author's PSTs follow //
 
 /////////////////////////////////////////// ERC165 //////////////////////////////////////////////
 

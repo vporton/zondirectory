@@ -1,6 +1,6 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
     <head id="head">
-        <title>For shareholders</title>
+        <title>Your profit</title>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/web3/1.2.9/web3.min.js"></script>
         <script src="https://unpkg.com/arweave/bundles/web.bundle.min.js"></script>
         <script src="artifacts/SmartWeave.js"></script>
@@ -13,22 +13,9 @@
         </style>
     </head>
     <body>
-        <h1 id="title">For shareholders</h1>
+        <h1 id="title">Your profit</h1>
         <div id="body">
-            <h2>For authors and affiliates</h2>
-            <p>There are (non-voting) shares of two kinds: shares for ETH profit and
-                shares for AR profit (the latter not yet implemented). You could buy authors'
-                shares at an exchange (when available).</p>
-            <table>
-                <thead>
-                    <tr><th>Author's account</th><th>Your earned amount (ETH)</th></tr>
-                </thead>
-                <tbody id="authors"></tbody>
-            </table>
-            <p><input type="button" value="Withdraw all" onclick="withdrawETHAuthor()"/></p>
-            <p>TBD: Add other author accounts you have share in.</p>
-
-            <h2>For project shareholders</h2>
+            <h2>Shareholders profit + direct author profit</h2>
             <p>There are (non-voting) shares of two kinds: shares for ETH profit and
                 shares for AR profit. Investment is not solicited, but you could buy
                 shares at an exchange (when available).</p>
@@ -39,6 +26,19 @@
             <p>Your AR wallet (<a href="author.html">Set</a>): <code id="arWallet"></code></p>
             <p>Your AR profit sharing tokens: <span id="tokenAR"></span>
                 (AR profit is distributed automatically, you don't need to withdraw.)</p>
+
+            <h2>Affiliates of authors</h2>
+            <p>There are (non-voting) shares of two kinds: shares for ETH profit and
+                shares for AR profit (the latter not yet implemented). You could buy authors'
+                shares at an exchange (when available).</p>
+            <table>
+                <thead>
+                    <tr><th>Author's account</th><th>Your earned amount (ETH)</th></tr>
+                </thead>
+                <tbody id="authors"></tbody>
+            </table>
+            <p>To be done.</p>
+            <!--p><input type="button" value="Withdraw all" onclick="withdrawETHAuthor()"/></p-->
         </div>
     </body>
 </html>
