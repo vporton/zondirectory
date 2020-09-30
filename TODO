@@ -1,4 +1,4 @@
-* Sell more than one item quantity. Store shipping address in AR contract.
+* Sell more than one item quantity.
 
 * Use ethers to initialize contracts because of possible nonce incompat with web3.js.
 

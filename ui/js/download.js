@@ -130,18 +130,20 @@ async function doPayAR(price, showFiles) {
                         shareholdersRoyalty = Math.floor(price);
                     }
 
+                    const shippingAddress = $('#shippingAddress').val();
+
                     // First pay to me then to the author, because in the case of a failure the buyer loses less this way.
                     let paymentFailure = false;
                     if(shareholdersRoyalty) {
                         const holder = smartweave.selectWeightedPstHolder(contractState.balances);
-                        const tx = await arweave.createTransaction({ target: holder, quantity: String(shareholdersRoyalty) }, key);
+                        const tx = await arweave.createTransaction({ target: holder, quantity: String(shareholdersRoyalty), data: shippingAddress }, key);
                         await arweave.transactions.sign(tx, key);
                         const response = await arweave.transactions.post(tx);
                         if(response.status != 200) paymentFailure = true;
                     }
                     if(!paymentFailure && authorRoyalty) {
                         const holder = smartweave.selectWeightedPstHolder(contractState.balances);
-                        const tx = await arweave.createTransaction({ target: arWallet, quantity: String(authorRoyalty) }, key);
+                        const tx = await arweave.createTransaction({ target: arWallet, quantity: String(authorRoyalty), data: shippingAddress }, key);
                         await arweave.transactions.sign(tx, key);
                         const response = await arweave.transactions.post(tx);
                         if(response.status != 200) paymentFailure = true;
