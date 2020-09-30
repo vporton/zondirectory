@@ -1,5 +1,3 @@
-* Affiliate program for entire site.
-
 * Selling physical items for AR.
 
 * Use ethers to initialize contracts because of possible nonce incompat with web3.js.

@@ -467,13 +467,13 @@ abstract contract BaseFiles is IERC1155, ERC165, ERC1155Metadata_URI, CommonCons
         uint256 _shareHoldersAmount = _amount;
         if(uint(_buyerAffiliate) > 1) {
             uint256 _buyerAffiliateAmount = uint256(buyerAffiliateShare.muli(int256(_amount)));
-            _buyerAffiliate.transfer(_buyerAffiliateAmount);
+            payToAuthor(_buyerAffiliate, _buyerAffiliateAmount);
             require(_shareHoldersAmount >= _buyerAffiliateAmount, "Attempt to pay negative amount.");
             _shareHoldersAmount -= _buyerAffiliateAmount;
         }
         if(uint(_sellerAffiliate) > 1) {
             uint256 _sellerAffiliateAmount = uint256(sellerAffiliateShare.muli(int256(_amount)));
-            payable(_sellerAffiliate).transfer(_sellerAffiliateAmount);
+            payToAuthor(_sellerAffiliate, _sellerAffiliateAmount);
             require(_shareHoldersAmount >= _sellerAffiliateAmount, "Attempt to pay negative amount.");
             _shareHoldersAmount -= _sellerAffiliateAmount;
         }
@@ -481,7 +481,6 @@ abstract contract BaseFiles is IERC1155, ERC165, ERC1155Metadata_URI, CommonCons
     }
 
     function payToAuthor(address payable _author, uint256 _amount) internal {
-        _author.transfer(_amount);
         authorTotalDividends[_author] += _amount;
     }
 
