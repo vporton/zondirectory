@@ -26,7 +26,7 @@ async function onLoad() {
     }
 
     const earnedETHAuthor = await contractInstance0.methods.authorDividendsOwing(defaultAccount, defaultAccount).call();
-    const row = `<tr><td>${defaultAccount}</td><td>${earnedETHAuthor}</td></tr>`;
+    const row = `<tr><td>${defaultAccount}</td><td>${web3.utils.fromWei(earnedETHAuthor)}</td></tr>`;
     $('#authors').append(row);
 }
 
