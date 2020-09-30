@@ -80,12 +80,10 @@ function getCookie(cname) {
     return "";
 }
 
-let web3;
-
 let defaultAccount;
 // web3.eth.defaultAccount = web3.eth.accounts[0];
 async function defaultAccountPromise() {
-    return web3 && web3.currentProvider ? (await getWeb3()).eth.getAccounts() : null;
+    return defaultAccount = web3 && web3.currentProvider ? (await getWeb3()).eth.getAccounts() : null;
 }
 
 let pstJsonInterfaceCache = null;

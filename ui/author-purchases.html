@@ -1,0 +1,31 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head id="head">
+        <meta name="robots" content="noindex" />
+        <title>Purchases of Your Items</title>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/web3/1.2.9/web3.min.js"></script>
+        <script src="https://unpkg.com/arweave/bundles/web.bundle.min.js"></script>
+        <script src="js/addresses2.js"></script>
+        <script src="js/common.js"></script>
+        <script src="js/author-purchases.js"></script>
+        <style>
+            table { border-collapse: collapse; }
+            td, th { border: 1px solid gray }
+        </style>
+    </head>
+    <body>
+        <h1 id="title">Recent Purchases of Your Items</h1>
+        <div id="body">
+            <h2>My files</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Item</th>
+                        <th>Price paid (in ETH)</th>
+                        <th>Shipping info</th>
+                    </tr>
+                </thead>
+                <tbody id="theTable"></tbody>
+            </table>
+        </div>
+    </body>
+</html>

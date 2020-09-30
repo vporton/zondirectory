@@ -135,7 +135,7 @@ abstract contract BaseFiles is IERC1155, ERC165, ERC1155Metadata_URI, CommonCons
         emit SetSellerAffiliateShare(_share);
     }
 
-    function setARToETHCoefficient(int128 _coeff) external {
+    function athToETHCoefficient(int128 _coeff) external {
         require(msg.sender == founder, "Access denied.");
         arToETHCoefficient = _coeff;
         emit SetARToETHCoefficient(_coeff);
@@ -742,7 +742,7 @@ abstract contract BaseFiles is IERC1155, ERC165, ERC1155Metadata_URI, CommonCons
     event SetARToETHCoefficient(int128 coeff); // share is 64.64 fixed point number
     event TransferAuthorship(address payable _orig, address payable _new);
     event SetNick(address payable indexed author, string nick);
-    event SetARWallet(address payable indexed authro, string arWallet);
+    event SetARWallet(address payable indexed author, string arWallet);
     event SetAuthorInfo(address payable indexed author, string link, string shortDescription, string description, string locale);
     event ItemCreated(uint indexed itemId);
     event SetItemOwner(uint indexed itemId, address payable indexed author);
