@@ -433,6 +433,7 @@ abstract contract BaseFiles is IERC1155, ERC165, ERC1155Metadata_URI, CommonCons
         if(_owing > 0) {
             msg.sender.transfer(_owing);
             lastTotalDivedends[msg.sender] = totalDividends;
+            authorDirectEarnings[msg.sender] = 0;
         }
     }
 
