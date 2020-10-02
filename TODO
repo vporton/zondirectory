@@ -1,3 +1,5 @@
+* Every item is a category! (for reviews)
+
 * Revert on withdrawal of author's profit (apparently due to superfluous `.transfer()` that I removed).
 
 * Selling physical items for AR.
