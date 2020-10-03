@@ -1,5 +1,4 @@
-* Every item is a category! (for reviews)
-  [for a category review is distinct from a subcategory; moreover, review always has only one parent unlike a subcategory]
+* Threaded comments (already supported in the contract).
 
 * Revert on withdrawal of author's profit (apparently due to superfluous `.transfer()` that I removed).
 
