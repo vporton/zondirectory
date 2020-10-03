@@ -246,7 +246,7 @@ abstract contract BaseFiles is IERC1155, ERC165, ERC1155Metadata_URI, CommonCons
             _initializeAuthor(maxId);
             emit SetItemOwner(maxId, _author);
         }
-        emit LinkUpdated(maxId, _info.link, _info.title, _info.shortDescription, _info.description, _info.locale, _info.linkKind);
+        emit LinkUpdated(maxId, _info);
         return maxId;
     }
 
@@ -256,13 +256,7 @@ abstract contract BaseFiles is IERC1155, ERC165, ERC1155Metadata_URI, CommonCons
         require(itemOwners[_linkId] == msg.sender, "Attempt to modify other's link."); // only owned links
         require(bytes(_info.title).length != 0, "Empty title.");
         require(entries[_linkId] == EntryKind.LINK, "Link does not exist.");
-        emit LinkUpdated(_linkId,
-                         _info.link,
-                         _info.title,
-                         _info.shortDescription,
-                         _info.description,
-                         _info.locale,
-                         _info.linkKind);
+        emit LinkUpdated(_linkId, _info);
     }
 
     function updateItemCover(uint _itemId, uint _version, bytes calldata _cover, uint _width, uint _height) external {
@@ -747,13 +741,7 @@ abstract contract BaseFiles is IERC1155, ERC165, ERC1155Metadata_URI, CommonCons
     event ItemCreated(uint indexed itemId);
     event SetItemOwner(uint indexed itemId, address payable indexed author);
     event ItemUpdated(uint indexed itemId, ItemInfo info);
-    event LinkUpdated(uint indexed linkId,
-                      string link,
-                      string title,
-                      string shortDescription,
-                      string description,
-                      string locale,
-                      uint256 indexed linkKind);
+    event LinkUpdated(uint indexed linkId, LinkInfo info);
     event ItemCoverUpdated(uint indexed itemId, uint indexed version, bytes cover, uint width, uint height);
     event ItemFilesUpdated(uint indexed itemId, string format, uint indexed version, bytes hash);
     event SetLastItemVersion(uint indexed itemId, uint version);

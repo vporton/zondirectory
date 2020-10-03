@@ -165,12 +165,12 @@ export function handleLinkUpdated(event: LinkUpdatedEvent): void {
     generateId(event)
   )
   entity.linkId = event.params.linkId
-  entity.link = event.params.link
-  entity.title = event.params.title
-  entity.shortDescription = event.params.shortDescription
-  entity.description = event.params.description
-  entity.locale = event.params.locale
-  entity.linkKind = event.params.linkKind
+  entity.link = event.params.info.link
+  entity.title = event.params.info.title
+  entity.shortDescription = event.params.info.shortDescription
+  entity.description = event.params.info.description
+  entity.locale = event.params.info.locale
+  entity.linkKind = event.params.info.linkKind
   entity.save()
 }
 
