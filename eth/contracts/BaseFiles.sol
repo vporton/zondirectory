@@ -55,7 +55,6 @@ abstract contract BaseFiles is IERC1155, ERC165, ERC1155Metadata_URI, CommonCons
     mapping (uint => address payable) public itemOwners;
     mapping (uint => mapping (uint => int256)) private childParentVotes;
     mapping (uint => uint256) public pricesETH;
-    mapping (uint => uint256) public pricesAR;
 
     mapping(address => uint256) authorDirectEarnings;
 
@@ -227,6 +226,7 @@ abstract contract BaseFiles is IERC1155, ERC165, ERC1155Metadata_URI, CommonCons
         string description;
         string locale;
         uint256 linkKind;
+        uint responseTo;
     }
 
     function createLink(LinkInfo calldata _info, bool _owned, address payable _affiliate) external returns (uint)
@@ -237,6 +237,7 @@ abstract contract BaseFiles is IERC1155, ERC165, ERC1155Metadata_URI, CommonCons
     function _createLink(LinkInfo calldata _info, bool _owned, address payable _affiliate) public returns (uint)
     {
         require(bytes(_info.title).length != 0, "Empty title.");
+        require(_info.responseTo == 0 || entries[_info.responseTo] != EntryKind.NONE);
         setAffiliate(_affiliate);
         address payable _author = _owned ? msg.sender : address(0);
         ++maxId;
@@ -256,6 +257,7 @@ abstract contract BaseFiles is IERC1155, ERC165, ERC1155Metadata_URI, CommonCons
         require(itemOwners[_linkId] == msg.sender, "Attempt to modify other's link."); // only owned links
         require(bytes(_info.title).length != 0, "Empty title.");
         require(entries[_linkId] == EntryKind.LINK, "Link does not exist.");
+        require(_info.responseTo == 0 || entries[_info.responseTo] != EntryKind.NONE);
         emit LinkUpdated(_linkId, _info);
     }
 

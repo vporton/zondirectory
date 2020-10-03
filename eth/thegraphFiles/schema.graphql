@@ -136,6 +136,7 @@ type LinkUpdated @entity {
   description: String! # string
   locale: String! # string
   linkKind: BigInt! # uint256
+  responseTo: BigInt! # uint256
 }
 
 type SetARWallet @entity {

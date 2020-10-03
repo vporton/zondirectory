@@ -171,6 +171,7 @@ export function handleLinkUpdated(event: LinkUpdatedEvent): void {
   entity.description = event.params.info.description
   entity.locale = event.params.info.locale
   entity.linkKind = event.params.info.linkKind
+  entity.responseTo = event.params.info.responseTo
   entity.save()
 }
 
