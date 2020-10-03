@@ -437,7 +437,6 @@ abstract contract BaseFiles is IERC1155, ERC165, ERC1155Metadata_URI, CommonCons
         }
     }
 
-    // FIXME
     function _authorDividendsOwing(address payable _author, address _account) internal view returns(uint256) {
         uint256 _newDividends = authorTotalDividends[_author] - lastAuthorTotalDivedends[_author][_account];
         return (balances[_sellerToToken(_author)][_account] * _newDividends) / 10**uint256(decimalsConstant); // rounding down
