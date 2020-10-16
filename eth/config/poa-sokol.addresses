@@ -5,6 +5,6 @@
   "FilesBlock": 17048298,
   "MainPST": "0x545Fd5f7AB1b99915222FFED0639E836Dc9A95e7",
   "MainPSTBlock": 17045854,
-  "TheGraph": "vporton/zd-sokol4",
+  "TheGraph": "vporton/zd-sokol6",
   "TheGraphTemplates": "vporton/zd-templates-sokol2"
 }
