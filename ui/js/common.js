@@ -194,8 +194,11 @@ async function getWeb3() {
     if(window.ethereum) {
         const web3Modal = myWeb3Modal();
         myWeb3Provider = await web3Modal.connect();
+        return myWeb3 = myWeb3Provider ? new Web3(myWeb3Provider) : null;
+    } else {
+        myWeb3 = web3 = new Web3(new Web3.providers.HttpProvider("https://sokol.poa.network"));
+        return myWeb3;
     }
-    return myWeb3 = myWeb3Provider ? new Web3(myWeb3Provider) : null;
 }
 
 function waitStart() {
