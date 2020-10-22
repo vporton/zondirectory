@@ -689,9 +689,9 @@ abstract contract BaseFiles is IERC1155, ERC165, ERC1155Metadata_URI, CommonCons
 /////////////////////////////////////////// Minting //////////////////////////////////////////////
 
     function _initializeAuthor(uint _itemId) internal {
+        itemOwners[_itemId] = msg.sender;
         if(sellerInitialized[msg.sender]) return;
         sellerInitialized[msg.sender] = true;
-        itemOwners[_itemId] = msg.sender;
         uint256 _id = _sellerToToken(msg.sender);
         balances[_id][msg.sender] = 10**uint256(decimalsConstant);
         totalSupply[_id] = 10**uint256(decimalsConstant);
