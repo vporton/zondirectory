@@ -86,7 +86,7 @@ async function createItem() {
             });
     } else {
         const contractInstance = new web3.eth.Contract(await filesJsonInterface(), await getAddress('Files'));
-        mySend(contractInstance, contractInstance.methods.createLinkAndVote, [{link, title, shortDescription, description, locale, linkKind: kind}, owned, affiliateAddress(), cats, amounts], {value: sum})
+        mySend(contractInstance, contractInstance.methods.createLinkAndVote, [{link, title, shortDescription, description, locale, linkKind: kind, responseTo: "0"}, owned, affiliateAddress(), cats, amounts], {value: sum})
             .then(() => {
                 ga('send', 'event', 'Links', 'link post', $('#tabs-blog').css('display') != 'none' ? 'blog' : 'link');
             });
