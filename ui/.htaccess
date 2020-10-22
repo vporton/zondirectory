@@ -1,1 +1,1 @@
-Header add Content-Security-Policy "default-src *; style-src 'unsafe-inline' 'self' https:; script-src 'unsafe-inline' 'unsafe-eval' 'self' https:; worker-src 'unsafe-inline' 'unsafe-eval' 'self' https: blob:; img-src 'self' data: https:"
+Header add Content-Security-Policy "default-src *; style-src 'unsafe-inline' 'self' https:; script-src 'unsafe-inline' 'unsafe-eval' 'self' https:; worker-src 'unsafe-inline' 'unsafe-eval' 'self' https: blob:; img-src 'self' data: https:; connect-src 'self' https:"
