@@ -1,62 +1,430 @@
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:xi="http://www.w3.org/2001/XInclude">
-    <head>
-        <!-- Global site tag (gtag.js) - Google Analytics -->
-        <script async="async" src="https://www.googletagmanager.com/gtag/js?id=UA-60199552-4"></script>
-        <script>
-        window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
-        gtag('js', new Date());
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:xi="http://www.w3.org/2001/XInclude">
 
-        gtag('config', 'UA-60199552-4');
+<head>
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async="async" src="https://www.googletagmanager.com/gtag/js?id=UA-60199552-4"></script>
+    <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-60199552-4');
+    </script>
+    <meta charset="UTF-8"/>
+    <meta name="description" content="Ogani Template"/>
+    <meta name="keywords" content="Ogani, unica, creative, html"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta http-equiv="X-UA-Compatible" content="ie=edge"/>
+    <title>Zon Directory</title>
+
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@200;300;400;600;900&amp;display=swap" rel="stylesheet"/>
+
+    <!-- Css Styles -->
+    <link rel="stylesheet" href="css/bootstrap.min.css" type="text/css"/>
+    <link rel="stylesheet" href="css/font-awesome.min.css" type="text/css"/>
+    <link rel="stylesheet" href="css/elegant-icons.css" type="text/css"/>
+    <link rel="stylesheet" href="css/nice-select.css" type="text/css"/>
+    <link rel="stylesheet" href="css/jquery-ui.min.css" type="text/css"/>
+    <link rel="stylesheet" href="css/owl.carousel.min.css" type="text/css"/>
+    <link rel="stylesheet" href="css/slicknav.min.css" type="text/css"/>
+    <link rel="stylesheet" href="css/style.css" type="text/css"/>
+    <script src="js/web3modal/index.js"></script>
+    <script type="text/javascript" src="artifacts/mewconnect.js"></script>
+    <xi:include href="#head"/>
+    <!-- Facebook Pixel Code -->
+    <script>
+        !function(f,b,e,v,n,t,s)
+        {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+        n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+        if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+        n.queue=[];t=b.createElement(e);t.async=!0;
+        t.src=v;s=b.getElementsByTagName(e)[0];
+        s.parentNode.insertBefore(t,s)}(window, document,'script',
+        'https://connect.facebook.net/en_US/fbevents.js');
+        fbq('init', '2915344898592053');
+        fbq('track', 'PageView');
         </script>
+        <noscript><img height="1" width="1" style="display:none"
+        src="https://www.facebook.com/tr?id=2915344898592053&amp;ev=PageView&amp;noscript=1"
+        /></noscript>
+        <!-- End Facebook Pixel Code -->
+</head>
 
-        <meta charset="utf-8"/>
-        <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-        <link rel="stylesheet" type="text/css" href="css/style.css"/>
-        <script src="js/web3modal/index.js"></script>
-        <script type="text/javascript" src="artifacts/mewconnect.js"></script>
-        <xi:include href="#head"/>
+<body>
+    <!-- Page Preloder -->
+    <div id="preloder">
+        <div class="loader"></div>
+    </div>
 
-        <!-- Facebook Pixel Code -->
-        <script>
-            !function(f,b,e,v,n,t,s)
-            {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-            n.callMethod.apply(n,arguments):n.queue.push(arguments)};
-            if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
-            n.queue=[];t=b.createElement(e);t.async=!0;
-            t.src=v;s=b.getElementsByTagName(e)[0];
-            s.parentNode.insertBefore(t,s)}(window, document,'script',
-            'https://connect.facebook.net/en_US/fbevents.js');
-            fbq('init', '2915344898592053');
-            fbq('track', 'PageView');
-            </script>
-            <noscript><img height="1" width="1" style="display:none"
-            src="https://www.facebook.com/tr?id=2915344898592053&amp;ev=PageView&amp;noscript=1"
-            /></noscript>
-            <!-- End Facebook Pixel Code -->
-    </head>
-    <body>
-        <p><a id="rootLink">Root category</a> |
-            <a href="index.html">Recent items</a> |
-            <a href="author.html">Author's dashboard</a> |
-            <a href="description.html">Publish files or sell something</a> |
-            <a href="post-link.html">Post link</a> |
-            <a href="edit-category.html">Create category</a> |
-            <a href="vote.html">Vote</a> |
-            <a href="settings.html">Settings</a> |
-            <strong><a href="help.html">Help</a></strong> |
-            <a href="terms-of-use.html">Terms of use</a> |
-            <a href="shareholder.html">For shareholders</a> |
-            <a href="affiliates.html">For affiliates</a> |
-            <a href="https://github.com/vporton/zondirectory" target="_blank"><img src="images/GitHub-Mark-32px.png" width="16" height="16"/></a></p>
-        <p style="display: none; color: red" id="wrongNetWarning">Your browser isn't configured for POA network. You can only read
-            not write.
-            <a href="https://help.zondirectory.com/configure-poa-network/">Configure POA network.</a></p>
-        <p style="display: none; color: red" id="testModeWarnining">Site works in test mode! Change <a href="settings.html">settings</a>.</p>
-        <p style="color: red">The software is not yet configured to use with real money and real data.</p>
-        <h1><xi:include href="#title"/></h1>
-        <xi:include href="#body"/>
-        <div id="wait" style="display: none; position: fixed; top: 50%; left: 50%; margin-right: -50%;
-        transform: translate(-50%, -50%); width: 200px; height: 100px; border: 1px solid red; background: lightgray;">Don't close the window!</div>
-    </body>
+    <!-- Humberger Begin -->
+    <div class="humberger__menu__overlay"></div>
+    <div class="humberger__menu__wrapper">
+        <div class="humberger__menu__logo">
+            <div class="header__logo">
+                <a href="./index.html"><div class="logo">Zon <span class="blue">Directory</span></div></a>
+            </div>
+        </div>
+        <div class="humberger__menu__widget">
+            <!--div class="header__top__right__language">
+                <img src="img/language.png" alt="">
+                <div>English</div>
+                <span class="arrow_carrot-down"></span>
+                <ul>
+                    <li><a href="#">Spanis</a></li>
+                    <li><a href="#">English</a></li>
+                </ul>
+            </div-->
+        </div>
+        <nav class="humberger__menu__nav mobile-menu">
+            <ul>
+                            <li class="active"><a href="./index.html">Home</a></li>
+                            <li><a href="./shop-grid.html">Shop</a></li>
+                            <li><a href="author.html">Author's Dashboard</a></li>
+                            <li><a href="description.html">Publish files</a></li>
+                            <li><a href="post-link.html">post links</a></li>
+                            <li><a href="vote.html">Vote</a></li>
+                            <li><a href="settings.html">Settings</a></li>
+                            <li><a href="help.html">Help</a></li>
+                            <li><a href="#"><i class="fa-facebook fa"></i></a></li>
+                            <li><a href="#"><i class="fa-twitter fa"></i></a></li>
+                        </ul>
+        </nav>
+        <div id="mobile-menu-wrap"></div>
+        <div class="header__top__right__social">
+            <a href="#"><i class="fa fa-facebook"></i></a>
+            <a href="#"><i class="fa fa-twitter"></i></a>
+            <a href="#"><i class="fa fa-linkedin"></i></a>
+            <a href="#"><i class="fa fa-pinterest-p"></i></a>
+        </div>
+        <div class="humberger__menu__contact">
+            <ul>
+                <li><a id="rootLink">Root Category</a></li>
+                <li><a href="index.html">Recent Items</a></li>
+                <li><a href="author.html">Create Category</a></li>
+                <li><a href="terms-of-use.html">Terms of Use</a></li>
+                <li><a href="shareholder.html">For Shareholders</a></li>
+                <li><a href="affiliates.html">For Affiliate</a></li>
+            </ul>
+        </div>
+    </div>
+    <!-- Humberger End -->
+
+    <!-- Header Section Begin -->
+    <header class="header">
+        <div class="header__top">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-8 col-md-8">
+                        <div class="header__top__left">
+                            <ul>
+                                <li><a id="rootLink">Root Category</a></li>
+                                <li><a href="index.html">Recent Items</a></li>
+                                <li><a href="edit-category.html">Create Category</a></li>
+                                <li><a href="terms-of-use.html">Terms of Use</a></li>
+                                <li><a href="shareholder.html">For Shareholders</a></li>
+                                <li><a href="affiliates.html">For Affiliate</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-4">
+                        <!--div class="header__top__right">
+                            <div class="header__top__right__language">
+                                <img src="img/language.png" alt="">
+                                <div>English</div>
+                                <span class="arrow_carrot-down"></span>
+                                <ul>
+                                    <li><a href="#">Russian</a></li>
+                                    <li><a href="#">English</a></li>
+                                </ul>
+                            </div>
+                        </div-->
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="header__logo">
+                        <a href="./index.html"><div class="logo">Zon <span class="blue">Directory</span></div></a>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="hero__search__form">
+                        <form action="#">
+                            <input type="text" placeholder="What do yo u need?"/>
+                            <button type="submit" class="site-btn">SEARCH</button>
+                        </form>
+                    </div>
+                        <div class="hero__search__phone__text">
+                            <h5>ETH 3.00</h5>
+                        </div>
+                 </div>
+            </div>
+        </div>
+        <div class="humberger__open">
+            <i class="fa fa-bars"></i>
+        </div>
+    </header>
+    <!-- Header Section End -->
+
+    <!-- Hero Section Begin -->
+    <section class="Hero__Section">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-3">
+                    <div class="hero__categories">
+                        <div class="hero__categories__all">
+                            <i class="fa fa-bars"></i>
+                            <span>CATEGORIES</span>
+                        </div>
+                        <ul>
+                            <li><a href="#">E-books</a></li>
+                            <li><a href="#">Musical Instruments</a></li>
+                            <li><a href="#">Camera &amp; Photography</a></li>
+                            <li><a href="#">Accessories</a></li>
+                            <li><a href="#">Smart phone &amp; Tablets</a></li>
+                            <li><a href="#">Binaries</a></li>
+                            <li><a href="#">Videos</a></li>
+                            <li><a href="#">Household goods</a></li>
+                            <li><a href="#">Software</a></li>
+                            <li><a href="#">Root</a></li>
+                            <li><a href="#">Sources</a></li>
+                            <li><a href="#">Spam</a></li>
+                            <li><a href="#">Others</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-lg-9 pLR-0">
+                    <div class="hero__search">
+                        <div class="header__menu">
+                        <ul>
+                            <li class="active"><a href="./index.html">Home</a></li>
+                            <li><a href="./shop-grid.html">Shop</a></li>
+                            <li><a href="author.html">Author's Dashboard</a></li>
+                            <li><a href="description.html">Publish files</a></li>
+                            <li><a href="post-link.html">post links</a></li>
+                            <li><a href="vote.html">Vote</a></li>
+                            <li><a href="settings.html">Settings</a></li>
+                            <li><a href="help.html">Help</a></li>
+                            <li><a href="#"><i class="fa-facebook fa"></i></a></li>
+                            <li><a href="#"><i class="fa-twitter fa"></i></a></li>
+                        </ul>
+                       </div>
+                    </div>
+                    <div class="container">
+                        <div class="row">
+                            <xi:include href="#hero"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- Hero Section End -->
+
+    <!-- Featured Section Begin -->
+    <section class="featured spad">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="featured__controls">
+                        <ul>
+                            <li class="active" data-filter="*">New Arrivals</li>
+                            <li data-filter=".oranges">On Sale</li>
+                            <li data-filter=".fresh-meat">Best Rated</li>
+                        </ul>
+                    <hr/>
+                    </div>
+                </div>
+            </div>
+            <div class="row featured__filter">
+                <div class="col-lg-3 col-md-4 col-sm-6 mix oranges fresh-meat">
+                    <xi:include href="#body"/>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- Featured Section End -->
+
+    <!-- Categories Section Begin -->
+    <section class="categories">
+        <div class="container">
+            <div class="row">
+            	<div class="col-md-12">
+            		<div class="section-title">
+            			<h2 class="topTitle">Top Categories</h2>
+            			<hr/>
+            		</div>
+            	</div>
+                <div class="categories__slider owl-carousel">
+                    <div class="col-lg-3">
+                        <div class="categories__item set-bg" data-setbg="img/categories/slider.jpg">
+                            <h5><a href="#">Smartphone &amp; Tablets</a></h5>
+                        </div>
+                    </div>
+                    <div class="col-lg-3">
+                        <div class="categories__item set-bg" data-setbg="img/categories/slider.jpg">
+                            <h5><a href="#">Software</a></h5>
+                        </div>
+                    </div>
+                    <div class="col-lg-3">
+                        <div class="categories__item set-bg" data-setbg="img/categories/slider.jpg">
+                            <h5><a href="#">Videos</a></h5>
+                        </div>
+                    </div>
+                    <div class="col-lg-3">
+                        <div class="categories__item set-bg" data-setbg="img/categories/slider.jpg">
+                            <h5><a href="#">Ebooks</a></h5>
+                        </div>
+                    </div>
+                    <div class="col-lg-3">
+                        <div class="categories__item set-bg" data-setbg="img/categories/slider.jpg">
+                            <h5><a href="#">Accessories</a></h5>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- Categories Section End -->
+
+    
+
+    <!-- Footer Section Begin -->
+    <footer class="footer spad">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-4 col-md-6 col-sm-6">
+                    <div class="footer__about">
+                        <div class="header__logo">
+                        <a href="./index.html"><div class="logo">Zon <span class="blue">Directory</span></div></a>
+                    </div>
+                    <hr/>
+                    <div class="footer__widget">
+                    	<div class="bold mt-3 mb-4"><strong>Get In Touch!</strong></div>
+                        <div class="footer__widget__social">
+                        <a href="#"><i class="fa fa-facebook"></i></a>
+                            <a href="#"><i class="fa fa-instagram"></i></a>
+                            <a href="#"><i class="fa fa-twitter"></i></a>
+                            <a href="#"><i class="fa fa-pinterest"></i></a>
+                        </div>
+                    </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-2 col-sm-6">
+                    <div class="footer__widget">
+                        <h6>Find it Fast</h6>
+                        <ul>
+                            <li><a href="#">E-Books</a></li>
+                            <li><a href="#">Smartphone &amp; Tablets</a></li>
+                            <li><a href="#">Software</a></li>
+                            <li><a href="#">Camera &amp; Photography</a></li>
+                            <li><a href="#">Videos</a></li>
+                            <li><a href="#">Sources</a></li>
+                            <li><a href="#">Binaries</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-2 col-sm-6">
+                    <div class="footer__widget">
+                        <h6>Information</h6>
+                        <ul>
+                            <li><a href="#">About Us</a></li>
+                            <li><a href="#">Contact Us</a></li>
+                            <li><a href="#">Privacy policy</a></li>
+                            <li><a href="#">Terms &amp; conditions</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-md-2 col-sm-6">
+                    <div class="footer__widget">
+                        <h6>Customer Care</h6>
+                        <ul>
+                            <li><a href="#">My Account</a></li>
+                            <li><a href="#">Order History</a></li>
+                            <li><a href="#">Customer Servcices</a></li>
+                            <li><a href="#">FAQs</a></li>
+                            <li><a href="#">Product Support</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <!-- <div class="col-lg-3 col-md-5">
+                    <div class="footer__widget">
+                        <h6>Customer Care</h6>
+                        <p>Get E-mail updates about our latest shop and special offers.</p>
+                        <form action="#">
+                            <input type="text" placeholder="Enter your mail">
+                            <button type="submit" class="site-btn">Subscribe</button>
+                        </form>
+                        <div class="footer__widget__social">
+                            <a href="#"><i class="fa fa-facebook"></i></a>
+                            <a href="#"><i class="fa fa-instagram"></i></a>
+                            <a href="#"><i class="fa fa-twitter"></i></a>
+                            <a href="#"><i class="fa fa-pinterest"></i></a>
+                        </div>
+                    </div>
+                </div> -->
+            </div>
+			<!-- Newsletter -->
+	
+
+	
+
+
+            
+        </div>
+    </footer>
+
+<!-- Newsletter Section Begin -->
+    <section class="newsletter">
+        <div class="container">
+            <div class="row newsletter">
+            	<div class="col-lg-6 col-md-6 col-sm-6">
+            		<h2 class="NewsTitle">Sign Up to <span class="bold">New letter</span></h2>
+            		<p>Subscribe our newsletter.</p>
+            	</div>
+            	<div class="col-lg-6 col-md-6 col-sm-6">
+            		<div class="hero__search__form newsletterForm">
+                        <form action="#">
+                            <input type="email" placeholder="Your Email Address"/>
+                            <button type="submit" class="site-btn">SUBSCRIBE</button>
+                        </form>
+                    </div>
+            	</div>
+            </div>
+        </div>
+    </section>
+	<!-- Newsletter END -->
+
+	<!-- copyright Section Begin -->
+    <section class="copyright">
+        <div class="container">
+		    <div class="row">
+		        <div class="col-lg-12">
+			        <div class="footer__copyright text-center">
+		    	        <div class="footer__copyright__text text-center"><p class="boldP">Copyright 2020 &#169; by <a href="./index.html">Zon Directory</a></p></div>
+		            </div>
+		        </div>
+		    </div>
+	    </div>
+	</section>
+    <!-- Footer Section End -->
+
+    <!-- Js Plugins -->
+    <script src="js/jquery-3.3.1.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/jquery.nice-select.min.js"></script>
+    <script src="js/jquery-ui.min.js"></script>
+    <script src="js/jquery.slicknav.js"></script>
+    <script src="js/mixitup.min.js"></script>
+    <script src="js/owl.carousel.min.js"></script>
+    <script src="js/main.js"></script>
+
+
+
+</body>
+
 </html>
