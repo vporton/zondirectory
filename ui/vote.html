@@ -13,13 +13,19 @@
     <body>
         <h1 id="title">Vote for Category Content or Subcategory</h1>
         <div id="body">
-            <form id="form" onkeypress="return event.keyCode != 13;">
-                <p>Child item or category ID: <input type="number" id="child" name="child" required="required"/></p>
-                <p>Parent category ID: <input type="text" id="parent" class="category" name="category" required="required"/></p>
-                <p><label><input type="radio" name="dir" value="for" required="required"/> Vote for</label>
-                    <label><input type="radio" name="dir" value="against" required="required"/> Vote against</label></p>
-                <p><input type="button" value="Vote" onclick="vote()"/></p>
-            </form>
+            <section>
+                <div class="container">
+                    <div class="row">
+                        <form id="form" onkeypress="return event.keyCode != 13;">
+                            <p>Child item or category ID: <input type="number" id="child" name="child" required="required"/></p>
+                            <p>Parent category ID: <input type="text" id="parent" class="category" name="category" required="required"/></p>
+                            <p><label><input type="radio" name="dir" value="for" required="required"/> Vote for</label>
+                                <label><input type="radio" name="dir" value="against" required="required"/> Vote against</label></p>
+                            <p><input type="button" value="Vote" onclick="vote()"/></p>
+                        </form>
+                    </div>
+                </div>
+            </section>
         </div>
     </body>
 </html>

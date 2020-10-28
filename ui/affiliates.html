@@ -8,15 +8,21 @@
     <body>
         <h1 id="title">For affiliates</h1>
         <div id="body">
-            <p>Affiliate's ETH commission (subtracted from shareholders profit, may change in the future):</p>
-            <ul>
-                <li>for attracting sellers: <span id="sellerBonus"></span>%</li>
-                <li>for attracting buyers: <span id="buyerBonus"></span>%</li>
-            </ul>
-            <p>Your Ethereum address: <input type="text" size="42" id="address" style="width: 25em" oninput="recalcLink()"/></p>
-            <p>Page at this site: <input type="url" id="page" style="width: 100%" oninput="recalcLink()"/></p>
-            <p>Affiliate link: <code id="link"></code></p>
-            <p><a href="shareholder.html">Withdraw here</a></p>
+            <section>
+                <div class="container">
+                    <div class="row">
+                        <p>Affiliate's ETH commission (subtracted from shareholders profit, may change in the future):</p>
+                        <ul>
+                            <li>for attracting sellers: <span id="sellerBonus"></span>%</li>
+                            <li>for attracting buyers: <span id="buyerBonus"></span>%</li>
+                        </ul>
+                        <p>Your Ethereum address: <input type="text" size="42" id="address" style="width: 25em" oninput="recalcLink()"/></p>
+                        <p>Page at this site: <input type="url" id="page" style="width: 100%" oninput="recalcLink()"/></p>
+                        <p>Affiliate link: <code id="link"></code></p>
+                        <p><a href="shareholder.html">Withdraw here</a></p>
+                    </div>
+                </div>
+            </section>
         </div>
     </body>
 </html>

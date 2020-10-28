@@ -16,27 +16,33 @@
     <body>
         <h1 id="title">Create/Edit Category</h1>
         <div id="body">
-            <form id="form" onkeypress="return event.keyCode != 13;">
-                <p>Category name: <input type="text" id="title" name="title" required="required"/></p>
-                <p>Category language: <input type="text" id="locale" value="en" name="locale" required="required"/></p>
-                <p id="ownedPar">Category is owned by you:
-                    <input type="checkbox" id="owned" name="owned"
-                        onclick="$('#ownedInfo').css('display', event.target.checked ? 'block' : 'none')"/>
-                    (Others cannot post to a category owned by you, but owned categories receive
-                    less promotion and search engine hits than regular categories. If doubt, leave unchecked.)</p>
-                <div id="ownedInfo" style="display: none">
-                    <p>Short (meta) description: <textarea id="shortDescription" name="shortDescription"></textarea></p>
-                    <p>Description: <textarea id="description" name="description"></textarea></p>
+            <section>
+                <div class="container">
+                    <div class="row">
+                        <form id="form" onkeypress="return event.keyCode != 13;">
+                            <p>Category name: <input type="text" id="title" name="title" required="required"/></p>
+                            <p>Category language: <input type="text" id="locale" value="en" name="locale" required="required"/></p>
+                            <p id="ownedPar">Category is owned by you:
+                                <input type="checkbox" id="owned" name="owned"
+                                    onclick="$('#ownedInfo').css('display', event.target.checked ? 'block' : 'none')"/>
+                                (Others cannot post to a category owned by you, but owned categories receive
+                                less promotion and search engine hits than regular categories. If doubt, leave unchecked.)</p>
+                            <div id="ownedInfo" style="display: none">
+                                <p>Short (meta) description: <textarea id="shortDescription" name="shortDescription"></textarea></p>
+                                <p>Description: <textarea id="description" name="description"></textarea></p>
+                            </div>
+                        </form>
+                        <div id="multiVoterDiv">
+                            <h2>Parent categories</h2>
+                            <p>You vote for parent categories with ETH, with the discount TODO.
+                                For your owned parent categories voting is free.
+                                Add your new category to at least one parent category to have more traffic.</p>
+                            <div id="multiVoter"></div>
+                        </div>
+                        <p><input type="button" value="Create/Edit" onclick="createCategory()"/></p>
+                    </div>
                 </div>
-            </form>
-            <div id="multiVoterDiv">
-                <h2>Parent categories</h2>
-                <p>You vote for parent categories with ETH, with the discount TODO.
-                    For your owned parent categories voting is free.
-                    Add your new category to at least one parent category to have more traffic.</p>
-                <div id="multiVoter"></div>
-            </div>
-            <p><input type="button" value="Create/Edit" onclick="createCategory()"/></p>
+            </section>
         </div>
     </body>
 </html>
