@@ -292,8 +292,9 @@ async function onLoad() {
         $('#categories > li:gt(0)').css('display', 'none');
 
         const item = queryResult.itemUpdateds[0];
-        document.getElementById('locale').textContent = item.locale;
+        //document.getElementById('locale').textContent = item.locale;
         document.getElementById('title').textContent = item.title;
+        document.getElementById('shortDescription').textContent = item.shortDescription;
         document.getElementById('description').textContent = item.description;
         $('head').append(`<meta name="description" content="${safe_attrs(item.shortDescription)}"/>`);
         document.getElementById('license').textContent = item.license;
@@ -301,10 +302,10 @@ async function onLoad() {
         priceAR = arweave.ar.arToWinston(formatPriceETH(item.priceETH) * ethInUSD / arInUSD * arCoefficient);
         const arDiscount = ((1 - arCoefficient) * 100).toPrecision(2);
         document.getElementById('priceUSD').textContent = formatPriceETH(item.priceETH) * ethInUSD;
-        document.getElementById('priceUSDAR').textContent = formatPriceAR(priceAR) * arInUSD;
+        // document.getElementById('priceUSDAR').textContent = formatPriceAR(priceAR) * arInUSD;
         document.getElementById('priceETH').textContent = formatPriceETH(item.priceETH);
-        document.getElementById('priceAR').textContent = formatPriceAR(priceAR);
-        document.getElementById('arDiscount').textContent = arDiscount;
+        // document.getElementById('priceAR').textContent = formatPriceAR(priceAR);
+        // document.getElementById('arDiscount').textContent = arDiscount;
         if(item.priceETH == INFINITY) {
             $('#buyETH').css('display', 'none');
             $('#buyAR').css('display', 'none');

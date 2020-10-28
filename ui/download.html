@@ -15,7 +15,75 @@
     <body>
         <h1 id="title">Download/Purchase</h1>
         <div id="body">
-            <section>
+            <section class="product-details">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-lg-6 col-md-6">
+                            <div class="product__details__pic">
+                                <div class="product__details__pic__item">
+                                    <img class="product__details__pic__item--large"
+                                        src="img/product/details/product-details-1.jpg" alt=""/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-5 col-md-5 pl-3">
+                            <div class="product__details__text">
+                                <h1><span class="blue" id="title"></span></h1>
+                                <p class="products__details" id="shortDescription"></p>
+                                <p>License: <span id="license"/></p>
+                                <div class="row mb-3 pl-3">
+                                        <div class="C__category">Categories: </div><a href="#"><span class="blue ml-1">E-books</span></a>
+                                        <div class="row"><div class="ml-5 C__category">Share Link: <div class="share">
+                                            <a href="#"><i class="fa fa-facebook"></i></a>
+                                            <a href="#"><i class="fa fa-twitter"></i></a>
+                                            <a href="#"><i class="fa fa-instagram"></i></a>
+                                            <a href="#"><i class="fa fa-pinterest"></i></a>
+                                        </div></div></div>
+                                </div>
+                                <div class="row">
+                                    <div class="pl-3 product__details__price">ETH <span id="priceETH"/> ($<span id="priceUSD"/>)</div>
+                                </div>
+                                <div class="row">
+                                    <div class="C__category mt-3 mr-3">Quantity:</div>
+                                    <div class="product__details__quantity">
+                                        <div class="quantity">
+                                            <div class="pro-qty">
+                                                <input type="text" value="1"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <a href="#" class="primary-btn">BUY</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-12">
+                            <div class="product__details__tab">
+                                <ul class="nav nav-tabs" role="tablist">
+                                    <li class="nav-item">
+                                        <a class="nav-link active" data-toggle="tab" href="#tabs-1" role="tab"
+                                            aria-selected="true">Description</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" data-toggle="tab" href="#tabs-3" role="tab"
+                                            aria-selected="false">Customer Reviews <span>(2)</span></a>
+                                    </li>
+                                </ul>
+                                <div class="tab-content">
+                                    <div class="tab-pane active" id="tabs-1" role="tabpanel">
+                                        <div class="product__details__tab__desc">
+                                            <h3>Products Infomation</h3>
+                                            <p id="description"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Product Details Section End -->
+            <!--section>
                 <div class="container">
                     <div class="row">
                         <div class="col-xs-12">
@@ -56,7 +124,7 @@
                         </div>
                     </div>
                 </div>
-            </section>
+            </section-->
         </div>
     </body>
 </html>
