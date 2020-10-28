@@ -18,30 +18,32 @@
             <section>
                 <div class="container">
                     <div class="row">
-                        <h2>Shareholders profit + direct author profit</h2>
-                        <p>Your earned amount in ETH: <span id="ETH"></span>
-                            <input type="button" value="Withdraw" onclick="withdrawETH()"/></p>
-                        <p>There are (non-voting) shares of two kinds: shares for ETH profit and
-                            shares for AR profit. Investment is not solicited, but you could buy
-                            shares at an exchange (when available).</p>
-                        <p>Your ETH profit sharing tokens: <span id="tokenETH"></span>
-                            (<code id="pstAddressElt"></code> token in MetaMask)</p>
-                        <p>Your AR wallet (<a href="author.html">Set</a>): <code id="arWallet"></code></p>
-                        <p>Your AR profit sharing tokens: <span id="tokenAR"></span>
-                            (AR profit is distributed automatically, you don't need to withdraw.)</p>
+                        <div class="col-xs-12">
+                            <h2>Shareholders profit + direct author profit</h2>
+                            <p>Your earned amount in ETH: <span id="ETH"></span>
+                                <input type="button" value="Withdraw" onclick="withdrawETH()"/></p>
+                            <p>There are (non-voting) shares of two kinds: shares for ETH profit and
+                                shares for AR profit. Investment is not solicited, but you could buy
+                                shares at an exchange (when available).</p>
+                            <p>Your ETH profit sharing tokens: <span id="tokenETH"></span>
+                                (<code id="pstAddressElt"></code> token in MetaMask)</p>
+                            <p>Your AR wallet (<a href="author.html">Set</a>): <code id="arWallet"></code></p>
+                            <p>Your AR profit sharing tokens: <span id="tokenAR"></span>
+                                (AR profit is distributed automatically, you don't need to withdraw.)</p>
 
-                        <h2>Affiliates of authors</h2>
-                        <p>There are (non-voting) shares of two kinds: shares for ETH profit and
-                            shares for AR profit (the latter not yet implemented). You could buy authors'
-                            shares at an exchange (when available).</p>
-                        <table>
-                            <thead>
-                                <tr><th>Author's account</th><th>Your earned amount (ETH)</th></tr>
-                            </thead>
-                            <tbody id="authors"></tbody>
-                        </table>
-                        <p>To be done.</p>
-                        <!--p><input type="button" value="Withdraw all" onclick="withdrawETHAuthor()"/></p-->
+                            <h2>Affiliates of authors</h2>
+                            <p>There are (non-voting) shares of two kinds: shares for ETH profit and
+                                shares for AR profit (the latter not yet implemented). You could buy authors'
+                                shares at an exchange (when available).</p>
+                            <table>
+                                <thead>
+                                    <tr><th>Author's account</th><th>Your earned amount (ETH)</th></tr>
+                                </thead>
+                                <tbody id="authors"></tbody>
+                            </table>
+                            <p>To be done.</p>
+                            <!--p><input type="button" value="Withdraw all" onclick="withdrawETHAuthor()"/></p-->
+                        </div>
                     </div>
                 </div>
             </section>

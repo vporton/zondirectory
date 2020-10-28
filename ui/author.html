@@ -19,30 +19,32 @@
             <section>
                 <div class="container">
                     <div class="row">
-                        <p><a href="shareholder.html">Withdraw Ether</a> | <a href="author-purchases.html">Purchases from you</a>
-                            (check this page regularly, currently we don't provide email notifications of new purchases!)</p>
-                        <p>Your AR wallet (until it is set all your AR royalties and donations will be sent to the owner of this site!):
-                            <code id="arWallet"></code>
-                            <input type="button" value="Set AR wallet" onclick="setARWallet()"/>
-                            <input type="file" value="Set AR wallet from key file..." id="arKeyFile" onchange="setARWalletFromkeyFile(event)"/>
-                        </p>
-                        <h2>My files</h2>
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>Title</th>
-                                    <th>Price in ETH</th>
-                                    <th>Operations</th>
-                                </tr>
-                            </thead>
-                            <tbody id="theTable"></tbody>
-                        </table>
-                        <h2>Links owned by me</h2>
-                        <ul id="links"></ul>
-                        <h2>Categories owned by me</h2>
-                        <p>You can publish for free (not counting Ethereum transaction costs) links, messages, downloads, etc.
-                            in your categories.</p>
-                        <ul id="categories"></ul>
+                        <div class="col-xs-12">
+                            <p><a href="shareholder.html">Withdraw Ether</a> | <a href="author-purchases.html">Purchases from you</a>
+                                (check this page regularly, currently we don't provide email notifications of new purchases!)</p>
+                            <p>Your AR wallet (until it is set all your AR royalties and donations will be sent to the owner of this site!):
+                                <code id="arWallet"></code>
+                                <input type="button" value="Set AR wallet" onclick="setARWallet()"/>
+                                <input type="file" value="Set AR wallet from key file..." id="arKeyFile" onchange="setARWalletFromkeyFile(event)"/>
+                            </p>
+                            <h2>My files</h2>
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Title</th>
+                                        <th>Price in ETH</th>
+                                        <th>Operations</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="theTable"></tbody>
+                            </table>
+                            <h2>Links owned by me</h2>
+                            <ul id="links"></ul>
+                            <h2>Categories owned by me</h2>
+                            <p>You can publish for free (not counting Ethereum transaction costs) links, messages, downloads, etc.
+                                in your categories.</p>
+                            <ul id="categories"></ul>
+                        </div>
                     </div>
                 </div>
             </section>

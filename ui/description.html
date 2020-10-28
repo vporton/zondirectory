@@ -19,20 +19,22 @@
             <section>
                 <div class="container">
                     <div class="row">
-                        <form id="form" onkeypress="return event.keyCode != 13;">
-                            <p>Language: <input type="text" id="locale" name="locale" value="en" required="required"/></p>
-                            <p>Title: <input type="text" id="title" name="title" required="required"/></p>
-                            <p>Short (meta) description: <textarea id="shortDescription" name="shortDescription"></textarea></p>
-                            <p>Description: <textarea id="description" name="description"></textarea></p>
-                            <p>License: <textarea id="license" name="license"></textarea></p>
-                            <p>Minimal price in ETH: <input type="text" id="priceETH" name="priceETH" required="required"/></p>
-                            <div id="multiVoterDiv">
-                                <h2>Categories</h2>
-                                <div id="multiVoter"></div>
-                            </div>
-                            <p><input type="button" value="submit" onclick="createOrUpdateItem()"/></p>
-                        </form>
-                        <p id="uploadLink" style="display: none;"><a href="">Upload file</a></p>
+                        <div class="col-xs-12">
+                            <form id="form" onkeypress="return event.keyCode != 13;">
+                                <p>Language: <input type="text" id="locale" name="locale" value="en" required="required"/></p>
+                                <p>Title: <input type="text" id="title" name="title" required="required"/></p>
+                                <p>Short (meta) description: <textarea id="shortDescription" name="shortDescription"></textarea></p>
+                                <p>Description: <textarea id="description" name="description"></textarea></p>
+                                <p>License: <textarea id="license" name="license"></textarea></p>
+                                <p>Minimal price in ETH: <input type="text" id="priceETH" name="priceETH" required="required"/></p>
+                                <div id="multiVoterDiv">
+                                    <h2>Categories</h2>
+                                    <div id="multiVoter"></div>
+                                </div>
+                                <p><input type="button" value="submit" onclick="createOrUpdateItem()"/></p>
+                            </form>
+                            <p id="uploadLink" style="display: none;"><a href="">Upload file</a></p>
+                        </div>
                     </div>
                 </div>
             </section>

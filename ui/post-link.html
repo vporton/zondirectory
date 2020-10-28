@@ -30,48 +30,50 @@
             <section>
                 <div class="container">
                     <div class="row">
-                        <form id="form" onkeypress="return event.keyCode != 13;">
-                            <p>Language: <input type="text" id="locale" name="locale" required="required" value="en"/></p>
-                            <p>Title: <input type="text" id="title" name="title" required="required" /></p>
-                            <p>Short (meta) description: <textarea id="shortDescription" name="shortDescription"></textarea></p>
-                            <p>Description: <textarea id="description" name="description"></textarea></p>
-                            <p>Link type:
-                                <label><input type="radio" name="kind" value="0" required="true"/> Directory entry</label>
-                                <label><input type="radio" name="kind" value="1" required="true"/> Message</label></p>
-                            <div id="tabs">
-                                <ul>
-                                    <li><a href="#tabs-link">Link</a></li>
-                                    <li><a href="#tabs-blog">Blog post</a></li>
-                                    <li><a href="#tabs-upload">Upload file</a></li>
-                                </ul>
-                                <div id="tabs-link">
-                                    <p>Link: <input type="url" id="link" name="link" /></p>
+                        <div class="col-xs-12">
+                            <form id="form" onkeypress="return event.keyCode != 13;">
+                                <p>Language: <input type="text" id="locale" name="locale" required="required" value="en"/></p>
+                                <p>Title: <input type="text" id="title" name="title" required="required" /></p>
+                                <p>Short (meta) description: <textarea id="shortDescription" name="shortDescription"></textarea></p>
+                                <p>Description: <textarea id="description" name="description"></textarea></p>
+                                <p>Link type:
+                                    <label><input type="radio" name="kind" value="0" required="true"/> Directory entry</label>
+                                    <label><input type="radio" name="kind" value="1" required="true"/> Message</label></p>
+                                <div id="tabs">
+                                    <ul>
+                                        <li><a href="#tabs-link">Link</a></li>
+                                        <li><a href="#tabs-blog">Blog post</a></li>
+                                        <li><a href="#tabs-upload">Upload file</a></li>
+                                    </ul>
+                                    <div id="tabs-link">
+                                        <p>Link: <input type="url" id="link" name="link" /></p>
+                                    </div>
+                                    <div id="tabs-blog">
+                                        <p>Template:
+                                            <select id="template" name="template">
+                                                <option value="">(none)</option>
+                                            </select>
+                                            <input type="button" value="Change" onclick="changePostTemplate()"/>
+                                            <a target="_blank" href="templates.html">Manage</a>
+                                        </p>
+                                        <textarea id="blogPost" name="blogPost"></textarea>
+                                    </div>
+                                    <div id="tabs-upload">
+                                        <p>Upload: <input type="file" id="file" name="file" /></p>
+                                        <p>You can upload for example an audio or video file or an image.</p>
+                                    </div>
                                 </div>
-                                <div id="tabs-blog">
-                                    <p>Template:
-                                        <select id="template" name="template">
-                                            <option value="">(none)</option>
-                                        </select>
-                                        <input type="button" value="Change" onclick="changePostTemplate()"/>
-                                        <a target="_blank" href="templates.html">Manage</a>
-                                    </p>
-                                    <textarea id="blogPost" name="blogPost"></textarea>
-                                </div>
-                                <div id="tabs-upload">
-                                    <p>Upload: <input type="file" id="file" name="file" /></p>
-                                    <p>You can upload for example an audio or video file or an image.</p>
-                                </div>
+                                <p>AR wallet key file to pay for upload:
+                                    <input type="file" id="arWalletKeyFile" name="arWalletKeyFile"/></p>
+                                <p style="font-size: smaller">For security reasons you are recommended to use another Arweave account than
+                                    the account to which you receive profit or store significant funds.</p>
+                            </form>
+                            <div id="multiVoterDiv">
+                                <h2>Categories</h2>
+                                <div id="multiVoter"></div>
                             </div>
-                            <p>AR wallet key file to pay for upload:
-                                <input type="file" id="arWalletKeyFile" name="arWalletKeyFile"/></p>
-                            <p style="font-size: smaller">For security reasons you are recommended to use another Arweave account than
-                                the account to which you receive profit or store significant funds.</p>
-                        </form>
-                        <div id="multiVoterDiv">
-                            <h2>Categories</h2>
-                            <div id="multiVoter"></div>
+                            <p><input type="button" value="submit" onclick="createOrUpdateItem()"/></p>
                         </div>
-                        <p><input type="button" value="submit" onclick="createOrUpdateItem()"/></p>
                     </div>
                 </div>
             </section>
