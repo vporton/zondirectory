@@ -190,21 +190,7 @@
                             <i class="fa fa-bars"></i>
                             <span>CATEGORIES</span>
                         </div>
-                        <ul>
-                            <li><a href="#">E-books</a></li>
-                            <li><a href="#">Musical Instruments</a></li>
-                            <li><a href="#">Camera &amp; Photography</a></li>
-                            <li><a href="#">Accessories</a></li>
-                            <li><a href="#">Smart phone &amp; Tablets</a></li>
-                            <li><a href="#">Binaries</a></li>
-                            <li><a href="#">Videos</a></li>
-                            <li><a href="#">Household goods</a></li>
-                            <li><a href="#">Software</a></li>
-                            <li><a id="rootLink">Root</a></li>
-                            <li><a href="#">Sources</a></li>
-                            <li><a href="#">Spam</a></li>
-                            <li><a href="#">Others</a></li>
-                        </ul>
+                        <xi:include href="#sidebarCategories"/>
                     </div>
                 </div>
                 <div class="col-lg-9 pLR-0">
@@ -231,7 +217,13 @@
     </section>
     <!-- Hero Section End -->
 
-    <xi:include href="#body"/>
+    <section class="product">
+        <div class="container">
+            <div class="row">
+                <xi:include href="#body"/>
+            </div>
+        </div>
+    </section>
 
     <!-- Categories Section Begin -->
     <section class="categories">
