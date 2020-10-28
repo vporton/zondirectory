@@ -4,7 +4,10 @@
                 xmlns:html="http://www.w3.org/1999/xhtml"
                 version="1.0">
 
-    <xsl:output method="html" version="5.0"/>
+    <xsl:output method="html" version="5.0"
+        doctype-public=""
+        doctype-system=""
+    />
 
     <xsl:param name="input"/>
 

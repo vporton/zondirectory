@@ -42,7 +42,8 @@ h6 {
 }
 
 h1 {
-	font-size: 70px;
+	    font-size: 40px !important;
+    font-weight: 800 !important;
 }
 
 h2 {
@@ -1150,7 +1151,7 @@ ol {
 .breadcrumb-section {
 	display: flex;
 	align-items: center;
-	padding: 20px 0 40px;
+	padding: 20px 0 10px;
 }
 
 .breadcrumb__text h2 {
@@ -3021,6 +3022,10 @@ ol {
 	letter-spacing: 2px;
 }
 
+.hero__section {
+	padding: 40px 0px;
+}
+
 /*--------------------------------- Responsive Media Quaries -----------------------------*/
 
 @media only screen and (min-width: 1200px) {
@@ -3339,6 +3344,7 @@ ol {
 	}
 	.hero__search__form {
 		width: 100%;
+		margin-top: 60px;
 	}
 	.hero__search__form form input {
 		width: 100%;
@@ -3597,6 +3603,10 @@ ol {
     float: right;
     justify-content: center;
 	}
+	.breadcrumb__text {
+    margin-top: 100px;
+    padding: 20px 0px 20px;
+}
 }
 
 /* Small Device = 320px */
@@ -3660,7 +3670,7 @@ ol {
 .breadcrumb-section {
     display: flex;
     align-items: center;
-    padding: 20px 0 40px;
+    padding: 20px 0 10px;
     margin-top: 100px;
 }
 
@@ -3680,6 +3690,9 @@ ol {
     float: right;
     justify-content: center;
 	}
+	.filter__option {
+    justify-content: center;
+}
 }
 
 	.newsletter {
@@ -3797,7 +3810,7 @@ ol {
     border-radius: 0;
 }
 
-h1, h2 ,h3, h4, h5, h6 {
+h2 ,h3, h4, h5, h6 {
 	font-weight: 600 !important;
 }
 

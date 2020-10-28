@@ -12,7 +12,7 @@ ui: ui-quick compile
 ui-quick:
 	-rm -rf out/ui
 	mkdir -p out/ui
-	find ui -name "*.js" -o -name "*.css" -o -name "*.json" -o -name "*.abi" -o -name "*.png" -o -name .htaccess -o \
+	find ui -name "*.js" -o -name "*.css" -o -name "*.json" -o -name "*.abi" -o -name "*.png" -o -name "*.jpg" -o -name .htaccess -o \
 	  -name "*.eot" -o -name "*.svg" -o -name "*.ttf" -o -name "*.woff" -o -name "*.woff2" | \
 	  xargs cp --parents -t out/
 	find ui \( -name "*.html" -a \! -name template.html \) | \
