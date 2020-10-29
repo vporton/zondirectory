@@ -32,13 +32,16 @@
                                 <p class="products__details" id="shortDescription"></p>
                                 <p>License: <span id="license"/></p>
                                 <div class="row mb-3 pl-3">
-                                        <div class="C__category">Categories: </div><a href="#"><span class="blue ml-1">E-books</span></a>
+                                    <div class="col-xs-12">
+                                        <div class="C__category">Categories: </div>
+                                        <ul id="categories"></ul>
                                         <div class="row"><div class="ml-5 C__category">Share Link: <div class="share">
                                             <a href="#"><i class="fa fa-facebook"></i></a>
                                             <a href="#"><i class="fa fa-twitter"></i></a>
                                             <a href="#"><i class="fa fa-instagram"></i></a>
                                             <a href="#"><i class="fa fa-pinterest"></i></a>
                                         </div></div></div>
+                                    </div>
                                 </div>
                                 <div class="row">
                                     <div class="pl-3 product__details__price">ETH <span id="priceETH"/> ($<span id="priceUSD"/>)</div>
@@ -79,6 +82,13 @@
                             </div>
                         </div>
                     </div>
+                    <div class="row">
+                        <div class="col-lg-6 col-md-6">
+                            <p>File formats:</p>
+                            <ul id="formats"></ul>
+                            <p id="noFiles"><em>No files</em></p>
+                        </div>
+                    </div>
                 </div>
             </section>
 
@@ -87,8 +97,6 @@
                 <div class="container">
                     <div class="row">
                         <div class="col-xs-12">
-                            <p>Categories:</p>
-                            <ul id="categories"></ul>
                             <p><a href="#" onclick="moreParents(); return false">More...</a> <a id="addParent">Add</a></p>
                             <p style="color: red">You are legally prohibited (unless the file license explicitly permits this) to distribute
                                 or obtain the download links in any other way except by using this interface or
@@ -100,12 +108,8 @@
                                 We cannot even remove fake sellers. To have your item delivered, you must notify the seller about your
                                 purchase! If you cannot contact a seller, it is not our failure.</p>
                             <p>Language: <span id="locale"></span></p>
-                            <p>Title: <span id="title"></span></p>
-                            <p>Description: <span id="description"></span></p>
-                            <p>License: <span id="license"></span></p>
                             <p>Shipping address and info (optional for digital items): <input type="text" id="shippingInfo"/>
                                 (Warning: All your purchase information will be published.)</p>
-                            <p>Multiply price by <input type="text" id="multiplier" value="1" style="width: 3em"/> (useful if you want to purchase more than one item).</p>
                             <p>Prices:</p>
                             <ul>
                                 <li>in ETH: <span id="priceETH"></span> ($<span id="priceUSD"></span>)
