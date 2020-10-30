@@ -251,6 +251,12 @@ async function onLoad() {
 
     await connectWeb3();
 
+    if(window.web3) {
+        await defaultAccountPromise();
+        const balance = await web3.eth.getBalance(defaultAccount);
+        console.log(balance)
+        $('.accountBalance').text(Number(web3.utils.fromWei(balance)).toFixed(2));
+    }
     $('.rootLink').attr('href', "category.html?cat=" + await getAddress('Root'));
 }
 
