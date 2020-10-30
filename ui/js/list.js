@@ -189,17 +189,13 @@ async function onLoad() {
             itemWidget.removeClass('hidden');
             itemWidget.find('.title').text(item.title);
             itemWidget.find('.priceETH').text(formatPriceETH(item.priceETH));
-            // if(catId) {
-            //     const spamInfo = items[i.replace(/^item/, 'spam')][0];
-            //     const spamScore = spamInfo ? formatPriceETH(new web3.utils.BN(spamInfo.value).neg()) : 0;
-            //     const voteStr = `<a href='vote.html?child=${i.replace(/^item/, "")}&parent=${catId}&dir=for'>👍</a>` +
-            //         `<a href='vote.html?child=${i.replace(/^item/, "")}&parent=${catId}&dir=against'>👎</a>`;
-            //     const row = `<tr><td><a href="${link}">${safe_tags(item.title)}</a></td><td>${formatPriceETH(item.priceETH)}</td><td>${spamScore} ${voteStr}</tr>`;
-            //     $('#theTable').append(row);
-            // } else {
-            //     const row = `<tr><td><a href="${link}">${safe_tags(item.title)}</a></td><td>${formatPriceETH(item.priceETH)}</td></tr>`;
-            //     $('#theTable').append(row);
-            // }
+            if(catId) {
+                const spamInfo = items[i.replace(/^item/, 'spam')][0];
+                const spamScore = spamInfo ? formatPriceETH(new web3.utils.BN(spamInfo.value).neg()) : 0;
+                const voteStr = `<a href='vote.html?child=${i.replace(/^item/, "")}&parent=${catId}&dir=for'>👍</a>` +
+                    `<a href='vote.html?child=${i.replace(/^item/, "")}&parent=${catId}&dir=against'>👎</a>`;
+                itemWidget.find('.voteStr').html(`Spam score: ${spamScore} ${voteStr}`);
+            }
             $('#items').append(itemWidget);
         }
         for(let i of itemKeys) {
