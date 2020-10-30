@@ -283,7 +283,7 @@ async function onLoad() {
                 if(!category) continue;
                 const spamInfo = items['spam' + categoryId][0];
                 const spamScore = spamInfo ? formatPriceETH(new web3.utils.BN(spamInfo.value).neg()) : 0;
-                const link = "index.html?cat=" + categoryId;
+                const link = "category.html?cat=" + categoryId;
                 const voteStr = `<a href='vote.html?child=${itemId}&parent=${categoryId}&dir=for'>👍</a>` +
                     `<a href='vote.html?child=${itemId}&parent=${categoryId}&dir=against'>👎</a>`;
                 $('#categories').append(`<li><a href="${link}">${safe_tags(category.title)}</a> (spam score: ${spamScore} ${voteStr})</li>`);

@@ -153,7 +153,7 @@ async function onLoad() {
                 if(!category) continue;
                 const spamInfo = items['rspam' + categoryId][0];
                 const spamScore = spamInfo ? formatPriceETH(new web3.utils.BN(spamInfo.value).neg()) : 0;
-                const link = "index.html?cat=" + categoryId;
+                const link = "category.html?cat=" + categoryId;
                 const voteStr = `<a href='vote.html?child=${catId}&parent=${categoryId}&dir=for'>👍</a>` +
                     `<a href='vote.html?child=${catId}&parent=${categoryId}&dir=against'>👎</a>`;
                 $('#supercategories').append(`<li><a href="${link}">${safe_tags(category.title)}</a> (spam score: ${spamScore} ${voteStr})</li>`);
@@ -165,7 +165,7 @@ async function onLoad() {
                 if(!category) continue;
                 const spamInfo = items['spam' + categoryId][0];
                 const spamScore = spamInfo ? formatPriceETH(new web3.utils.BN(spamInfo.value).neg()) : 0;
-                const link = "index.html?cat=" + categoryId;
+                const link = "category.html?cat=" + categoryId;
                 const voteStr = `<a href='vote.html?child=${categoryId}&parent=${catId}&dir=for'>👍</a>` +
                     `<a href='vote.html?child=${categoryId}&parent=${catId}&dir=against'>👎</a>`;
                 if(items['ownedCategory' + categoryId][0])
@@ -188,6 +188,7 @@ async function onLoad() {
             const itemWidget = $('#item').clone(true);
             itemWidget.removeClass('hidden');
             itemWidget.find('.title').text(item.title);
+            itemWidget.find('.link').each(function() { this.setAttribute('href', link); });
             itemWidget.find('.priceETH').text(formatPriceETH(item.priceETH));
             if(catId) {
                 const spamInfo = items[i.replace(/^item/, 'spam')][0];
@@ -225,14 +226,14 @@ async function onLoad() {
                 if(!/^category[0-9]+/.test(i)) continue;
                 const item = items[i][0];
                 if(!item) continue;
-                const link = "index.html?cat=" + item.categoryId;
+                const link = "category.html?cat=" + item.categoryId;
                 $('#categories').append(`<li><a href="${link}">${safe_tags(item.title)}</a></li>`);
             }
             for(let i of itemKeys) {
                 if(!/^ownedCategory[0-9]+/.test(i)) continue;
                 const item = items[i][0];
                 if(!item) continue;
-                const link = "index.html?cat=" + item.categoryId;
+                const link = "category.html?cat=" + item.categoryId;
                 $('#ownedSubcategories').append(`<li><a href="${link}">${safe_tags(item.title)}</a></li>`);
             }
         }
