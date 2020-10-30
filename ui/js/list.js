@@ -185,17 +185,22 @@ async function onLoad() {
             const item = items[i][0];
             if(!item) continue;
             const link = "download.html?id=" + item.itemId;
-            if(catId) {
-                const spamInfo = items[i.replace(/^item/, 'spam')][0];
-                const spamScore = spamInfo ? formatPriceETH(new web3.utils.BN(spamInfo.value).neg()) : 0;
-                const voteStr = `<a href='vote.html?child=${i.replace(/^item/, "")}&parent=${catId}&dir=for'>👍</a>` +
-                    `<a href='vote.html?child=${i.replace(/^item/, "")}&parent=${catId}&dir=against'>👎</a>`;
-                const row = `<tr><td><a href="${link}">${safe_tags(item.title)}</a></td><td>${formatPriceETH(item.priceETH)}</td><td>${spamScore} ${voteStr}</tr>`;
-                $('#theTable').append(row);
-            } else {
-                const row = `<tr><td><a href="${link}">${safe_tags(item.title)}</a></td><td>${formatPriceETH(item.priceETH)}</td></tr>`;
-                $('#theTable').append(row);
-            }
+            const itemWidget = $('#item').clone(true);
+            itemWidget.removeClass('hidden');
+            itemWidget.find('.title').text(item.title);
+            itemWidget.find('.priceETH').text(formatPriceETH(item.priceETH));
+            // if(catId) {
+            //     const spamInfo = items[i.replace(/^item/, 'spam')][0];
+            //     const spamScore = spamInfo ? formatPriceETH(new web3.utils.BN(spamInfo.value).neg()) : 0;
+            //     const voteStr = `<a href='vote.html?child=${i.replace(/^item/, "")}&parent=${catId}&dir=for'>👍</a>` +
+            //         `<a href='vote.html?child=${i.replace(/^item/, "")}&parent=${catId}&dir=against'>👎</a>`;
+            //     const row = `<tr><td><a href="${link}">${safe_tags(item.title)}</a></td><td>${formatPriceETH(item.priceETH)}</td><td>${spamScore} ${voteStr}</tr>`;
+            //     $('#theTable').append(row);
+            // } else {
+            //     const row = `<tr><td><a href="${link}">${safe_tags(item.title)}</a></td><td>${formatPriceETH(item.priceETH)}</td></tr>`;
+            //     $('#theTable').append(row);
+            // }
+            $('#items').append(itemWidget);
         }
         for(let i of itemKeys) {
             if(!/^link/.test(i)) continue;

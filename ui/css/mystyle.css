@@ -1,2 +1,4 @@
+.hidden { display: none; }
+
 .error { border: 1px solid red }
 label.error { border: none; font-size: small }
