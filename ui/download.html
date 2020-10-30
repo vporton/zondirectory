@@ -44,7 +44,7 @@
                                     </div>
                                 </div>
                                 <div class="row">
-                                    <div class="pl-3 product__details__price">ETH <span id="priceETH"/> ($<span id="priceUSD"/>)</div>
+                                    <div class="pl-3 product__details__price">ETH <span class="priceETH"/> ($<span class="priceUSD"/>)</div>
                                 </div>
                                 <div class="row">
                                     <div class="C__category mt-3 mr-3">Quantity:</div>
@@ -55,7 +55,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <a href="#" class="primary-btn">BUY</a>
+                                    <a href="#" onclick="buyDialog(); return false;" class="primary-btn">BUY</a>
                                 </div>
                             </div>
                         </div>
@@ -108,27 +108,27 @@
                                 We cannot even remove fake sellers. To have your item delivered, you must notify the seller about your
                                 purchase! If you cannot contact a seller, it is not our failure.</p>
                             <p>Language: <span id="locale"></span></p>
-                            <p>Shipping address and info (optional for digital items): <input type="text" id="shippingInfo"/>
-                                (Warning: All your purchase information will be published.)</p>
-                            <p>Prices:</p>
-                            <ul>
-                                <li>in ETH: <span id="priceETH"></span> ($<span id="priceUSD"></span>)
-                                    <input id="buyETH" class="buy" type="button" value="Buy" onclick="payETH()"/>
-                                    <input type="button" value="Donate" onclick="donateETH()"/></li>
-                                <li>in AR: <span id="priceAR"></span> ($<span id="priceUSDAR"></span> - <span id="arDiscount"></span>% discount) |
-                                    AR wallet key file: <input type="file" id="arWalletKeyFile"/>
-                                    <input id="buyAR" class="buy" type="button" value="Buy" onclick="payAR()"/>
-                                    <input type="button" value="Donate" onclick="donateAR()"/>
-                                    <span style="color: red">Selling physical items (anything except digital downloads)
-                                        for AR is currently unsupported! We don't refund AR paid for physical items.</span></li>
-                            </ul>
-                            <p>File formats:</p>
-                            <ul id="formats"></ul>
-                            <p id="noFiles"><em>No files</em></p>
                         </div>
                     </div>
                 </div>
             </section-->
+
+            <div id="buyDialog" style="display: none" title="Purchase">
+                <p>Shipping address and info (optional for digital items): <input type="text" id="shippingInfo"/>
+                    (Warning: All your purchase information will be published.)</p>
+                <p>Prices:</p>
+                <ul>
+                    <li>in ETH: <span class="priceETH"></span> ($<span class="priceUSD"></span>)
+                        <input id="buyETH" class="buy" type="button" value="Buy" onclick="payETH()"/>
+                        <input type="button" value="Donate" onclick="donateETH()"/></li>
+                    <li>in AR: <span class="priceAR"></span> ($<span class="priceUSDAR"></span> - <span class="arDiscount"></span>% discount) |
+                        AR wallet key file: <input type="file" id="arWalletKeyFile"/>
+                        <input id="buyAR" class="buy" type="button" value="Buy" onclick="payAR()"/>
+                        <input type="button" value="Donate" onclick="donateAR()"/>
+                        <span style="color: red">Selling physical items (anything except digital downloads)
+                            for AR is currently unsupported! We don't refund AR paid for physical items.</span></li>
+                </ul>
+            </div>
         </div>
     </body>
 </html>

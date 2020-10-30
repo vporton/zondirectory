@@ -72,7 +72,7 @@ function checkMultiplier() {
 async function payETH() {
     const multiplier = checkMultiplier();
     if(multiplier === null) return;
-    const price = askPrice(multiplier * document.getElementById('priceETH').textContent);
+    const price = askPrice(multiplier * $('.priceETH').text());
     if(!price) return;
     const shippingInfo = $('#shippingInfo').val();
     const contractInstance = new web3.eth.Contract(await filesJsonInterface(), await getAddress('Files'));
@@ -301,11 +301,11 @@ async function onLoad() {
         const [[arInUSD, ethInUSD], arCoefficient] = await Promise.all([calculateARRate(), fetchARCoefficient()]);
         priceAR = arweave.ar.arToWinston(formatPriceETH(item.priceETH) * ethInUSD / arInUSD * arCoefficient);
         const arDiscount = ((1 - arCoefficient) * 100).toPrecision(2);
-        document.getElementById('priceUSD').textContent = formatPriceETH(item.priceETH) * ethInUSD;
-        // document.getElementById('priceUSDAR').textContent = formatPriceAR(priceAR) * arInUSD;
-        document.getElementById('priceETH').textContent = formatPriceETH(item.priceETH);
-        // document.getElementById('priceAR').textContent = formatPriceAR(priceAR);
-        // document.getElementById('arDiscount').textContent = arDiscount;
+        $('.priceUSD').text(formatPriceETH(item.priceETH) * ethInUSD);
+        $('.priceUSDAR').text(formatPriceAR(priceAR) * arInUSD);
+        $('.priceETH').text(formatPriceETH(item.priceETH));
+        $('.priceAR').text(formatPriceAR(priceAR));
+        $('.arDiscount').text(arDiscount);
         if(item.priceETH == INFINITY) {
             $('#buyETH').css('display', 'none');
             $('#buyAR').css('display', 'none');
@@ -325,6 +325,10 @@ async function calculateARRate() {
     return await fetch('https://api.coingecko.com/api/v3/simple/price?ids=arweave%2Cethereum&vs_currencies=usd')
         .then(response => response.json())
         .then(data => [data.arweave.usd, data.ethereum.usd]);
+}
+
+function buyDialog() {
+    $('#buyDialog').dialog({minWidth: 400});
 }
 
 window.addEventListener('load', onLoad);
