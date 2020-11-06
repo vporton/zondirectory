@@ -2,7 +2,9 @@
 
 Video presentation: https://www.youtube.com/watch?v=JWNIaF3eAUg
 
-Try it at https://zondirectory.com
+Try it at:
+* https://beta.zondirectory.com (without design)
+* https://zondirectory.com (new design but partially done)
 
 More information: https://help.zondirectory.com
 
