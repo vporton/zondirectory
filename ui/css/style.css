@@ -423,7 +423,7 @@ ol {
 	list-style: none;
     display: inline-block;
     position: relative;
-    padding: 0px 7px;
+    padding: 0px 2px;
     color: #4c4c4c;
 }
 
@@ -598,6 +598,8 @@ ol {
     position: absolute;
     right: 0 !important;
     width: 100%;
+    background: #fff !important;
+    z-index: 1;
 }
 
 .hero__categories__all {
@@ -3344,7 +3346,7 @@ ol {
 	}
 	.hero__search__form {
 		width: 100%;
-		margin-top: 60px;
+		/*margin-top: 60px;*/
 	}
 	.hero__search__form form input {
 		width: 100%;
@@ -3664,7 +3666,7 @@ ol {
     position: absolute;
     margin: 50px auto 15px !important;
     border-radius: 0px 30px 30px 0px;
-    top: 30px;
+    top: -40px;
     left: 10px;
 }
 .breadcrumb-section {
@@ -3865,7 +3867,64 @@ h2 ,h3, h4, h5, h6 {
     transform: scale(1.1);
     position: absolute;
     z-index: 999999999;
+    background: #fff !important;
 }
+
+.listView .mix .featured__item:hover {
+	position: static;
+	transform: none;
+}
+
+.listView .mix .featured__item .title {
+	margin-left: 2%;
+	margin-bottom: 10px;
+}
+
+.product__details__text .nice-select {
+	display: none;
+}
+
+.product__details__text #C__dropdown {
+	display: block !important;
+}
+
+.product__details__text .C__category:after {
+	content: none !important;
+}
+
+.featured__filter .sidebar {
+	border: 1px solid #e6e6e6;
+	padding: 10px;
+	height: 100%;
+}
+
+.featured__filter .sidebar ul {
+	list-style: none;
+	padding-left: 20px;
+	line-height: 30px;
+	font-size: 18px;
+}
+
+.featured__filter .sidebar ul li , .featured__filter .sidebar ul li a {
+	color: #1869c4 !important;
+	font-weight: 600;
+}
+
+.featured__filter .sidebar ul .black{
+	font-size: 20px;
+	color: #000 !important;
+} 
+
+
+.featured__filter .sidebar ul li:before {
+	    position: absolute;
+    left: 0;
+    content: "3";
+    font-family: "ElegantIcons";
+    transform: rotate(-90deg);
+    padding-left: 0px;
+}
+
 
 @media only screen and (max-width: 767px) {
 .hero__categories {

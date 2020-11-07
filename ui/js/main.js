@@ -97,27 +97,27 @@
 
 
 
-    if($(window).width() < 990)
-{
-           $('.hero__categories ul').slideUp(400);
-           $('.hero__categories__all').on('click', function(){
-                 $('.hero__categories ul').slideToggle(400);
-            });
-} else {
+//     if($(window).width() < 990)
+// {
+//            $('.hero__categories ul').slideUp(400);
+//            $('.hero__categories__all').on('click', function(){
+//                  $('.hero__categories ul').slideToggle(400);
+//             });
+// } else {
 
-    $('.hero__categories ul').slideUp(400);
-    $('.hero__categories ul').slideToggle(400);
+//     $('.hero__categories ul').slideUp(400);
+//     $('.hero__categories ul').slideToggle(400);
 
-}
+// }
 
-    // $('.hero__categories__all').on('click', function(){
-    //     $('.hero__categories ul').slideToggle(400);
-    // });
+    $('.hero__categories__all').on('click', function(){
+        $('.hero__categories ul').slideToggle(400);
+    });
 
-    // $('hero__categories__all').click(function() {
-    //         $('hero__categories ul').slideToggle(400);
-    //         $(this).hide();
-    //     });
+    $('hero__categories__all').click(function() {
+            $('hero__categories ul').slideToggle(400);
+            $(this).hide();
+        });
 
     /*--------------------------
         Latest Product Slider
@@ -240,4 +240,28 @@
         $button.parent().find('input').val(newVal);
     });
 
+
+/*-------------------
+        Grid/List view
+    --------------------- */
+
+ $('.listView').click(function() {
+    
+    $(".featured__filter").addClass('listView');
+    $(".featured__filter").removeClass('gridView');
+    $(".featured__filter .mix").addClass('col-lg-12');
+    // $(".featured__filter .col-lg-12").removeClass('col-lg-3');
+ });
+
+
+ $('.gridView').click(function() {
+    $(".featured__filter").addClass('gridView');
+    $(".featured__filter").removeClass('listView');
+    $(".featured__filter .mix").addClass('col-lg-3');
+    $(".featured__filter .mix").removeClass('col-lg-12');
+ });
+
+
+
 })(jQuery);
+
