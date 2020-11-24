@@ -4,7 +4,7 @@ Video presentation: https://www.youtube.com/watch?v=JWNIaF3eAUg
 
 Try it at:
 * https://beta.zondirectory.com (without design)
-* https://zondirectory.com (new design but partially done)
+* https://zondirectory.com (new design but partially done, we have already paid for design (sorry for the delay: the old design agency didn't accomplish the task))
 
 More information: https://help.zondirectory.com
 
