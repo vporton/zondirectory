@@ -3,6 +3,8 @@
   "MainPSTBlock": 7560039,
   "Files": "0x75E646C646Fb8FCA386D2B96b9c27cd7CB3d356e",
   "FilesBlock": 7560045,
+  "TheGraph": "vporton/files1",
+  "TheGraphTemplates": "vporton/templates1",
   "BlogTemplates": "0x2d3AC1b051aCFCA88529C21b19aFCE267f2C15Ac",
   "BlogTemplatesBlock": 7560051
 }
