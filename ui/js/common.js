@@ -244,7 +244,7 @@ async function onLoad() {
     if(window.ethereum) window.ethereum.enable();
 
     let choosenNetwork = getCookie('web3network');
-    if(!choosenNetwork) choosenNetwork = 'poa-core';
+    if(!choosenNetwork) choosenNetwork = 'matic';
     if(!window.web3 || !window.web3.currentProvider || choosenNetwork != window.web3.currentProvider.chainId) {
         $("#wrongNetWarning").css('display', 'block');
     }
