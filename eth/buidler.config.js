@@ -99,7 +99,7 @@ module.exports = {
       accounts: process.env.MAINNET_PRIVATE_KEY ? [process.env.MAINNET_PRIVATE_KEY] : [],
     },
     'matic': {
-      url: "https://rpc.maticvigil.com/",
+      url: "https://rpc-mainnet.matic.network",
       accounts: process.env.MAINNET_PRIVATE_KEY ? [process.env.MAINNET_PRIVATE_KEY] : [],
     },
   },
