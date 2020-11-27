@@ -6,5 +6,6 @@
   "TheGraph": "vporton/files1",
   "TheGraphTemplates": "vporton/templates1",
   "BlogTemplates": "0x2d3AC1b051aCFCA88529C21b19aFCE267f2C15Ac",
-  "BlogTemplatesBlock": 7560051
+  "BlogTemplatesBlock": 7560051,
+  "Root": 1
 }
