@@ -98,6 +98,10 @@ module.exports = {
       url: "​https://core.poanetwork.dev/",
       accounts: process.env.MAINNET_PRIVATE_KEY ? [process.env.MAINNET_PRIVATE_KEY] : [],
     },
+    'matic': {
+      url: "https://rpc.maticvigil.com/",
+      accounts: process.env.MAINNET_PRIVATE_KEY ? [process.env.MAINNET_PRIVATE_KEY] : [],
+    },
   },
   namedAccounts: {
     deployer: {
