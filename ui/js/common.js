@@ -66,7 +66,7 @@ function queryThegraph(query) {
 function queryThegraph2(query) {
     query = query.replace(/\\/g, '\\').replace(/"/g, '\\"').replace(/\n/g, "\\n");
     return new Promise(async (resolve, error) => {
-        const THEGRAPH_URL = "https://api.thegraph.com/subgraphs/name/" + await getAddress('TheGraphTemplates');
+        const THEGRAPH_URL = "https://node5.zondirectory.com/subgraphs/name/" + await getAddress('TheGraphTemplates');
         $.post(THEGRAPH_URL, `{ "query": "${query}" }`, function(data) {
             // TODO: Correct error handling.
             if(data.errors) {
@@ -249,7 +249,7 @@ async function onLoad() {
         $("#wrongNetWarning").css('display', 'block');
     }
 
-    if(choosenNetwork != '0x63')
+    if(choosenNetwork != '0x89')
         $('#testModeWarnining').css('display', 'block');
 
     await connectWeb3();
