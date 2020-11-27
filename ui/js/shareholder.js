@@ -8,7 +8,7 @@ async function onLoad() {
     const tokenETH = await contractInstance.methods.balanceOf(defaultAccount).call();
     $('#tokenETH').text(web3.utils.fromWei(tokenETH));
     const earnedETH = await contractInstance0.methods.dividendsOwing(defaultAccount).call();
-    $('#ETH').text(web3.utils.fromWei(earnedETH));
+    $('#MATIC').text(web3.utils.fromWei(earnedETH));
 
     let query = `{
     setARWallets(orderBy:id, orderDirection:desc, where:{author:"${defaultAccount}"}) {

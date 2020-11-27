@@ -88,7 +88,7 @@ async function payETH() {
 }
 
 async function donateETH() {
-    const price = prompt("Your donation amount in ETH:", '0.1');
+    const price = prompt("Your donation amount in MATIC:", '0.1');
     if(!price) return;
     const contractInstance = new web3.eth.Contract(await filesJsonInterface(), await getAddress('Files'));
     await defaultAccountPromise();

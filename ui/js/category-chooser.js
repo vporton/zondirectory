@@ -29,7 +29,7 @@
             const p = $('#multiVoterTmpl').clone(false);
             p.css('display', 'block');
             const input = p.find('input');
-            p.append(" | Vote amount in ETH: <input name='amount'> ");
+            p.append(" | Vote amount in MATIC: <input name='amount'> ");
             p.append(`<input type='button' value='Delete' onclick='$(event.target).closest("p").remove()'>`);
             input.categoryChooser();
             $('#multiVoter').append(p);

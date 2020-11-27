@@ -3,7 +3,7 @@
 async function vote() {
     if(!$('#form').valid()) return;
 
-    const amount = prompt("Vote amount (in ETH):", '0.1');
+    const amount = prompt("Vote amount (in MATIC):", '0.1');
     if(!amount) return;
 
     const child = $('#child').val();
