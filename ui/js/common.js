@@ -139,6 +139,9 @@ function getEthereumNetworkName() {
     let chainId = getCookie('web3network');
     if(!chainId) chainId = '0x1';
     switch(chainId.toLowerCase()) {
+        case '0x89':
+            networkName = 'matic';
+            break;
         case '0x63':
             networkName = 'poa-core';
             break;
@@ -146,7 +149,7 @@ function getEthereumNetworkName() {
             networkName = 'poa-sokol';
             break;
         default:
-            networkName = 'poa-sokol'; // TODO: Use poa-core
+            networkName = 'matic';
             break;
     }
     return networkName;
