@@ -1,4 +1,4 @@
-const buidler = require("@nomiclabs/buidler");
+const buidler = require("@nomiclabs/hardhat");
 const fs = require('fs');
 
 const {deployIfDifferent, log} = deployments;
