@@ -16,17 +16,18 @@ function testApproxEq(a, b, msg) {
 
 describe("Comissions", function() {
   it("Dividends", async function() {
+    const {deploy} = deployments;
     const [deployer, founder, partner, seller, seller2, buyer, buyer2, affiliate] = await ethers.getSigners();
 
     const PARTNER_PERCENT = 30;
     const FIRST_PURCHASE = 3.535;
     const SECOND_PURCHASE = 2.335;
 
-    const Files = await ethers.getContractFactory("Files");
-    const files = await Files.deploy(await founder.getAddress(), myToWei(100));
-    await files.deployed();
+    await deploy("contracts/Files.sol:Files", {from: await deployer.getAddress()});
+    const files = await ethers.getContract("contracts/Files.sol:Files");
 
-    files.connect(founder).transfer(await partner.getAddress(), myToWei(PARTNER_PERCENT));
+    // files.connect(founder).send(await partner.getAddress(), myToWei(PARTNER_PERCENT));
+    founder.sendTransaction({to: await partner.getAddress(), value: myToWei(PARTNER_PERCENT)}); // FIXME
 
     const ownedCategoryId = (await extractEvent(files.connect(seller).createOwnedCategory({title: "Owned category", locale: "en", shortDescription: "", description: ""}, '0x0000000000000000000000000000000000000001'), 'CategoryCreated')).categoryId;
     const unownedCategoryId = (await extractEvent(files.connect(seller).createCategory("Unowned category", "en", '0x0000000000000000000000000000000000000001'), 'CategoryCreated')).categoryId;

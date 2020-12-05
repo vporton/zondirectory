@@ -47,11 +47,13 @@ module.exports = async ({getNamedAccounts, deployments}) => {
     const {deployer} = namedAccounts;
     const MainPST = await deployments.get("MainPST");
     log(`Deploying Files...`);
-    const deployResult = await deploy('Files', {from: deployer});
+    const deployResult = await deploy('Files', {from: deployer, proxy: true});
     if (deployResult.newlyDeployed) {
         log(`contract Files deployed at ${deployResult.address} in block ${deployResult.receipt.blockNumber} using ${deployResult.receipt.gasUsed} gas`);
     }
-    // const mydeploy = require('../lib/mydeploy');
+    const mydeploy = require('../lib/mydeploy');
+    mydeploy.updateAddress('Files', deployResult.address, buidler.network.name); // or ethers.getContractAt
+    mydeploy.updateAddress('FilesBlock', deployResult.receipt.blockNumber, buidler.network.name); // or ethers.getContractAt
     // if(await categories["Root"])
     //     mydeploy.updateAddress('Root', 1/*await categories["Root"]*/, buidler.network.name);
     // if(await categories["Spam"])

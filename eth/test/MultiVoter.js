@@ -17,6 +17,7 @@ function myToWei(n) {
 
 describe("MultiVoter", function() {
   it("Categories", async function() {
+    const {deploy} = deployments;
     const [deployer, founder, partner, seller, seller2, buyer, buyer2, affiliate] = await ethers.getSigners();
 
     // const PARTNER_PERCENT = 30;
@@ -26,9 +27,8 @@ describe("MultiVoter", function() {
     // const UNOWNED_VOTE_AMOUNT = 1.97;
     // const MYOWN_VOTE_AMOUNT = 2.11;
 
-    const Files = await ethers.getContractFactory("Files");
-    const files = await Files.deploy(await founder.getAddress(), myToWei(100));
-    await files.deployed();
+    await deploy("contracts/Files.sol:Files", {from: await deployer.getAddress()});
+    const files = await ethers.getContract("contracts/Files.sol:Files");
 
     const ownedCategoryId = (await extractEvent(files.connect(seller).createOwnedCategory({title: "Owned category", locale: "en", shortDescription: "", description: ""}, '0x0000000000000000000000000000000000000001'), 'CategoryCreated')).categoryId;
     const unownedCategoryId = (await extractEvent(files.connect(seller).createCategory("Unowned category", "en", '0x0000000000000000000000000000000000000001'), 'CategoryCreated')).categoryId;
