@@ -27,10 +27,10 @@ describe("Files", function() {
     const UNOWNED_VOTE_AMOUNT = 1.97;
     const MYOWN_VOTE_AMOUNT = 2.11;
 
-    await deploy("contracts/Files.sol:Files", {from: await deployer.getAddress()});
+    await deploy("contracts/Files.sol:Files", {from: await founder.getAddress()});
     const files = await ethers.getContract("contracts/Files.sol:Files");
 
-    founder.sendTransaction({to: await partner.getAddress(), value: myToWei(PARTNER_PERCENT)}); // FIXME
+    await founder.sendTransaction({to: await partner.getAddress(), value: myToWei(PARTNER_PERCENT)}); // FIXME
 
     const ownedCategoryId = (await extractEvent(files.connect(seller).createOwnedCategory({title: "Owned category", locale: "en", shortDescription: "", description: ""}, '0x0000000000000000000000000000000000000001'), 'CategoryCreated')).categoryId;
     const unownedCategoryId = (await extractEvent(files.connect(seller).createCategory("Unowned category", "en", '0x0000000000000000000000000000000000000001'), 'CategoryCreated')).categoryId;

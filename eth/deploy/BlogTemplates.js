@@ -12,6 +12,12 @@ module.exports = async ({getNamedAccounts, deployments}) => {
     const deployResult = await deploy('BlogTemplates', {from: deployer, proxy: true});
     if (deployResult.newlyDeployed) {
         log(`contract BlogTemplates deployed at ${deployResult.address} in block ${deployResult.receipt.blockNumber} using ${deployResult.receipt.gasUsed} gas`);
+        const contractInstance = await ethers.getContract("BlogTemplates");
+        await contractInstance.methods.initialize(FilesRelayer.address)
+            .send({from: deployer, gas: '1000000'})
+            .on('error', (error) => log(`Error initializing BlogTemplates: ` + error))
+            .catch((error) => log(`Error initializing BlogTemplates: ` + error));
+        log(`...initialized`);
     }
     const mydeploy = require('../lib/mydeploy');
     mydeploy.updateAddress('BlogTemplates', deployResult.address, buidler.network.name); // or ethers.getContractAt

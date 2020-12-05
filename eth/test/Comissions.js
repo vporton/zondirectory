@@ -23,11 +23,11 @@ describe("Comissions", function() {
     const FIRST_PURCHASE = 3.535;
     const SECOND_PURCHASE = 2.335;
 
-    await deploy("contracts/Files.sol:Files", {from: await deployer.getAddress()});
+    await deploy("contracts/Files.sol:Files", {from: await founder.getAddress()});
     const files = await ethers.getContract("contracts/Files.sol:Files");
 
     // files.connect(founder).send(await partner.getAddress(), myToWei(PARTNER_PERCENT));
-    founder.sendTransaction({to: await partner.getAddress(), value: myToWei(PARTNER_PERCENT)}); // FIXME
+    await founder.sendTransaction({to: await partner.getAddress(), value: myToWei(PARTNER_PERCENT)}); // FIXME
 
     const ownedCategoryId = (await extractEvent(files.connect(seller).createOwnedCategory({title: "Owned category", locale: "en", shortDescription: "", description: ""}, '0x0000000000000000000000000000000000000001'), 'CategoryCreated')).categoryId;
     const unownedCategoryId = (await extractEvent(files.connect(seller).createCategory("Unowned category", "en", '0x0000000000000000000000000000000000000001'), 'CategoryCreated')).categoryId;
