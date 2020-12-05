@@ -1,4 +1,4 @@
-const buidler = require("@nomiclabs/hardhat");
+const buidler = require("hardhat");
 const fs = require('fs');
 
 const {deployIfDifferent, log} = deployments;
@@ -7,16 +7,13 @@ module.exports = async ({getNamedAccounts, deployments}) => {
     const namedAccounts = await getNamedAccounts();
     const {deploy} = deployments;
     const {deployer} = namedAccounts;
-    const Files = await deployments.get("Files");
+    const Files = await deployments.get("contracts/Files.sol:Files");
     log(`Deploying BlogTemplates...`);
-    const deployResult = await deploy('BlogTemplates', {from: deployer, proxy: true});
+    const deployResult = await deploy('contracts/BlogTemplates.sol:BlogTemplates', {from: deployer, proxy: true});
     if (deployResult.newlyDeployed) {
         log(`contract BlogTemplates deployed at ${deployResult.address} in block ${deployResult.receipt.blockNumber} using ${deployResult.receipt.gasUsed} gas`);
-        const contractInstance = await ethers.getContract("BlogTemplates");
-        await contractInstance.methods.initialize(deployResult.address)
-            .send({from: deployer, gas: '1000000'})
-            .on('error', (error) => log(`Error initializing BlogTemplates: ` + error))
-            .catch((error) => log(`Error initializing BlogTemplates: ` + error));
+        const contractInstance = await ethers.getContract("contracts/BlogTemplates.sol:BlogTemplates");
+        await contractInstance.initialize(deployResult.address);
         log(`...initialized`);
     }
     const mydeploy = require('../lib/mydeploy');

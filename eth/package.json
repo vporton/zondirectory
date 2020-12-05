@@ -9,7 +9,7 @@
     "ganache-cli": "^6.9.1",
     "hardhat": "^2.0.4",
     "hardhat-abi-exporter": "^2.0.6",
-    "hardhat-deploy": "^0.7.0-beta.35",
+    "hardhat-deploy": "git+ssh://git@github.com:vporton/hardhat-deploy.git#supportsInterface-bug",
     "hardhat-deploy-ethers": "^0.3.0-beta.7",
     "solc": "^0.6.11",
     "web3": "^1.3.0"

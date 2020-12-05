@@ -1,4 +1,4 @@
-const buidler = require("@nomiclabs/hardhat");
+const buidler = require("hardhat");
 const fs = require('fs');
 
 const {deployIfDifferent, log} = deployments;
@@ -8,14 +8,11 @@ module.exports = async ({getNamedAccounts, deployments}) => {
     const {deploy} = deployments;
     const {deployer} = namedAccounts;
     log(`Deploying MainPST...`);
-    const deployResult = await deploy('MainPST', {from: deployer, proxy: true});
+    const deployResult = await deploy('contracts/MainPST.sol:MainPST', {from: deployer, proxy: true});
     if (deployResult.newlyDeployed) {
         log(`contract MainPST deployed at ${deployResult.address} in block ${deployResult.receipt.blockNumber} using ${deployResult.receipt.gasUsed} gas`);
-        const contractInstance = await ethers.getContract("MainPST");
-        await contractInstance.methods.initialize(process.env.PROGRAMMER_ADDRESS, web3.utils.toWei('100000'))
-            .send({from: deployer, gas: '1000000'})
-            .on('error', (error) => log(`Error initializing MainPST: ` + error))
-            .catch((error) => log(`Error initializing MainPST: ` + error));
+        const contractInstance = await ethers.getContract("contracts/MainPST.sol:MainPST");
+        await contractInstance.initialize(process.env.PROGRAMMER_ADDRESS, ethers.utils.parseEther('100000'));
         log(`...initialized`);
     }
     const mydeploy = require('../lib/mydeploy');

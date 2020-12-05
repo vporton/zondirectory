@@ -1,4 +1,4 @@
-const buidler = require("@nomiclabs/hardhat");
+const buidler = require("hardhat");
 const fs = require('fs');
 
 const {deployIfDifferent, log} = deployments;
@@ -45,16 +45,13 @@ module.exports = async ({getNamedAccounts, deployments}) => {
     const namedAccounts = await getNamedAccounts();
     const {deploy} = deployments;
     const {deployer} = namedAccounts;
-    const MainPST = await deployments.get("MainPST");
+    const MainPST = await deployments.get("contracts/MainPST.sol:MainPST");
     log(`Deploying Files...`);
-    const deployResult = await deploy('Files', {from: deployer, proxy: true});
+    const deployResult = await deploy('contracts/Files.sol:Files', {from: deployer, proxy: true});
     if (deployResult.newlyDeployed) {
         log(`contract Files deployed at ${deployResult.address} in block ${deployResult.receipt.blockNumber} using ${deployResult.receipt.gasUsed} gas`);
-        const contractInstance = await ethers.getContract("Files");
-        await contractInstance.methods.initialize(process.env.PROGRAMMER_ADDRESS, deployResult.address)
-            .send({from: deployer, gas: '1000000'})
-            .on('error', (error) => log(`Error initializing Files: ` + error))
-            .catch((error) => log(`Error initializing Files: ` + error));
+        const contractInstance = await ethers.getContract("contracts/Files.sol:Files");
+        await contractInstance.initialize(process.env.PROGRAMMER_ADDRESS, deployResult.address);
         log(`...initialized`);
     }
     const mydeploy = require('../lib/mydeploy');
