@@ -35,10 +35,15 @@ function safe_attrs(str) {
     return safe_tags(str).replace(/"/g,'&quot;').replace(/'<'/g,'&apos;');
 }
 
+const _CHAIN_ID = getCookie('web3network');
+const CHAIN_ID = _CHAIN_ID ? _CHAIN_ID : '0x1';
+const THE_GRAPH_HOST = CHAIN_ID.toLowerCase() == '0x13881' ? "https://mumbai.zondirectory.com" : "https://node5.zondirectory.com";
+console.log('_CHAIN_ID', THE_GRAPH_HOST)
+
 function queryThegraph(query) {
     query = query.replace(/\\/g, '\\').replace(/"/g, '\\"').replace(/\n/g, "\\n");
     return new Promise(async (resolve, error) => {
-        const THEGRAPH_URL = "https://api.thegraph.com/subgraphs/name/" + await getAddress('TheGraph');
+        const THEGRAPH_URL = `${THE_GRAPH_HOST}/subgraphs/name/` + await getAddress('TheGraph');
         $.post(THEGRAPH_URL, `{ "query": "${query}" }`, function(data) {
             // TODO: Correct error handling.
             if(data.errors) {
@@ -53,7 +58,7 @@ function queryThegraph(query) {
 function queryThegraph2(query) {
     query = query.replace(/\\/g, '\\').replace(/"/g, '\\"').replace(/\n/g, "\\n");
     return new Promise(async (resolve, error) => {
-        const THEGRAPH_URL = "https://api.thegraph.com/subgraphs/name/" + await getAddress('TheGraphTemplates');
+        const THEGRAPH_URL = `${THE_GRAPH_HOST}/subgraphs/name/` + await getAddress('TheGraphTemplates');
         $.post(THEGRAPH_URL, `{ "query": "${query}" }`, function(data) {
             // TODO: Correct error handling.
             if(data.errors) {
@@ -126,6 +131,12 @@ function getEthereumNetworkName() {
     let chainId = getCookie('web3network');
     if(!chainId) chainId = '0x1';
     switch(chainId.toLowerCase()) {
+        case '0x83':
+            networkName = 'matic';
+            break;
+        case '0x13881':
+            networkName = 'mumbai';
+            break;
         case '0x63':
             networkName = 'poa-core';
             break;

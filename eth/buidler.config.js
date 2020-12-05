@@ -34,7 +34,7 @@ task("compile", "Compiles the entire project, building all artifacts", async fun
 module.exports = {
   // This is a sample solc configuration that specifies which version of solc to use
   solc: {
-    version: "0.7.1",
+    version: "0.7.3",
     optimizer: {
       enabled: true,
       runs: 200
@@ -97,6 +97,10 @@ module.exports = {
     'poa-core': {
       url: "​https://core.poanetwork.dev/",
       accounts: process.env.MAINNET_PRIVATE_KEY ? [process.env.MAINNET_PRIVATE_KEY] : [],
+    },
+    'mumbai': {
+      url: "https://rpc-mumbai.matic.today",
+      accounts: process.env.RINKEBY_PRIVATE_KEY ? [process.env.RINKEBY_PRIVATE_KEY] : [],
     },
   },
   namedAccounts: {

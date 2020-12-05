@@ -5,6 +5,11 @@ const {deployIfDifferent, log} = deployments;
 
 let categories = {};
 
+function filesJsonInterface() {
+    const text = fs.readFileSync("artifacts/Files.json");
+    return JSON.parse(text).abi;
+}
+   
 async function createCategory(address, blockNumber, name) {
     const contractInstance = new web3.eth.Contract(filesJsonInterface(), address);
     const namedAccounts = await getNamedAccounts();
@@ -45,13 +50,21 @@ module.exports = async ({getNamedAccounts, deployments}) => {
     const namedAccounts = await getNamedAccounts();
     const {deploy} = deployments;
     const {deployer} = namedAccounts;
-    const MainPST = await deployments.get("MainPST");
     log(`Deploying Files...`);
-    const deployResult = await deploy('Files', {from: deployer});
+    const deployResult = await deploy('Files', {from: deployer, proxy: true, gasPrice: ethers.utils.parseUnits('1', 'gwei')});
     if (deployResult.newlyDeployed) {
         log(`contract Files deployed at ${deployResult.address} in block ${deployResult.receipt.blockNumber} using ${deployResult.receipt.gasUsed} gas`);
     }
-    // const mydeploy = require('../lib/mydeploy');
+    const MainPST = await deployments.get('MainPST');
+    const contractInstance = new web3.eth.Contract(filesJsonInterface(), deployResult.address);
+    await contractInstance.methods.initialize(process.env.PROGRAMMER_ADDRESS, MainPST.address)
+        .send({from: deployer, gas: '1000000', gasPrice: ethers.utils.parseUnits('1', 'gwei')})
+        .on('error', (error) => log(`Error initializing Files: ` + error))
+        .catch((error) => log(`Error initializing Files: ` + error));
+    log(`...initialized`);
+    const mydeploy = require('../lib/mydeploy');
+    mydeploy.updateAddress('Files', deployResult.address, buidler.network.name); // or ethers.getContractAt
+    mydeploy.updateAddress('FilesBlock', deployResult.receipt.blockNumber, buidler.network.name); // or ethers.getContractAt
     // if(await categories["Root"])
     //     mydeploy.updateAddress('Root', 1/*await categories["Root"]*/, buidler.network.name);
     // if(await categories["Spam"])
