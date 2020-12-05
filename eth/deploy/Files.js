@@ -51,7 +51,7 @@ module.exports = async ({getNamedAccounts, deployments}) => {
     if (deployResult.newlyDeployed) {
         log(`contract Files deployed at ${deployResult.address} in block ${deployResult.receipt.blockNumber} using ${deployResult.receipt.gasUsed} gas`);
         const contractInstance = await ethers.getContract("Files");
-        await contractInstance.methods.initialize(process.env.PROGRAMMER_ADDRESS, MainPSTRelayer.address)
+        await contractInstance.methods.initialize(process.env.PROGRAMMER_ADDRESS, deployResult.address)
             .send({from: deployer, gas: '1000000'})
             .on('error', (error) => log(`Error initializing Files: ` + error))
             .catch((error) => log(`Error initializing Files: ` + error));

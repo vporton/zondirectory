@@ -25,6 +25,7 @@ describe("Comissions", function() {
 
     await deploy("contracts/Files.sol:Files", {from: await founder.getAddress()});
     const files = await ethers.getContract("contracts/Files.sol:Files");
+    await files.initialize(await founder.getAddress(), files.address);
 
     // files.connect(founder).send(await partner.getAddress(), myToWei(PARTNER_PERCENT));
     await founder.sendTransaction({to: await partner.getAddress(), value: myToWei(PARTNER_PERCENT)}); // FIXME

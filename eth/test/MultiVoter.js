@@ -29,6 +29,7 @@ describe("MultiVoter", function() {
 
     await deploy("contracts/Files.sol:Files", {from: await founder.getAddress()});
     const files = await ethers.getContract("contracts/Files.sol:Files");
+    await files.initialize(await founder.getAddress(), files.address);
 
     const ownedCategoryId = (await extractEvent(files.connect(seller).createOwnedCategory({title: "Owned category", locale: "en", shortDescription: "", description: ""}, '0x0000000000000000000000000000000000000001'), 'CategoryCreated')).categoryId;
     const unownedCategoryId = (await extractEvent(files.connect(seller).createCategory("Unowned category", "en", '0x0000000000000000000000000000000000000001'), 'CategoryCreated')).categoryId;
