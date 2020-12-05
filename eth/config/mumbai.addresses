@@ -4,5 +4,7 @@
   "Files": "0x4014eB9083ABDB3Ef9e05638eE1F798a1c03C25a",
   "FilesBlock": 7680284,
   "BlogTemplates": "0x161e20B776F73A92480Cc6fB24344Ee918eC6dD8",
-  "BlogTemplatesBlock": 7680293
+  "BlogTemplatesBlock": 7680293,
+  "TheGraph": "vporton/files1",
+  "TheGraphTemplates": "vporton/templates1"
 }
