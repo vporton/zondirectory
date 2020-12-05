@@ -106,6 +106,10 @@ module.exports = {
       url: "https://rpc-mainnet.matic.network",
       accounts: process.env.MAINNET_PRIVATE_KEY ? [process.env.MAINNET_PRIVATE_KEY] : [],
     },
+    'mumbai': {
+      url: "https://testnetv3.matic.network",
+      accounts: process.env.RINKEBY_PRIVATE_KEY ? [process.env.RINKEBY_PRIVATE_KEY] : [],
+    },
   },
   namedAccounts: {
     deployer: {
