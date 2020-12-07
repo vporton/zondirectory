@@ -260,6 +260,8 @@ Suggest fix:
 
 Suggest fix: [OpenZeppelin ERC20](https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contracts/token/ERC20/ERC20.sol)
 
+@vporton: Done, however I've modified their ERC20 implementation for reason related with `initialize()` (see below).
+
 <a name="M04"/>
 
 ## M04 - Should use SafeMath
