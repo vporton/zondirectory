@@ -7,7 +7,7 @@ all: ui
 ui: ui-quick compile
 	make out/ui/artifacts/SmartWeave.js out/ui/artifacts/mewconnect.js \
 	  out/ui/artifacts/Files.abi out/ui/artifacts/MainPST.abi out/ui/artifacts/BlogTemplates.abi
-	cp -f eth/data/matic.addresses eth/data/poa-sokol.addresses out/ui/artifacts/
+	cp -f eth/data/matic.addresses eth/data/mumbai.addresses eth/data/poa-sokol.addresses out/ui/artifacts/
 
 ui-quick:
 	-rm -rf out/ui
