@@ -70,6 +70,8 @@ Suggest fix:
 
 These methods should have `internal` modifier instead of `public` since unwanted actor could trick system to unexpected state.
 
+@vporton: Unwanted actor could use only `external` methods. So what is the harm of `public` ones?
+
 **For example:** In [BaseFiles.sol#L361-L381](https://github.com/vporton/zondirectory/blob/design/eth/contracts/BaseFiles.sol#L361-L381):
 
 ```solidity

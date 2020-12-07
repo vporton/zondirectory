@@ -154,7 +154,7 @@ abstract contract BaseFiles is IERC1155, ERC165, ERC1155Metadata_URI, CommonCons
         emit SetItemOwner(_itemId, address(0));
     }
 
-    function setTokenUri(string calldata _tokenUri) external {
+    function setTokenUri(string calldata _tokenUri) external onlyFounder {
         tokenUri = _tokenUri;
     }
 
@@ -731,6 +731,11 @@ abstract contract BaseFiles is IERC1155, ERC165, ERC1155Metadata_URI, CommonCons
 
     function _sellerToToken(address payable _seller) internal pure returns (uint256) {
         return uint256(_seller);
+    }
+
+    modifier onlyFounder(){
+        require(msg.sender == founder, "Access denied");
+        _;
     }
 
     event SetOwner(address payable owner); // share is 64.64 fixed point number
