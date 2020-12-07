@@ -100,6 +100,8 @@ These methods should have `internal` modifier instead of `public` since unwanted
 
 `_voteChildParent()` was accessible without **any** restriction, that mean anyone could vote with **zero cost**.
 
+@vporton: That's correct: `_voteChildParent()` is called from `voteChildParent()` and the "amount" of the vote is `msg.value`. So voting without any cost would produce a zero-value vote, what is not a security volnurability.
+
 <a name="H03"/>
 
 ## H03 - Possible Ethereum trapped and lost
