@@ -6,12 +6,19 @@ pragma experimental ABIEncoderV2;
 import './BaseFiles.sol';
 
 contract Files is BaseFiles {
-    function voteMultiple(uint _child, uint[] calldata _parents, uint256[] calldata _voteAmounts) external {
+    function voteMultiple(uint _child, uint[] calldata _parents, uint256[] calldata _voteAmounts) external payable {
         _voteMultiple(_child, _parents, _voteAmounts);
     }
 
     function _voteMultiple(uint _child, uint[] calldata _parents, uint256[] calldata _voteAmounts) public {
         require(_parents.length == _voteAmounts.length, "Lengths don't match.");
+        if(itemOwners[_parent] != msg.sender)) {
+            uint256 total = 0;
+            for(uint i0 = 0; i0 < _parents.length; ++i0) {
+                total += _voteAmounts[i0];
+            }
+            require(total <= msg.value, "Not enough funds for vote.");
+        }
         for(uint i = 0; i < _parents.length; ++i) {
             uint _parent = _parents[i];
             uint256 _amount = _voteAmounts[i];

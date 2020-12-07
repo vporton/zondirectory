@@ -114,6 +114,10 @@ These methods have nothing to do with `msg.value` but it still `payable` that co
 
 Suggest fix: Remove `payable` modifier.
 
+@vporton: Instead of removing payable I add the check that the summary vote value is less than or equal to `msg.value`. _That_ was an error.
+
+@vporton: Additional error: `voteMultiple()` in `Files.sol` should be payable.
+
 <a name="H04"/>
 
 ## H04 - Possible logic issue of voting
