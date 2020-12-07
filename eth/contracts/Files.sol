@@ -10,15 +10,15 @@ contract Files is BaseFiles {
         _voteMultiple(_child, _parents, _voteAmounts);
     }
 
-    function _voteMultiple(uint _child, uint[] calldata _parents, uint256[] calldata _voteAmounts) public {
+    function _voteMultiple(uint _child, uint[] calldata _parents, uint256[] calldata _voteAmounts) public payable {
         require(_parents.length == _voteAmounts.length, "Lengths don't match.");
-        if(itemOwners[_parent] != msg.sender)) {
-            uint256 total = 0;
-            for(uint i0 = 0; i0 < _parents.length; ++i0) {
+        uint256 total = 0;
+        for(uint i0 = 0; i0 < _parents.length; ++i0) {
+            if(itemOwners[_parents[i0]] != msg.sender) {
                 total += _voteAmounts[i0];
             }
-            require(total <= msg.value, "Not enough funds for vote.");
         }
+        require(total <= msg.value, "Not enough funds for vote.");
         for(uint i = 0; i < _parents.length; ++i) {
             uint _parent = _parents[i];
             uint256 _amount = _voteAmounts[i];
