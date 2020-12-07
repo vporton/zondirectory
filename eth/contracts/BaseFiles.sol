@@ -367,6 +367,7 @@ abstract contract BaseFiles is IERC1155, ERC165, ERC1155Metadata_URI, CommonCons
     function _voteChildParent(uint _child, uint _parent, bool _yes, address payable _affiliate, uint256 _amount) public {
         require(entries[_child] != EntryKind.NONE, "Child does not exist.");
         require(entries[_parent] == EntryKind.CATEGORY, "Must be a category.");
+        require(_amount <= 1 << 255, "To big number.");
         setAffiliate(_affiliate);
         int256 _value = _yes ? int256(_amount) : -int256(_amount);
         if(_value == 0) return; // We don't want to pollute the events with zero votes.

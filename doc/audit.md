@@ -155,6 +155,8 @@ function _voteMultiple(uint _child, uint[] calldata _parents, uint256[] calldata
 
 Please check `uint256[] calldata _voteAmounts` your own.
 
+@vporton: Responded above, added a `require` check.
+
 <a name="H05"/>
 
 ## H05 - Possible integer underflow/overflow
@@ -162,6 +164,8 @@ Please check `uint256[] calldata _voteAmounts` your own.
 | Affected        | Severity  | Count | Lines |
 |:----------------|:----------|------:|-------|
 | Files.sol       | High      |   1   |[9-24](https://github.com/vporton/zondirectory/blob/design/eth/contracts/Files.sol#L9-L24)|
+
+@vporton: It seems you have a typo about line numbers in the table above.
 
 In [BaseFiles.sol#L369](https://github.com/vporton/zondirectory/blob/design/eth/contracts/BaseFiles.sol#L369), this issue related to [H02](#H02).
 
