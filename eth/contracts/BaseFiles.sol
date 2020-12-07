@@ -368,9 +368,9 @@ abstract contract BaseFiles is IERC1155, ERC165, ERC1155Metadata_URI, CommonCons
         require(entries[_child] != EntryKind.NONE, "Child does not exist.");
         require(entries[_parent] == EntryKind.CATEGORY, "Must be a category.");
         require(_amount <= 1 << 255, "To big number.");
-        setAffiliate(_affiliate);
         int256 _value = _yes ? int256(_amount) : -int256(_amount);
-        if(_value == 0) return; // We don't want to pollute the events with zero votes.
+        if(_value == 0) revert("We don't want to pollute the events with zero votes");
+        setAffiliate(_affiliate);
         int256 _newValue = childParentVotes[_child][_parent] + _value;
         childParentVotes[_child][_parent] = _newValue;
         address payable _author = itemOwners[_child];
@@ -384,11 +384,11 @@ abstract contract BaseFiles is IERC1155, ERC165, ERC1155Metadata_URI, CommonCons
     }
 
     function voteForOwnChild(uint _child, uint _parent) external payable {
+        if(msg.value == 0) revert("We don't want to pollute the events with zero votes");
         require(entries[_child] != EntryKind.NONE, "Child does not exist.");
         require(entries[_parent] == EntryKind.CATEGORY, "Must be a category.");
         address _author = itemOwners[_child];
         require(_author == msg.sender, "Must be owner.");
-        if(msg.value == 0) return; // We don't want to pollute the events with zero votes.
         int256 _value = upvotesOwnersShare.inv().muli(int256(msg.value));
         int256 _newValue = childParentVotes[_child][_parent] + _value;
         childParentVotes[_child][_parent] = _newValue;

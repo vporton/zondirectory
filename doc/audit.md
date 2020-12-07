@@ -357,6 +357,8 @@ Suggest fix:
         if(_value == 0) revert("We don't want to pollute the events with zero votes");
 ```
 
+@vporton: `revert` in `_initializeAuthor` would be wrong!
+
 # Extra note
 
 - Lack of testing and code coverage
