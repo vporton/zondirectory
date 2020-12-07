@@ -323,6 +323,8 @@ Suggest fix:
     }
 ```
 
+@vporton: You mistake: Constructors are incompatible with upgradeable contracts. That's why I didn't use a constructor.
+
 <a name="L02"/>
 
 ## L02 - Out date library
