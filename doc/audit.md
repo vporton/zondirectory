@@ -35,7 +35,7 @@
 
 | Affected        | Severity  | Count | Lines |
 |:----------------|:----------|------:|-------|
-| BaseFiles.sol   | High      |   1   | [158](https://github.com/vporton/zondirectory/blob/design/eth/contracts/BaseFiles.sol#L158)|
+| BaseFiles.sol   | High      |   1   | [158](https://github.com/vporton/zondirectory/blob/9fd543fa83d5d3ce9f642c85d566f5ad122b9509/eth/contracts/BaseFiles.sol#L158)|
 
 This function need to be protected
 
@@ -64,13 +64,13 @@ Suggest fix:
 
 | Affected        | Severity  | Count | Lines |
 |:---------------:|:----------|------:|-------|
-| BaseFiles.sol   | High      |   6   |[200](https://github.com/vporton/zondirectory/blob/design/eth/contracts/BaseFiles.sol#L200), [237](https://github.com/vporton/zondirectory/blob/design/eth/contracts/BaseFiles.sol#L237), [313](https://github.com/vporton/zondirectory/blob/design/eth/contracts/BaseFiles.sol#L313), [340](https://github.com/vporton/zondirectory/blob/design/eth/contracts/BaseFiles.sol#L340), [365](https://github.com/vporton/zondirectory/blob/design/eth/contracts/BaseFiles.sol#L365), [401](https://github.com/vporton/zondirectory/blob/design/eth/contracts/BaseFiles.sol#L401)|
-|BlogTemplates.sol|High|1|[69](https://github.com/vporton/zondirectory/blob/design/eth/contracts/BlogTemplates.sol#L69)|
-|Files.sol|High|1|[13](https://github.com/vporton/zondirectory/blob/design/eth/contracts/Files.sol#L13)|
+| BaseFiles.sol   | High      |   6   |[200](https://github.com/vporton/zondirectory/blob/9fd543fa83d5d3ce9f642c85d566f5ad122b9509/eth/contracts/BaseFiles.sol#L200), [237](https://github.com/vporton/zondirectory/blob/9fd543fa83d5d3ce9f642c85d566f5ad122b9509/eth/contracts/BaseFiles.sol#L237), [313](https://github.com/vporton/zondirectory/blob/9fd543fa83d5d3ce9f642c85d566f5ad122b9509/eth/contracts/BaseFiles.sol#L313), [340](https://github.com/vporton/zondirectory/blob/9fd543fa83d5d3ce9f642c85d566f5ad122b9509/eth/contracts/BaseFiles.sol#L340), [365](https://github.com/vporton/zondirectory/blob/9fd543fa83d5d3ce9f642c85d566f5ad122b9509/eth/contracts/BaseFiles.sol#L365), [401](https://github.com/vporton/zondirectory/blob/9fd543fa83d5d3ce9f642c85d566f5ad122b9509/eth/contracts/BaseFiles.sol#L401)|
+|BlogTemplates.sol|High|1|[69](https://github.com/vporton/zondirectory/blob/9fd543fa83d5d3ce9f642c85d566f5ad122b9509/eth/contracts/BlogTemplates.sol#L69)|
+|Files.sol|High|1|[13](https://github.com/vporton/zondirectory/blob/9fd543fa83d5d3ce9f642c85d566f5ad122b9509/eth/contracts/Files.sol#L13)|
 
 These methods should have `internal` modifier instead of `public` since unwanted actor could trick system to unexpected state.
 
-**For example:** In [BaseFiles.sol#L361-L381](https://github.com/vporton/zondirectory/blob/design/eth/contracts/BaseFiles.sol#L361-L381):
+**For example:** In [BaseFiles.sol#L361-L381](https://github.com/vporton/zondirectory/blob/9fd543fa83d5d3ce9f642c85d566f5ad122b9509/eth/contracts/BaseFiles.sol#L361-L381):
 
 ```solidity
     function voteChildParent(uint _child, uint _parent, bool _yes, address payable _affiliate) external payable {
@@ -104,7 +104,7 @@ These methods should have `internal` modifier instead of `public` since unwanted
 
 | Affected        | Severity  | Count | Lines |
 |:----------------|:----------|------:|-------|
-| Files.sol       | High      |   4   |[29](https://github.com/vporton/zondirectory/blob/design/eth/contracts/Files.sol#L29), [39](https://github.com/vporton/zondirectory/blob/design/eth/contracts/Files.sol#L39), [49](https://github.com/vporton/zondirectory/blob/design/eth/contracts/Files.sol#L49), [58](https://github.com/vporton/zondirectory/blob/design/eth/contracts/Files.sol#L58)|
+| Files.sol       | High      |   4   |[29](https://github.com/vporton/zondirectory/blob/9fd543fa83d5d3ce9f642c85d566f5ad122b9509/eth/contracts/Files.sol#L29), [39](https://github.com/vporton/zondirectory/blob/9fd543fa83d5d3ce9f642c85d566f5ad122b9509/eth/contracts/Files.sol#L39), [49](https://github.com/vporton/zondirectory/blob/9fd543fa83d5d3ce9f642c85d566f5ad122b9509/eth/contracts/Files.sol#L49), [58](https://github.com/vporton/zondirectory/blob/9fd543fa83d5d3ce9f642c85d566f5ad122b9509/eth/contracts/Files.sol#L58)|
 
 These methods have nothing to do with `msg.value` but it still `payable` that could lead to fund trapped and lost.
 
@@ -116,9 +116,9 @@ Suggest fix: Remove `payable` modifier.
 
 | Affected        | Severity  | Count | Lines |
 |:----------------|:----------|------:|-------|
-| Files.sol       | High      |   1   |[9-24](https://github.com/vporton/zondirectory/blob/design/eth/contracts/Files.sol#L9-L24)|
+| Files.sol       | High      |   1   |[9-24](https://github.com/vporton/zondirectory/blob/9fd543fa83d5d3ce9f642c85d566f5ad122b9509/eth/contracts/Files.sol#L9-L24)|
 
-In [Files.sol#L9-L24](https://github.com/vporton/zondirectory/blob/design/eth/contracts/Files.sol#L9-L24), we're allow use to input `_voteAmounts` that doesn't look correct, weighted voting mechanism need to tie on stake, fund, share, etc.
+In [Files.sol#L9-L24](https://github.com/vporton/zondirectory/blob/9fd543fa83d5d3ce9f642c85d566f5ad122b9509/eth/contracts/Files.sol#L9-L24), we're allow use to input `_voteAmounts` that doesn't look correct, weighted voting mechanism need to tie on stake, fund, share, etc.
 
 ```solidity
     function voteMultiple(uint _child, uint[] calldata _parents, uint256[] calldata _voteAmounts) external {
@@ -149,13 +149,13 @@ Please check `uint256[] calldata _voteAmounts` your own.
 
 <a name="H05"/>
 
-## H05 - Possible integer underflow/overflow
+## H05 - Possible integer overflow
 
 | Affected        | Severity  | Count | Lines |
 |:----------------|:----------|------:|-------|
-| Files.sol       | High      |   1   |[9-24](https://github.com/vporton/zondirectory/blob/design/eth/contracts/Files.sol#L9-L24)|
+| Files.sol       | High      |   1   |[9-24](https://github.com/vporton/zondirectory/blob/9fd543fa83d5d3ce9f642c85d566f5ad122b9509/eth/contracts/Files.sol#L9-L24)|
 
-In [BaseFiles.sol#L369](https://github.com/vporton/zondirectory/blob/design/eth/contracts/BaseFiles.sol#L369), this issue related to [H02](#H02).
+In [BaseFiles.sol#L369](https://github.com/vporton/zondirectory/blob/9fd543fa83d5d3ce9f642c85d566f5ad122b9509/eth/contracts/BaseFiles.sol#L369), this issue related to [H02](#H02).
 
 ```solidity
     function _voteChildParent(uint _child, uint _parent, bool _yes, address payable _affiliate, uint256 _amount) public {
@@ -175,7 +175,7 @@ Suggest fix: all math formula should be handle by `SafeMath` or `ABDKMath64x64`
 
 | Affected      | Severity  | Count | Lines |
 |:-------------:|:----------|------:|-------|
-| Address.sol   | Medium    |   1   | [26-27](https://github.com/vporton/zondirectory/blob/design/eth/contracts/Address.sol#L26-L27)
+| Address.sol   | Medium    |   1   | [26-27](https://github.com/vporton/zondirectory/blob/9fd543fa83d5d3ce9f642c85d566f5ad122b9509/eth/contracts/Address.sol#L26-L27)
 
 During initialization code execution, `EXTCODESIZE` on the address should return zero, which is the length of the code of the account while `CODESIZE` should return the length of the initialization code (as defined in H.2) - [Ethereum Yellow Page](https://ethereum.github.io/yellowpaper/paper.pdf)
 
@@ -205,8 +205,8 @@ It's better to check with [EIP-1052](https://eips.ethereum.org/EIPS/eip-1052)
 
 | Affected        | Severity  | Count | Lines |
 |:----------------|:----------|------:|-------|
-| BaseFiles.sol   | Medium    |   46  | [96](https://github.com/vporton/zondirectory/blob/design/eth/contracts/BaseFiles.sol#L96), [97](https://github.com/vporton/zondirectory/blob/design/eth/contracts/BaseFiles.sol#L97), [103](https://github.com/vporton/zondirectory/blob/design/eth/contracts/BaseFiles.sol#L103), [110](https://github.com/vporton/zondirectory/blob/design/eth/contracts/BaseFiles.sol#L110), [116](https://github.com/vporton/zondirectory/blob/design/eth/contracts/BaseFiles.sol#L116), [122](https://github.com/vporton/zondirectory/blob/design/eth/contracts/BaseFiles.sol#L122), [128](https://github.com/vporton/zondirectory/blob/design/eth/contracts/BaseFiles.sol#L128), [134](https://github.com/vporton/zondirectory/blob/design/eth/contracts/BaseFiles.sol#L134), [140](https://github.com/vporton/zondirectory/blob/design/eth/contracts/BaseFiles.sol#L140), [146](https://github.com/vporton/zondirectory/blob/design/eth/contracts/BaseFiles.sol#L146), [147](https://github.com/vporton/zondirectory/blob/design/eth/contracts/BaseFiles.sol#L147), [153](https://github.com/vporton/zondirectory/blob/design/eth/contracts/BaseFiles.sol#L153), [170](https://github.com/vporton/zondirectory/blob/design/eth/contracts/BaseFiles.sol#L170), [202](https://github.com/vporton/zondirectory/blob/design/eth/contracts/BaseFiles.sol#L202), [215](https://github.com/vporton/zondirectory/blob/design/eth/contracts/BaseFiles.sol#L215), [216](https://github.com/vporton/zondirectory/blob/design/eth/contracts/BaseFiles.sol#L216), [217](https://github.com/vporton/zondirectory/blob/design/eth/contracts/BaseFiles.sol#L217), [239](https://github.com/vporton/zondirectory/blob/design/eth/contracts/BaseFiles.sol#L239), [240](https://github.com/vporton/zondirectory/blob/design/eth/contracts/BaseFiles.sol#L240), [257](https://github.com/vporton/zondirectory/blob/design/eth/contracts/BaseFiles.sol#L257), [258](https://github.com/vporton/zondirectory/blob/design/eth/contracts/BaseFiles.sol#L258), [259](https://github.com/vporton/zondirectory/blob/design/eth/contracts/BaseFiles.sol#L259), [260](https://github.com/vporton/zondirectory/blob/design/eth/contracts/BaseFiles.sol#L260), [265](https://github.com/vporton/zondirectory/blob/design/eth/contracts/BaseFiles.sol#L265), [267](https://github.com/vporton/zondirectory/blob/design/eth/contracts/BaseFiles.sol#L267), [273](https://github.com/vporton/zondirectory/blob/design/eth/contracts/BaseFiles.sol#L273), [274](https://github.com/vporton/zondirectory/blob/design/eth/contracts/BaseFiles.sol#L274), [279](https://github.com/vporton/zondirectory/blob/design/eth/contracts/BaseFiles.sol#L279), [280](https://github.com/vporton/zondirectory/blob/design/eth/contracts/BaseFiles.sol#L280), [285](https://github.com/vporton/zondirectory/blob/design/eth/contracts/BaseFiles.sol#L285), [286](https://github.com/vporton/zondirectory/blob/design/eth/contracts/BaseFiles.sol#L286), [297](https://github.com/vporton/zondirectory/blob/design/eth/contracts/BaseFiles.sol#L297), [314](https://github.com/vporton/zondirectory/blob/design/eth/contracts/BaseFiles.sol#L314), [354](https://github.com/vporton/zondirectory/blob/design/eth/contracts/BaseFiles.sol#L354), [355](https://github.com/vporton/zondirectory/blob/design/eth/contracts/BaseFiles.sol#L355), [366](https://github.com/vporton/zondirectory/blob/design/eth/contracts/BaseFiles.sol#L366), [367](https://github.com/vporton/zondirectory/blob/design/eth/contracts/BaseFiles.sol#L367), [384](https://github.com/vporton/zondirectory/blob/design/eth/contracts/BaseFiles.sol#L384), [385](https://github.com/vporton/zondirectory/blob/design/eth/contracts/BaseFiles.sol#L385), [387](https://github.com/vporton/zondirectory/blob/design/eth/contracts/BaseFiles.sol#L387), [401](https://github.com/vporton/zondirectory/blob/design/eth/contracts/BaseFiles.sol#L401), [402](https://github.com/vporton/zondirectory/blob/design/eth/contracts/BaseFiles.sol#L402), [403](https://github.com/vporton/zondirectory/blob/design/eth/contracts/BaseFiles.sol#L403), [404](https://github.com/vporton/zondirectory/blob/design/eth/contracts/BaseFiles.sol#L404), [551](https://github.com/vporton/zondirectory/blob/design/eth/contracts/BaseFiles.sol#L551), [552](https://github.com/vporton/zondirectory/blob/design/eth/contracts/BaseFiles.sol#L552) |
-|BlogTemplates.sol|Medium|6|[48](https://github.com/vporton/zondirectory/blob/design/eth/contracts/BlogTemplates.sol#L48), [54](https://github.com/vporton/zondirectory/blob/design/eth/contracts/BlogTemplates.sol#L54), [60](https://github.com/vporton/zondirectory/blob/design/eth/contracts/BlogTemplates.sol#L60), [70](https://github.com/vporton/zondirectory/blob/design/eth/contracts/BlogTemplates.sol#L70), [71](https://github.com/vporton/zondirectory/blob/design/eth/contracts/BlogTemplates.sol#L71), [82](https://github.com/vporton/zondirectory/blob/design/eth/contracts/BlogTemplates.sol#L82), [83](https://github.com/vporton/zondirectory/blob/design/eth/contracts/BlogTemplates.sol#L83), [88](https://github.com/vporton/zondirectory/blob/design/eth/contracts/BlogTemplates.sol#L88)|
+| BaseFiles.sol   | Medium    |   46  | [96](https://github.com/vporton/zondirectory/blob/9fd543fa83d5d3ce9f642c85d566f5ad122b9509/eth/contracts/BaseFiles.sol#L96), [97](https://github.com/vporton/zondirectory/blob/9fd543fa83d5d3ce9f642c85d566f5ad122b9509/eth/contracts/BaseFiles.sol#L97), [103](https://github.com/vporton/zondirectory/blob/9fd543fa83d5d3ce9f642c85d566f5ad122b9509/eth/contracts/BaseFiles.sol#L103), [110](https://github.com/vporton/zondirectory/blob/9fd543fa83d5d3ce9f642c85d566f5ad122b9509/eth/contracts/BaseFiles.sol#L110), [116](https://github.com/vporton/zondirectory/blob/9fd543fa83d5d3ce9f642c85d566f5ad122b9509/eth/contracts/BaseFiles.sol#L116), [122](https://github.com/vporton/zondirectory/blob/9fd543fa83d5d3ce9f642c85d566f5ad122b9509/eth/contracts/BaseFiles.sol#L122), [128](https://github.com/vporton/zondirectory/blob/9fd543fa83d5d3ce9f642c85d566f5ad122b9509/eth/contracts/BaseFiles.sol#L128), [134](https://github.com/vporton/zondirectory/blob/9fd543fa83d5d3ce9f642c85d566f5ad122b9509/eth/contracts/BaseFiles.sol#L134), [140](https://github.com/vporton/zondirectory/blob/9fd543fa83d5d3ce9f642c85d566f5ad122b9509/eth/contracts/BaseFiles.sol#L140), [146](https://github.com/vporton/zondirectory/blob/9fd543fa83d5d3ce9f642c85d566f5ad122b9509/eth/contracts/BaseFiles.sol#L146), [147](https://github.com/vporton/zondirectory/blob/9fd543fa83d5d3ce9f642c85d566f5ad122b9509/eth/contracts/BaseFiles.sol#L147), [153](https://github.com/vporton/zondirectory/blob/9fd543fa83d5d3ce9f642c85d566f5ad122b9509/eth/contracts/BaseFiles.sol#L153), [170](https://github.com/vporton/zondirectory/blob/9fd543fa83d5d3ce9f642c85d566f5ad122b9509/eth/contracts/BaseFiles.sol#L170), [202](https://github.com/vporton/zondirectory/blob/9fd543fa83d5d3ce9f642c85d566f5ad122b9509/eth/contracts/BaseFiles.sol#L202), [215](https://github.com/vporton/zondirectory/blob/9fd543fa83d5d3ce9f642c85d566f5ad122b9509/eth/contracts/BaseFiles.sol#L215), [216](https://github.com/vporton/zondirectory/blob/9fd543fa83d5d3ce9f642c85d566f5ad122b9509/eth/contracts/BaseFiles.sol#L216), [217](https://github.com/vporton/zondirectory/blob/9fd543fa83d5d3ce9f642c85d566f5ad122b9509/eth/contracts/BaseFiles.sol#L217), [239](https://github.com/vporton/zondirectory/blob/9fd543fa83d5d3ce9f642c85d566f5ad122b9509/eth/contracts/BaseFiles.sol#L239), [240](https://github.com/vporton/zondirectory/blob/9fd543fa83d5d3ce9f642c85d566f5ad122b9509/eth/contracts/BaseFiles.sol#L240), [257](https://github.com/vporton/zondirectory/blob/9fd543fa83d5d3ce9f642c85d566f5ad122b9509/eth/contracts/BaseFiles.sol#L257), [258](https://github.com/vporton/zondirectory/blob/9fd543fa83d5d3ce9f642c85d566f5ad122b9509/eth/contracts/BaseFiles.sol#L258), [259](https://github.com/vporton/zondirectory/blob/9fd543fa83d5d3ce9f642c85d566f5ad122b9509/eth/contracts/BaseFiles.sol#L259), [260](https://github.com/vporton/zondirectory/blob/9fd543fa83d5d3ce9f642c85d566f5ad122b9509/eth/contracts/BaseFiles.sol#L260), [265](https://github.com/vporton/zondirectory/blob/9fd543fa83d5d3ce9f642c85d566f5ad122b9509/eth/contracts/BaseFiles.sol#L265), [267](https://github.com/vporton/zondirectory/blob/9fd543fa83d5d3ce9f642c85d566f5ad122b9509/eth/contracts/BaseFiles.sol#L267), [273](https://github.com/vporton/zondirectory/blob/9fd543fa83d5d3ce9f642c85d566f5ad122b9509/eth/contracts/BaseFiles.sol#L273), [274](https://github.com/vporton/zondirectory/blob/9fd543fa83d5d3ce9f642c85d566f5ad122b9509/eth/contracts/BaseFiles.sol#L274), [279](https://github.com/vporton/zondirectory/blob/9fd543fa83d5d3ce9f642c85d566f5ad122b9509/eth/contracts/BaseFiles.sol#L279), [280](https://github.com/vporton/zondirectory/blob/9fd543fa83d5d3ce9f642c85d566f5ad122b9509/eth/contracts/BaseFiles.sol#L280), [285](https://github.com/vporton/zondirectory/blob/9fd543fa83d5d3ce9f642c85d566f5ad122b9509/eth/contracts/BaseFiles.sol#L285), [286](https://github.com/vporton/zondirectory/blob/9fd543fa83d5d3ce9f642c85d566f5ad122b9509/eth/contracts/BaseFiles.sol#L286), [297](https://github.com/vporton/zondirectory/blob/9fd543fa83d5d3ce9f642c85d566f5ad122b9509/eth/contracts/BaseFiles.sol#L297), [314](https://github.com/vporton/zondirectory/blob/9fd543fa83d5d3ce9f642c85d566f5ad122b9509/eth/contracts/BaseFiles.sol#L314), [354](https://github.com/vporton/zondirectory/blob/9fd543fa83d5d3ce9f642c85d566f5ad122b9509/eth/contracts/BaseFiles.sol#L354), [355](https://github.com/vporton/zondirectory/blob/9fd543fa83d5d3ce9f642c85d566f5ad122b9509/eth/contracts/BaseFiles.sol#L355), [366](https://github.com/vporton/zondirectory/blob/9fd543fa83d5d3ce9f642c85d566f5ad122b9509/eth/contracts/BaseFiles.sol#L366), [367](https://github.com/vporton/zondirectory/blob/9fd543fa83d5d3ce9f642c85d566f5ad122b9509/eth/contracts/BaseFiles.sol#L367), [384](https://github.com/vporton/zondirectory/blob/9fd543fa83d5d3ce9f642c85d566f5ad122b9509/eth/contracts/BaseFiles.sol#L384), [385](https://github.com/vporton/zondirectory/blob/9fd543fa83d5d3ce9f642c85d566f5ad122b9509/eth/contracts/BaseFiles.sol#L385), [387](https://github.com/vporton/zondirectory/blob/9fd543fa83d5d3ce9f642c85d566f5ad122b9509/eth/contracts/BaseFiles.sol#L387), [401](https://github.com/vporton/zondirectory/blob/9fd543fa83d5d3ce9f642c85d566f5ad122b9509/eth/contracts/BaseFiles.sol#L401), [402](https://github.com/vporton/zondirectory/blob/9fd543fa83d5d3ce9f642c85d566f5ad122b9509/eth/contracts/BaseFiles.sol#L402), [403](https://github.com/vporton/zondirectory/blob/9fd543fa83d5d3ce9f642c85d566f5ad122b9509/eth/contracts/BaseFiles.sol#L403), [404](https://github.com/vporton/zondirectory/blob/9fd543fa83d5d3ce9f642c85d566f5ad122b9509/eth/contracts/BaseFiles.sol#L404), [551](https://github.com/vporton/zondirectory/blob/9fd543fa83d5d3ce9f642c85d566f5ad122b9509/eth/contracts/BaseFiles.sol#L551), [552](https://github.com/vporton/zondirectory/blob/9fd543fa83d5d3ce9f642c85d566f5ad122b9509/eth/contracts/BaseFiles.sol#L552) |
+|BlogTemplates.sol|Medium|6|[48](https://github.com/vporton/zondirectory/blob/9fd543fa83d5d3ce9f642c85d566f5ad122b9509/eth/contracts/BlogTemplates.sol#L48), [54](https://github.com/vporton/zondirectory/blob/9fd543fa83d5d3ce9f642c85d566f5ad122b9509/eth/contracts/BlogTemplates.sol#L54), [60](https://github.com/vporton/zondirectory/blob/9fd543fa83d5d3ce9f642c85d566f5ad122b9509/eth/contracts/BlogTemplates.sol#L60), [70](https://github.com/vporton/zondirectory/blob/9fd543fa83d5d3ce9f642c85d566f5ad122b9509/eth/contracts/BlogTemplates.sol#L70), [71](https://github.com/vporton/zondirectory/blob/9fd543fa83d5d3ce9f642c85d566f5ad122b9509/eth/contracts/BlogTemplates.sol#L71), [82](https://github.com/vporton/zondirectory/blob/9fd543fa83d5d3ce9f642c85d566f5ad122b9509/eth/contracts/BlogTemplates.sol#L82), [83](https://github.com/vporton/zondirectory/blob/9fd543fa83d5d3ce9f642c85d566f5ad122b9509/eth/contracts/BlogTemplates.sol#L83), [88](https://github.com/vporton/zondirectory/blob/9fd543fa83d5d3ce9f642c85d566f5ad122b9509/eth/contracts/BlogTemplates.sol#L88)|
 
 Modifier would be better in many cases to discover which part of code are exposed or able to be trigger from unwanted actor.
 
@@ -244,7 +244,7 @@ Suggest fix:
 
 | Affected        | Severity  | Count | Lines |
 |:----------------|:----------|------:|-------|
-| BaseToken.sol   | Medium    |   2   |[15-17](https://github.com/vporton/zondirectory/blob/design/eth/contracts/BaseToken.sol#L15-L17),[23-29](https://github.com/vporton/zondirectory/blob/design/eth/contracts/BaseToken.sol#L23-L29)|
+| BaseToken.sol   | Medium    |   2   |[15-17](https://github.com/vporton/zondirectory/blob/9fd543fa83d5d3ce9f642c85d566f5ad122b9509/eth/contracts/BaseToken.sol#L15-L17),[23-29](https://github.com/vporton/zondirectory/blob/9fd543fa83d5d3ce9f642c85d566f5ad122b9509/eth/contracts/BaseToken.sol#L23-L29)|
 
 Suggest fix: [OpenZeppelin ERC20](https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contracts/token/ERC20/ERC20.sol)
 
@@ -254,7 +254,7 @@ Suggest fix: [OpenZeppelin ERC20](https://github.com/OpenZeppelin/openzeppelin-c
 
 | Affected        | Severity  | Count | Lines |
 |:----------------|:----------|------:|-------|
-| BaseFiles.sol   | Medium    |   6   |[416](https://github.com/vporton/zondirectory/blob/design/eth/contracts/BaseFiles.sol#L416), [438](https://github.com/vporton/zondirectory/blob/design/eth/contracts/BaseFiles.sol#L438), [449](https://github.com/vporton/zondirectory/blob/design/eth/contracts/BaseFiles.sol#L449), [479](https://github.com/vporton/zondirectory/blob/design/eth/contracts/BaseFiles.sol#L479), [483](https://github.com/vporton/zondirectory/blob/design/eth/contracts/BaseFiles.sol#L483), [698](https://github.com/vporton/zondirectory/blob/design/eth/contracts/BaseFiles.sol#L698)|
+| BaseFiles.sol   | Medium    |   6   |[416](https://github.com/vporton/zondirectory/blob/9fd543fa83d5d3ce9f642c85d566f5ad122b9509/eth/contracts/BaseFiles.sol#L416), [438](https://github.com/vporton/zondirectory/blob/9fd543fa83d5d3ce9f642c85d566f5ad122b9509/eth/contracts/BaseFiles.sol#L438), [449](https://github.com/vporton/zondirectory/blob/9fd543fa83d5d3ce9f642c85d566f5ad122b9509/eth/contracts/BaseFiles.sol#L449), [479](https://github.com/vporton/zondirectory/blob/9fd543fa83d5d3ce9f642c85d566f5ad122b9509/eth/contracts/BaseFiles.sol#L479), [483](https://github.com/vporton/zondirectory/blob/9fd543fa83d5d3ce9f642c85d566f5ad122b9509/eth/contracts/BaseFiles.sol#L483), [698](https://github.com/vporton/zondirectory/blob/9fd543fa83d5d3ce9f642c85d566f5ad122b9509/eth/contracts/BaseFiles.sol#L698)|
 
 We should use `SafeMath` to make sure there are no overflow/underflow or side effect.
 
@@ -266,13 +266,13 @@ We should use `SafeMath` to make sure there are no overflow/underflow or side ef
 
 | Affected        | Severity  | Count | Lines |
 |:----------------|:----------|------:|-------|
-| BaseFiles.sol   | Low       |   1   |[78-91](https://github.com/vporton/zondirectory/blob/design/eth/contracts/BaseFiles.sol#L78-L91)|
-| BlogTemplates.sol   | Low       |   1   |[L32-L36](https://github.com/vporton/zondirectory/blob/design/eth/contracts/BlogTemplates.sol#L32-L36)|
-| MainPST.sol   | Low       |   1   |[15-24](https://github.com/vporton/zondirectory/blob/design/eth/contracts/MainPST.sol#L15-L24)|
+| BaseFiles.sol   | Low       |   1   |[78-91](https://github.com/vporton/zondirectory/blob/9fd543fa83d5d3ce9f642c85d566f5ad122b9509/eth/contracts/BaseFiles.sol#L78-L91)|
+| BlogTemplates.sol   | Low       |   1   |[L32-L36](https://github.com/vporton/zondirectory/blob/9fd543fa83d5d3ce9f642c85d566f5ad122b9509/eth/contracts/BlogTemplates.sol#L32-L36)|
+| MainPST.sol   | Low       |   1   |[15-24](https://github.com/vporton/zondirectory/blob/9fd543fa83d5d3ce9f642c85d566f5ad122b9509/eth/contracts/MainPST.sol#L15-L24)|
 
 We should use `constructor()` instead of implement it our own.
 
-Example, [BaseFiles.sol#L78-L91](https://github.com/vporton/zondirectory/blob/design/eth/contracts/BaseFiles.sol#L78-L91)
+Example, [BaseFiles.sol#L78-L91](https://github.com/vporton/zondirectory/blob/9fd543fa83d5d3ce9f642c85d566f5ad122b9509/eth/contracts/BaseFiles.sol#L78-L91)
 
 ```solidity
     function initialize(address payable _founder, MainPST _pst) external {
@@ -313,8 +313,8 @@ Suggest fix:
 
 | Affected        | Severity  | Count | Lines |
 |:----------------|:----------|------:|-------|
-| ABDKMath64x64.sol   | Low       |   1   |[ABDKMath64x64.sol](https://github.com/vporton/zondirectory/blob/design/eth/contracts/ABDKMath64x64.sol)|
-| SafeMath.sol   | Low       |   1   |[SafeMath.sol](https://github.com/vporton/zondirectory/blob/design/eth/contracts/SafeMath.sol)|
+| ABDKMath64x64.sol   | Low       |   1   |[ABDKMath64x64.sol](https://github.com/vporton/zondirectory/blob/9fd543fa83d5d3ce9f642c85d566f5ad122b9509/eth/contracts/ABDKMath64x64.sol)|
+| SafeMath.sol   | Low       |   1   |[SafeMath.sol](https://github.com/vporton/zondirectory/blob/9fd543fa83d5d3ce9f642c85d566f5ad122b9509/eth/contracts/SafeMath.sol)|
 
 Need to keep these two up to date, please check:
 - [ABDKMath64x64.sol](https://github.com/abdk-consulting/abdk-libraries-solidity/blob/master/ABDKMath64x64.sol): Latest version with Solidity 0.7.x support and gas optimization.
@@ -326,7 +326,7 @@ Need to keep these two up to date, please check:
 
 | Affected        | Severity  | Count | Lines |
 |:----------------|:----------|------:|-------|
-| BaseFiles.sol   | Low       |   3   |[370](https://github.com/vporton/zondirectory/blob/design/eth/contracts/BaseFiles.sol#L370), [388](https://github.com/vporton/zondirectory/blob/design/eth/contracts/BaseFiles.sol#L388), [693](https://github.com/vporton/zondirectory/blob/design/eth/contracts/BaseFiles.sol#L693)|
+| BaseFiles.sol   | Low       |   3   |[370](https://github.com/vporton/zondirectory/blob/9fd543fa83d5d3ce9f642c85d566f5ad122b9509/eth/contracts/BaseFiles.sol#L370), [388](https://github.com/vporton/zondirectory/blob/9fd543fa83d5d3ce9f642c85d566f5ad122b9509/eth/contracts/BaseFiles.sol#L388), [693](https://github.com/vporton/zondirectory/blob/9fd543fa83d5d3ce9f642c85d566f5ad122b9509/eth/contracts/BaseFiles.sol#L693)|
 
 It's better to revert, It prevents state change or unnecessary transaction. Some wallet able to warning people that transaction won't work.
 
