@@ -23,6 +23,8 @@ abstract contract BaseFiles is IERC1155, ERC165, ERC1155Metadata_URI, CommonCons
     uint256 constant LINK_KIND_LINK = 0;
     uint256 constant LINK_KIND_MESSAGE = 1;
 
+    uint8 constant decimalsConstant = 50;
+
     // 64.64 fixed point number
     int128 public salesOwnersShare;
     int128 public upvotesOwnersShare;
@@ -53,14 +55,13 @@ abstract contract BaseFiles is IERC1155, ERC165, ERC1155Metadata_URI, CommonCons
     mapping (uint => address payable) public itemOwners;
     mapping (uint => mapping (uint => int256)) private childParentVotes;
     mapping (uint => uint256) public pricesETH;
-    mapping (uint => uint256) public pricesAR;
 
-    uint256 totalDividends = 0;
+    mapping(address => uint256) authorDirectEarnings;
+
+    uint256 totalDividends;
     mapping(address => uint256) lastTotalDivedends; // the value of totalDividends after the last payment to an address
     mapping(address => uint256) authorTotalDividends;
     mapping(address => mapping(address => uint256)) lastAuthorTotalDivedends; // the value of totalDividends after the last payment to an address
-
-    uint8 constant decimalsConstant = 50;
 
     // id => (owner => balance)
     mapping (uint256 => mapping(address => uint256)) internal balances;
@@ -225,6 +226,7 @@ abstract contract BaseFiles is IERC1155, ERC165, ERC1155Metadata_URI, CommonCons
         string description;
         string locale;
         uint256 linkKind;
+        uint responseTo;
     }
 
     function createLink(LinkInfo calldata _info, bool _owned, address payable _affiliate) external returns (uint)
@@ -235,6 +237,7 @@ abstract contract BaseFiles is IERC1155, ERC165, ERC1155Metadata_URI, CommonCons
     function _createLink(LinkInfo calldata _info, bool _owned, address payable _affiliate) public returns (uint)
     {
         require(bytes(_info.title).length != 0, "Empty title.");
+        require(_info.responseTo == 0 || entries[_info.responseTo] != EntryKind.NONE);
         setAffiliate(_affiliate);
         address payable _author = _owned ? msg.sender : address(0);
         ++maxId;
@@ -244,7 +247,7 @@ abstract contract BaseFiles is IERC1155, ERC165, ERC1155Metadata_URI, CommonCons
             _initializeAuthor(maxId);
             emit SetItemOwner(maxId, _author);
         }
-        emit LinkUpdated(maxId, _info.link, _info.title, _info.shortDescription, _info.description, _info.locale, _info.linkKind);
+        emit LinkUpdated(maxId, _info);
         return maxId;
     }
 
@@ -254,13 +257,8 @@ abstract contract BaseFiles is IERC1155, ERC165, ERC1155Metadata_URI, CommonCons
         require(itemOwners[_linkId] == msg.sender, "Attempt to modify other's link."); // only owned links
         require(bytes(_info.title).length != 0, "Empty title.");
         require(entries[_linkId] == EntryKind.LINK, "Link does not exist.");
-        emit LinkUpdated(_linkId,
-                         _info.link,
-                         _info.title,
-                         _info.shortDescription,
-                         _info.description,
-                         _info.locale,
-                         _info.linkKind);
+        require(_info.responseTo == 0 || entries[_info.responseTo] != EntryKind.NONE);
+        emit LinkUpdated(_linkId, _info);
     }
 
     function updateItemCover(uint _itemId, uint _version, bytes calldata _cover, uint _width, uint _height) external {
@@ -416,7 +414,7 @@ abstract contract BaseFiles is IERC1155, ERC165, ERC1155Metadata_URI, CommonCons
 
     function _dividendsOwing(address _account) internal view returns(uint256) {
         uint256 _newDividends = totalDividends - lastTotalDivedends[_account];
-        return (pst.balanceOf(_account) * _newDividends) / pst.totalSupply(); // rounding down
+        return (pst.balanceOf(_account) * _newDividends) / pst.totalSupply() + authorDirectEarnings[_account]; // rounding down
     }
 
     function dividendsOwing(address _account) external view returns(uint256) {
@@ -432,6 +430,7 @@ abstract contract BaseFiles is IERC1155, ERC165, ERC1155Metadata_URI, CommonCons
         if(_owing > 0) {
             msg.sender.transfer(_owing);
             lastTotalDivedends[msg.sender] = totalDividends;
+            authorDirectEarnings[msg.sender] = 0;
         }
     }
 
@@ -468,13 +467,13 @@ abstract contract BaseFiles is IERC1155, ERC165, ERC1155Metadata_URI, CommonCons
         uint256 _shareHoldersAmount = _amount;
         if(uint(_buyerAffiliate) > 1) {
             uint256 _buyerAffiliateAmount = uint256(buyerAffiliateShare.muli(int256(_amount)));
-            _buyerAffiliate.transfer(_buyerAffiliateAmount);
+            payToAuthor(_buyerAffiliate, _buyerAffiliateAmount);
             require(_shareHoldersAmount >= _buyerAffiliateAmount, "Attempt to pay negative amount.");
             _shareHoldersAmount -= _buyerAffiliateAmount;
         }
         if(uint(_sellerAffiliate) > 1) {
             uint256 _sellerAffiliateAmount = uint256(sellerAffiliateShare.muli(int256(_amount)));
-            payable(_sellerAffiliate).transfer(_sellerAffiliateAmount);
+            payToAuthor(_sellerAffiliate, _sellerAffiliateAmount);
             require(_shareHoldersAmount >= _sellerAffiliateAmount, "Attempt to pay negative amount.");
             _shareHoldersAmount -= _sellerAffiliateAmount;
         }
@@ -482,8 +481,7 @@ abstract contract BaseFiles is IERC1155, ERC165, ERC1155Metadata_URI, CommonCons
     }
 
     function payToAuthor(address payable _author, uint256 _amount) internal {
-        _author.transfer(_amount);
-        authorTotalDividends[_author] += _amount;
+        authorDirectEarnings[_author] += _amount;
     }
 
 // Affiliates //
@@ -515,8 +513,6 @@ abstract contract BaseFiles is IERC1155, ERC165, ERC1155Metadata_URI, CommonCons
         address payable _result = reverseAccountsMapping[_effective];
         return _result != address(0) ? _result : _effective;
     }
-
-// Author's PSTs follow //
 
 /////////////////////////////////////////// ERC165 //////////////////////////////////////////////
 
@@ -694,9 +690,9 @@ abstract contract BaseFiles is IERC1155, ERC165, ERC1155Metadata_URI, CommonCons
 /////////////////////////////////////////// Minting //////////////////////////////////////////////
 
     function _initializeAuthor(uint _itemId) internal {
+        itemOwners[_itemId] = msg.sender;
         if(sellerInitialized[msg.sender]) return;
         sellerInitialized[msg.sender] = true;
-        itemOwners[_itemId] = msg.sender;
         uint256 _id = _sellerToToken(msg.sender);
         balances[_id][msg.sender] = 10**uint256(decimalsConstant);
         totalSupply[_id] = 10**uint256(decimalsConstant);
@@ -753,13 +749,7 @@ abstract contract BaseFiles is IERC1155, ERC165, ERC1155Metadata_URI, CommonCons
     event ItemCreated(uint indexed itemId);
     event SetItemOwner(uint indexed itemId, address payable indexed author);
     event ItemUpdated(uint indexed itemId, ItemInfo info);
-    event LinkUpdated(uint indexed linkId,
-                      string link,
-                      string title,
-                      string shortDescription,
-                      string description,
-                      string locale,
-                      uint256 indexed linkKind);
+    event LinkUpdated(uint indexed linkId, LinkInfo info);
     event ItemCoverUpdated(uint indexed itemId, uint indexed version, bytes cover, uint width, uint height);
     event ItemFilesUpdated(uint indexed itemId, string format, uint indexed version, bytes hash);
     event SetLastItemVersion(uint indexed itemId, uint version);
