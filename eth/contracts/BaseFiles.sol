@@ -5,12 +5,12 @@ pragma experimental ABIEncoderV2;
 
 import './Common.sol';
 import './Address.sol';
-import './SafeMath.sol';
+import '@openzeppelin/contracts/math/SafeMath.sol';
 import './IERC1155.sol';
 import './IERC1155TokenReceiver.sol';
 import './IERC1155Metadata.sol';
 import './MainPST.sol';
-import './ABDKMath64x64.sol';
+import 'abdk-libraries-solidity/ABDKMath64x64.sol';
 
 abstract contract BaseFiles is IERC1155, ERC165, ERC1155Metadata_URI, CommonConstants {
 
@@ -155,7 +155,7 @@ abstract contract BaseFiles is IERC1155, ERC165, ERC1155Metadata_URI, CommonCons
         emit SetItemOwner(_itemId, address(0));
     }
 
-    function setTokenUri(string calldata _tokenUri) external {
+    function setTokenUri(string calldata _tokenUri) external onlyFounder {
         tokenUri = _tokenUri;
     }
 
@@ -365,9 +365,10 @@ abstract contract BaseFiles is IERC1155, ERC165, ERC1155Metadata_URI, CommonCons
     function _voteChildParent(uint _child, uint _parent, bool _yes, address payable _affiliate, uint256 _amount) public {
         require(entries[_child] != EntryKind.NONE, "Child does not exist.");
         require(entries[_parent] == EntryKind.CATEGORY, "Must be a category.");
-        setAffiliate(_affiliate);
+        require(_amount <= 1 << 255, "To big number.");
         int256 _value = _yes ? int256(_amount) : -int256(_amount);
-        if(_value == 0) return; // We don't want to pollute the events with zero votes.
+        if(_value == 0) revert("We don't want to pollute the events with zero votes");
+        setAffiliate(_affiliate);
         int256 _newValue = childParentVotes[_child][_parent] + _value;
         childParentVotes[_child][_parent] = _newValue;
         address payable _author = itemOwners[_child];
@@ -381,11 +382,11 @@ abstract contract BaseFiles is IERC1155, ERC165, ERC1155Metadata_URI, CommonCons
     }
 
     function voteForOwnChild(uint _child, uint _parent) external payable {
+        if(msg.value == 0) revert("We don't want to pollute the events with zero votes");
         require(entries[_child] != EntryKind.NONE, "Child does not exist.");
         require(entries[_parent] == EntryKind.CATEGORY, "Must be a category.");
         address _author = itemOwners[_child];
         require(_author == msg.sender, "Must be owner.");
-        if(msg.value == 0) return; // We don't want to pollute the events with zero votes.
         int256 _value = upvotesOwnersShare.inv().muli(int256(msg.value));
         int256 _newValue = childParentVotes[_child][_parent] + _value;
         childParentVotes[_child][_parent] = _newValue;
@@ -727,6 +728,11 @@ abstract contract BaseFiles is IERC1155, ERC165, ERC1155Metadata_URI, CommonCons
 
     function _sellerToToken(address payable _seller) internal pure returns (uint256) {
         return uint256(_seller);
+    }
+
+    modifier onlyFounder(){
+        require(msg.sender == founder, "Access denied");
+        _;
     }
 
     event SetOwner(address payable owner); // share is 64.64 fixed point number
