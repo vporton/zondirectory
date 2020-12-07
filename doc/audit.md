@@ -272,6 +272,8 @@ Suggest fix: [OpenZeppelin ERC20](https://github.com/OpenZeppelin/openzeppelin-c
 
 We should use `SafeMath` to make sure there are no overflow/underflow or side effect.
 
+@vporton: No, overflow is impossible (unless you have like `1<<255` Ether).
+
 **Note**: Please aware that, round down could be cause of token lost. A tiny amount of token wil be "burnt" after `floor()`.
 
 <a name="L01"/>
