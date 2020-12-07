@@ -3,23 +3,11 @@
 pragma solidity ^0.7.0;
 pragma experimental ABIEncoderV2;
 
-import './BaseToken.sol';
+import './MyERC20.sol';
 
-contract MainPST is BaseToken {
-    string public name;
-    uint8 public decimals;
-    string public symbol;
-
-    bool initialized;
-
+contract MainPST is MyERC20 {
     function initialize(address payable _founder, uint256 _initialBalance) external {
-        require(!initialized);
-        initialized = true;
-
-        name = "Zon Directory PST Token (ETH)";
-        decimals = 18;
-        symbol = "ZDPSTE";
-        balances[_founder] = _initialBalance;
-        totalSupply = _initialBalance;
+        super.initialize("Zon Directory PST Token (ETH)", "ZDPSTE");
+        _mint(_founder, _initialBalance);
     }
 }

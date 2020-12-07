@@ -5,7 +5,7 @@ pragma experimental ABIEncoderV2;
 
 import './Common.sol';
 import './Address.sol';
-import './SafeMath.sol';
+import '@openzeppelin/contracts/math/SafeMath.sol';
 import './IERC1155.sol';
 import './IERC1155TokenReceiver.sol';
 import './IERC1155Metadata.sol';
