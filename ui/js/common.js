@@ -143,7 +143,7 @@ function getEthereumNetworkName() {
             networkName = 'poa-sokol';
             break;
         default:
-            networkName = 'poa-sokol'; // TODO: Use poa-core
+            networkName = 'matic'; // TODO: Use poa-core
             break;
     }
     return networkName;
@@ -235,16 +235,22 @@ async function onLoad() {
     if(window.ethereum) window.ethereum.enable();
 
     let choosenNetwork = getCookie('web3network');
-    if(!choosenNetwork) choosenNetwork = 'poa-core';
+    if(!choosenNetwork) choosenNetwork = 'matic';
     if(!window.web3 || !window.web3.currentProvider || choosenNetwork != window.web3.currentProvider.chainId) {
         $("#wrongNetWarning").css('display', 'block');
     }
 
-    if(choosenNetwork != '0x63')
+    if(choosenNetwork != '0x83')
         $('#testModeWarnining').css('display', 'block');
 
     await connectWeb3();
 
+    if(window.web3) {
+        await defaultAccountPromise();
+        const balance = await web3.eth.getBalance(defaultAccount);
+        console.log(balance)
+        $('.accountBalance').text(Number(web3.utils.fromWei(balance)).toFixed(2));
+    }
     $('#rootLink').attr('href', "index.html?cat=" + await getAddress('Root'));
 }
 
