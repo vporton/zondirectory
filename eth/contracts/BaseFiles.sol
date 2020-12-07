@@ -10,7 +10,7 @@ import './IERC1155.sol';
 import './IERC1155TokenReceiver.sol';
 import './IERC1155Metadata.sol';
 import './MainPST.sol';
-import './ABDKMath64x64.sol';
+import 'abdk-libraries-solidity/ABDKMath64x64.sol';
 
 abstract contract BaseFiles is IERC1155, ERC165, ERC1155Metadata_URI, CommonConstants {
 
