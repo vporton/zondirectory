@@ -197,7 +197,7 @@ abstract contract BaseFiles is IERC1155, ERC165, ERC1155Metadata_URI, CommonCons
         return _createItem(_info, _affiliate);
     }
 
-    function _createItem(ItemInfo calldata _info, address payable _affiliate) public returns (uint)
+    function _createItem(ItemInfo calldata _info, address payable _affiliate) internal returns (uint)
     {
         require(bytes(_info.title).length != 0, "Empty title.");
         setAffiliate(_affiliate);
@@ -234,7 +234,7 @@ abstract contract BaseFiles is IERC1155, ERC165, ERC1155Metadata_URI, CommonCons
         return _createLink(_info, _owned, _affiliate);
     }
 
-    function _createLink(LinkInfo calldata _info, bool _owned, address payable _affiliate) public returns (uint)
+    function _createLink(LinkInfo calldata _info, bool _owned, address payable _affiliate) internal returns (uint)
     {
         require(bytes(_info.title).length != 0, "Empty title.");
         require(_info.responseTo == 0 || entries[_info.responseTo] != EntryKind.NONE);
@@ -310,7 +310,7 @@ abstract contract BaseFiles is IERC1155, ERC165, ERC1155Metadata_URI, CommonCons
         return _createCategory(_title, _locale, _affiliate);
     }
 
-    function _createCategory(string calldata _title, string calldata _locale, address payable _affiliate) public returns (uint) {
+    function _createCategory(string calldata _title, string calldata _locale, address payable _affiliate) internal returns (uint) {
         require(bytes(_title).length != 0, "Empty title.");
         setAffiliate(_affiliate);
         ++maxId;
@@ -337,7 +337,7 @@ abstract contract BaseFiles is IERC1155, ERC165, ERC1155Metadata_URI, CommonCons
         return _createOwnedCategory(_info, _affiliate);
     }
 
-    function _createOwnedCategory(OwnedCategoryInfo calldata _info, address payable _affiliate) public returns (uint) {
+    function _createOwnedCategory(OwnedCategoryInfo calldata _info, address payable _affiliate) internal returns (uint) {
         require(bytes(_info.title).length != 0, "Empty title.");
         setAffiliate(_affiliate);
         ++maxId;
@@ -362,7 +362,7 @@ abstract contract BaseFiles is IERC1155, ERC165, ERC1155Metadata_URI, CommonCons
         _voteChildParent(_child, _parent, _yes, _affiliate, msg.value);
     }
 
-    function _voteChildParent(uint _child, uint _parent, bool _yes, address payable _affiliate, uint256 _amount) public {
+    function _voteChildParent(uint _child, uint _parent, bool _yes, address payable _affiliate, uint256 _amount) internal {
         require(entries[_child] != EntryKind.NONE, "Child does not exist.");
         require(entries[_parent] == EntryKind.CATEGORY, "Must be a category.");
         require(_amount <= 1 << 255, "To big number.");
@@ -399,7 +399,7 @@ abstract contract BaseFiles is IERC1155, ERC165, ERC1155Metadata_URI, CommonCons
     }
 
     // _value > 0 - present
-    function _setMyChildParent(uint _child, uint _parent, int256 _value, int256 _featureLevel) public {
+    function _setMyChildParent(uint _child, uint _parent, int256 _value, int256 _featureLevel) internal {
         require(entries[_child] != EntryKind.NONE, "Child does not exist.");
         require(entries[_parent] == EntryKind.CATEGORY, "Must be a category.");
         require(itemOwners[_parent] == msg.sender, "Access denied.");

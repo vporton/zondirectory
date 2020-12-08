@@ -66,7 +66,7 @@ contract BlogTemplates {
         _createPost(_templateId, _postId, _itemId);
     }
 
-    function _createPost(uint _templateId, uint _postId, uint _itemId) public {
+    function _createPost(uint _templateId, uint _postId, uint _itemId) internal {
         require(_itemId != 0, "Item ID zero.");
         require(postIDs[_itemId] == 0, "ID is already taken.");
         postOwners[_postId] = msg.sender;
