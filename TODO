@@ -1,3 +1,5 @@
+* Don't run `initialize()` on repeated deployment.
+
 * Selling physical items for AR.
 
 * Sell more than one item quantity.

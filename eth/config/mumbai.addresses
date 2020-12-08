@@ -2,9 +2,9 @@
   "MainPST": "0xcB9F72b521602Eb154B8e81b83bc588E2dfd7cC3",
   "MainPSTBlock": 7763801,
   "Files": "0x9A2E564e0EC4cc39c30899B6DD1Bc32dC3a919e2",
-  "FilesBlock": 7763839,
+  "FilesBlock": 7788747,
   "BlogTemplates": "0x75ecCe09Dc263e99B126bC59298Bc6f96920255e",
-  "BlogTemplatesBlock": 7763849,
+  "BlogTemplatesBlock": 7788757,
   "TheGraph": "vporton/files2",
   "TheGraphTemplates": "vporton/templates1"
 }
