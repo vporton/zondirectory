@@ -76,7 +76,7 @@ abstract contract BaseFiles is IERC1155, ERC165, ERC1155Metadata_URI, CommonCons
     bool initialized;
 
     function initialize(address payable _founder, MainPST _pst) external {
-        require(!initialized);
+        require(!initialized, "Already initialized.");
         initialized = true;
 
         founder = _founder;
@@ -268,8 +268,7 @@ abstract contract BaseFiles is IERC1155, ERC165, ERC1155Metadata_URI, CommonCons
         emit ItemCoverUpdated(_itemId, _version, _cover, _width, _height);
     }
 
-    function uploadFile(uint _itemId, uint _version, string calldata _format, bytes calldata _hash) external {
-        require(_hash.length == 32, "Wrong hash length.");
+    function uploadFile(uint _itemId, uint _version, string calldata _format, bytes32 _hash) external {
         require(_effectiveAccount(itemOwners[_itemId]) == msg.sender, "Attempt to modify other's item.");
         require(entries[_itemId] == EntryKind.DOWNLOADS, "Item does not exist.");
         emit ItemFilesUpdated(_itemId, _format, _version, _hash);
@@ -281,7 +280,7 @@ abstract contract BaseFiles is IERC1155, ERC165, ERC1155Metadata_URI, CommonCons
         emit SetLastItemVersion(_itemId, _version);
     }
 
-    function pay(uint _itemId, address payable _affiliate, string calldata shippingInfo) external payable returns (bytes memory) {
+    function pay(uint _itemId, address payable _affiliate, string calldata shippingInfo) external payable {
         require(pricesETH[_itemId] <= msg.value, "Paid too little.");
         require(entries[_itemId] == EntryKind.DOWNLOADS, "Item does not exist.");
         setAffiliate(_affiliate);
@@ -751,7 +750,7 @@ abstract contract BaseFiles is IERC1155, ERC165, ERC1155Metadata_URI, CommonCons
     event ItemUpdated(uint indexed itemId, ItemInfo info);
     event LinkUpdated(uint indexed linkId, LinkInfo info);
     event ItemCoverUpdated(uint indexed itemId, uint indexed version, bytes cover, uint width, uint height);
-    event ItemFilesUpdated(uint indexed itemId, string format, uint indexed version, bytes hash);
+    event ItemFilesUpdated(uint indexed itemId, string format, uint indexed version, bytes32 hash);
     event SetLastItemVersion(uint indexed itemId, uint version);
     event CategoryCreated(uint256 indexed categoryId, address indexed author); // zero author - no owner
     event CategoryUpdated(uint256 indexed categoryId, string title, string locale);

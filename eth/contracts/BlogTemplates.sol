@@ -30,7 +30,7 @@ contract BlogTemplates {
     bool initialized;
 
     function initialize(Files _filesContract) external {
-        require(!initialized);
+        require(!initialized, "Already initialized.");
         initialized = true;
         filesContract = _filesContract;
     }
