@@ -28,6 +28,7 @@
 |||[L01 - User constructor instead of initialize](#L01)|
 |||[L02 - Out date library](#L02)|
 |||[L03 - Better to revert](#L03)|
+|||[L04 - Hash data must be bytes32](#L04)|
 
 <a name="H01"/>
 
@@ -454,6 +455,25 @@ Suggest fix:
 @vporton: `revert` in `_initializeAuthor` would be wrong!
 
 @chiro: Might be, I missed business logic part.
+
+<a name="L04"/>
+
+## L04 - Hash data must be bytes32
+
+| Affected        | Severity  | Count | Lines |
+|:----------------|:----------|------:|-------|
+| BaseFiles.sol   | Low       |   3   |[271-272](https://github.com/vporton/zondirectory/blob/9fd543fa83d5d3ce9f642c85d566f5ad122b9509/eth/contracts/BaseFiles.sol#L271-L272)|
+
+```solidity
+    function uploadFile(uint _itemId, uint _version, string calldata _format, bytes calldata _hash) external {
+        require(_hash.length == 32, "Wrong hash length.");
+```
+
+Suggest fix:
+
+```solidity
+    function uploadFile(uint _itemId, uint _version, string calldata _format, bytes32 _hash) external {
+```
 
 # Extra note
 
