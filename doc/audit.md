@@ -100,7 +100,7 @@ These methods should have `internal` modifier instead of `public` since unwanted
 
 `_voteChildParent()` was accessible without **any** restriction, that mean anyone could vote with **zero cost**.
 
-@vporton: That's correct: `_voteChildParent()` is called from `voteChildParent()` and the "amount" of the vote is `msg.value`. So voting without any cost would produce a zero-value vote, what is not a security volnurability.
+@vporton: That's correct: `_voteChildParent()` is called from `voteChildParent()` and the "amount" of the vote is `msg.value`. So voting without any cost would produce a zero-value vote, what is not a security vulnerability.
 
 <a name="H03"/>
 
@@ -163,7 +163,7 @@ Please check `uint256[] calldata _voteAmounts` your own.
 
 | Affected        | Severity  | Count | Lines |
 |:----------------|:----------|------:|-------|
-| Files.sol       | High      |   1   |[9-24](https://github.com/vporton/zondirectory/blob/design/eth/contracts/Files.sol#L9-L24)|
+| Files.sol       | High      |   1   |[369](https://github.com/vporton/zondirectory/blob/design/eth/contracts/BaseFiles.sol#L369)|
 
 @vporton: It seems you have a typo about line numbers in the table above.
 
@@ -179,7 +179,7 @@ In [BaseFiles.sol#L369](https://github.com/vporton/zondirectory/blob/design/eth/
 
 This line will be overflow: `int256 _value = _yes ? int256(_amount) : -int256(_amount);`
 
-Suggest fix: all math formula should be handle by `SafeMath` or `ABDKMath64x64`
+Suggest fix: all math formula should be handled by `SafeMath` or `ABDKMath64x64`
 
 <a name="M01"/>
 
@@ -283,7 +283,7 @@ We should use `SafeMath` to make sure there are no overflow/underflow or side ef
 | Affected        | Severity  | Count | Lines |
 |:----------------|:----------|------:|-------|
 | BaseFiles.sol   | Low       |   1   |[78-91](https://github.com/vporton/zondirectory/blob/design/eth/contracts/BaseFiles.sol#L78-L91)|
-| BlogTemplates.sol   | Low       |   1   |[L32-L36](https://github.com/vporton/zondirectory/blob/design/eth/contracts/BlogTemplates.sol#L32-L36)|
+| BlogTemplates.sol   | Low       |   1   |[32-36](https://github.com/vporton/zondirectory/blob/design/eth/contracts/BlogTemplates.sol#L32-L36)|
 | MainPST.sol   | Low       |   1   |[15-24](https://github.com/vporton/zondirectory/blob/design/eth/contracts/MainPST.sol#L15-L24)|
 
 We should use `constructor()` instead of implement it our own.
