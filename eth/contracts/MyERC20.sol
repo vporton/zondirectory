@@ -62,7 +62,7 @@ contract MyERC20 is Context, IERC20 {
      * construction.
      */
     function initialize(string memory name_, string memory symbol_) public {
-        require(!initialized);
+        require(!initialized, "Already initialized.");
         initialized = true;
 
         _name = name_;
