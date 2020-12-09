@@ -20,7 +20,9 @@ module.exports = async ({getNamedAccounts, deployments}) => {
         await contractInstance.methods.initialize(process.env.PROGRAMMER_ADDRESS, web3.utils.toWei('100000'))
             .send({from: deployer, gas: '1000000', gasPrice: ethers.utils.parseUnits('1', 'gwei')})
             .on('error', (error) => log(`Error initializing MainPST: ` + error))
-            .catch((error) => log(`Error initializing MainPST: ` + error));
+            .catch((error) => {
+                if(error !== "Already initialized.") log(`Error initializing MainPST: ` + error);
+            });
         log(`...initialized`);
     }
     const mydeploy = require('../lib/mydeploy');

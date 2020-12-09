@@ -60,8 +60,10 @@ module.exports = async ({getNamedAccounts, deployments}) => {
     await contractInstance.methods.initialize(process.env.PROGRAMMER_ADDRESS, MainPST.address)
         .send({from: deployer, gas: '1000000', gasPrice: ethers.utils.parseUnits('1', 'gwei')})
         .on('error', (error) => log(`Error initializing Files: ` + error))
-        .catch((error) => log(`Error initializing Files: ` + error));
-    log(`...initialized`);
+        .catch((error) => {
+            if(error !== "Already initialized.") log(`Error initializing Files: ` + error);
+        });
+log(`...initialized`);
     const mydeploy = require('../lib/mydeploy');
     mydeploy.updateAddress('Files', deployResult.address, buidler.network.name); // or ethers.getContractAt
     mydeploy.updateAddress('FilesBlock', deployResult.receipt.blockNumber, buidler.network.name); // or ethers.getContractAt
