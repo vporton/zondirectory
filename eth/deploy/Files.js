@@ -61,7 +61,9 @@ module.exports = async ({getNamedAccounts, deployments}) => {
         .send({from: deployer, gas: '1000000', gasPrice: ethers.utils.parseUnits('1', 'gwei')})
         .on('error', (error) => log(`Error initializing Files: ` + error))
         .catch((error) => {
-            if(error !== "Already initialized.") log(`Error initializing Files: ` + error);
+            if(error !== "Error: Transaction has been reverted by the EVM") {
+                log(`Error initializing Files: ` + error);
+            }
         });
 log(`...initialized`);
     const mydeploy = require('../lib/mydeploy');

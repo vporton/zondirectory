@@ -21,7 +21,9 @@ module.exports = async ({getNamedAccounts, deployments}) => {
             .send({from: deployer, gas: '1000000', gasPrice: ethers.utils.parseUnits('1', 'gwei')})
             .on('error', (error) => log(`Error initializing MainPST: ` + error))
             .catch((error) => {
-                if(error !== "Already initialized.") log(`Error initializing MainPST: ` + error);
+                if(error !== "Error: Transaction has been reverted by the EVM") {
+                    log(`Error initializing MainPST: ` + error);
+                }
             });
         log(`...initialized`);
     }
