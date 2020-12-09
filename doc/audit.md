@@ -462,7 +462,7 @@ Suggest fix:
 
 | Affected        | Severity  | Count | Lines |
 |:----------------|:----------|------:|-------|
-| BaseFiles.sol   | Low       |   3   |[271-272](https://github.com/vporton/zondirectory/blob/9fd543fa83d5d3ce9f642c85d566f5ad122b9509/eth/contracts/BaseFiles.sol#L271-L272)|
+| BaseFiles.sol   | Low       |   1   |[271-272](https://github.com/vporton/zondirectory/blob/9fd543fa83d5d3ce9f642c85d566f5ad122b9509/eth/contracts/BaseFiles.sol#L271-L272)|
 
 ```solidity
     function uploadFile(uint _itemId, uint _version, string calldata _format, bytes calldata _hash) external {
@@ -474,6 +474,20 @@ Suggest fix:
 ```solidity
     function uploadFile(uint _itemId, uint _version, string calldata _format, bytes32 _hash) external {
 ```
+
+<a name="L05"/>
+
+## L05 - Function missing return data
+
+| Affected        | Severity  | Count | Lines |
+|:----------------|:----------|------:|-------|
+| BaseFiles.sol   | Low       |   2   |[284-294](https://github.com/vporton/zondirectory/blob/9fd543fa83d5d3ce9f642c85d566f5ad122b9509/eth/contracts/BaseFiles.sol#L284-L294) [296-305](https://github.com/vporton/zondirectory/blob/9fd543fa83d5d3ce9f642c85d566f5ad122b9509/eth/contracts/BaseFiles.sol#L296-L305)|
+
+```solidity
+function pay(uint _itemId, address payable _affiliate, string calldata shippingInfo) external payable returns (bytes memory) {
+```
+
+These two return `(bytes memory)` but actually it return nothing. Please consider to return `bool` and `return true;` at the end of function block.
 
 # Extra note
 
