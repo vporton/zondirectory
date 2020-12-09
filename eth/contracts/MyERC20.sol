@@ -47,6 +47,11 @@ contract MyERC20 is Context, IERC20 {
     string private _symbol;
     uint8 private _decimals;
 
+    modifier onlyNotZeroAddress(address inputAddress) {
+        require(inputAddress != address(0), "Should not a zero address");
+        _;
+    }
+
     /**
      * @dev Sets the values for {name} and {symbol}, initializes {decimals} with
      * a default value of 18.
@@ -212,9 +217,7 @@ contract MyERC20 is Context, IERC20 {
      * - `recipient` cannot be the zero address.
      * - `sender` must have a balance of at least `amount`.
      */
-    function _transfer(address sender, address recipient, uint256 amount) internal virtual {
-        require(sender != address(0), "ERC20: transfer from the zero address");
-        require(recipient != address(0), "ERC20: transfer to the zero address");
+    function _transfer(address sender, address recipient, uint256 amount) internal virtual onlyNotZeroAddress(sender) onlyNotZeroAddress(recipient) {
 
         _beforeTokenTransfer(sender, recipient, amount);
 
@@ -232,8 +235,7 @@ contract MyERC20 is Context, IERC20 {
      *
      * - `to` cannot be the zero address.
      */
-    function _mint(address account, uint256 amount) internal virtual {
-        require(account != address(0), "ERC20: mint to the zero address");
+    function _mint(address account, uint256 amount) internal virtual onlyNotZeroAddress(account) {
 
         _beforeTokenTransfer(address(0), account, amount);
 
@@ -253,8 +255,7 @@ contract MyERC20 is Context, IERC20 {
      * - `account` cannot be the zero address.
      * - `account` must have at least `amount` tokens.
      */
-    function _burn(address account, uint256 amount) internal virtual {
-        require(account != address(0), "ERC20: burn from the zero address");
+    function _burn(address account, uint256 amount) internal virtual onlyNotZeroAddress(account) {
 
         _beforeTokenTransfer(account, address(0), amount);
 
@@ -276,9 +277,7 @@ contract MyERC20 is Context, IERC20 {
      * - `owner` cannot be the zero address.
      * - `spender` cannot be the zero address.
      */
-    function _approve(address owner, address spender, uint256 amount) internal virtual {
-        require(owner != address(0), "ERC20: approve from the zero address");
-        require(spender != address(0), "ERC20: approve to the zero address");
+    function _approve(address owner, address spender, uint256 amount) internal virtual onlyNotZeroAddress(owner) onlyNotZeroAddress(spender) {
 
         _allowances[owner][spender] = amount;
         emit Approval(owner, spender, amount);

@@ -29,6 +29,7 @@
 |||[L02 - Out date library](#L02)|
 |||[L03 - Better to revert](#L03)|
 |||[L04 - Hash data must be bytes32](#L04)|
+|||[L05 - Function missing return data](#L05)|
 
 <a name="H01"/>
 
