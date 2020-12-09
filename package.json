@@ -1,6 +1,6 @@
 {
   "dependencies": {
-    "@myetherwallet/mewconnect-web-client": "^2.1.5-beta.1",
+    "@myetherwallet/mewconnect-web-client": "git+ssh://git@github.com/vporton/MEWconnect-web-client.git#matic-yarn-bug-workaround",
     "arweave": "^1.7.1",
     "arweave-deploy": "^1.9.1",
     "promises-tho": "^1.1.0",
