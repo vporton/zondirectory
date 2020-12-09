@@ -148,6 +148,8 @@ contract Test {
 
 @chiro: `_voteChildParent()` is able to be triggered from outside of EVM then it's vulnerable.
 
+@vporton: Made it internal.
+
 <a name="H03"/>
 
 ## H03 - Possible Ethereum trapped and lost
