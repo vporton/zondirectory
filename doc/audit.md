@@ -24,7 +24,7 @@
 |||[M02 - Prefer to use self-define modifier](#M02)|
 |||[M03 - Should use better ERC20 implementation](#M03)|
 |||[M04 - Should use SafeMath](#M04)|
-| Low      | 3         |      |
+| Low      | 5         |      |
 |||[L01 - User constructor instead of initialize](#L01)|
 |||[L02 - Out date library](#L02)|
 |||[L03 - Better to revert](#L03)|
