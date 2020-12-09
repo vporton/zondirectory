@@ -75,6 +75,36 @@ abstract contract BaseFiles is IERC1155, ERC165, ERC1155Metadata_URI, CommonCons
 
     bool initialized;
 
+    modifier onlyFounder() {
+        require(msg.sender == founder, "Only able to be triggered by founder");
+        _;
+    }
+
+    modifier onlyNotZeroAddress(address inputAddress) {
+        require(inputAddress != address(0), "Should not a zero address");
+        _;
+    }
+
+    modifier onlyItemOwner(uint _itemId) {
+        require(_effectiveAccount(itemOwners[_itemId]) == msg.sender, "Only able to be triggered by item's owner");
+        _;
+    }
+
+    modifier onlyExistingItem(uint _itemId) {
+        require(entries[_itemId] == EntryKind.DOWNLOADS, "Item does not exist.");
+        _;
+    }
+
+    modifier onlyExistingChild(uint _child) {
+        require(entries[_child] != EntryKind.NONE, "Child does not exist.");
+        _;
+    }
+
+    modifier onlyCategory(uint _parent) {
+        require(entries[_parent] == EntryKind.CATEGORY, "Must be a category.");
+        _;
+    }
+
     function initialize(address payable _founder, MainPST _pst) external {
         require(!initialized, "Already initialized.");
         initialized = true;
@@ -92,65 +122,53 @@ abstract contract BaseFiles is IERC1155, ERC165, ERC1155Metadata_URI, CommonCons
 
 // Owners //
 
-    function setMainOwner(address payable _founder) external {
-        require(msg.sender == founder, "Access denied.");
-        require(_founder != address(0), "Zero address."); // also prevents makeing owned categories unowned (spam)
+    function setMainOwner(address payable _founder) external onlyFounder onlyNotZeroAddress(_founder) {
         founder = _founder;
         emit SetOwner(_founder);
     }
 
-    function removeMainOwner() external {
-        require(msg.sender == founder, "Access denied.");
+    function removeMainOwner() external onlyFounder {
         founder = address(0);
         emit SetOwner(address(0));
     }
 
     // _share is 64.64 fixed point number
-    function setSalesOwnersShare(int128 _share) external {
-        require(msg.sender == founder, "Access denied.");
+    function setSalesOwnersShare(int128 _share) external onlyFounder {
         salesOwnersShare = _share;
         emit SetSalesOwnerShare(_share);
     }
 
-    function setUpvotesOwnersShare(int128 _share) external {
-        require(msg.sender == founder, "Access denied.");
+    function setUpvotesOwnersShare(int128 _share) external onlyFounder {
         upvotesOwnersShare = _share;
         emit SetUpvotesOwnerShare(_share);
     }
 
-    function setUploadOwnersShare(int128 _share) external {
-        require(msg.sender == founder, "Access denied.");
+    function setUploadOwnersShare(int128 _share) external onlyFounder {
         uploadOwnersShare = _share;
         emit SetUploadOwnerShare(_share);
     }
 
-    function setBuyerAffiliateShare(int128 _share) external {
-        require(msg.sender == founder, "Access denied.");
+    function setBuyerAffiliateShare(int128 _share) external onlyFounder {
         buyerAffiliateShare = _share;
         emit SetBuyerAffiliateShare(_share);
     }
 
-    function setSellerAffiliateShare(int128 _share) external {
-        require(msg.sender == founder, "Access denied.");
+    function setSellerAffiliateShare(int128 _share) external onlyFounder {
         sellerAffiliateShare = _share;
         emit SetSellerAffiliateShare(_share);
     }
 
-    function athToETHCoefficient(int128 _coeff) external {
-        require(msg.sender == founder, "Access denied.");
+    function athToETHCoefficient(int128 _coeff) external onlyFounder {
         arToETHCoefficient = _coeff;
         emit SetARToETHCoefficient(_coeff);
     }
 
-    function setItemOwner(uint _itemId, address payable _author) external {
-        require(_effectiveAccount(itemOwners[_itemId]) == msg.sender, "Access denied.");
-        require(_author != address(0), "Zero address.");
+    function setItemOwner(uint _itemId, address payable _author) external onlyNotZeroAddress(_author) onlyItemOwner(_itemId) {
         itemOwners[_itemId] = _author;
         emit SetItemOwner(_itemId, _author);
     }
 
-    function removeItemOwner(uint _itemId) external {
-        require(_effectiveAccount(itemOwners[_itemId]) == msg.sender, "Access denied.");
+    function removeItemOwner(uint _itemId) external onlyItemOwner(_itemId) {
         itemOwners[_itemId] = address(0);
         emit SetItemOwner(_itemId, address(0));
     }
@@ -210,10 +228,7 @@ abstract contract BaseFiles is IERC1155, ERC165, ERC1155Metadata_URI, CommonCons
         return maxId;
     }
 
-    function updateItem(uint _itemId, ItemInfo calldata _info) external
-    {
-        require(_effectiveAccount(itemOwners[_itemId]) == msg.sender, "Attempt to modify other's item.");
-        require(entries[_itemId] == EntryKind.DOWNLOADS, "Item does not exist.");
+    function updateItem(uint _itemId, ItemInfo calldata _info) external onlyItemOwner(_itemId) onlyExistingItem(_itemId) {
         require(bytes(_info.title).length != 0, "Empty title.");
         pricesETH[_itemId] = _info.priceETH;
         emit ItemUpdated(_itemId, _info);
@@ -254,35 +269,29 @@ abstract contract BaseFiles is IERC1155, ERC165, ERC1155Metadata_URI, CommonCons
     // Can be used for spam.
     function updateLink(uint _linkId, LinkInfo calldata _info) external
     {
-        require(itemOwners[_linkId] == msg.sender, "Attempt to modify other's link."); // only owned links
         require(bytes(_info.title).length != 0, "Empty title.");
+        require(itemOwners[_linkId] == msg.sender, "Attempt to modify other's link."); // only owned links
         require(entries[_linkId] == EntryKind.LINK, "Link does not exist.");
         require(_info.responseTo == 0 || entries[_info.responseTo] != EntryKind.NONE);
         emit LinkUpdated(_linkId, _info);
     }
 
-    function updateItemCover(uint _itemId, uint _version, bytes calldata _cover, uint _width, uint _height) external {
-        require(_effectiveAccount(itemOwners[_itemId]) == msg.sender, "Access denied."); // only owned entries
+    function updateItemCover(uint _itemId, uint _version, bytes calldata _cover, uint _width, uint _height) external onlyItemOwner(_itemId) {
         EntryKind kind = entries[_itemId];
         require(kind != EntryKind.NONE, "Entry does not exist.");
         emit ItemCoverUpdated(_itemId, _version, _cover, _width, _height);
     }
 
-    function uploadFile(uint _itemId, uint _version, string calldata _format, bytes32 _hash) external {
-        require(_effectiveAccount(itemOwners[_itemId]) == msg.sender, "Attempt to modify other's item.");
-        require(entries[_itemId] == EntryKind.DOWNLOADS, "Item does not exist.");
+    function uploadFile(uint _itemId, uint _version, string calldata _format, bytes32 _hash) external onlyItemOwner(_itemId) onlyExistingItem(_itemId) {
         emit ItemFilesUpdated(_itemId, _format, _version, _hash);
     }
 
-    function setLastItemVersion(uint _itemId, uint _version) external {
-        require(_effectiveAccount(itemOwners[_itemId]) == msg.sender, "Attempt to modify other's item.");
-        require(entries[_itemId] == EntryKind.DOWNLOADS, "Item does not exist.");
+    function setLastItemVersion(uint _itemId, uint _version) external onlyItemOwner(_itemId) onlyExistingItem(_itemId) {
         emit SetLastItemVersion(_itemId, _version);
     }
 
-    function pay(uint _itemId, address payable _affiliate, string calldata shippingInfo) external payable {
+    function pay(uint _itemId, address payable _affiliate, string calldata shippingInfo) external payable onlyExistingItem(_itemId) returns (bytes memory) {
         require(pricesETH[_itemId] <= msg.value, "Paid too little.");
-        require(entries[_itemId] == EntryKind.DOWNLOADS, "Item does not exist.");
         setAffiliate(_affiliate);
         uint256 _shareholdersShare = uint256(salesOwnersShare.muli(int256(msg.value)));
         address payable _author = itemOwners[_itemId];
@@ -292,8 +301,7 @@ abstract contract BaseFiles is IERC1155, ERC165, ERC1155Metadata_URI, CommonCons
         emit Pay(msg.sender, itemOwners[_itemId], _itemId, msg.value, pricesETH[_itemId], toAuthor, shippingInfo);
     }
 
-    function donate(uint _itemId, address payable _affiliate) external payable returns (bytes memory) {
-        require(entries[_itemId] == EntryKind.DOWNLOADS, "Item does not exist.");
+    function donate(uint _itemId, address payable _affiliate) external payable onlyExistingItem(_itemId) returns (bytes memory) {
         setAffiliate(_affiliate);
         uint256 _shareholdersShare = uint256(salesOwnersShare.muli(int256(msg.value)));
         address payable _author = itemOwners[_itemId];
@@ -361,9 +369,7 @@ abstract contract BaseFiles is IERC1155, ERC165, ERC1155Metadata_URI, CommonCons
         _voteChildParent(_child, _parent, _yes, _affiliate, msg.value);
     }
 
-    function _voteChildParent(uint _child, uint _parent, bool _yes, address payable _affiliate, uint256 _amount) internal {
-        require(entries[_child] != EntryKind.NONE, "Child does not exist.");
-        require(entries[_parent] == EntryKind.CATEGORY, "Must be a category.");
+    function _voteChildParent(uint _child, uint _parent, bool _yes, address payable _affiliate, uint256 _amount) internal onlyExistingChild(_child) onlyCategory(_parent) {
         require(_amount <= 1 << 255, "To big number.");
         int256 _value = _yes ? int256(_amount) : -int256(_amount);
         if(_value == 0) revert("We don't want to pollute the events with zero votes");
@@ -380,10 +386,8 @@ abstract contract BaseFiles is IERC1155, ERC165, ERC1155Metadata_URI, CommonCons
         emit ChildParentVote(_child, _parent, _newValue, 0, false);
     }
 
-    function voteForOwnChild(uint _child, uint _parent) external payable {
+    function voteForOwnChild(uint _child, uint _parent) external payable onlyExistingChild(_child) onlyCategory(_parent) {
         if(msg.value == 0) revert("We don't want to pollute the events with zero votes");
-        require(entries[_child] != EntryKind.NONE, "Child does not exist.");
-        require(entries[_parent] == EntryKind.CATEGORY, "Must be a category.");
         address _author = itemOwners[_child];
         require(_author == msg.sender, "Must be owner.");
         int256 _value = upvotesOwnersShare.inv().muli(int256(msg.value));
@@ -398,9 +402,7 @@ abstract contract BaseFiles is IERC1155, ERC165, ERC1155Metadata_URI, CommonCons
     }
 
     // _value > 0 - present
-    function _setMyChildParent(uint _child, uint _parent, int256 _value, int256 _featureLevel) internal {
-        require(entries[_child] != EntryKind.NONE, "Child does not exist.");
-        require(entries[_parent] == EntryKind.CATEGORY, "Must be a category.");
+    function _setMyChildParent(uint _child, uint _parent, int256 _value, int256 _featureLevel) internal onlyExistingChild(_child) onlyCategory(_parent) {
         require(itemOwners[_parent] == msg.sender, "Access denied.");
         emit ChildParentVote(_child, _parent, _value, _featureLevel, true);
     }
@@ -546,9 +548,8 @@ abstract contract BaseFiles is IERC1155, ERC165, ERC1155Metadata_URI, CommonCons
         @param _value   Transfer amount
         @param _data    Additional data with no specified format, MUST be sent unaltered in call to `onERC1155Received` on `_to`
     */
-    function safeTransferFrom(address _from, address _to, uint256 _id, uint256 _value, bytes calldata _data) override external {
+    function safeTransferFrom(address _from, address _to, uint256 _id, uint256 _value, bytes calldata _data) override external onlyNotZeroAddress(_to) {
 
-        require(_to != address(0x0), "_to must be non-zero.");
         require(_from == msg.sender || operatorApproval[_from][msg.sender] == true, "Need operator approval for 3rd party transfers.");
 
         // SafeMath will throw with insuficient funds _from
@@ -582,10 +583,9 @@ abstract contract BaseFiles is IERC1155, ERC165, ERC1155Metadata_URI, CommonCons
         @param _values  Transfer amounts per token type (order and length must match _ids array)
         @param _data    Additional data with no specified format, MUST be sent unaltered in call to the `ERC1155TokenReceiver` hook(s) on `_to`
     */
-    function safeBatchTransferFrom(address _from, address _to, uint256[] calldata _ids, uint256[] calldata _values, bytes calldata _data) override external {
+    function safeBatchTransferFrom(address _from, address _to, uint256[] calldata _ids, uint256[] calldata _values, bytes calldata _data) override external onlyNotZeroAddress(_to) {
 
         // MUST Throw on errors
-        require(_to != address(0x0), "destination address must be non-zero.");
         require(_ids.length == _values.length, "_ids and _values array length must match.");
         require(_from == msg.sender || operatorApproval[_from][msg.sender] == true, "Need operator approval for 3rd party transfers.");
 
@@ -727,11 +727,6 @@ abstract contract BaseFiles is IERC1155, ERC165, ERC1155Metadata_URI, CommonCons
 
     function _sellerToToken(address payable _seller) internal pure returns (uint256) {
         return uint256(_seller);
-    }
-
-    modifier onlyFounder(){
-        require(msg.sender == founder, "Access denied");
-        _;
     }
 
     event SetOwner(address payable owner); // share is 64.64 fixed point number

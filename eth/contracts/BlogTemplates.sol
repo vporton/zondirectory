@@ -29,6 +29,16 @@ contract BlogTemplates {
 
     bool initialized;
 
+    modifier onlyTemplateOwner(uint _templateId) {
+        require(templateOwners[_templateId] == msg.sender, "Only able to be triggered by template's owner");
+        _;
+    }
+
+    modifier onlyPostOwner(uint _postId) {
+        require(postOwners[_postId] == msg.sender, "Only able to be triggered by post's owner");
+        _;
+    }
+
     function initialize(Files _filesContract) external {
         require(!initialized, "Already initialized.");
         initialized = true;
@@ -44,20 +54,17 @@ contract BlogTemplates {
         return maxId;
     }
 
-    function changeTemplateOwner(uint _templateId, address _owner) external {
-        require(templateOwners[_templateId] == msg.sender, "Access denied.");
+    function changeTemplateOwner(uint _templateId, address _owner) external onlyTemplateOwner(_templateId) {
         templateOwners[_templateId] = _owner;
         emit TemplateChangeOwner(_templateId, _owner);
     }
 
-    function updateTemplate(uint _templateId, string calldata _name, string calldata _js, string calldata _settings) external {
-        require(templateOwners[_templateId] == msg.sender, "Access denied.");
+    function updateTemplate(uint _templateId, string calldata _name, string calldata _js, string calldata _settings) external onlyTemplateOwner(_templateId) {
         templatesJavaScript[_templateId] = _js;
         emit TemplateUpdated(_templateId, _name, _js, _settings);
     }
 
-    function setArchivedTemplate(uint _templateId, bool _archived) external {
-        require(templateOwners[_templateId] == msg.sender, "Access denied.");
+    function setArchivedTemplate(uint _templateId, bool _archived) external onlyTemplateOwner(_templateId) {
         emit TemplateSetArchived(_templateId, _archived);
     }
 
@@ -78,14 +85,12 @@ contract BlogTemplates {
         emit PostUpdated(_postId, _templateId);
     }
 
-    function changePostOwner(uint _postId, address _owner) external {
-        require(postOwners[_postId] == msg.sender, "Access denied.");
+    function changePostOwner(uint _postId, address _owner) external onlyPostOwner(_postId) {
         postOwners[_postId] = _owner;
         emit PostChangeOwner(_postId, _owner);
     }
 
-    function changePostTemplate(uint _postId, uint _templateId) external {
-        require(postOwners[_postId] == msg.sender, "Access denied.");
+    function changePostTemplate(uint _postId, uint _templateId) external onlyPostOwner(_postId) {
         postTemplates[_postId] = _templateId;
         emit PostUpdated(_postId, _templateId);
     }

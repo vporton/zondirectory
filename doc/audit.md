@@ -24,10 +24,12 @@
 |||[M02 - Prefer to use self-define modifier](#M02)|
 |||[M03 - Should use better ERC20 implementation](#M03)|
 |||[M04 - Should use SafeMath](#M04)|
-| Low      | 3         |      |
+| Low      | 5         |      |
 |||[L01 - User constructor instead of initialize](#L01)|
 |||[L02 - Out date library](#L02)|
 |||[L03 - Better to revert](#L03)|
+|||[L04 - Hash data must be bytes32](#L04)|
+|||[L05 - Function missing return data](#L05)|
 
 <a name="H01"/>
 
@@ -72,6 +74,48 @@ These methods should have `internal` modifier instead of `public` since unwanted
 
 @vporton: Unwanted actor could use only `external` methods. So what is the harm of `public` ones?
 
+@chiro:
+
+`external`: That meant function is able to be trigger from:
+
+- Outside of EVM 
+- Other smart contracts
+- It isn't able to trigger by contract itself
+
+`public`: That meant function is able to trigger from:
+
+- Outside of EMV
+- Other smart contracts
+- It's able to trigger by contract itself
+
+E.g:
+
+```solidity
+// SPDX-License-Identifier: GPL-3.0
+pragma solidity >=0.7.0 <0.8.0;
+
+// All methods are accessible from the outside of EMV and other smart contracts.
+contract Test {
+    
+    uint256 data;
+    
+    event Log(uint256 indexed value);
+    
+    function test() public{
+        emit Log(++data);
+    }
+    
+    function test2() public {
+        this.test();   // Yes it's possible to call test
+        this.test3(); // You can't call test3
+    }
+    
+    function test3() external {
+        data++;
+    }
+}
+```
+
 **For example:** In [BaseFiles.sol#L361-L381](https://github.com/vporton/zondirectory/blob/design/eth/contracts/BaseFiles.sol#L361-L381):
 
 ```solidity
@@ -100,7 +144,9 @@ These methods should have `internal` modifier instead of `public` since unwanted
 
 `_voteChildParent()` was accessible without **any** restriction, that mean anyone could vote with **zero cost**.
 
-@vporton: That's correct: `_voteChildParent()` is called from `voteChildParent()` and the "amount" of the vote is `msg.value`. So voting without any cost would produce a zero-value vote, what is not a security volnurability.
+@vporton: That's correct: `_voteChildParent()` is called from `voteChildParent()` and the "amount" of the vote is `msg.value`. So voting without any cost would produce a zero-value vote, what is not a security vulnerability.
+
+@chiro: `_voteChildParent()` is able to be triggered from outside of EVM then it's vulnerable.
 
 <a name="H03"/>
 
@@ -116,7 +162,11 @@ Suggest fix: Remove `payable` modifier.
 
 @vporton: Instead of removing payable I add the check that the summary vote value is less than or equal to `msg.value`. _That_ was an error.
 
+@chiro: Let's make it clear, my job here to make sure there are no vulnerabilities. I didn't see you consume `msg.value` then to me it's an error. All consumable data/variables need to be consumed that's my point.
+
 @vporton: Additional error: `voteMultiple()` in `Files.sol` should be payable.
+
+@chiro: Just like above, This method didn't contain `msg.value` then it shouldn't to be `payable`. I'm just working like an EVM to walk through this code please understand. This issue was catch in another case: [H04 - Possible logic issue of voting](#H04)
 
 <a name="H04"/>
 
@@ -157,15 +207,47 @@ Please check `uint256[] calldata _voteAmounts` your own.
 
 @vporton: Responded above, added a `require` check.
 
+@chiro: This line https://github.com/vporton/zondirectory/blob/stable/eth/contracts/Files.sol#L13
+
+```solidity
+function _voteMultiple(uint _child, uint[] calldata _parents, uint256[] calldata _voteAmounts) public payable {
+```
+
+**Must be:**
+
+```solidity
+function _voteMultiple(uint _child, uint[] calldata _parents, uint256[] calldata _voteAmounts) internal {
+```
+
+You could play with this code on, https://remix.ethereum.org
+```solidity
+// SPDX-License-Identifier: GPL-3.0
+pragma solidity >=0.7.0 <0.8.0;
+
+contract Test {
+ 
+    function test4() public payable
+    {
+        test5();
+    }   
+    
+    function test5() internal{
+        payable(address(msg.sender)).transfer(msg.value);
+    }
+}
+```
+
 <a name="H05"/>
 
 ## H05 - Possible integer underflow/overflow
 
 | Affected        | Severity  | Count | Lines |
 |:----------------|:----------|------:|-------|
-| Files.sol       | High      |   1   |[9-24](https://github.com/vporton/zondirectory/blob/design/eth/contracts/Files.sol#L9-L24)|
+| Files.sol       | High      |   1   |[369](https://github.com/vporton/zondirectory/blob/design/eth/contracts/BaseFiles.sol#L369)|
 
 @vporton: It seems you have a typo about line numbers in the table above.
+
+@chiro: Updated
 
 In [BaseFiles.sol#L369](https://github.com/vporton/zondirectory/blob/design/eth/contracts/BaseFiles.sol#L369), this issue related to [H02](#H02).
 
@@ -179,7 +261,7 @@ In [BaseFiles.sol#L369](https://github.com/vporton/zondirectory/blob/design/eth/
 
 This line will be overflow: `int256 _value = _yes ? int256(_amount) : -int256(_amount);`
 
-Suggest fix: all math formula should be handle by `SafeMath` or `ABDKMath64x64`
+Suggest fix: all math formula should be handled by `SafeMath` or `ABDKMath64x64`
 
 <a name="M01"/>
 
@@ -274,6 +356,10 @@ We should use `SafeMath` to make sure there are no overflow/underflow or side ef
 
 @vporton: No, overflow is impossible (unless you have like `1<<255` Ether).
 
+@chiro: Yes, it looks impossible but I'm still using `SafeMath` no matter what. 
+
+We called them `unexpected state` since we can't identify them when we write the code.
+
 **Note**: Please aware that, round down could be cause of token lost. A tiny amount of token wil be "burnt" after `floor()`.
 
 <a name="L01"/>
@@ -283,7 +369,7 @@ We should use `SafeMath` to make sure there are no overflow/underflow or side ef
 | Affected        | Severity  | Count | Lines |
 |:----------------|:----------|------:|-------|
 | BaseFiles.sol   | Low       |   1   |[78-91](https://github.com/vporton/zondirectory/blob/design/eth/contracts/BaseFiles.sol#L78-L91)|
-| BlogTemplates.sol   | Low       |   1   |[L32-L36](https://github.com/vporton/zondirectory/blob/design/eth/contracts/BlogTemplates.sol#L32-L36)|
+| BlogTemplates.sol   | Low       |   1   |[32-36](https://github.com/vporton/zondirectory/blob/design/eth/contracts/BlogTemplates.sol#L32-L36)|
 | MainPST.sol   | Low       |   1   |[15-24](https://github.com/vporton/zondirectory/blob/design/eth/contracts/MainPST.sol#L15-L24)|
 
 We should use `constructor()` instead of implement it our own.
@@ -325,6 +411,16 @@ Suggest fix:
 
 @vporton: You mistake: Constructors are incompatible with upgradeable contracts. That's why I didn't use a constructor.
 
+@chiro: If you are using minimal proxy https://eips.ethereum.org/EIPS/eip-1167 or alternative mechanism, I think that's fine.
+
+https://github.com/vporton/zondirectory/blob/stable/eth/contracts/BaseFiles.sol#L79
+
+Please remember to add revert reason:
+
+```solidity
+require(!initialized);
+```
+
 <a name="L02"/>
 
 ## L02 - Out date library
@@ -358,6 +454,41 @@ Suggest fix:
 ```
 
 @vporton: `revert` in `_initializeAuthor` would be wrong!
+
+@chiro: Might be, I missed business logic part.
+
+<a name="L04"/>
+
+## L04 - Hash data must be bytes32
+
+| Affected        | Severity  | Count | Lines |
+|:----------------|:----------|------:|-------|
+| BaseFiles.sol   | Low       |   1   |[271-272](https://github.com/vporton/zondirectory/blob/9fd543fa83d5d3ce9f642c85d566f5ad122b9509/eth/contracts/BaseFiles.sol#L271-L272)|
+
+```solidity
+    function uploadFile(uint _itemId, uint _version, string calldata _format, bytes calldata _hash) external {
+        require(_hash.length == 32, "Wrong hash length.");
+```
+
+Suggest fix:
+
+```solidity
+    function uploadFile(uint _itemId, uint _version, string calldata _format, bytes32 _hash) external {
+```
+
+<a name="L05"/>
+
+## L05 - Function missing return data
+
+| Affected        | Severity  | Count | Lines |
+|:----------------|:----------|------:|-------|
+| BaseFiles.sol   | Low       |   2   |[284-294](https://github.com/vporton/zondirectory/blob/9fd543fa83d5d3ce9f642c85d566f5ad122b9509/eth/contracts/BaseFiles.sol#L284-L294) [296-305](https://github.com/vporton/zondirectory/blob/9fd543fa83d5d3ce9f642c85d566f5ad122b9509/eth/contracts/BaseFiles.sol#L296-L305)|
+
+```solidity
+function pay(uint _itemId, address payable _affiliate, string calldata shippingInfo) external payable returns (bytes memory) {
+```
+
+These two return `(bytes memory)` but actually it return nothing. Please consider to return `bool` and `return true;` at the end of function block.
 
 # Extra note
 
