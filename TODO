@@ -1,5 +1,6 @@
 * Model ERC-1155 tokens by analogy with ERC-20: https://github.com/Psychedelic/terabethia/blob/master/eth_bridge/ic/src/weth/src/main.rs
-  See https://support.dfinity.org/hc/en-us/articles/6080909704212-Asynchronous-DeFi-on-the-IC for more.
+  See https://support.dfinity.org/hc/en-us/articles/6080909704212-Asynchronous-DeFi-on-the-IC and
+  https://beta.smartcontracts.org/docs/current/references/ledger/ (only one token per canister) for more.
 
 * Threaded comments (already supported in the contract).
 
