@@ -1,3 +1,5 @@
+* Model ERC-1155 tokens by analogy with ERC-20: https://github.com/Psychedelic/terabethia/blob/master/eth_bridge/ic/src/weth/src/main.rs
+
 * Threaded comments (already supported in the contract).
 
 * Revert on withdrawal of author's profit (apparently due to superfluous `.transfer()` that I removed).
