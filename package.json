@@ -4,7 +4,7 @@
     "arweave-deploy": "^1.9.1",
     "promises-tho": "^1.1.0",
     "smartweave": "https://arweave.net/AM-u4X2po-3Tx7fma3lRonCfLwrjI42IALwDL_YFXBs",
-    "solc": "0.6.12",
+    "solc": "0.8.28",
     "typescript": "^3.9.6"
   }
 }
