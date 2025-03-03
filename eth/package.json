@@ -1,13 +1,13 @@
 {
   "dependencies": {
-    "@ethereum-waffle/compiler": "^3.0.2",
+    "@ethereum-waffle/compiler": "^4.0.1",
     "@nomiclabs/buidler": "^1.4.2",
     "@nomiclabs/buidler-ganache": "^1.3.3",
     "@nomiclabs/buidler-web3": "^1.3.4",
     "buidler-deploy": "^0.5.5",
-    "ganache-cli": "^6.9.1",
+    "ganache-cli": "^6.12.2",
     "solc": "^0.6.11",
-    "web3": "1.2.9"
+    "web3": "4.0.1"
   },
   "devDependencies": {
     "@nomiclabs/buidler-ethers": "^2.0.0",
